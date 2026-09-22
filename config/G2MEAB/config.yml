@@ -1,0 +1,5 @@
+object_base: orig/G2MEAB
+object: sys/main.dol
+hash: 2ff77807c8fa95faeb6b378d4e793eeafc5c4730
+symbols: config/G2MEAB/symbols.txt
+splits: config/G2MEAB/splits.txt

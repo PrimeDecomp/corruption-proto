@@ -249,12 +249,8 @@ cflags_retro = [
     "-str reuse,pool,readonly",
     "-use_lmw_stmw on",
     "-gccinc",
-    "-inline deferred",
-    "-common on",
-]
-cflags_retro_noauto = [
-    *[flag for flag in cflags_retro if flag != "-inline deferred"],
     "-inline deferred,noauto",
+    "-common on",
 ]
 
 # REL flags
@@ -328,20 +324,17 @@ config.libs = [
             Object(
                 NonMatching,
                 "Kyoto/CToken.cpp",
-                cflags=cflags_retro_noauto,
             ),
-            Object(NonMatching, "Kyoto/Streams/CMemoryInStream.cpp"),
+            Object(Matching, "Kyoto/Streams/CMemoryInStream.cpp"),
             Object(NonMatching, "Kyoto/Streams/CMemoryStreamOut.cpp"),
             Object(
                 NonMatching,
                 "Kyoto/Streams/COutputStream.cpp",
-                cflags=cflags_retro_noauto,
             ),
             Object(NonMatching, "Kyoto/Streams/CZipSupport.cpp"),
             Object(
                 NonMatching,
                 "Kyoto/Streams/CZipOutputStream.cpp",
-                cflags=cflags_retro_noauto,
             ),
         ],
     ),

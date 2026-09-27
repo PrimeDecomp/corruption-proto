@@ -326,9 +326,9 @@ config.libs = [
                 "Kyoto/CToken.cpp",
             ),
             Object(Matching, "Kyoto/Streams/CMemoryInStream.cpp"),
-            Object(NonMatching, "Kyoto/Streams/CMemoryStreamOut.cpp"),
+            Object(Matching, "Kyoto/Streams/CMemoryStreamOut.cpp"),
             Object(
-                NonMatching,
+                Matching,
                 "Kyoto/Streams/COutputStream.cpp",
             ),
             Object(NonMatching, "Kyoto/Streams/CZipSupport.cpp"),

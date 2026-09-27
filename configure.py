@@ -322,7 +322,7 @@ config.libs = [
         [
             Object(NonMatching, "Kyoto/CAssetTypesList.cpp"),
             Object(
-                NonMatching,
+                Matching,
                 "Kyoto/CToken.cpp",
             ),
             Object(Matching, "Kyoto/Streams/CMemoryInStream.cpp"),
@@ -333,7 +333,7 @@ config.libs = [
             ),
             Object(NonMatching, "Kyoto/Streams/CZipSupport.cpp"),
             Object(
-                NonMatching,
+                Matching,
                 "Kyoto/Streams/CZipOutputStream.cpp",
             ),
         ],

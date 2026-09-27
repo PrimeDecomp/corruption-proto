@@ -3,6 +3,7 @@
 
 #include "Kyoto/Streams/COutputStream.hpp"
 #include "Kyoto/Streams/ZipTypes.hpp"
+#include "rstl/auto_ptr.hpp"
 
 class CZipOutputStream : public COutputStream {
 public:
@@ -17,8 +18,7 @@ public:
 private:
   COutputStream* mOutput;
   int mCompressedBytesWritten;
-  bool mOwnsStream;
-  z_stream* mStream;
+  rstl::auto_ptr<z_stream> mStream;
   bool mFinished;
 };
 

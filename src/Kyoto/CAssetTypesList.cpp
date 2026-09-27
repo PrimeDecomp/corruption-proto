@@ -12,7 +12,7 @@ static const unsigned int kAssetTypes[] = {
 
 unsigned int CAssetTypesList::GetFourCCForIndex(unsigned int index) {
   if (index >= sizeof(kAssetTypes) / sizeof(kAssetTypes[0])) {
-    CCallStack stack(0, "CAssetTypesList.cpp(419) : ", "UnknownType");
+    CCallStack stack(0, "CAssetTypesList.cpp(419) : ", kUnknownType);
     rs_log_assert_failure(&stack, "CAssetTypesList.cpp", 419, "Verify",
                           "((uint32)index) < kNumAssetTypes",
                           "Invalid index into asset types list in CAssetTypesList::GetFourCCForIndex.");

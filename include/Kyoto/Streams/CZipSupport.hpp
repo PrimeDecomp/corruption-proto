@@ -3,7 +3,7 @@
 
 class CZipSupport {
 public:
-  static void Decompress(const void* source, unsigned int sourceLength, void* output,
+  static bool Decompress(const void* source, unsigned int sourceLength, void* output,
                          unsigned int outputLength);
   static void* Alloc(void* context, unsigned int count, unsigned int size);
   static void Free(void* context, void* memory);

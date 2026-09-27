@@ -53,6 +53,7 @@ Kyoto/Text/CTextInstruction.cpp:
 
 Kyoto/CAssetTypesList.cpp:
 	.text       start:0x804FDEC0 end:0x804FDF60
+	.rodata     start:0x806A1790 end:0x806A1868
 
 Kyoto/CFactoryMgr.cpp:
 	.text       start:0x804FDF60 end:0x804FE444
@@ -89,9 +90,12 @@ Kyoto/Streams/COutputStream.cpp:
 
 Kyoto/Streams/CZipOutputStream.cpp:
 	.text       start:0x805065E8 end:0x80506978
+	.rodata     start:0x806A2ED0 end:0x806A2F68
+	.data       start:0x806E0340 end:0x806E0350
 
 Kyoto/Streams/CZipSupport.cpp:
 	.text       start:0x80506978 end:0x80506B74
+	.rodata     start:0x806A2F68 end:0x806A3088
 
 Kyoto/CObjectReference.cpp:
 	.text       start:0x80506BB8 end:0x80507638
@@ -101,3 +105,4 @@ Kyoto/CSimplePool.cpp:
 
 Kyoto/CToken.cpp:
 	.text       start:0x8050821C end:0x80508574
+	.rodata     start:0x806A3368 end:0x806A3380

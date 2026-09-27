@@ -240,9 +240,26 @@ cflags_runtime = [
     "-inline auto",
 ]
 
+# Retro game, Kyoto, and rstl code uses a separate compiler profile from the
+# SDK/runtime libraries. Keep optimization and inlining independent of the
+# generic flags so individual objects can be adjusted as they are matched.
+cflags_retro = [
+    *[flag for flag in cflags_base if flag not in ("-O4,p", "-inline auto", "-str reuse")],
+    "-O4,p",
+    "-str reuse,pool,readonly",
+    "-use_lmw_stmw on",
+    "-gccinc",
+    "-inline deferred",
+    "-common on",
+]
+cflags_retro_noauto = [
+    *[flag for flag in cflags_retro if flag != "-inline deferred"],
+    "-inline deferred,noauto",
+]
+
 # REL flags
 cflags_rel = [
-    *cflags_base,
+    *cflags_retro,
     "-sdata 0",
     "-sdata2 0",
 ]
@@ -257,6 +274,17 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
         "mw_version": "GC/1.2.5n",
         "cflags": cflags_base,
         "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
+# Helper function for Retro game, Kyoto, and rstl libraries
+def RetroLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/2.7",
+        "cflags": cflags_retro,
+        "progress_category": "game",
         "objects": objects,
     }
 
@@ -285,56 +313,38 @@ def MatchingFor(*versions):
 config.warn_missing_config = True
 config.warn_missing_source = False
 config.libs = [
-    {
-        "lib": "rstl",
-        "mw_version": "Wii/1.0",
-        "cflags": [*cflags_base, "-use_lmw_stmw on"],
-        "progress_category": "game",
-        "objects": [
+    RetroLib(
+        "rstl",
+        [
             Object(NonMatching, "rstl/rstl_map.cpp"),
             Object(NonMatching, "rstl/rstl_misc.cpp"),
             Object(NonMatching, "rstl/rstl_strings.cpp"),
         ],
-    },
-    {
-        "lib": "Kyoto",
-        "mw_version": "Wii/1.0",
-        "cflags": [*cflags_base, "-use_lmw_stmw on"],
-        "progress_category": "game",
-        "objects": [
+    ),
+    RetroLib(
+        "Kyoto",
+        [
             Object(NonMatching, "Kyoto/CAssetTypesList.cpp"),
             Object(
                 NonMatching,
                 "Kyoto/CToken.cpp",
-                cflags=[
-                    *[flag for flag in cflags_base if flag != "-inline auto"],
-                    "-inline noauto",
-                    "-use_lmw_stmw on",
-                ],
+                cflags=cflags_retro_noauto,
             ),
             Object(NonMatching, "Kyoto/Streams/CMemoryInStream.cpp"),
             Object(NonMatching, "Kyoto/Streams/CMemoryStreamOut.cpp"),
             Object(
                 NonMatching,
                 "Kyoto/Streams/COutputStream.cpp",
-                cflags=[
-                    *[flag for flag in cflags_base if flag != "-inline auto"],
-                    "-inline noauto",
-                    "-use_lmw_stmw on",
-                ],
+                cflags=cflags_retro_noauto,
             ),
             Object(NonMatching, "Kyoto/Streams/CZipSupport.cpp"),
             Object(
                 NonMatching,
                 "Kyoto/Streams/CZipOutputStream.cpp",
-                cflags=[
-                    *[flag for flag in cflags_base if flag != "-inline auto"],
-                    "-inline noauto",
-                    "-use_lmw_stmw on",
-                ],
+                cflags=cflags_retro_noauto,
             ),
         ],
-    },
+    ),
     {
         "lib": "Runtime.PPCEABI.H",
         "mw_version": config.linker_version,

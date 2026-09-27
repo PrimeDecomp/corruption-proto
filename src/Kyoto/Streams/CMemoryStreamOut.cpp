@@ -5,9 +5,7 @@ extern "C" void* memcpy(void* destination, const void* source, unsigned long len
 
 void CMemoryStreamOut::Write(const void* data, unsigned long length) {
   const unsigned long available = mOutputLength - mPosition;
-  if (available < length) {
-    length = available;
-  }
+  length = available < length ? available : length;
   if (length != 0) {
     memcpy(static_cast< unsigned char* >(mOutput) + mPosition, data, length);
     mPosition += length;

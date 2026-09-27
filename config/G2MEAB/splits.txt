@@ -12,3 +12,89 @@ Sections:
 	.sbss       type:bss align:32
 	.sdata2     type:rodata align:16
 	.sbss2      type:bss align:32
+
+MetroidPrime/CObjectList.cpp:
+	.text       start:0x80011658 end:0x80011B5C
+	.ctors      start:0x8065B4CC end:0x8065B4D0
+
+MetroidPrime/Player/CPlayer.cpp:
+	.text       start:0x80011B5C end:0x8002329C
+	.ctors      start:0x8065B4D0 end:0x8065B4D4
+
+MetroidPrime/CEntity.cpp:
+	.text       start:0x80030F78 end:0x800332B0
+	.ctors      start:0x8065B4F4 end:0x8065B4F8
+
+MetroidPrime/Decode.cpp:
+	.text       start:0x800334A4 end:0x80033B7C
+	.ctors      start:0x8065B4F8 end:0x8065B4FC
+
+MetroidPrime/CIOWinManager.cpp:
+	.text       start:0x80033B7C end:0x80034A5C
+	.ctors      start:0x8065B4FC end:0x8065B500
+
+MetroidPrime/CActor.cpp:
+	.text       start:0x80034B04 end:0x80037424
+	.ctors      start:0x8065B500 end:0x8065B504
+
+MetroidPrime/CWorld.cpp:
+	.text       start:0x80037424 end:0x8003C188
+	.ctors      start:0x8065B504 end:0x8065B508
+
+MetroidPrime/CGameArea.cpp:
+	.text       start:0x8004BFAC end:0x8005CAE8
+	.ctors      start:0x8065B518 end:0x8065B51C
+
+Kyoto/Text/CTextExecuteBuffer.cpp:
+	.text       start:0x804B68C0 end:0x804B85DC
+
+Kyoto/Text/CTextInstruction.cpp:
+	.text       start:0x804B85DC end:0x804B88DC
+
+Kyoto/CAssetTypesList.cpp:
+	.text       start:0x804FDEC0 end:0x804FDF60
+
+Kyoto/CFactoryMgr.cpp:
+	.text       start:0x804FDF60 end:0x804FE444
+
+Kyoto/CResFactory.cpp:
+	.text       start:0x804FE444 end:0x80500080
+
+Kyoto/CResLoader.cpp:
+	.text       start:0x80500080 end:0x80503000
+
+rstl/rstl_map.cpp:
+	.text       start:0x80503000 end:0x80503650
+
+rstl/rstl_misc.cpp:
+	.text       start:0x80503650 end:0x8050368C
+
+rstl/rstl_strings.cpp:
+	.text       start:0x8050368C end:0x805050A8
+
+rstl/RstlExtras.cpp:
+	.text       start:0x8050511C end:0x805061F0
+
+Kyoto/Streams/CMemoryInStream.cpp:
+	.text       start:0x805061F0 end:0x80506234
+
+Kyoto/Streams/CMemoryStreamOut.cpp:
+	.text       start:0x80506234 end:0x805063A0
+
+Kyoto/Streams/COutputStream.cpp:
+	.text       start:0x805063A0 end:0x805065E8
+
+Kyoto/Streams/CZipOutputStream.cpp:
+	.text       start:0x805065E8 end:0x80506978
+
+Kyoto/Streams/CZipSupport.cpp:
+	.text       start:0x80506978 end:0x80506B74
+
+Kyoto/CObjectReference.cpp:
+	.text       start:0x80506BB8 end:0x80507638
+
+Kyoto/CSimplePool.cpp:
+	.text       start:0x80507638 end:0x80508318
+
+Kyoto/CToken.cpp:
+	.text       start:0x80508318 end:0x80508574

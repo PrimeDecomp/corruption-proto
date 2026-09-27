@@ -330,7 +330,7 @@ config.libs = [
                  Object(NonMatching, "Kyoto/CResLoader.cpp"),
                  Object(NonMatching, "Kyoto/CObjectReference.cpp"),
                  Object(NonMatching, "Kyoto/CSimplePool.cpp"),
-                 Object(NonMatching, "rstl/rstl_map.cpp"),
+                 Object(Matching, "rstl/rstl_map.cpp"),
                  Object(NonMatching, "rstl/rstl_misc.cpp"),
                  Object(NonMatching, "rstl/rstl_strings.cpp"),
                  Object(NonMatching, "rstl/RstlExtras.cpp"),

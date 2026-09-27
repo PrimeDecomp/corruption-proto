@@ -46,6 +46,101 @@ struct fake_header {
 } // namespace
 
 namespace rstl {
+void rbtree_rotate_left(void* header_void, void* node_void) {
+  fake_header* header = static_cast< fake_header* >(header_void);
+  fake_node* node = static_cast< fake_node* >(node_void);
+
+  fake_node* parent = node->mParent;
+  fake_node* right = node->mRight;
+  fake_node* l = right->mLeft;
+
+  if (parent == 0) {
+    header->mRootNode = right;
+    right->mParent = 0;
+  } else {
+    if (parent->mLeft == node) {
+      parent->mLeft = right;
+    } else {
+      parent->mRight = right;
+    }
+    right->mParent = node->mParent;
+  }
+  node->mParent = right;
+  right->mLeft = node;
+  if (l) {
+    l->mParent = node;
+  }
+  node->mRight = l;
+}
+
+void rbtree_rotate_right(void* header_void, void* node_void) {
+  fake_header* header = static_cast< fake_header* >(header_void);
+  fake_node* node = static_cast< fake_node* >(node_void);
+
+  fake_node* parent = node->mParent;
+  fake_node* left = node->mLeft;
+  fake_node* r = left->mRight;
+
+  if (parent == 0) {
+    header->mRootNode = left;
+    left->mParent = 0;
+  } else {
+    if (node == parent->mLeft) {
+      parent->mLeft = left;
+    } else {
+      parent->mRight = left;
+    }
+    left->mParent = node->mParent;
+  }
+  node->mParent = left;
+  left->mRight = node;
+  if (r) {
+    r->mParent = node;
+  }
+  node->mLeft = r;
+}
+
+void rbtree_rebalance(void* header_void, void* node_void) {
+  fake_node* node = static_cast< fake_node* >(node_void);
+  fake_header* header = static_cast< fake_header* >(header_void);
+
+  while (node->mParent != 0 && node->mParent->mColor == kNC_Red) {
+    fake_node* p = node->mParent->mParent->mLeft;
+    if (node->mParent == p) {
+      p = node->mParent->mParent->mRight;
+      if ((p != 0 && p->mColor == kNC_Red)) {
+        node->mParent->mColor = kNC_Black;
+        p->mColor = kNC_Black;
+        node->mParent->mParent->mColor = kNC_Red;
+        node = node->mParent->mParent;
+
+      } else {
+        if (node == node->mParent->mRight) {
+          node = node->mParent;
+          rbtree_rotate_left(header, node);
+        }
+        node->mParent->mColor = kNC_Black;
+        node->mParent->mParent->mColor = kNC_Red;
+        rbtree_rotate_right(header, node->mParent->mParent);
+      }
+    } else if (p != 0 && p->mColor == kNC_Red) {
+      node->mParent->mColor = kNC_Black;
+      p->mColor = kNC_Black;
+      node->mParent->mParent->mColor = kNC_Red;
+      node = node->mParent->mParent;
+
+    } else {
+      if (node == node->mParent->mLeft) {
+        node = node->mParent;
+        rbtree_rotate_right(header, node);
+      }
+      node->mParent->mColor = kNC_Black;
+      node->mParent->mParent->mColor = kNC_Red;
+      rbtree_rotate_left(header, node->mParent->mParent);
+    }
+  }
+  header->mRootNode->mColor = kNC_Black;
+}
 
 void* rbtree_rebalance_for_erase(void* header_void, void* node_void) {
   fake_node* node = static_cast< fake_node* >(node_void);
@@ -228,101 +323,4 @@ void* rbtree_rebalance_for_erase(void* header_void, void* node_void) {
 
   return successor;
 }
-
-void rbtree_rebalance(void* header_void, void* node_void) {
-  fake_node* node = static_cast< fake_node* >(node_void);
-  fake_header* header = static_cast< fake_header* >(header_void);
-
-  while (node->mParent != 0 && node->mParent->mColor == kNC_Red) {
-    fake_node* p = node->mParent->mParent->mLeft;
-    if (node->mParent == p) {
-      p = node->mParent->mParent->mRight;
-      if ((p != 0 && p->mColor == kNC_Red)) {
-        node->mParent->mColor = kNC_Black;
-        p->mColor = kNC_Black;
-        node->mParent->mParent->mColor = kNC_Red;
-        node = node->mParent->mParent;
-
-      } else {
-        if (node == node->mParent->mRight) {
-          node = node->mParent;
-          rbtree_rotate_left(header, node);
-        }
-        node->mParent->mColor = kNC_Black;
-        node->mParent->mParent->mColor = kNC_Red;
-        rbtree_rotate_right(header, node->mParent->mParent);
-      }
-    } else if (p != 0 && p->mColor == kNC_Red) {
-      node->mParent->mColor = kNC_Black;
-      p->mColor = kNC_Black;
-      node->mParent->mParent->mColor = kNC_Red;
-      node = node->mParent->mParent;
-
-    } else {
-      if (node == node->mParent->mLeft) {
-        node = node->mParent;
-        rbtree_rotate_right(header, node);
-      }
-      node->mParent->mColor = kNC_Black;
-      node->mParent->mParent->mColor = kNC_Red;
-      rbtree_rotate_left(header, node->mParent->mParent);
-    }
-  }
-  header->mRootNode->mColor = kNC_Black;
-}
-
-void rbtree_rotate_right(void* header_void, void* node_void) {
-  fake_header* header = static_cast< fake_header* >(header_void);
-  fake_node* node = static_cast< fake_node* >(node_void);
-
-  fake_node* parent = node->mParent;
-  fake_node* left = node->mLeft;
-  fake_node* r = left->mRight;
-
-  if (parent == 0) {
-    header->mRootNode = left;
-    left->mParent = 0;
-  } else {
-    if (node == parent->mLeft) {
-      parent->mLeft = left;
-    } else {
-      parent->mRight = left;
-    }
-    left->mParent = node->mParent;
-  }
-  node->mParent = left;
-  left->mRight = node;
-  if (r) {
-    r->mParent = node;
-  }
-  node->mLeft = r;
-}
-
-void rbtree_rotate_left(void* header_void, void* node_void) {
-  fake_header* header = static_cast< fake_header* >(header_void);
-  fake_node* node = static_cast< fake_node* >(node_void);
-
-  fake_node* parent = node->mParent;
-  fake_node* right = node->mRight;
-  fake_node* l = right->mLeft;
-
-  if (parent == 0) {
-    header->mRootNode = right;
-    right->mParent = 0;
-  } else {
-    if (parent->mLeft == node) {
-      parent->mLeft = right;
-    } else {
-      parent->mRight = right;
-    }
-    right->mParent = node->mParent;
-  }
-  node->mParent = right;
-  right->mLeft = node;
-  if (l) {
-    l->mParent = node;
-  }
-  node->mRight = l;
-}
-
 } // namespace rstl

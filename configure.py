@@ -296,8 +296,8 @@ def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-Matching = True                   # Object matches and should be linked
-NonMatching = False               # Object does not match and should not be linked
+Matching = True  # Object matches and should be linked
+NonMatching = False  # Object does not match and should not be linked
 Equivalent = config.non_matching  # Object should be linked when configured with --non-matching
 
 
@@ -309,16 +309,35 @@ def MatchingFor(*versions):
 config.warn_missing_config = True
 config.warn_missing_source = False
 config.libs = [
-    RetroLib(
-        "rstl",
-        [
-            Object(NonMatching, "rstl/rstl_map.cpp"),
-            Object(NonMatching, "rstl/rstl_misc.cpp"),
-            Object(NonMatching, "rstl/rstl_strings.cpp"),
+    RetroLib("Game",
+             [
+                 Object(NonMatching, "MetroidPrime/CObjectList.cpp"),
+                 Object(NonMatching, "MetroidPrime/Player/CPlayer.cpp"),
+                 Object(NonMatching, "MetroidPrime/CEntity.cpp"),
+                 Object(NonMatching, "MetroidPrime/Decode.cpp"),
+                 Object(NonMatching, "MetroidPrime/CIOWinManager.cpp"),
+                 Object(NonMatching, "MetroidPrime/CActor.cpp"),
+                 Object(NonMatching, "MetroidPrime/CWorld.cpp"),
+                 Object(NonMatching, "MetroidPrime/CGameArea.cpp"),
         ],
     ),
+    RetroLib("Kyoto1",
+             [
+                 Object(NonMatching, "Kyoto/Text/CTextExecuteBuffer.cpp"),
+                 Object(NonMatching, "Kyoto/Text/CTextInstruction.cpp"),
+                 Object(NonMatching, "Kyoto/CFactoryMgr.cpp"),
+                 Object(NonMatching, "Kyoto/CResFactory.cpp"),
+                 Object(NonMatching, "Kyoto/CResLoader.cpp"),
+                 Object(NonMatching, "Kyoto/CObjectReference.cpp"),
+                 Object(NonMatching, "Kyoto/CSimplePool.cpp"),
+                 Object(NonMatching, "rstl/rstl_map.cpp"),
+                 Object(NonMatching, "rstl/rstl_misc.cpp"),
+                 Object(NonMatching, "rstl/rstl_strings.cpp"),
+                 Object(NonMatching, "rstl/RstlExtras.cpp"),
+             ],
+    ),
     RetroLib(
-        "Kyoto",
+        "Kyoto2",
         [
             Object(NonMatching, "Kyoto/CAssetTypesList.cpp"),
             Object(
@@ -337,17 +356,7 @@ config.libs = [
                 "Kyoto/Streams/CZipOutputStream.cpp",
             ),
         ],
-    ),
-    {
-        "lib": "Runtime.PPCEABI.H",
-        "mw_version": config.linker_version,
-        "cflags": cflags_runtime,
-        "progress_category": "sdk",  # str | List[str]
-        "objects": [
-            Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
-            Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
-        ],
-    },
+    )
 ]
 
 

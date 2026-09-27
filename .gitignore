@@ -33,6 +33,3 @@ compile_commands.json
 # Miscellaneous
 /*.txt
 *.exe
-
-# Personal agent configuration and investigation artifacts
-.agents/

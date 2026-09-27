@@ -286,6 +286,56 @@ config.warn_missing_config = True
 config.warn_missing_source = False
 config.libs = [
     {
+        "lib": "rstl",
+        "mw_version": "Wii/1.0",
+        "cflags": [*cflags_base, "-use_lmw_stmw on"],
+        "progress_category": "game",
+        "objects": [
+            Object(NonMatching, "rstl/rstl_map.cpp"),
+            Object(NonMatching, "rstl/rstl_misc.cpp"),
+            Object(NonMatching, "rstl/rstl_strings.cpp"),
+        ],
+    },
+    {
+        "lib": "Kyoto",
+        "mw_version": "Wii/1.0",
+        "cflags": [*cflags_base, "-use_lmw_stmw on"],
+        "progress_category": "game",
+        "objects": [
+            Object(NonMatching, "Kyoto/CAssetTypesList.cpp"),
+            Object(
+                NonMatching,
+                "Kyoto/CToken.cpp",
+                cflags=[
+                    *[flag for flag in cflags_base if flag != "-inline auto"],
+                    "-inline noauto",
+                    "-use_lmw_stmw on",
+                ],
+            ),
+            Object(NonMatching, "Kyoto/Streams/CMemoryInStream.cpp"),
+            Object(NonMatching, "Kyoto/Streams/CMemoryStreamOut.cpp"),
+            Object(
+                NonMatching,
+                "Kyoto/Streams/COutputStream.cpp",
+                cflags=[
+                    *[flag for flag in cflags_base if flag != "-inline auto"],
+                    "-inline noauto",
+                    "-use_lmw_stmw on",
+                ],
+            ),
+            Object(NonMatching, "Kyoto/Streams/CZipSupport.cpp"),
+            Object(
+                NonMatching,
+                "Kyoto/Streams/CZipOutputStream.cpp",
+                cflags=[
+                    *[flag for flag in cflags_base if flag != "-inline auto"],
+                    "-inline noauto",
+                    "-use_lmw_stmw on",
+                ],
+            ),
+        ],
+    },
+    {
         "lib": "Runtime.PPCEABI.H",
         "mw_version": config.linker_version,
         "cflags": cflags_runtime,

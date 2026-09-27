@@ -69,6 +69,7 @@ rstl/rstl_map.cpp:
 
 rstl/rstl_misc.cpp:
 	.text       start:0x80503650 end:0x8050368C
+	.rodata     start:0x806A2D30 end:0x806A2D48
 
 rstl/rstl_strings.cpp:
 	.text       start:0x8050368C end:0x805050A8

@@ -339,6 +339,7 @@ config.libs = [
     RetroLib(
         "Kyoto2",
         [
+            Object(NonMatching, "Kyoto/Text/CFont.cpp"),
             Object(NonMatching, "Kyoto/CAssetTypesList.cpp"),
             Object(
                 Matching,

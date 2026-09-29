@@ -51,6 +51,12 @@ Kyoto/Text/CTextExecuteBuffer.cpp:
 Kyoto/Text/CTextInstruction.cpp:
 	.text       start:0x804B85DC end:0x804B88DC
 
+Kyoto/Text/CFont.cpp:
+	.text       start:0x804BA770 end:0x804BAB64
+	.rodata     start:0x8069E8F8 end:0x8069E918
+	.data       start:0x806CF340 end:0x806DF340
+	.sbss       start:0x8079B230 end:0x8079B238
+
 Kyoto/CAssetTypesList.cpp:
 	.text       start:0x804FDEC0 end:0x804FDF60
 	.rodata     start:0x806A1790 end:0x806A1868

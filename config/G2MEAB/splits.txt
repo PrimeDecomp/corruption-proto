@@ -1254,6 +1254,15 @@ Kyoto/Input/RevolutionIController.cpp:
 Kyoto/Input/CRevolutionController.cpp:
 	.text       start:0x8056F5B8 end:0x805708F4
 
+Weapons/CProjectileWeapon.cpp:
+	.text       start:0x805908C4 end:0x805941F0
+
+Weapons/CProjectileWeaponDataFactory.cpp:
+	.text       start:0x805941F0 end:0x80595558
+
+Weapons/CCollisionResponseData.cpp:
+	.text       start:0x80595558 end:0x805971B8
+
 Weapons/IWeaponRenderer.cpp:
 	.text       start:0x805971B8 end:0x80597290
 	.ctors      start:0x8065BC5C end:0x8065BC60

@@ -685,8 +685,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Particles/CDeferredParticleEffect.cpp",
-      "mapped": false
+      "path": "Kyoto/Particles/CManagedParticleGen.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Particles/CEffectComponent.cpp",

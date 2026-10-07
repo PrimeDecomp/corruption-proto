@@ -350,6 +350,21 @@ def VorbisLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
+# Provisional Lua/LuaPlus profile, independent from Dolphin and Retro flags.
+# The target's Lua version string does not establish its compiler settings.
+cflags_lua = [*cflags_base]
+
+
+def LuaLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/2.7",
+        "cflags": cflags_lua,
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
 # Helper function for Retro game, Kyoto, and rstl libraries
 def RetroLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
@@ -651,6 +666,38 @@ config.libs = [
         Object(NonMatching, "FMOD/fmod_sample_converter.cpp"),
         Object(NonMatching, "FMOD/fmod_dsp_codec.cpp"),
         Object(NonMatching, "FMOD/fmod_dsp_codecpool.cpp"),
+    ]),
+    LuaLib("Lua", [
+        Object(NonMatching, "Lua/lwstrlib.c"),
+        Object(NonMatching, "Lua/LuaObject.cpp"),
+        Object(NonMatching, "Lua/LuaPlus.cpp"),
+        Object(NonMatching, "Lua/LuaPlusAddons.c"),
+        Object(NonMatching, "Lua/LuaPlusFunctions.cpp"),
+        Object(NonMatching, "Lua/LuaState_DumpObject.cpp"),
+        Object(NonMatching, "Lua/lcode.c"),
+        Object(NonMatching, "Lua/ldebug.c"),
+        Object(NonMatching, "Lua/ldo.c"),
+        Object(NonMatching, "Lua/ldump.c"),
+        Object(NonMatching, "Lua/lfunc.c"),
+        Object(NonMatching, "Lua/lgc.c"),
+        Object(NonMatching, "Lua/llex.c"),
+        Object(NonMatching, "Lua/lmem.c"),
+        Object(NonMatching, "Lua/lobject.c"),
+        Object(NonMatching, "Lua/lparser.c"),
+        Object(NonMatching, "Lua/lstate.c"),
+        Object(NonMatching, "Lua/lstring.c"),
+        Object(NonMatching, "Lua/ltable.c"),
+        Object(NonMatching, "Lua/ltm.c"),
+        Object(NonMatching, "Lua/lundump.c"),
+        Object(NonMatching, "Lua/lvm.c"),
+        Object(NonMatching, "Lua/lzio.c"),
+        Object(NonMatching, "Lua/lapi.c"),
+        Object(NonMatching, "Lua/lbaselib.c"),
+        Object(NonMatching, "Lua/ldblib.c"),
+        Object(NonMatching, "Lua/lmathlib.c"),
+        Object(NonMatching, "Lua/lstrlib.c"),
+        Object(NonMatching, "Lua/ltablib.c"),
+        Object(NonMatching, "Lua/lauxlib.c"),
     ]),
     LzoLib("LZO", [
         Object(NonMatching, "LZO/lzo_init.c"),
@@ -987,6 +1034,8 @@ config.libs = [
         Object(NonMatching, "MetaRender/CCubeRenderer.cpp"),
     ]),
     RetroLib("MetroidPrime", [
+        Object(NonMatching, "MetroidPrime/main.cpp"),
+        Object(NonMatching, "MetroidPrime/CControlMapper.cpp"),
         Object(NonMatching, "MetroidPrime/CArchMsgParmInt32.cpp"),
         Object(NonMatching, "MetroidPrime/CArchMsgParmInt32Int32VoidPtr.cpp"),
         Object(NonMatching, "MetroidPrime/CArchMsgParmNull.cpp"),

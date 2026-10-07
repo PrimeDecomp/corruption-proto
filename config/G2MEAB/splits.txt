@@ -13,6 +13,14 @@ Sections:
 	.sdata2     type:rodata align:16
 	.sbss2      type:bss align:32
 
+MetroidPrime/main.cpp:
+	.text       start:0x80005860 end:0x800105C4
+	.ctors      start:0x8065B4C4 end:0x8065B4C8
+
+MetroidPrime/CControlMapper.cpp:
+	.text       start:0x800105C4 end:0x80011658
+	.ctors      start:0x8065B4C8 end:0x8065B4CC
+
 MetroidPrime/CObjectList.cpp:
 	.text       start:0x80011658 end:0x80011B5C
 	.ctors      start:0x8065B4CC end:0x8065B4D0
@@ -416,6 +424,96 @@ Dolphin/odenotstub/odenotstub.c:
 
 Dolphin/amcstubs/AmcExi2Stubs.c:
 	.text       start:0x80442018 end:0x80442048
+
+Lua/lwstrlib.c:
+	.text       start:0x80442048 end:0x804454F0
+
+Lua/LuaObject.cpp:
+	.text       start:0x804454F0 end:0x804466D4
+
+Lua/LuaPlus.cpp:
+	.text       start:0x804466D4 end:0x80447500
+
+Lua/LuaPlusAddons.c:
+	.text       start:0x80447500 end:0x8044787C
+
+Lua/LuaPlusFunctions.cpp:
+	.text       start:0x8044787C end:0x804479DC
+
+Lua/LuaState_DumpObject.cpp:
+	.text       start:0x80447AE8 end:0x8044A01C
+
+Lua/lcode.c:
+	.text       start:0x8044A01C end:0x8044CB08
+
+Lua/ldebug.c:
+	.text       start:0x8044CB08 end:0x8044E0D0
+
+Lua/ldo.c:
+	.text       start:0x8044E0D0 end:0x804509B4
+
+Lua/ldump.c:
+	.text       start:0x804509B4 end:0x8045188C
+
+Lua/lfunc.c:
+	.text       start:0x8045188C end:0x80451CC8
+
+Lua/lgc.c:
+	.text       start:0x80451CC8 end:0x80453784
+
+Lua/llex.c:
+	.text       start:0x80453784 end:0x80456A1C
+
+Lua/lmem.c:
+	.text       start:0x80456A1C end:0x80456CA4
+
+Lua/lobject.c:
+	.text       start:0x80456CA4 end:0x80457518
+
+Lua/lparser.c:
+	.text       start:0x80457518 end:0x8045DF18
+
+Lua/lstate.c:
+	.text       start:0x8045DF18 end:0x8045E874
+
+Lua/lstring.c:
+	.text       start:0x8045E874 end:0x8045EFF4
+
+Lua/ltable.c:
+	.text       start:0x8045EFF4 end:0x80460998
+
+Lua/ltm.c:
+	.text       start:0x80460998 end:0x80460B74
+
+Lua/lundump.c:
+	.text       start:0x80460B74 end:0x80462B40
+
+Lua/lvm.c:
+	.text       start:0x80462B40 end:0x80466150
+
+Lua/lzio.c:
+	.text       start:0x80466150 end:0x80466460
+
+Lua/lapi.c:
+	.text       start:0x80466460 end:0x80469D10
+
+Lua/lbaselib.c:
+	.text       start:0x80469D10 end:0x8046C034
+
+Lua/ldblib.c:
+	.text       start:0x8046C034 end:0x8046CDD8
+
+Lua/lmathlib.c:
+	.text       start:0x8046CDD8 end:0x8046D838
+
+Lua/lstrlib.c:
+	.text       start:0x8046D838 end:0x80470B40
+
+Lua/ltablib.c:
+	.text       start:0x80470B40 end:0x80471768
+
+Lua/lauxlib.c:
+	.text       start:0x80471768 end:0x80473854
 
 Collision/CCollidableAABox.cpp:
 	.text       start:0x80473854 end:0x80474364

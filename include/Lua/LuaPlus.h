@@ -59,7 +59,11 @@ protected:
 	const char* m_message;
 };
 
+#ifdef NDEBUG
+#define luaplus_assert(e) if (!(e)) (void)0
+#else
 #define luaplus_assert(e) if (!(e)) throw LuaException(#e)
+#endif
 
 class LuaStateOutFile;
 class LuaState;

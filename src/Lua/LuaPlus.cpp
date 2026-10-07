@@ -270,9 +270,9 @@ static int FatalError( lua_State* state )
 	puts(err);
 #endif // WIN32
 
-#ifndef _WIN32_WCE
+#if !defined(_WIN32_WCE) && !defined(__MWERKS__)
 	throw -1;
-#endif // _WIN32_WCE
+#endif
 
 	return -1;
 }
@@ -401,14 +401,16 @@ void LuaState::Init( bool initStandardLibrary )
 		LuaAutoBlock autoBlock(this);
 		luaopen_base(m_state);
 		luaopen_table( m_state );
+#ifndef __MWERKS__
 		luaopen_io(m_state);
+#endif
 		luaopen_string(m_state);
 		luaopen_wstring(m_state);
 		luaopen_math(m_state);
 		luaopen_debug(m_state);
-#ifndef _WIN32_WCE
+#if !defined(_WIN32_WCE) && !defined(__MWERKS__)
 		luaopen_loadlib(m_state);
-#endif // _WIN32_WCE
+#endif
 
 		ScriptFunctionsRegister( this );
 

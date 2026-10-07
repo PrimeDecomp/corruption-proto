@@ -350,6 +350,12 @@ Collision/CMRay.cpp:
 Collision/CCharacterPrimitiveData.cpp:
 	.text       start:0x8047E860 end:0x8047F4A0
 
+Collision/CDelaunayTriangulation.cpp:
+	.text       start:0x8047F4A0 end:0x804801DC
+
+Collision/CCollidableOrientedBox.cpp:
+	.text       start:0x804801DC end:0x80480884
+
 GuiSys/CAuiMeter.cpp:
 	.text       start:0x804816E4 end:0x80481E20
 
@@ -1323,11 +1329,26 @@ WorldFormat/CCollidableOBBTree.cpp:
 WorldFormat/CCollidableOBBTreeGroup.cpp:
 	.text       start:0x805ABBE4 end:0x805AE030
 
+WorldFormat/CAreaPVS.cpp:
+	.text       start:0x805AE030 end:0x805AE338
+
+WorldFormat/CRenderingOctree.cpp:
+	.text       start:0x805AE338 end:0x805AE940
+
+WorldFormat/CGroupedFloatData.cpp:
+	.text       start:0x805AE940 end:0x805AEF30
+
+WorldFormat/CGamePortalAreaData.cpp:
+	.text       start:0x805AEF30 end:0x805B0F74
+
 WorldFormat/CCollisionPrimitiveData.cpp:
 	.text       start:0x805B0F74 end:0x805B1818
 
 WorldFormat/CTriangleCollisionCache.cpp:
 	.text       start:0x805B1818 end:0x805B36EC
+
+WorldFormat/CCollidableTranslatedConvexPH.cpp:
+	.text       start:0x805B36EC end:0x805B5D10
 
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C

@@ -311,6 +311,76 @@ MetroidPrime/CActorLights.cpp:
 	.text       start:0x800E1CF8 end:0x800E4C64
 	.ctors      start:0x8065B5CC end:0x8065B5D0
 
+MetroidPrime/Enemies/CPatternedInfo.cpp:
+	.text       start:0x800E4C64 end:0x800E572C
+	.ctors      start:0x8065B5D0 end:0x8065B5D4
+
+MetroidPrime/CSimpleShadow.cpp:
+	.text       start:0x800E572C end:0x800E5F74
+	.ctors      start:0x8065B5D4 end:0x8065B5D8
+
+MetroidPrime/CActorParameters.cpp:
+	.text       start:0x800E5F74 end:0x800E66CC
+	.ctors      start:0x8065B5D8 end:0x8065B5DC
+
+MetroidPrime/CInGameGuiManager.cpp:
+	.text       start:0x800E66CC end:0x800E7708
+	.ctors      start:0x8065B5DC end:0x8065B5E0
+
+MetroidPrime/CWorldShadow.cpp:
+	.text       start:0x800E7708 end:0x800E8494
+	.ctors      start:0x8065B5E0 end:0x8065B5E4
+
+MetroidPrime/CAudioStateWin.cpp:
+	.text       start:0x800E8494 end:0x800E85FC
+	.ctors      start:0x8065B5E4 end:0x8065B5E8
+
+MetroidPrime/Player/CPlayerVisor.cpp:
+	.text       start:0x800E85FC end:0x800E9340
+	.ctors      start:0x8065B5E8 end:0x8065B5EC
+
+MetroidPrime/CModelData.cpp:
+	.text       start:0x800E9340 end:0x800EB568
+	.ctors      start:0x8065B5EC end:0x8065B5F0
+
+MetroidPrime/CDecalManager.cpp:
+	.text       start:0x800EB568 end:0x800ED5EC
+	.ctors      start:0x8065B5F0 end:0x8065B5F4
+
+MetroidPrime/ScriptObjects/CScriptSpiderBallWaypoint.cpp:
+	.text       start:0x800ED5EC end:0x800EE724
+	.ctors      start:0x8065B5F4 end:0x8065B5F8
+
+MetroidPrime/TGameTypes.cpp:
+	.text       start:0x800EE724 end:0x800EE76C
+	.ctors      start:0x8065B5F8 end:0x8065B5FC
+
+MetroidPrime/CPhysicsActor.cpp:
+	.text       start:0x800EE76C end:0x800F0DB8
+	.ctors      start:0x8065B5FC end:0x8065B600
+
+MetroidPrime/CPhysicsState.cpp:
+	.text       start:0x800F0DB8 end:0x800F0EA4
+
+MetroidPrime/CFluidUVMotion.cpp:
+	.text       start:0x800F0EA4 end:0x800F128C
+
+MetroidPrime/ScriptObjects/CScriptCoverPoint.cpp:
+	.text       start:0x800F128C end:0x800F1B4C
+	.ctors      start:0x8065B600 end:0x8065B604
+
+MetroidPrime/CFluidPlane.cpp:
+	.text       start:0x800F1B4C end:0x800F7350
+	.ctors      start:0x8065B604 end:0x8065B608
+
+MetroidPrime/CFluidPlaneManager.cpp:
+	.text       start:0x800F7350 end:0x800F7B24
+	.ctors      start:0x8065B608 end:0x8065B60C
+
+MetroidPrime/ScriptObjects/CScriptGrapplePoint.cpp:
+	.text       start:0x800F7B24 end:0x800F9238
+	.ctors      start:0x8065B60C end:0x8065B610
+
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 
@@ -419,6 +489,117 @@ MetroidPrime/Enemies/CWallWalker.cpp:
 MetroidPrime/Enemies/CGenericFSM2.cpp:
 	.text       start:0x8028A67C end:0x8028F448
 	.ctors      start:0x8065B95C end:0x8065B960
+
+MetroidPrime/CStateManager.cpp:
+	.text       start:0x8028F448 end:0x80298128
+	.ctors      start:0x8065B960 end:0x8065B964
+
+MetroidPrime/CStateManagerObject.cpp:
+	.text       start:0x80298128 end:0x8029B708
+	.ctors      start:0x8065B964 end:0x8065B968
+
+MetroidPrime/CStateManagerCollision.cpp:
+	.text       start:0x8029B708 end:0x8029D208
+	.ctors      start:0x8065B968 end:0x8065B96C
+
+MetroidPrime/CRenderActor.cpp:
+	.text       start:0x8029D208 end:0x8029FF20
+	.ctors      start:0x8065B96C end:0x8065B970
+
+MetroidPrime/Cameras/CDebugCamera.cpp:
+	.text       start:0x8029FF20 end:0x802A07EC
+	.ctors      start:0x8065B970 end:0x8065B974
+
+MetroidPrime/Cameras/CCameraShaker.cpp:
+	.text       start:0x802A07EC end:0x802A0A30
+	.ctors      start:0x8065B974 end:0x8065B978
+
+MetroidPrime/Cameras/CCameraShakerData.cpp:
+	.text       start:0x802A0A30 end:0x802A13EC
+	.ctors      start:0x8065B978 end:0x8065B97C
+
+MetroidPrime/Cameras/CCameraShakerManager.cpp:
+	.text       start:0x802A13EC end:0x802A2004
+	.ctors      start:0x8065B97C end:0x8065B980
+
+MetroidPrime/CDisplayManager.cpp:
+	.text       start:0x802A2004 end:0x802A48E4
+	.ctors      start:0x8065B980 end:0x8065B984
+
+MetroidPrime/CRenderManager.cpp:
+	.text       start:0x802A48E4 end:0x802AC03C
+	.ctors      start:0x8065B984 end:0x8065B988
+
+MetroidPrime/CViewportManager.cpp:
+	.text       start:0x802AC03C end:0x802AD188
+	.ctors      start:0x8065B988 end:0x8065B98C
+
+MetroidPrime/SViewportRenderData.cpp:
+	.text       start:0x802AD188 end:0x802AD3FC
+
+MetroidPrime/ScriptObjects/CScriptActorTransform.cpp:
+	.text       start:0x802AD3FC end:0x802AEE7C
+	.ctors      start:0x8065B98C end:0x8065B990
+
+MetroidPrime/ScriptObjects/CScriptRelayRandom.cpp:
+	.text       start:0x802AEE7C end:0x802AFA48
+	.ctors      start:0x8065B990 end:0x8065B994
+
+MetroidPrime/Tweaks/CTweakPlayerRes.cpp:
+	.text       start:0x802AFA48 end:0x802B091C
+	.ctors      start:0x8065B994 end:0x8065B998
+
+MetroidPrime/Cameras/CTransitionCamera.cpp:
+	.text       start:0x802B091C end:0x802B3220
+	.ctors      start:0x8065B998 end:0x8065B99C
+
+MetroidPrime/CGameViewport.cpp:
+	.text       start:0x802B3220 end:0x802B3D08
+	.ctors      start:0x8065B99C end:0x8065B9A0
+
+MetroidPrime/ScriptObjects/CScriptLUA.cpp:
+	.text       start:0x802B3D08 end:0x802B9354
+	.ctors      start:0x8065B9A0 end:0x8065B9A4
+
+MetroidPrime/Enemies/CMantha.cpp:
+	.text       start:0x80389960 end:0x8038B30C
+	.ctors      start:0x8065BADC end:0x8065BAE0
+
+MetroidPrime/Enemies/CFacingNavigation.cpp:
+	.text       start:0x8038B30C end:0x8038B5D0
+	.ctors      start:0x8065BAE0 end:0x8065BAE4
+
+MetroidPrime/Weapons/CReptilicusHunterChakram.cpp:
+	.text       start:0x8038B5D0 end:0x8038E534
+	.ctors      start:0x8065BAE4 end:0x8065BAE8
+
+MetroidPrime/CSteeringBehaviors.cpp:
+	.text       start:0x8038E534 end:0x8038FC30
+	.ctors      start:0x8065BAE8 end:0x8065BAEC
+
+MetroidPrime/CTerrainAlignment.cpp:
+	.text       start:0x8038FC30 end:0x803907D0
+	.ctors      start:0x8065BAEC end:0x8065BAF0
+
+MetroidPrime/CLineOfSightCache.cpp:
+	.text       start:0x803907D0 end:0x8039109C
+	.ctors      start:0x8065BAF0 end:0x8065BAF4
+
+MetroidPrime/Enemies/CWaypointNavigation.cpp:
+	.text       start:0x8039109C end:0x80392470
+	.ctors      start:0x8065BAF4 end:0x8065BAF8
+
+MetroidPrime/Enemies/CPathFindNavigation.cpp:
+	.text       start:0x80392470 end:0x803934F0
+	.ctors      start:0x8065BAF8 end:0x8065BAFC
+
+MetroidPrime/Enemies/CSeedBoss1.cpp:
+	.text       start:0x803934F0 end:0x8039E404
+	.ctors      start:0x8065BAFC end:0x8065BB00
+
+MetroidPrime/Enemies/CMetroidHatcher.cpp:
+	.text       start:0x8039E404 end:0x803A6A04
+	.ctors      start:0x8065BB00 end:0x8065BB04
 
 MetroidPrime/Enemies/CPirateDrone.cpp:
 	.text       start:0x803A6A04 end:0x803AC394

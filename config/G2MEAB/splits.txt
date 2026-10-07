@@ -2139,6 +2139,7 @@ GuiSys/CGuiTextPane.cpp:
 
 Kyoto/Text/CGuiTextSupport.cpp:
 	.text       start:0x80488C24 end:0x8048BA2C
+	.rodata     start:0x8069C1B8 end:0x8069C290
 
 GuiSys/CGuiWidget.cpp:
 	.text       start:0x8048BA2C end:0x8048C4E4
@@ -2201,42 +2202,53 @@ Kyoto/Animation/CAnimSysContext.cpp:
 
 Kyoto/Animation/CAnimTreeLoopIn.cpp:
 	.text       start:0x80491A2C end:0x80494198
+	.rodata     start:0x8069CBA8 end:0x8069CBF8
 
 Kyoto/Animation/CAnimTreeSequence.cpp:
 	.text       start:0x80494198 end:0x804967B4
+	.rodata     start:0x8069CBF8 end:0x8069CC48
 
 Kyoto/Animation/CMetaAnimBlend.cpp:
 	.text       start:0x804967B4 end:0x80496C80
+	.rodata     start:0x8069CC48 end:0x8069CC78
 
 Kyoto/Animation/CMetaAnimFactory.cpp:
 	.text       start:0x80496C80 end:0x80496F18
+	.rodata     start:0x8069CC78 end:0x8069CD18
 
 Kyoto/Animation/CMetaAnimPhaseBlend.cpp:
 	.text       start:0x80496F18 end:0x80497724
+	.rodata     start:0x8069CD18 end:0x8069CDA8
 
 Kyoto/Animation/CMetaAnimPlay.cpp:
 	.text       start:0x80497724 end:0x80497D5C
+	.rodata     start:0x8069CDA8 end:0x8069CEB8
 
 Kyoto/Animation/CMetaAnimRandom.cpp:
 	.text       start:0x80497D5C end:0x80498524
 
 Kyoto/Animation/CMetaAnimSequence.cpp:
 	.text       start:0x80498524 end:0x80498A3C
+	.rodata     start:0x8069CF70 end:0x8069D050
 
 Kyoto/Animation/CMetaTransFactory.cpp:
 	.text       start:0x80498A3C end:0x80498C64
+	.rodata     start:0x8069D050 end:0x8069D0D8
 
 Kyoto/Animation/CMetaTransMetaAnim.cpp:
 	.text       start:0x80498C64 end:0x80498EA4
+	.rodata     start:0x8069D0D8 end:0x8069D108
 
 Kyoto/Animation/CMetaTransPhaseTrans.cpp:
 	.text       start:0x80498EA4 end:0x804997E4
+	.rodata     start:0x8069D108 end:0x8069D1C0
 
 Kyoto/Animation/CMetaTransSnap.cpp:
 	.text       start:0x804997E4 end:0x80499870
 
 Kyoto/Animation/CMetaTransTrans.cpp:
 	.text       start:0x80499870 end:0x80499BD8
+	.rodata     start:0x8069D1C0 end:0x8069D1F0
 
 Kyoto/Animation/CPASAnimInfo.cpp:
 	.text       start:0x80499BD8 end:0x80499CD0
@@ -2261,6 +2273,7 @@ Kyoto/Animation/CSequenceHelper.cpp:
 
 Kyoto/Animation/CTreeUtils.cpp:
 	.text       start:0x8049DBC0 end:0x8049DE74
+	.rodata     start:0x8069D370 end:0x8069D398
 
 Kyoto/Animation/IMetaAnim.cpp:
 	.text       start:0x8049DE74 end:0x8049E220
@@ -2270,24 +2283,30 @@ Kyoto/Animation/CAdvancementDeltas.cpp:
 
 Kyoto/Animation/CAnimMathUtils.cpp:
 	.text       start:0x8049E5E0 end:0x8049EAC0
+	.rodata     start:0x8069D398 end:0x8069D438
 
 Kyoto/Animation/CAnimPOIData.cpp:
 	.text       start:0x8049ED50 end:0x8049F4F4
+	.rodata     start:0x8069D4F0 end:0x8069D5D0
 
 Kyoto/Animation/CAnimSource.cpp:
 	.text       start:0x8049F4F4 end:0x804A1540
+	.rodata     start:0x8069D5D0 end:0x8069D810
 
 Kyoto/Animation/CAnimSourceReader.cpp:
 	.text       start:0x804A1540 end:0x804A2E8C
+	.rodata     start:0x8069D810 end:0x8069D868
 
 Kyoto/Animation/CAnimSourceReaderBase.cpp:
 	.text       start:0x804A2E8C end:0x804A497C
 
 Kyoto/Animation/CAnimTreeAnimReaderContainer.cpp:
 	.text       start:0x804A497C end:0x804A50D0
+	.rodata     start:0x8069D868 end:0x8069D8A8
 
 Kyoto/Animation/CAnimTreeBlend.cpp:
 	.text       start:0x804A50D0 end:0x804A5904
+	.rodata     start:0x8069D8A8 end:0x8069D8C8
 
 Kyoto/Animation/CAnimTreeDoubleChild.cpp:
 	.text       start:0x804A5904 end:0x804A6A74
@@ -2300,9 +2319,11 @@ Kyoto/Animation/CAnimTreeSingleChild.cpp:
 
 Kyoto/Animation/CAnimTreeTimeScale.cpp:
 	.text       start:0x804A70C8 end:0x804A87CC
+	.rodata     start:0x8069D8F8 end:0x8069D968
 
 Kyoto/Animation/CAnimTreeTransition.cpp:
 	.text       start:0x804A87CC end:0x804A9B0C
+	.rodata     start:0x8069D968 end:0x8069D990
 
 Kyoto/Animation/CAnimTreeTweenBase.cpp:
 	.text       start:0x804A9B0C end:0x804AADCC
@@ -2315,13 +2336,16 @@ Kyoto/Animation/CCharAnimMemoryMetrics.cpp:
 
 Kyoto/Animation/CCharLayoutInfo.cpp:
 	.text       start:0x804AAF10 end:0x804AC608
+	.rodata     start:0x8069D9A0 end:0x8069DB30
 
 Kyoto/Animation/CFBStreamedAnimReader.cpp:
 	.text       start:0x804AC608 end:0x804AFED4
 	.ctors      start:0x8065BB80 end:0x8065BB84
+	.rodata     start:0x8069DB30 end:0x8069DD10
 
 Kyoto/Animation/CFBStreamedCompression.cpp:
 	.text       start:0x804AFED4 end:0x804B0BAC
+	.rodata     start:0x8069DD10 end:0x8069DF48
 
 Kyoto/Animation/CInt32POINode.cpp:
 	.text       start:0x804B0BAC end:0x804B0C08
@@ -2338,18 +2362,22 @@ Kyoto/Animation/CSegId.cpp:
 
 Kyoto/Animation/CSegStatementSet.cpp:
 	.text       start:0x804B1110 end:0x804B13DC
+	.rodata     start:0x8069DF60 end:0x8069E050
 
 Kyoto/Animation/CSteadyStateAnimInfo.cpp:
 	.text       start:0x804B13DC end:0x804B152C
 
 Kyoto/Animation/CTimeScaleFunctions.cpp:
 	.text       start:0x804B152C end:0x804B1A14
+	.rodata     start:0x8069E050 end:0x8069E0B0
 
 Kyoto/Animation/IAnimReader.cpp:
 	.text       start:0x804B1A14 end:0x804B1ED0
+	.rodata     start:0x8069E0B0 end:0x8069E140
 
 Kyoto/Animation/CAllFormatsAnimSource.cpp:
 	.text       start:0x804B1ED0 end:0x804B27CC
+	.rodata     start:0x8069E140 end:0x8069E2A8
 
 Kyoto/CDvdRequest.cpp:
 	.text       start:0x804B27CC end:0x804B2A2C
@@ -2386,6 +2414,7 @@ Kyoto/Text/CPushStateInstruction.cpp:
 
 Kyoto/Text/CRasterFont.cpp:
 	.text       start:0x804B4218 end:0x804B5F6C
+	.rodata     start:0x8069E378 end:0x8069E490
 
 Kyoto/Text/CRemoveColorOverrideInstruction.cpp:
 	.text       start:0x804B5F6C end:0x804B6028
@@ -2395,9 +2424,11 @@ Kyoto/Text/CSaveableState.cpp:
 
 Kyoto/Text/CTextExecuteBuffer.cpp:
 	.text       start:0x804B6218 end:0x804B8580
+	.rodata     start:0x8069E490 end:0x8069E708
 
 Kyoto/Text/CTextInstruction.cpp:
 	.text       start:0x804B8580 end:0x804B88DC
+	.rodata     start:0x8069E708 end:0x8069E7A0
 
 Kyoto/Text/CTextParser.cpp:
 	.text       start:0x804B88DC end:0x804BA3C0
@@ -2424,6 +2455,7 @@ Kyoto/Graphics/CCubeModel.cpp:
 Kyoto/Graphics/CGX.cpp:
 	.text       start:0x804BCA64 end:0x804BE6C4
 	.ctors      start:0x8065BB8C end:0x8065BB90
+	.rodata     start:0x8069E968 end:0x8069E9D8
 
 Kyoto/Graphics/CTevCombiners.cpp:
 	.text       start:0x804BE6C4 end:0x804BEB44
@@ -2432,12 +2464,15 @@ Kyoto/Graphics/CTevCombiners.cpp:
 Kyoto/Graphics/DolphinCGraphics.cpp:
 	.text       start:0x804BEB44 end:0x804C4D6C
 	.ctors      start:0x8065BB94 end:0x8065BB98
+	.rodata     start:0x8069E9F8 end:0x8069ED28
 
 Kyoto/Graphics/DolphinCPalette.cpp:
 	.text       start:0x804C4D6C end:0x804C50EC
+	.rodata     start:0x8069ED28 end:0x8069ED90
 
 Kyoto/Graphics/DolphinCTexture.cpp:
 	.text       start:0x804C50EC end:0x804C74C8
+	.rodata     start:0x8069EDA0 end:0x8069F078
 
 Kyoto/Math/CloseEnough.cpp:
 	.text       start:0x804C74C8 end:0x804C7650
@@ -2507,10 +2542,12 @@ Kyoto/Text/CStringTokenizer.cpp:
 
 Kyoto/Alloc/CCircularBuffer.cpp:
 	.text       start:0x804CFE58 end:0x804D00A4
+	.rodata     start:0x8069F538 end:0x8069F5D8
 
 Kyoto/Alloc/CMemory.cpp:
 	.text       start:0x804D00A4 end:0x804D075C
 	.ctors      start:0x8065BBC0 end:0x8065BBC4
+	.rodata     start:0x8069F5D8 end:0x8069F7E8
 
 Kyoto/Alloc/IAllocator.cpp:
 	.text       start:0x804D075C end:0x804D0844
@@ -2528,6 +2565,7 @@ Kyoto/Particles/CColorElement.cpp:
 Kyoto/Particles/CElementGen.cpp:
 	.text       start:0x804D358C end:0x804DFB6C
 	.ctors      start:0x8065BBC8 end:0x8065BBCC
+	.rodata     start:0x8069F9B0 end:0x8069FBE8
 
 Kyoto/Particles/CIntElement.cpp:
 	.text       start:0x804DFB6C end:0x804E20A0
@@ -2539,6 +2577,7 @@ Kyoto/Particles/CModVectorElement.cpp:
 Kyoto/Particles/CParticleDataFactory.cpp:
 	.text       start:0x804E4760 end:0x804EBFC8
 	.ctors      start:0x8065BBD0 end:0x8065BBD4
+	.rodata     start:0x8069FBE8 end:0x806A13D8
 
 Kyoto/Particles/CParticleGlobals.cpp:
 	.text       start:0x804EC1F4 end:0x804EC320
@@ -2546,9 +2585,11 @@ Kyoto/Particles/CParticleGlobals.cpp:
 Kyoto/Particles/CParticleSwoosh.cpp:
 	.text       start:0x804EC320 end:0x804F166C
 	.ctors      start:0x8065BBD8 end:0x8065BBDC
+	.rodata     start:0x806A1418 end:0x806A1520
 
 Kyoto/Particles/CParticleSwooshDataFactory.cpp:
 	.text       start:0x804F166C end:0x804F1FAC
+	.rodata     start:0x806A1520 end:0x806A1568
 
 Kyoto/Particles/CRealElement.cpp:
 	.text       start:0x804F1FAC end:0x804F6E70
@@ -2595,12 +2636,15 @@ Kyoto/CAssetTypesList.cpp:
 
 Kyoto/CFactoryMgr.cpp:
 	.text       start:0x804FDF60 end:0x804FE6B8
+	.rodata     start:0x806A2778 end:0x806A27A8
 
 Kyoto/CResFactory.cpp:
 	.text       start:0x804FE6B8 end:0x80500080
+	.rodata     start:0x806A27A8 end:0x806A2810
 
 Kyoto/CResLoader.cpp:
 	.text       start:0x80500080 end:0x80502F64
+	.rodata     start:0x806A2810 end:0x806A2D30
 
 rstl/rstl_map.cpp:
 	.text       start:0x80502F64 end:0x80503650
@@ -2642,6 +2686,7 @@ Kyoto/CObjectReference.cpp:
 
 Kyoto/CSimplePool.cpp:
 	.text       start:0x80507134 end:0x8050821C
+	.rodata     start:0x806A3088 end:0x806A3368
 
 Kyoto/CToken.cpp:
 	.text       start:0x8050821C end:0x80508574
@@ -2684,6 +2729,7 @@ zlib-1.1.3/zutil.c:
 Kyoto/CARAMManager.cpp:
 	.text       start:0x80510798 end:0x805113CC
 	.ctors      start:0x8065BBF4 end:0x8065BBF8
+	.rodata     start:0x806A4368 end:0x806A44D0
 
 Kyoto/Math/CFrustumPlanes.cpp:
 	.text       start:0x805113CC end:0x80511B0C
@@ -2712,9 +2758,11 @@ Kyoto/Graphics/CColor.cpp:
 Kyoto/DolphinCMemoryCardSys.cpp:
 	.text       start:0x8051A9EC end:0x8051DD9C
 	.ctors      start:0x8065BC04 end:0x8065BC08
+	.rodata     start:0x806A47A8 end:0x806A53C0
 
 Kyoto/DolphinCDvdFile.cpp:
 	.text       start:0x8051DD9C end:0x8051EF9C
+	.rodata     start:0x806A53C0 end:0x806A5670
 
 Kyoto/Alloc/CMediumAllocPool.cpp:
 	.text       start:0x8051EF9C end:0x8051F998
@@ -2727,19 +2775,24 @@ Kyoto/Alloc/CGameAllocator.cpp:
 
 Kyoto/Animation/DolphinCSkinnedModel.cpp:
 	.text       start:0x80521908 end:0x80522CDC
+	.rodata     start:0x806A5F20 end:0x806A5F40
 
 Kyoto/Animation/DolphinCSkinRules.cpp:
 	.text       start:0x80522CDC end:0x80523D04
+	.rodata     start:0x806A5F40 end:0x806A6108
 
 Kyoto/Animation/DolphinCVirtualBone.cpp:
 	.text       start:0x80523D04 end:0x80524448
+	.rodata     start:0x806A6108 end:0x806A61A8
 
 Kyoto/Graphics/DolphinCModel.cpp:
 	.text       start:0x80524448 end:0x80525418
+	.rodata     start:0x806A61A8 end:0x806A63C8
 
 Kyoto/Text/CStringTable.cpp:
 	.text       start:0x80525418 end:0x80525EB0
 	.ctors      start:0x8065BC08 end:0x8065BC0C
+	.rodata     start:0x806A6400 end:0x806A6660
 
 Kyoto/Particles/CEmitterElement.cpp:
 	.text       start:0x80525EB0 end:0x805275D4
@@ -2753,6 +2806,7 @@ Kyoto/CTimeProvider.cpp:
 
 Kyoto/CARAMToken.cpp:
 	.text       start:0x8052856C end:0x80528F20
+	.rodata     start:0x806A6728 end:0x806A6850
 
 Kyoto/DolphinCFIOFileSupport.cpp:
 	.text       start:0x80528F20 end:0x80529654
@@ -2771,25 +2825,30 @@ Kyoto/Text/CImageInstruction.cpp:
 
 Kyoto/Text/CTextRenderBuffer.cpp:
 	.text       start:0x8052A034 end:0x8052C2D4
+	.rodata     start:0x806A6C78 end:0x806A6E20
 
 Kyoto/Graphics/CCubeMoviePlayer.cpp:
 	.text       start:0x8052C2D4 end:0x8052FAA4
+	.rodata     start:0x806A6F78 end:0x806A7628
 
 Kyoto/Animation/CAdditiveAnimPlayback.cpp:
 	.text       start:0x8052FAA4 end:0x8052FD48
 
 Kyoto/Particles/CParticleElectricDataFactory.cpp:
 	.text       start:0x8052FD48 end:0x80530804
+	.rodata     start:0x806A7628 end:0x806A76A0
 
 Kyoto/Particles/CParticleElectric.cpp:
 	.text       start:0x80530804 end:0x8053583C
 	.ctors      start:0x8065BC10 end:0x8065BC14
+	.rodata     start:0x806A76C8 end:0x806A7810
 
 Kyoto/Graphics/DolphinCColor.cpp:
 	.text       start:0x8053583C end:0x80535D04
 
 Kyoto/CDependencyGroup.cpp:
 	.text       start:0x80535D04 end:0x80536438
+	.rodata     start:0x806A7810 end:0x806A78F0
 
 Kyoto/Streams/CTextOutStream.cpp:
 	.text       start:0x80536438 end:0x80536548
@@ -2812,6 +2871,7 @@ Kyoto/Particles/CGenDescription.cpp:
 
 Kyoto/CPakFile.cpp:
 	.text       start:0x80538114 end:0x8053A8EC
+	.rodata     start:0x806A7A48 end:0x806A7F90
 
 Kyoto/Input/CRumbleVoice.cpp:
 	.text       start:0x8053A8EC end:0x8053B22C
@@ -2871,6 +2931,7 @@ Kyoto/Math/CMayaSpline.cpp:
 
 Kyoto/Particles/CParticleSpawnSystemDataFactory.cpp:
 	.text       start:0x805485B4 end:0x80548D54
+	.rodata     start:0x806A9498 end:0x806A9510
 
 Kyoto/Particles/CParticleSpawnSystem.cpp:
 	.text       start:0x80548D54 end:0x8054B27C
@@ -2959,6 +3020,7 @@ Kyoto/Streams/CBitStreamReader.cpp:
 
 Kyoto/Streams/DolphinCInputStream.cpp:
 	.text       start:0x80556864 end:0x80556D94
+	.rodata     start:0x806AA0C8 end:0x806AA300
 
 Kyoto/Streams/DolphinCZipInputStream.cpp:
 	.text       start:0x80556D94 end:0x80556F84
@@ -2982,6 +3044,7 @@ LZO/lzo1x_d1.c:
 
 Kyoto/Streams/DolphinCLZOInputStream.cpp:
 	.text       start:0x80558244 end:0x805584B4
+	.rodata     start:0x806AA530 end:0x806AA630
 
 Kyoto/Streams/CStreamPreloadedToken.cpp:
 	.text       start:0x805584B4 end:0x80559008
@@ -2994,6 +3057,7 @@ Kyoto/Animation/CCompressedAnimSource.cpp:
 
 Kyoto/Animation/CJointData_LinearStorage.cpp:
 	.text       start:0x80559378 end:0x80559CD0
+	.rodata     start:0x806AA888 end:0x806AA8AC
 
 Kyoto/Animation/CCompressedAnimSourceReader.cpp:
 	.text       start:0x80559CD0 end:0x8055BD34

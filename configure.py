@@ -210,9 +210,13 @@ cflags_base = [
     "-str reuse",
     "-multibyte",  # For Wii compilers, replace with `-enc SJIS`
     "-i include",
+    "-i include/libc",
     f"-i build/{config.version}/include",
     f"-DBUILD_VERSION={version_num}",
     f"-DVERSION_{config.version}",
+    # dolsdk2004: April 20, 2004 SDK, May 21 Patch 1.
+    "-DSDK_REVISION=1",
+    "-D__GEKKO__",
 ]
 
 # Debug flags
@@ -263,12 +267,21 @@ cflags_rel = [
 config.linker_version = "GC/1.3.2"
 
 
+# Imported from doldecomp/dolsdk2004 (see src/Dolphin/UPSTREAM).
+# Keep these objects NonMatching until prototype-specific matching is done.
+cflags_dolphin = [
+    *cflags_base,
+    "-char unsigned",
+    "-ir src/Dolphin",
+]
+
+
 # Helper function for Dolphin libraries
 def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/1.2.5n",
-        "cflags": cflags_base,
+        "cflags": cflags_dolphin,
         "progress_category": "sdk",
         "objects": objects,
     }
@@ -360,7 +373,7 @@ config.libs = [
         Object(NonMatching, "Dolphin/os/OSSync.c"),
         Object(NonMatching, "Dolphin/os/OSThread.c"),
         Object(NonMatching, "Dolphin/os/OSTime.c"),
-        Object(NonMatching, "Dolphin/os/__ppc_eabi_init.cpp"),
+        Object(NonMatching, "Dolphin/os/__ppc_eabi_init.cpp", extra_cflags=["-lang=c"]),
     ]),
     DolphinLib("HIO", [
         Object(NonMatching, "Dolphin/hio/hio.c"),

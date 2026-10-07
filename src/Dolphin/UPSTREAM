@@ -1,0 +1,28 @@
+Source: https://github.com/doldecomp/dolsdk2004
+Commit: 2328b4164b1a98422a2255d83ce9a5a7548990cc
+SDK revision: 1 (20Apr2004Patch1 / May 21, 2004)
+
+Imported implementations for the existing Dolphin translation units, their
+private headers, and the upstream public/support headers under include/.
+All imported objects remain NonMatching. The normal link continues to use
+original objects; all_source compiles the imported implementations for objdiff.
+No prototype matching or runtime equivalence is claimed.
+
+Paths adapted to the existing split/configuration names:
+  src/base/PPCArch.c -> src/Dolphin/PPCArch.c
+  src/ai/ai.c -> src/Dolphin/ai.c
+  src/db/db.c -> src/Dolphin/db.c
+  src/os/OSSemaphore.c -> src/Dolphin/os/OSSem.c
+  src/os/__ppc_eabi_init.c -> src/Dolphin/os/__ppc_eabi_init.cpp (compiled as C)
+  src/dvd/dvdFatal.c -> src/Dolphin/dvd/dvdfatal.c
+Other selected source paths gain the Dolphin/ prefix.
+
+Upstream has no implementations for the existing IP, THP, or OdemuExi2 units.
+Those remain scaffolds, as do the separate Revolution WPAD/KPAD units.
+
+Local header integration changes:
+  include/libc/stddef.h: size_t uses unsigned long, consistent with include/types.h.
+  include/dolphin/card.h: rename parameters named new for C++ compatibility.
+  include/libc/wchar.h: do not redefine the built-in C++ wchar_t.
+  include/dolphin/types.h: use a C++-compatible NULL definition.
+  Imported text: remove trailing whitespace and normalize final newlines.

@@ -1,6 +1,29 @@
-/*
- * NonMatching translation-unit scaffold; no implementation is supplied.
- * G2MEAB .text: 0x80442018..0x80442048 (8 native functions).
- * Evidence: Complete AmcExi2Stubs.c sequence: Init/EnableInterrupts empty, Poll/ReadN/WriteN return0, Reserve/Unreserve empty, AMC_IsStub returns1. These exact native4/4/8/8/8/4/4/8-byte bodies occupy30 bytes. Individual empty body identities rely on the complete source order and TRK wrapper call sites, not isolated blr fingerprints. Next42048 transitions to previously assigned game data-factory assertion code.
- * Function identities, helper inventory and unresolved data/compiler ownership are recorded in the external workflow research.
- */
+#include <dolphin.h>
+#include <dolphin/amc/AmcExi2Comm.h>
+
+// prototypes
+int AMC_IsStub(void);
+
+void EXI2_Init(volatile unsigned char **inputPendingPtrRef, EXICallback monitorCallback) {}
+
+void EXI2_EnableInterrupts(void) {}
+
+int EXI2_Poll(void) {
+    return 0;
+}
+
+AmcExiError EXI2_ReadN(void *bytes, unsigned long length) {
+    return AMC_EXI_NO_ERROR;
+}
+
+AmcExiError EXI2_WriteN(const void *bytes, unsigned long length) {
+    return AMC_EXI_NO_ERROR;
+}
+
+void EXI2_Reserve(void) {}
+
+void EXI2_Unreserve(void) {}
+
+int AMC_IsStub(void) {
+    return 1;
+}

@@ -598,6 +598,9 @@ Kyoto/Animation/CSegId.cpp:
 Kyoto/Animation/CSegStatementSet.cpp:
 	.text       start:0x804B1110 end:0x804B13DC
 
+Kyoto/Animation/CSteadyStateAnimInfo.cpp:
+	.text       start:0x804B13DC end:0x804B152C
+
 Kyoto/Animation/CTimeScaleFunctions.cpp:
 	.text       start:0x804B152C end:0x804B1A14
 
@@ -1090,6 +1093,9 @@ Kyoto/CFrameDelayedKiller.cpp:
 Kyoto/Animation/CTimeRemainderAndFraction.cpp:
 	.text       start:0x8053D770 end:0x8053D854
 
+Kyoto/Text/CCharacterExtraSpaceInstruction.cpp:
+	.text       start:0x8053D854 end:0x8053D8E8
+
 Kyoto/Network/CNetworkMessage.cpp:
 	.text       start:0x8053D8E8 end:0x8053DB34
 
@@ -1244,6 +1250,29 @@ Kyoto/Particles/CUserEvaluatorDescription.cpp:
 Kyoto/Particles/CUserEvaluatorDataFactory.cpp:
 	.text       start:0x8055C8B8 end:0x8055D42C
 
+Kyoto/Animation/CAnimPOIDatabase.cpp:
+	.text       start:0x8055D42C end:0x8055DE78
+
+Kyoto/Animation/CHalfTransition.cpp:
+	.text       start:0x8055DE78 end:0x8055DF20
+
+MetroidPrime/CTransitionDatabaseGame.cpp:
+	.text       start:0x8055DF20 end:0x805608C0
+
+Kyoto/Animation/CTransition.cpp:
+	.text       start:0x805608C0 end:0x8056098C
+
+MetroidPrime/CAxisAngle.cpp:
+	.text       start:0x8056098C end:0x80560D78
+	.ctors      start:0x8065BC40 end:0x8065BC44
+
+MetroidPrime/CEulerAngles.cpp:
+	.text       start:0x80560D78 end:0x805610AC
+	.ctors      start:0x8065BC44 end:0x8065BC48
+
+Kyoto/Animation/CParticleResData.cpp:
+	.text       start:0x805610AC end:0x80561278
+
 Kyoto/Animation/CCECharacterInfo.cpp:
 	.text       start:0x80561380 end:0x80563AF4
 
@@ -1311,6 +1340,15 @@ Kyoto/Input/RevolutionIController.cpp:
 
 Kyoto/Input/CRevolutionController.cpp:
 	.text       start:0x8056F5B8 end:0x805708F4
+
+Kyoto/Animation/CCECharacterFactoryBuilder.cpp:
+	.text       start:0x8058D9D0 end:0x8058E0C4
+
+Kyoto/Animation/CCECharacterFactory.cpp:
+	.text       start:0x8058E0C4 end:0x8058F190
+
+Kyoto/Animation/CCharacterAudioManager.cpp:
+	.text       start:0x8058F190 end:0x805908C4
 
 Weapons/CProjectileWeapon.cpp:
 	.text       start:0x805908C4 end:0x805941F0

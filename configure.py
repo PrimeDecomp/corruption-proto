@@ -652,6 +652,7 @@ config.libs = [
         Object(NonMatching, "Kyoto/Particles/CParticleSortedSystemDataFactory.cpp"),
         Object(NonMatching, "Kyoto/Particles/CSortedParticleSystemDescription.cpp"),
         Object(NonMatching, "Kyoto/Graphics/DolphinGPUMemory.cpp"),
+        Object(NonMatching, "Kyoto/Math/CGameCameraSpline.cpp"),
         Object(NonMatching, "Kyoto/Math/CSpline.cpp"),
         Object(NonMatching, "Kyoto/Math/CMotionSpline.cpp"),
         Object(NonMatching, "Kyoto/Graphics/PortalPlane.cpp"),
@@ -690,7 +691,9 @@ config.libs = [
         Object(NonMatching, "Kyoto/Audio/CAudioChannel.cpp"),
         Object(NonMatching, "Kyoto/Audio/CAudioSoundEffect.cpp"),
         Object(NonMatching, "Kyoto/Audio/CAudioVoice.cpp"),
+        Object(NonMatching, "Kyoto/Animation/CAssetSoundPOINode.cpp"),
         Object(NonMatching, "Kyoto/Audio/CSoundEvaluator.cpp"),
+        Object(NonMatching, "Kyoto/Animation/CAssetPOINode.cpp"),
         Object(NonMatching, "Kyoto/Input/RevolutionIController.cpp"),
         Object(NonMatching, "Kyoto/Input/CRevolutionController.cpp"),
     ]),
@@ -720,6 +723,7 @@ config.libs = [
     ]),
     RetroLib("Kyoto.Weapons", [
         Object(NonMatching, "Weapons/IWeaponRenderer.cpp"),
+        Object(NonMatching, "Weapons/CDecalDataFactory.cpp"),
         Object(NonMatching, "Weapons/CDecalDescription.cpp"),
     ]),
     RuntimeLib("MetroTRK", [

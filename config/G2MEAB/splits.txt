@@ -1070,6 +1070,9 @@ Kyoto/Graphics/DolphinGPUMemory.cpp:
 	.text       start:0x8054CA40 end:0x8054D27C
 	.ctors      start:0x8065BC30 end:0x8065BC34
 
+Kyoto/Math/CGameCameraSpline.cpp:
+	.text       start:0x8054D27C end:0x8054D31C
+
 Kyoto/Math/CSpline.cpp:
 	.text       start:0x8054D31C end:0x8054D808
 
@@ -1198,8 +1201,14 @@ Kyoto/Audio/CAudioSoundEffect.cpp:
 Kyoto/Audio/CAudioVoice.cpp:
 	.text       start:0x8056C884 end:0x8056E2A8
 
+Kyoto/Animation/CAssetSoundPOINode.cpp:
+	.text       start:0x8056E334 end:0x8056E67C
+
 Kyoto/Audio/CSoundEvaluator.cpp:
 	.text       start:0x8056E67C end:0x8056EB20
+
+Kyoto/Animation/CAssetPOINode.cpp:
+	.text       start:0x8056F39C end:0x8056F51C
 
 Kyoto/Input/RevolutionIController.cpp:
 	.text       start:0x8056F51C end:0x8056F5B8
@@ -1210,6 +1219,9 @@ Kyoto/Input/CRevolutionController.cpp:
 Weapons/IWeaponRenderer.cpp:
 	.text       start:0x805971B8 end:0x80597290
 	.ctors      start:0x8065BC5C end:0x8065BC60
+
+Weapons/CDecalDataFactory.cpp:
+	.text       start:0x80597290 end:0x80598024
 
 Weapons/CDecalDescription.cpp:
 	.text       start:0x8059ADB4 end:0x8059AE44

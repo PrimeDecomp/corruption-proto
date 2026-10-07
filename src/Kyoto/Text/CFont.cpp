@@ -7,34 +7,30 @@ extern const float kFontAdvance;
 extern const float kFontCellSize;
 
 struct CFontGraphicsState {
-  unsigned int words[2];
+  unsigned int state;
+  unsigned int value;
   unsigned char flag;
 };
 
-extern "C" void fn_804BAE18(CFontGraphicsState* state);
+extern "C" CFontGraphicsState fn_804BAE18();
 extern "C" void fn_804BADE4(const CFontGraphicsState* state);
 extern "C" void fn_804BAB64(int textureWidth, int textureHeight, int x, int y,
-                              int sourceX, int sourceY, int sourceWidth, int sourceHeight,
-                              int width, int height, const CColor* color);
+                           int sourceX, int sourceY, int sourceWidth, int sourceHeight,
+                           int width, int height, const CColor* color);
 extern "C" void fn_804C0274(int width, int height, int format, const void* data, int, int);
 
 void CFont::DrawString(const char* text, long x, long y, const CColor& color) const {
-  CFontGraphicsState previous;
-  fn_804BAE18(&previous);
-  CFontGraphicsState state;
-  state.words[0] = previous.words[0];
-  state.words[1] = previous.words[1];
-  state.flag = previous.flag;
+  CFontGraphicsState state = fn_804BAE18();
   BindSystemFont();
 
-  const float cellSize = kFontCellSize * mScale;
-  const float advance = kFontAdvance * mScale;
-  while (*text != 0) {
-    const char character = *text;
-    fn_804BAB64(256, 256, x, y, (character % 16) * 16, character & 0xf0, 16, 16,
-                static_cast<int>(cellSize), static_cast<int>(cellSize), &color);
+  unsigned char character = *text;
+  while (character != 0) {
     ++text;
-    x += static_cast<int>(advance);
+    fn_804BAB64(256, 256, x, y, (character % 16) * 16, character & 0xf0, 16, 16,
+               static_cast<int>(kFontCellSize * mScale),
+               static_cast<int>(kFontCellSize * mScale), &color);
+    x += static_cast<int>(kFontAdvance * mScale);
+    character = *text;
   }
 
   fn_804BADE4(&state);
@@ -90,16 +86,11 @@ void CFont::LinearToTile8(unsigned char* destination, const unsigned char* sourc
 }
 
 void CFont::TileCopy8(unsigned char* destination, const unsigned char* source) {
-  for (int row = 0; row < 4; ++row) {
-    destination[0] = source[0];
-    destination[1] = source[1];
-    destination[2] = source[2];
-    destination[3] = source[3];
-    destination[4] = source[4];
-    destination[5] = source[5];
-    destination[6] = source[6];
-    destination[7] = source[7];
-    destination += 8;
+  for (unsigned int row = 0; row < 4; ++row) {
+    for (unsigned int column = 0; column < 8; ++column) {
+      destination[column] = source[column];
+    }
     source += 256;
+    destination += 8;
   }
 }

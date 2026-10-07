@@ -446,6 +446,9 @@ Collision/CDelaunayTriangulation.cpp:
 Collision/CCollidableOrientedBox.cpp:
 	.text       start:0x804801DC end:0x80480884
 
+Collision/CGjkSolver.cpp:
+	.text       start:0x80480884 end:0x804816E4
+
 GuiSys/CAuiMeter.cpp:
 	.text       start:0x804816E4 end:0x80481E20
 

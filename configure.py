@@ -614,6 +614,7 @@ config.libs = [
         Object(NonMatching, "Collision/CCharacterPrimitiveData.cpp"),
         Object(NonMatching, "Collision/CDelaunayTriangulation.cpp"),
         Object(NonMatching, "Collision/CCollidableOrientedBox.cpp"),
+        Object(NonMatching, "Collision/CGjkSolver.cpp"),
         Object(NonMatching, "GuiSys/CAuiMeter.cpp"),
         Object(NonMatching, "GuiSys/CGuiCamera.cpp"),
         Object(NonMatching, "GuiSys/CGuiCompoundWidget.cpp"),

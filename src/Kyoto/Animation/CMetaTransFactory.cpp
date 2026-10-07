@@ -1,6 +1,24 @@
-/*
- * G2MEAB Kyoto/Animation/CMetaTransFactory.cpp translation-unit scaffold.
- * .text: 0x80498A3C..0x80498C64 (1 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: One CreateMetaTrans dispatch selects the transition variants. Both reference source implementations and adjacent concrete factory products corroborate. Target228-byte function remains whole despite reference1F8 size.
- */
+#include "Kyoto/Animation/CMetaTransFactory.hpp"
+#include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Animation/CMetaTransMetaAnim.hpp"
+#include "Kyoto/Animation/CMetaTransPhaseTrans.hpp"
+#include "Kyoto/Animation/CMetaTransSnap.hpp"
+#include "Kyoto/Animation/CMetaTransTrans.hpp"
+#include "Kyoto/Animation/IMetaTrans.hpp"
+#include "Kyoto/Streams/CInputStream.hpp"
+
+rstl::rc_ptr< IMetaTrans > CMetaTransFactory::CreateMetaTrans(CInputStream& in) {
+  EMetaTransType type = static_cast< EMetaTransType >(in.ReadInt32());
+  switch (type) {
+  case kMTT_MetaAnim:
+    return rs_new CMetaTransMetaAnim(in);
+  case kMTT_Trans:
+    return rs_new CMetaTransTrans(in);
+  case kMTT_PhaseTrans:
+    return rs_new CMetaTransPhaseTrans(in);
+  case kMTT_Snap:
+    return rs_new CMetaTransSnap;
+  default:
+    return rstl::rc_ptr< IMetaTrans >();
+  }
+}

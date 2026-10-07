@@ -1,6 +1,14 @@
-/*
- * G2MEAB Kyoto/Animation/CInt32POINode.cpp translation-unit scaffold.
- * .text: 0x804B0BAC..0x804B0C08 (1 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Single stream constructor writes vtable806CE690 and reads integer payload at+34 after CPOINode base. Both references establish class family. CopyNodeMinusStartTime present in reference source is not emitted here; no reference count is imposed.
- */
+#include "Kyoto/Animation/CInt32POINode.hpp"
+
+#include "Kyoto/Streams/CInputStream.hpp"
+
+CInt32POINode::CInt32POINode(CInputStream& in)
+: CPOINode(in), mVal(in.Get< int >()), mLctrName(in) {}
+
+CInt32POINode CInt32POINode::CopyNodeMinusStartTime(const CInt32POINode& node,
+                                                    const CCharAnimTime& startTime) {
+  return CInt32POINode(node.GetNameHash(), node.GetPoiType(), node.GetTime() - startTime,
+                       node.GetIndex(), node.GetSaveState(), node.GetWeight(),
+                       node.GetCharacterIndex(), node.GetFlags(), node.GetValue(),
+                       node.GetLocatorName());
+}

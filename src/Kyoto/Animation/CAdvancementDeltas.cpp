@@ -1,6 +1,19 @@
-/*
- * G2MEAB Kyoto/Animation/CAdvancementDeltas.cpp translation-unit scaffold.
- * .text: 0x8049E220..0x8049E5E0 (6 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Four target variants/helpers precede/between the familiar methods: orientation-only and offset-only blend atE220/E29C, ordinary BlendE304, orientation-only and offset-only interpolate atE3CC/E454, ordinary InterpolateE4E8. Ghidra semantics plus both reference ordinary methods establish the family. Keep all six; do not start at the first atlas anchorE304.
- */
+#include "Kyoto/Animation/CAdvancementDeltas.hpp"
+
+#include "Kyoto/Animation/CAnimMathUtils.hpp"
+
+CAdvancementDeltas CAdvancementDeltas::Interpolate(const CAdvancementDeltas& a,
+                                                   const CAdvancementDeltas& b,
+                                                   const float startWeight, const float endWeight) {
+  return CAdvancementDeltas((startWeight + endWeight) * b.GetOffsetDelta() * 0.5f -
+                                a.GetOffsetDelta() * ((startWeight + endWeight) - 2.f) * 0.5f,
+                            CAnimMathUtils::Slerp(a.GetOrientationDelta(), b.GetOrientationDelta(),
+                                                  (startWeight + endWeight) * 0.5f));
+}
+
+CAdvancementDeltas CAdvancementDeltas::Blend(const CAdvancementDeltas& a,
+                                             const CAdvancementDeltas& b, const float t) {
+  return CAdvancementDeltas(
+      CVector3f::Lerp(a.GetOffsetDelta(), b.GetOffsetDelta(), t),
+      CAnimMathUtils::Slerp(a.GetOrientationDelta(), b.GetOrientationDelta(), t));
+}

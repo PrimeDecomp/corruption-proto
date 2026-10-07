@@ -1,6 +1,11 @@
-/*
- * G2MEAB CCubeSurface.cpp translation-unit scaffold (NonMatching).
- * .text: 0x805196f0 - 0x805197ac (end exclusive).
- * 3 native functions including retained helpers; Prime and Echoes references inspected.
- * Nonfunctional: implementation, declarations and data-section ownership remain to be recovered.
- */
+#include "Kyoto/Graphics/CCubeSurface.hpp"
+
+const CVector3f CCubeSurface::skDefaultNormal(1.f, 0.f, 0.f);
+
+CAABox CCubeSurface::GetBounds() const {
+  if (mData->mExtraSize != 0) {
+    return mData->mBounds;
+  }
+
+  return CAABox(mData->mCenter, mData->mCenter);
+}

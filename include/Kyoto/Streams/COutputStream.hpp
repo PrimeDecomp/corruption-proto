@@ -1,29 +1,156 @@
-#ifndef KYOTO_STREAMS_COUTPUTSTREAM_HPP
-#define KYOTO_STREAMS_COUTPUTSTREAM_HPP
+#ifndef _COUTPUTSTREAM
+#define _COUTPUTSTREAM
+
+#include "Kyoto/Basics/CBasics.hpp"
+#include "types.h"
+
+#include "stddef.h"
+
+class COutputStream;
+
+template < typename T >
+void coutput_stream_helper(const T& t, COutputStream& out);
 
 class COutputStream {
 public:
-  explicit COutputStream(int bufferLength);
+  explicit COutputStream(int len);
   virtual ~COutputStream();
-  virtual void Write(const void* data, unsigned long length) = 0;
+  virtual void Write(const void* ptr, size_t len) = 0;
 
-  void DoPut(const void* data, unsigned long length);
+  void DoPut(const void* ptr, size_t len);
   void DoFlush();
   void Flush() { DoFlush(); }
-  void WriteChar(unsigned char value) {
+  void Put(const void* ptr, size_t len) { DoPut(ptr, len); }
+
+  template < typename T >
+  void Put(const T& t) {
+    coutput_stream_helper(t, *this);
+  }
+
+  void WriteInt8(const signed char t) { Put(t); }
+  void WriteUint8(const uchar t) { Put(t); }
+
+  void WriteInt16(const short t) { Put(t); }
+  void WriteUint16(const ushort t) { Put(t); }
+
+  void WriteReal32(const float t) { Put(t); }
+
+  void WriteUint32(const uint t) { Put(t); }
+  void WriteInt32(const int t) { Put(t); }
+
+  void WriteShort(const short t) {
+    const short value = t;
+    Put(&value, sizeof(value));
+  }
+  void WriteLong(const uint t) {
+    const uint value = CBasics::SwapBytes(t);
+    Put(&value, sizeof(value));
+  }
+
+  void WriteBool(const bool b) {
     if (mUnwrittenLength >= mBufferLength) {
       DoFlush();
     }
     ++mWrittenBytes;
-    *(static_cast< unsigned char* >(mBuffer) + mUnwrittenLength++) = value;
+    *(static_cast< uchar* >(mBuffer) + mUnwrittenLength++) = b ? 1 : 0;
+  }
+  void WriteChar(const uchar c) {
+    if (mUnwrittenLength >= mBufferLength) {
+      DoFlush();
+    }
+    ++mWrittenBytes;
+    *(static_cast< unsigned char* >(mBuffer) + mUnwrittenLength++) = c;
   }
 
+  uint GetWrittenBytes() const { return mWrittenBytes; }
+
 private:
-  unsigned int mUnwrittenLength;
-  unsigned int mBufferLength;
+  uint mUnwrittenLength;
+  uint mBufferLength;
   void* mBuffer;
-  unsigned int mWrittenBytes;
-  unsigned char mScratch[96];
+  uint mWrittenBytes;
+  uchar mScratch[96];
 };
 
-#endif
+CHECK_SIZEOF(COutputStream, 0x74)
+
+template < typename T >
+inline void coutput_stream_helper(const T& t, COutputStream& out) {
+  t.PutTo(out);
+}
+
+template <>
+inline void coutput_stream_helper(const float& t, COutputStream& out) {
+  const float value = t;
+  out.WriteLong(*reinterpret_cast< const uint* >(&value));
+}
+
+template <>
+inline void coutput_stream_helper(const signed char& t, COutputStream& out) {
+  out.WriteChar(t);
+}
+
+template <>
+inline void coutput_stream_helper(const uchar& t, COutputStream& out) {
+  out.WriteChar(t);
+}
+
+template <>
+inline void coutput_stream_helper(const short& t, COutputStream& out) {
+  out.WriteShort(t);
+}
+
+template <>
+inline void coutput_stream_helper(const ushort& t, COutputStream& out) {
+  out.WriteShort(t);
+}
+
+template <>
+inline void coutput_stream_helper(const int& t, COutputStream& out) {
+  out.WriteLong(t);
+}
+
+template <>
+inline void coutput_stream_helper(const uint& t, COutputStream& out) {
+  out.WriteLong(t);
+}
+
+template <>
+inline void coutput_stream_helper(const bool& t, COutputStream& out) {
+  out.WriteChar(static_cast< u8 >(t));
+}
+
+#include "rstl/pair.hpp"
+#include "rstl/reserved_vector.hpp"
+#include "rstl/vector.hpp"
+namespace rstl {
+template < typename L, typename R >
+inline void pair< L, R >::PutTo(COutputStream& out) const {
+  out.Put(first);
+  out.Put(second);
+}
+
+template < typename Iter >
+inline void StreamObjects(COutputStream& out, const Iter& begin, const Iter& end, int) {
+  Iter iterEnd = end;
+  for (Iter iter = begin; iter != iterEnd; ++iter) {
+    out.Put(*iter);
+  }
+}
+
+template < typename T, int N >
+inline void reserved_vector< T, N >::PutTo(COutputStream& out) const {
+  const int count = size();
+  out.Put(count);
+  StreamObjects(out, begin(), end(), count);
+}
+
+template < typename T, typename Alloc >
+inline void vector< T, Alloc >::PutTo(COutputStream& out) const {
+  const int count = size();
+  out.Put(count);
+  StreamObjects(out, begin(), end(), count);
+}
+} // namespace rstl
+
+#endif // _COUTPUTSTREAM

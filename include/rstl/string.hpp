@@ -161,6 +161,7 @@ public:
   bool operator!=(const basic_string& other) const;
 
   int find(const basic_string& other, int pos = 0) const;
+  int find(const _CharTp* other, int pos = 0, int count = -1) const;
   int find(_CharTp ch, int pos = 0) const;
   int find_first_of(const basic_string& other, int pos = 0) const;
   const_iterator position_iterator(int pos) const;
@@ -244,6 +245,23 @@ int basic_string< _CharTp, Traits, Alloc >::find(const basic_string& other, int 
 }
 
 template < typename _CharTp, typename Traits, typename Alloc >
+int basic_string< _CharTp, Traits, Alloc >::find(const _CharTp* other, int pos, int count) const {
+  pos = get_real_pos_for_begin(pos);
+  int length = 0;
+  const _CharTp* end = other;
+  while ((count == -1 || length < count) && *end != Traits::eos()) {
+    ++length;
+    ++end;
+  }
+  const int found = internal_search(begin() + pos, this->end(), other, end);
+  int result = found + pos;
+  if (found == -1) {
+    result = found;
+  }
+  return result;
+}
+
+template < typename _CharTp, typename Traits, typename Alloc >
 int basic_string< _CharTp, Traits, Alloc >::find(_CharTp ch, int pos) const {
   pos = get_real_pos_for_begin(pos);
   const int found = internal_search(begin() + pos, end(), static_cast< const _CharTp* >(&ch),
@@ -306,6 +324,10 @@ inline bool basic_string< _CharTp, Traits, Alloc >::operator!=(const basic_strin
 typedef basic_string< wchar_t > wstring;
 typedef basic_string< char > string;
 typedef basic_string< char, case_insensitive_char_traits > case_insensitive_string;
+typedef case_insensitive_string istring;
+
+inline istring istring_l(const char* data) { return istring(data); }
+inline bool operator==(const istring& a, const istring& b) { return a.compare(b) == 0; }
 
 template <>
 inline wstring::basic_string(wstring::literal_t, const wchar_t* data) {
@@ -357,7 +379,26 @@ static inline wstring operator+(const wstring& a, const wchar_t* c) {
   return result;
 }
 
+inline wstring operator+(const wchar_t* a, const wstring& b) {
+  wstring result(a);
+  result.append(b);
+  return result;
+}
+
+inline string operator+(const char* a, const string& b) {
+  string result(a);
+  result.append(b);
+  return result;
+}
+
 CHECK_SIZEOF(string, 0x10)
+template < typename _CharTp, typename Traits, typename Alloc >
+basic_string< _CharTp, Traits, Alloc >
+basic_string< _CharTp, Traits, Alloc >::substr(int pos, int count) const {
+  const pair< const_iterator, const_iterator > range = range_iterator(pos, count);
+  return basic_string(range.first, range.second);
+}
+
 } // namespace rstl
 
 #endif // _RSTL_STRING

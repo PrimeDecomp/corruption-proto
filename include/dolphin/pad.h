@@ -24,6 +24,13 @@ extern "C" {
 #define PAD_CHAN3_BIT 0x10000000
 
 #define PAD_MAX_CONTROLLERS     4
+#define PAD_CHAN0 0
+#define PAD_CHAN1 1
+#define PAD_CHAN2 2
+#define PAD_CHAN3 3
+#define PAD_CHANMAX 4
+#define PADButtonDown(buttonLast, button) (((buttonLast) ^ (button)) & (button))
+#define PADButtonUp(buttonLast, button) (((buttonLast) ^ (button)) & (buttonLast))
 
 #define PAD_BUTTON_LEFT  (1 << 0)   // 0x0001
 #define PAD_BUTTON_RIGHT (1 << 1)   // 0x0002

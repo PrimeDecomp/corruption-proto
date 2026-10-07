@@ -1,6 +1,49 @@
-/*
- * G2MEAB Kyoto/Animation/CCharLayoutInfo.cpp translation-unit scaffold.
- * .text: 0x804AAF10..0x804AC608 (30 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Starts emitted CCharLayoutNode destructor, CSegId-vector destructor and copy constructor before string lookupAB0C0 anchor. InitializeLinearDataAB168 has target asserts. Preserve all segment/map/tree helpers and final TSegIdMap destructorAC3F8 plus stream constructorAC4A8 throughAC608, matching Echoes' full tail. Do not assign AC4A8 to streamed reader.
- */
+#include "Kyoto/Animation/CCharLayoutInfo.hpp"
+
+#include "Kyoto/CFactoryMgr.hpp"
+#include "Kyoto/Streams/CInputStream.hpp"
+#include "rstl/StringExtras.hpp"
+
+CFactoryFnReturn FCharLayoutInfo(const SObjectTag& tag, CInputStream& in, const CVParamTransfer&) {
+  return rs_new CCharLayoutInfo(in);
+}
+
+CCharLayoutNode::CCharLayoutNode(CInputStream& in)
+: mParent(in), mReferenceStanceOffset(in), mRotation(in), mLocalRotation(in), mConnectedParts(in) {}
+
+CCharLayoutInfo::CCharLayoutInfo(CInputStream& in)
+: mNodes(rstl::ownership_transfer< TSegIdMap< CCharLayoutNode > >(
+      rs_new TSegIdMap< CCharLayoutNode >(in)))
+, mSegIdList(in)
+, mNameMap(in) {
+  InitializeLinearData();
+}
+
+void CCharLayoutInfo::InitializeLinearData() {
+  const int count = mSegIdList.GetCount();
+  mLinearParents.reserve(count);
+  mLinearReferenceStanceOffsets.reserve(count);
+  mLinearParentOffsets.reserve(count);
+  mLinearRotations.reserve(count);
+  mLinearLocalRotations.reserve(count);
+
+  for (int i = 0; i < count; ++i) {
+    CSegId id(i);
+    const CCharLayoutNode& node = GetSegmentData(id);
+    mLinearParents.push_back_unsafe(node.GetParent());
+    mLinearReferenceStanceOffsets.push_back_unsafe(node.GetReferenceStanceOffset());
+    mLinearParentOffsets.push_back_unsafe(GetFromParentUnrotated(id));
+    mLinearRotations.push_back_unsafe(node.GetRotation());
+    mLinearLocalRotations.push_back_unsafe(node.GetLocalRotation());
+  }
+}
+
+CSegId CCharLayoutInfo::GetSegIdFromString(const rstl::string& bone) const {
+  for (rstl::map< rstl::string, CSegId >::const_iterator it = mNameMap.begin();
+       it != mNameMap.end(); ++it) {
+    if (CStringExtras::CompareCaseInsensitive(it->first, bone) == 0) {
+      return it->second;
+    }
+  }
+  return CSegId::Invalid();
+}

@@ -1,6 +1,103 @@
-/*
- * G2MEAB Kyoto/Math/CFrustumPlanes.cpp translation-unit scaffold.
- * .text: 0x805113CC..0x80511B0C (7 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: PointInFrustumPlanes113CC is the leading plane loop (count at first word, plane stride16), followed by Sphere1142C, BoxCheck11498, optional-box wrapper11584, box wrapper115CC, constructor1164C and static CreateNormal11A74. Constructor builds five planes plus an optional sixth and calls the normal helper five times. Complete seven-function sequence agrees with both reference native inventories. Earlier CARAMManager registered-list destructor11358 ends exactly113CC (root-owned); next11B0C selects renderer function pointers and is unrelated. Duplicate broad fingerprints for point/normal helpers are not identities; target caller/data-flow inspection establishes these members.
- */
+#include "Kyoto/Math/CFrustumPlanes.hpp"
+
+#include "Kyoto/Math/CAABox.hpp"
+#include "Kyoto/Math/CSphere.hpp"
+#include "Kyoto/Math/CTransform4f.hpp"
+
+#include <math.h>
+
+static CUnitVector3f CreateNormal(const CVector3f& a, const CVector3f& b,
+                                  const CVector3f& c) {
+  return CVector3f::Cross(b - a, c - a);
+}
+
+CFrustumPlanes::CFrustumPlanes(const CTransform4f& xf, float fov, float aspect, float nearZ,
+                               bool useFarPlane, float farZ) {
+  float halfFov = fov * 0.5f;
+  const float cosV = static_cast< float >(cos(halfFov));
+  const float sinV = static_cast< float >(sin(halfFov));
+  const float verticalLength = nearZ / cosV;
+  const float height = verticalLength * sinV;
+  halfFov *= aspect;
+  const float cosH = static_cast< float >(cos(halfFov));
+  const float sinH = static_cast< float >(sin(halfFov));
+  float width = nearZ / cosH;
+  width *= sinH;
+
+  CVector3f corners[4] = {CVector3f(width, nearZ, height), CVector3f(width, nearZ, -height),
+                          CVector3f(-width, nearZ, -height), CVector3f(-width, nearZ, height)};
+  CVector3f worldCorners[4] = {xf.Rotate(corners[0]), xf.Rotate(corners[1]), xf.Rotate(corners[2]),
+                               xf.Rotate(corners[3])};
+  CVector3f pos = xf.GetTranslation();
+  CVector3f nearPos = xf * CVector3f(0.f, nearZ, 0.f);
+
+  mPlanes.push_back(
+      CPlane(nearPos, CreateNormal(worldCorners[0], worldCorners[2], worldCorners[1])));
+  mPlanes.push_back(
+      CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[1], worldCorners[0])));
+  mPlanes.push_back(
+      CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[3], worldCorners[2])));
+  mPlanes.push_back(
+      CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[0], worldCorners[3])));
+  mPlanes.push_back(
+      CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[2], worldCorners[1])));
+  if (useFarPlane) {
+    mPlanes.push_back(CPlane(farZ - mPlanes[0].GetConstant(), -mPlanes[0].GetNormal()));
+  }
+}
+
+bool CFrustumPlanes::BoxInFrustumPlanes(const CAABox& box) const {
+  for (int i = 0; i < mPlanes.size(); ++i) {
+    if (!box.InsidePlane(mPlanes[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool CFrustumPlanes::BoxInFrustumPlanes(const rstl::optional_object< CAABox >& box) const {
+  if (mPlanes.empty()) {
+    return true;
+  }
+  if (!box.valid()) {
+    return false;
+  }
+  return BoxInFrustumPlanes(*box);
+}
+
+int CFrustumPlanes::BoxFrustumPlanesCheck(const CAABox& box) const {
+  int ret = 1;
+  for (int i = 0; i < mPlanes.size(); ++i) {
+    CVector3f closestPoint = box.ClosestPointAlongVector(mPlanes[i].GetNormal());
+    if (mPlanes[i].IsFacing(closestPoint)) {
+      return 0;
+    }
+    if (ret == 1) {
+      CVector3f furthestPoint = box.FurthestPointAlongVector(mPlanes[i].GetNormal());
+      if (mPlanes[i].IsFacing(furthestPoint)) {
+        ret = 2;
+      }
+    }
+  }
+  return ret;
+}
+
+bool CFrustumPlanes::SphereInFrustumPlanes(const CSphere& sphere) const {
+  float radius = sphere.GetRadius();
+  CVector3f pos = sphere.GetCenter();
+  for (int i = 0; i < mPlanes.size(); ++i) {
+    if (mPlanes[i].GetHeight(pos) - radius > 0.f) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool CFrustumPlanes::PointInFrustumPlanes(const CVector3f& point) const {
+  for (int i = 0; i < mPlanes.size(); ++i) {
+    if (mPlanes[i].IsFacing(point)) {
+      return false;
+    }
+  }
+  return true;
+}

@@ -1,6 +1,16 @@
-/*
- * G2MEAB Kyoto/Text/CPopStateInstruction.cpp translation-unit scaffold.
- * .text: 0x804B4084..0x804B416C (3 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Three-function family; distinctive Invoke410C60 has both-reference fingerprint and mutates pop-state list. Starts at own derived destructor; ends at push-state destructor.
- */
+#include "Kyoto/Text/CPopStateInstruction.hpp"
+
+#include "Kyoto/Text/CFontRenderState.hpp"
+#include "Kyoto/Text/CTextRenderBuffer.hpp"
+
+void CPopStateInstruction::Invoke(CFontRenderState& state, CTextRenderBuffer* buf) const {
+  const CObjectReference* font = state.GetFont().GetRef();
+  state.PopState();
+  if (state.GetFont().GetRef() != font) {
+    buf->AddFontChange(state.GetFont());
+  }
+}
+
+void CPopStateInstruction::PageInvoke(CFontRenderState& state, CTextRenderBuffer* buf) const {
+  Invoke(state, buf);
+}

@@ -1,6 +1,50 @@
-/*
- * G2MEAB Kyoto/Animation/CSegStatementSet.cpp translation-unit scaffold.
- * .text: 0x804B1110..0x804B13DC (3 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Stack-set destructorC4, stack-set constructorCC and external-buffer base constructor13C form the target family; final constructor is distinctive Echoes anchor. Both reference source families corroborate storage responsibilities. Following steady-state-info vector methodsB13DC/B1474 are excluded, despite unknown original source ownership.
- */
+#include "Kyoto/Animation/CSegStatementSet.hpp"
+
+#include "Kyoto/Alloc/CMemory.hpp"
+
+#include <dolphin/os/OSCache.h>
+
+namespace {
+const int kSegmentCount = 100;
+const int kSegmentSetSize = kSegmentCount * sizeof(CSegStatement);
+const int kCacheSlotCount = 3;
+int sFreeSegments = (1 << kCacheSlotCount) - 1;
+
+inline void* AllocateSegment() {
+  LCQueueWait(0);
+  if (sFreeSegments) {
+    for (uint i = 0; i < kCacheSlotCount; ++i) {
+      if ((sFreeSegments & (1 << i)) != 0) {
+        sFreeSegments ^= 1 << i;
+        char* base = static_cast< char* >(LCGetBase());
+        base += i * kSegmentSetSize;
+        return base;
+      }
+    }
+  }
+
+  return CMemory::Alloc(kSegmentSetSize);
+}
+
+inline void FreeSegment(CSegStatement* seg) {
+  char* base = static_cast< char* >(LCGetBase());
+  char* ptr = reinterpret_cast< char* >(seg);
+  if (ptr >= base && ptr < base + kCacheSlotCount * kSegmentSetSize) {
+    int index = (ptr - base) / kSegmentSetSize;
+    sFreeSegments |= 1 << index;
+  } else {
+    CMemory::Free(seg);
+  }
+}
+} // namespace
+
+CSegStatementSet::CSegStatementSet(void* storage)
+: mSegData(static_cast< CSegStatement* >(storage)) {
+  for (int i = 0; i < kSegmentCount; ++i) {
+    new (&mSegData[i]) CSegStatement;
+  }
+}
+
+CStackSegStatementSet::CStackSegStatementSet() : CSegStatementSet(AllocateSegment()) {}
+
+CStackSegStatementSet::~CStackSegStatementSet() { FreeSegment(mSegData); }

@@ -1,6 +1,44 @@
-/*
- * G2MEAB Kyoto/Animation/CSoundPOINode.cpp translation-unit scaffold.
- * .text: 0x80554B24..0x80554D88 (4 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Four-function copy-minus-time/destructor/stream constructor/parameter constructor family. Target all constructors/destructor write vtable806E1D80, and copy subtracts CCharAnimTime then calls54CDC. Stream constructor reads sound id,falloff,maxdistance,pitch ushorts/duration. Echoes source and linked four-method inventory corroborate; Prime has older inline class/header rather than standalone TU. Next54D88 clears pose cache and begins PoseLinear.
- */
+#include "Kyoto/Animation/CSoundPOINode.hpp"
+
+#include "Kyoto/Streams/CInputStream.hpp"
+
+CSoundPOINode::CSoundPOINode(uint nameHash, EPOIType type, const CCharAnimTime& time, int index,
+                             const bool unique, float weight, int charIdx, int flags, int sfxId,
+                             float fallOff, float maxDist, const CSegId& segId, ushort pitchStart,
+                             ushort pitchEnd, float pitchDuration)
+: CPOINode(nameHash, type, time, index, unique, weight, charIdx, flags)
+, mSfxId(sfxId)
+, mFalloff(fallOff)
+, mMaxDist(maxDist)
+, mSegId(segId)
+, mPitchStart(pitchStart)
+, mPitchEnd(pitchEnd)
+, mPitchDuration(pitchDuration) {}
+
+CSoundPOINode::CSoundPOINode(CInputStream& in)
+: CPOINode(in)
+, mSfxId(in.Get< int >())
+, mFalloff(in.Get< float >())
+, mMaxDist(in.Get< float >())
+, mSegId(static_cast< uchar >(0))
+, mPitchStart(0)
+, mPitchEnd(0)
+, mPitchDuration(0.f) {
+  if (mVersion > skExtendedVersion) {
+    mSegId = CSegId(in);
+    mPitchStart = in.Get< ushort >();
+    mPitchEnd = in.Get< ushort >();
+    mPitchDuration = in.Get< float >();
+  }
+}
+
+CSoundPOINode::~CSoundPOINode() {}
+
+CSoundPOINode CSoundPOINode::CopyNodeMinusStartTime(const CSoundPOINode& node,
+                                                    const CCharAnimTime& startTime) {
+  return CSoundPOINode(node.GetNameHash(), node.GetPoiType(), node.GetTime() - startTime,
+                       node.GetIndex(), node.GetSaveState(), node.GetWeight(),
+                       node.GetCharacterIndex(), node.GetFlags(), node.GetSoundId(),
+                       node.GetFallOff(), node.GetMaxDistance(), node.mSegId, node.mPitchStart,
+                       node.mPitchEnd, node.mPitchDuration);
+}

@@ -1,0 +1,41 @@
+#ifndef _CSEGID
+#define _CSEGID
+
+#include <types.h>
+
+#include "Kyoto/Streams/CInputStream.hpp"
+
+class CSegId {
+public:
+  CSegId() : mId(-1) {}
+
+  CSegId(int id) : mId(id) {}
+
+  CSegId(uint id) : mId(id) {}
+
+  CSegId(const char& id) : mId(id) {}
+
+  CSegId(CInputStream& in);
+
+  static CSegId Null() { return CSegId(99); }
+
+  static CSegId Character() { return CSegId(97); }
+
+  static CSegId Invalid() { return CSegId(255); }
+
+  bool operator==(const CSegId& other) const { return mId == other.mId; }
+
+  bool operator!=(const CSegId& other) const { return mId != other.mId; }
+
+  const uchar val() const { return mId; }
+
+private:
+  uchar mId;
+};
+CHECK_SIZEOF(CSegId, 0x1)
+
+namespace rstl {
+RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(CSegId)
+} // namespace rstl
+
+#endif // _CSEGID

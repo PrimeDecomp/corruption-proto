@@ -1,6 +1,67 @@
-/*
- * G2MEAB Kyoto/Animation/CAllFormatsAnimSource.cpp translation-unit scaffold.
- * .text: 0x804B1ED0..0x804B27CC (11 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Destructor/GetNewReader/factory/object wrappers/derived reader/constructor/SubConstruct and union stream/destructor helpers follow both reference family. GetNewReader has target filename asserts. Final union stream constructorB2778 anchors Echoes and ends27CC. Next27CC writes DVD request vtable806CEF68, outside Animation.
- */
+#include "Kyoto/Animation/CAllFormatsAnimSource.hpp"
+
+#include "Kyoto/Animation/CAnimSourceReader.hpp"
+#include "Kyoto/Animation/CFBStreamedAnimReader.hpp"
+#include "Kyoto/CVParamTransfer.hpp"
+#include "Kyoto/IObjectStore.hpp"
+#include "Kyoto/Streams/CInputStream.hpp"
+
+CAnimFormatUnion::CAnimFormatUnion(CInputStream& in, IObjectStore& store) {
+  mFormatType = in.Get< uint >();
+  SubConstruct(mFormatData, mFormatType, in, store);
+}
+
+CAnimFormatUnion::~CAnimFormatUnion() {
+  switch (mFormatType) {
+  case kF_AnimSource:
+    reinterpret_cast< CAnimSource* >(mFormatData)->~CAnimSource();
+    break;
+  case kF_FBStreamedCompression:
+    reinterpret_cast< CFBStreamedCompression* >(mFormatData)->~CFBStreamedCompression();
+    break;
+  default:
+    break;
+  }
+}
+
+void CAnimFormatUnion::SubConstruct(uchar* ptr, const uint format, CInputStream& in,
+                                    IObjectStore& store) {
+  switch (format) {
+  case kF_AnimSource:
+    new (ptr) CAnimSource(in);
+    break;
+  case kF_FBStreamedCompression:
+    new (ptr) CFBStreamedCompression(in, store);
+    break;
+  default:
+    break;
+  }
+}
+
+CAllFormatsAnimSource::CAllFormatsAnimSource(CInputStream& in, IObjectStore& store,
+                                             const SObjectTag& tag)
+: mFormatUnion(in, store), x88_(0.f, 0.f, 0.f), mTag(tag) {}
+
+CFactoryFnReturn AnimSourceFactory(const SObjectTag& tag, CInputStream& in,
+                                         const CVParamTransfer& param) {
+  const rstl::rc_ptr< IVParamObj > obj = param.GetObj();
+  IObjectStore* pool = static_cast< TObjOwnerParam< IObjectStore* >* >(obj.GetPtr())->GetData();
+  return rs_new CAllFormatsAnimSource(in, *pool, tag);
+}
+
+rstl::ownership_transfer< IAnimReader >
+CAllFormatsAnimSource::GetNewReader(const TLockedToken< CAllFormatsAnimSource >& tok,
+                                    const CCharAnimTime& time, const CAnimPOIData* poiData) {
+  switch (tok->GetType()) {
+  case CAnimFormatUnion::kF_AnimSource:
+    return rs_new CAnimSourceReader(TSubAnimTypeToken< CAnimSource >(tok), time, poiData);
+  case CAnimFormatUnion::kF_FBStreamedCompression:
+    return rs_new CFBStreamedAnimReader(TSubAnimTypeToken< CFBStreamedCompression >(tok), time,
+                                        poiData);
+  default:
+    return rs_new CFBStreamedAnimReader(TSubAnimTypeToken< CFBStreamedCompression >(tok), time,
+                                        poiData);
+  }
+}
+
+CAllFormatsAnimSource::~CAllFormatsAnimSource() {}

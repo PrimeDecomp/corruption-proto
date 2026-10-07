@@ -1,6 +1,26 @@
-/*
- * G2MEAB Kyoto/Text/CFontInstruction.cpp translation-unit scaffold.
- * .text: 0x804B2C1C..0x804B2F10 (5 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Full five-function order: destructor80, PageInvoke2C, GetAssetCount8, GetAssets1BC, Invoke84. Distinctive destructor and Invoke anchor both references/Echoes. Target GetAssets is larger due retained rstl assertions; no split within it. Ends at texture-space conversion.
- */
+#include "Kyoto/Text/CFontInstruction.hpp"
+
+#include "Kyoto/Text/CFontRenderState.hpp"
+#include "Kyoto/Text/CTextRenderBuffer.hpp"
+
+void CFontInstruction::Invoke(CFontRenderState& state, CTextRenderBuffer* buf) const {
+  if (buf != nullptr) {
+    buf->AddFontChange(mFont);
+  }
+
+  state.SetFont(mFont);
+  state.RefreshPalette();
+}
+
+void CFontInstruction::GetAssets(rstl::vector< CToken >& assets) const {
+  assets.push_back_unsafe(mFont);
+  if (mFont.IsLoaded()) {
+    assets.push_back_unsafe(TToken< CRasterFont >(mFont)->GetTexture());
+  }
+}
+
+uint CFontInstruction::GetAssetCount() const { return 2; }
+
+void CFontInstruction::PageInvoke(CFontRenderState& state, CTextRenderBuffer* buf) const {
+  Invoke(state, buf);
+}

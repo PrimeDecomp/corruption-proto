@@ -3,10 +3,14 @@
 
 #include <stdio.h>
 
-#ifndef __cplusplus
-typedef unsigned short wchar_t;
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-int fwide(FILE *stream, int mode);
+int fwide(FILE* stream, int mode);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

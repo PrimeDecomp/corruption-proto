@@ -54,6 +54,7 @@ class Object:
         self.completed = completed
         self.options: Dict[str, Any] = {
             "add_to_all": None,
+            "build_unlinked": False,
             "asflags": None,
             "asm_dir": None,
             "cflags": None,
@@ -1195,6 +1196,16 @@ def generate_build_ninja(
                     )
                 link_steps.append(module_link_step)
         n.newline()
+
+        # Compile explicitly requested reference objects without inventing a
+        # target split or adding them to any link step.
+        for obj in objects.values():
+            if obj.options.get("build_unlinked"):
+                if obj.completed:
+                    sys.exit(f"Unlinked reference object cannot be Matching: {obj.name}")
+                if obj.src_path is None or not obj.src_path.exists() or not file_is_c_cpp(obj.src_path):
+                    sys.exit(f"Missing C/C++ reference source: {obj.name}")
+                c_build(obj, obj.src_path)
 
         # Check if all compiler versions exist
         for mw_version in used_compiler_versions:

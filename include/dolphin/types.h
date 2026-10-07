@@ -13,6 +13,17 @@ typedef unsigned long long int u64;
 typedef float  f32;
 typedef double f64;
 
+typedef volatile u8 vu8;
+typedef volatile u16 vu16;
+typedef volatile u32 vu32;
+typedef volatile u64 vu64;
+typedef volatile s8 vs8;
+typedef volatile s16 vs16;
+typedef volatile s32 vs32;
+typedef volatile s64 vs64;
+typedef volatile f32 vf32;
+typedef volatile f64 vf64;
+
 typedef char *Ptr;
 
 typedef int BOOL;
@@ -31,7 +42,7 @@ typedef int BOOL;
 
 #define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))
 
-#define INT_MAX 2147483647
+#include "libc/limits.h"
 
 #ifndef NULL
 #ifdef __cplusplus
@@ -41,11 +52,19 @@ typedef int BOOL;
 #endif
 #endif
 
+#if !defined(__cplusplus) || __cplusplus < 201103L
+#ifndef nullptr
+#define nullptr NULL
+#endif
+#if defined(__MWERKS__) && !defined(override)
+#define override
+#endif
+#endif
+
 #include "libc/stdio.h"
 #include "libc/stdarg.h"
 #include "libc/string.h"
 #include "libc/ctype.h"
 
-#include "cmath.h"
 
 #endif

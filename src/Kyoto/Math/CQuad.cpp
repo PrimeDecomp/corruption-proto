@@ -1,7 +1,4 @@
-/*
- * G2MEAB Math/CQuad.cpp translation-unit scaffold (NonMatching).
- * .text: 0x804FC9A4..0x804FCA44 (end exclusive), 1 native functions.
- * Identity and ownership investigated against target code and both references.
- * Confidence: high.
- * Nonfunctional: implementation and data ownership remain to be recovered.
- */
+#include "Kyoto/Math/CQuad.hpp"
+
+CQuad::CQuad(const CVector3f& a, const CVector3f& b, const CVector3f& c, const CVector3f& d)
+: mPlane(a, b, c), mA(a), mB(b), mC(c), mD(d) {}

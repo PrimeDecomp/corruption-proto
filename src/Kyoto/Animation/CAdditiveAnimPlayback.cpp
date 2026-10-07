@@ -1,6 +1,70 @@
-/*
- * G2MEAB Kyoto/Animation/CAdditiveAnimPlayback.cpp translation-unit scaffold.
- * .text: 0x8052FAA4..0x8052FD48 (4 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Update/FadeOut/SetWeight/constructor form complete four-function Echoes family, with Prime FadeOut anchor and both source APIs. All native sizes retained, ending constructor atFD48.
- */
+#include "Kyoto/Animation/CAdditiveAnimPlayback.hpp"
+
+#include "Kyoto/Animation/CAnimTreeNode.hpp"
+#include "Kyoto/Math/CloseEnough.hpp"
+#include "rstl/math.hpp"
+
+CAdditiveAnimPlayback::CAdditiveAnimPlayback(const rstl::ncrc_ptr< CAnimTreeNode >& anim,
+                                             float weight, bool loop,
+                                             const CAdditiveAnimationInfo& info, bool fadeOut)
+: mInfo(info)
+, mAnim(anim)
+, mTargetWeight(rstl::max_val(0.f, rstl::min_val(weight, 1.f)))
+, mCurWeight(0.f)
+, mActive(loop)
+, mWeightTimer(0.f)
+, mPhase(kPP_FadingIn)
+, mNeedsFadeOut(!loop && fadeOut) {}
+
+void CAdditiveAnimPlayback::SetWeight(float weight) {
+  mTargetWeight = rstl::max_val(0.f, rstl::min_val(weight, 1.f));
+
+  if (mPhase == kPP_FadingIn) {
+    mCurWeight = mInfo.GetFadeInTime() > 0.f
+                        ? mTargetWeight * (mWeightTimer / mInfo.GetFadeInTime())
+                        : mTargetWeight;
+    return;
+  }
+  if (mPhase == kPP_FadingOut) {
+    mCurWeight = mInfo.GetFadeOutTime() > 0.f
+                        ? mTargetWeight * (mWeightTimer / mInfo.GetFadeOutTime())
+                        : mTargetWeight;
+    return;
+  }
+  mCurWeight = mTargetWeight;
+}
+
+void CAdditiveAnimPlayback::FadeOut() {
+  if (mPhase == kPP_FadedOut || mPhase == kPP_FadedIn) {
+    mWeightTimer = mInfo.GetFadeOutTime();
+  } else if (mPhase == kPP_FadingIn) {
+    mWeightTimer = (mWeightTimer / mInfo.GetFadeInTime()) * mInfo.GetFadeOutTime();
+  }
+
+  if (mInfo.GetFadeOutTime() > 0.f) {
+    mPhase = kPP_FadingOut;
+    return;
+  }
+
+  mPhase = kPP_FadedOut;
+  mCurWeight = 0.f;
+}
+
+void CAdditiveAnimPlayback::Update(float dt) {
+  if (mPhase == kPP_FadingIn) {
+    const float time = mInfo.GetFadeInTime();
+    mWeightTimer = rstl::min_val(time, mWeightTimer + dt);
+    mCurWeight = time > 0.f ? mTargetWeight * (mWeightTimer / time) : mTargetWeight;
+
+    if (close_enough(mCurWeight, mTargetWeight)) {
+      mPhase = kPP_FadedIn;
+    }
+  } else if (mPhase == kPP_FadingOut) {
+    const float time = mInfo.GetFadeOutTime();
+    mWeightTimer = rstl::max_val(0.f, mWeightTimer - dt);
+    mCurWeight = time > 0.f ? mTargetWeight * (mWeightTimer / time) : 0.f;
+    if (close_enough(mCurWeight, 0.f)) {
+      mPhase = kPP_FadedOut;
+    }
+  }
+}

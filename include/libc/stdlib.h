@@ -6,19 +6,25 @@
 
 #define RAND_MAX 32767
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+double atof(const char* str);
 void srand(unsigned int seed);
 int rand(void);
-void abort(void);
+int abs(int n);
+long labs(long n);
 void exit(int status);
-size_t wcstombs(char *dest, const wchar_t *src, size_t max);
+void abort(void);
+void* malloc(size_t size);
+void free(void* ptr);
+size_t wcstombs(char* dest, const wchar_t* src, size_t max);
 
-#ifdef __MWERKS__
-#define abs(x) __abs(x)
-#else
-static inline int abs(int x)
-{
-    int mask = x >> 31;
-    return (x + mask) ^ mask;
+typedef int (*_compare_function)(const void*, const void*);
+void qsort(void*, size_t, size_t, _compare_function);
+
+#ifdef __cplusplus
 }
 #endif
 

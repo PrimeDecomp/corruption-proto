@@ -13,6 +13,7 @@
 ###
 
 import argparse
+import json
 import sys
 from pathlib import Path
 from typing import Any, Dict, List
@@ -1344,6 +1345,35 @@ config.libs = [
         ],
     )
 ]
+
+
+# Imported Kyoto sources use the normal project headers. Reference-only sources compile
+# but cannot be linked until their prototype translation units are identified.
+kyoto_manifest_path = Path("config/kyoto-imports.json")
+config.reconfig_deps.append(kyoto_manifest_path)
+kyoto_imports = json.loads(kyoto_manifest_path.read_text())
+kyoto_flags = [kyoto_imports["cflags"], "-lang=c++", "-i include",
+               "-i include/libc", "-i include/LZO", "-DSDK_REVISION=1", "-D__GEKKO__"]
+kyoto_objects = {obj.name: obj for lib in config.libs for obj in lib["objects"]}
+kyoto_references = []
+for imported in kyoto_imports["files"]:
+    name = imported["path"]
+    if imported["mapped"]:
+        obj = kyoto_objects[name]
+        if obj.completed:
+            raise ValueError(f"Import would override a prototype match: {name}")
+    else:
+        if name in kyoto_objects:
+            raise ValueError(f"Reference unexpectedly has target configuration: {name}")
+        obj = Object(NonMatching, name, build_unlinked=True)
+        kyoto_references.append(obj)
+    obj.options.update(cflags=kyoto_flags, extra_cflags=[], mw_version="GC/2.7")
+    if name == "Kyoto/Math/CTransform4f.cpp":
+        # The upstream unfinished GetInverse uses an uninitialized return
+        # pointer. Keep the diagnostic visible without blocking this unlinked
+        # NonMatching import; do not silently change the reference algorithm.
+        obj.options["extra_cflags"] = ["-W noerror"]
+config.libs.append(RetroLib("KyotoEchoesReferences", kyoto_references))
 
 
 # Optional callback to adjust link order. This can be used to add, remove, or reorder objects.

@@ -1,6 +1,165 @@
-/*
- * G2MEAB Kyoto/Animation/CPoseAsTransforms_Linear.cpp translation-unit scaffold.
- * .text: 0x80554D88..0x805559B0 (19 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Starts new pose cache clear54D88 and layout-derived cache build54DAC, followed by rotation/build/getters and four-vector storage helpers. ElementType copy55770 and parameter constructor557F4 precede pose constructor55890. Echoes linear pose source and Prime older variable-size pose family consulted; extra target cache/vector helpers retained. Next559B0 has CManagedParticleGen.cpp(431/438/444/450/456), proving end outside Animation.
- */
+#include "Kyoto/Animation/CPoseAsTransforms_Linear.hpp"
+
+#include "Kyoto/Animation/CCharLayoutInfo.hpp"
+#include "Kyoto/Animation/CJointData_LinearStorage.hpp"
+#include "Kyoto/Math/CQuaternion.hpp"
+
+static rstl::vector< CSegId >::const_iterator ConnectedPartsEnd(const CCharLayoutInfo& layout,
+                                                                const CSegId& seg);
+
+CPoseAsTransforms_Linear::CPoseAsTransforms_Linear(int count, int withScale, int withOffsets)
+: mElements(count, CElementType(CMatrix3f::Identity(), CVector3f::Zero(), CVector3f::Zero()))
+, mScales(withScale == 1 ? count : 0, CVector3f::One())
+, mUnscaledRotations(withScale == 1 ? count : 0, CMatrix3f::Identity())
+, x30_(withOffsets == 1 ? count : 0, CVector3f::Zero())
+, x40_24_(false)
+, mUniformScale(0) {}
+
+const CMatrix3f& CPoseAsTransforms_Linear::GetTransformMinusOffset(const CSegId& seg) const {
+  return mElements[seg.val()].mRotation;
+}
+
+CMatrix3f CPoseAsTransforms_Linear::GetRotation(const CSegId& seg) {
+  if (mScales.size() != 0) {
+    return mUnscaledRotations[seg.val()];
+  }
+  return GetTransformMinusOffset(seg);
+}
+
+const CVector3f& CPoseAsTransforms_Linear::GetOffset(const CSegId& seg) const {
+  return mElements[seg.val()].mOffset;
+}
+
+CTransform4f CPoseAsTransforms_Linear::GetTransform(const CSegId& seg) {
+  const CElementType& elem = mElements[seg.val()];
+  if (mScales.size() != 0) {
+    return CTransform4f(mUnscaledRotations[seg.val()], elem.mOffset);
+  }
+  return CTransform4f(elem.mRotation, elem.mOffset);
+}
+
+void CPoseAsTransforms_Linear::BuildPose(const CCharLayoutInfo& layout,
+                                         const CJointData_LinearStorage& data) {
+  x40_24_ = false;
+  const uchar* rotations = data.GetRotations();
+  const uchar* translations = data.GetTranslations();
+  const uchar* scales = data.GetScales();
+  int stride = data.GetStride();
+  if (mScales.size() != 0) {
+    CElementType* elem = mElements.data();
+    const CSegId* parent = layout.GetLinearParents().data();
+    CMatrix3f* unscaled = mUnscaledRotations.data();
+    CVector3f* scale = mScales.data();
+    elem->mRotation = CMatrix3f::Identity();
+    elem->mOffset = CVector3f::Zero();
+    *unscaled = CMatrix3f::Identity();
+    *scale = CVector3f::One();
+    const uchar* scaleBase = scales;
+    rotations += stride;
+    translations += stride;
+    scales += stride;
+    ++elem;
+    ++unscaled;
+    ++parent;
+    ++scale;
+    int count = mElements.size();
+    for (int i = 1; i < count; ++i) {
+      uchar parentId = parent->val();
+      const CElementType& parentElem = mElements[parentId];
+      const CMatrix3f& parentRotation = mUnscaledRotations[parentId];
+      *scale = *reinterpret_cast< const CVector3f* >(scales);
+      *unscaled =
+          parentRotation * reinterpret_cast< const CQuaternion* >(rotations)->BuildTransform();
+      elem->mRotation = *unscaled * CMatrix3f::Scale(scale->GetX(), scale->GetY(), scale->GetZ());
+      elem->mLocalOffset = *reinterpret_cast< const CVector3f* >(translations);
+      elem->mOffset = parentElem.mOffset +
+                      parentRotation * (elem->mLocalOffset * *reinterpret_cast< const CVector3f* >(
+                                                                 scaleBase + stride * parentId));
+      rotations += stride;
+      translations += stride;
+      scales += stride;
+      ++parent;
+      ++unscaled;
+      ++scale;
+      ++elem;
+    }
+  } else {
+    CElementType* elem = mElements.data();
+    const CSegId* parent = layout.GetLinearParents().data();
+    elem->mRotation = CMatrix3f::Identity();
+    elem->mOffset = CVector3f::Zero();
+    rotations += stride;
+    translations += stride;
+    ++parent;
+    ++elem;
+    int count = mElements.size();
+    for (int i = 1; i < count; ++i) {
+      const CElementType& parentElem = mElements[parent->val()];
+      elem->mRotation = parentElem.mRotation *
+                        reinterpret_cast< const CQuaternion* >(rotations)->BuildTransform();
+      elem->mLocalOffset = *reinterpret_cast< const CVector3f* >(translations);
+      elem->mOffset = parentElem.mOffset + parentElem.mRotation * elem->mLocalOffset;
+      rotations += stride;
+      translations += stride;
+      ++parent;
+      ++elem;
+    }
+  }
+}
+
+void CPoseAsTransforms_Linear::SetRotation(const CCharLayoutInfo& layout, const CSegId& seg,
+                                           const CMatrix3f& rotation) {
+  x40_24_ = false;
+  CMatrix3f delta = rotation * GetRotation(seg).GetTranspose();
+  RotateHierarchy(layout, seg, delta, 1);
+}
+
+void CPoseAsTransforms_Linear::RotateHierarchy(const CCharLayoutInfo& layout, const CSegId& seg,
+                                               const CMatrix3f& rotation, int order) {
+  int id = seg.val();
+  x40_24_ = false;
+  CElementType& elem = mElements[id];
+  if (mScales.size() == 0) {
+    if (order == 1) {
+      elem.mRotation = rotation * elem.mRotation;
+    } else {
+      elem.mRotation = elem.mRotation * rotation;
+    }
+    elem.mRotation = elem.mRotation.Orthonormalized();
+  } else {
+    CMatrix3f unscaled(CMatrix3f::Identity());
+    if (order == 1) {
+      unscaled = rotation * elem.mRotation;
+    } else {
+      unscaled = elem.mRotation * rotation;
+    }
+    const CVector3f& scale = mScales[id];
+    elem.mRotation = unscaled * CMatrix3f::Scale(scale.GetX(), scale.GetY(), scale.GetZ());
+    mUnscaledRotations[id] = unscaled;
+  }
+
+  if (layout.GetSegmentData(seg).GetNumConnectedParts() >= 2) {
+    rstl::vector< CSegId >::const_iterator it =
+        layout.GetSegmentData(seg).GetConnectedParts().begin();
+    rstl::vector< CSegId >::const_iterator end = ConnectedPartsEnd(layout, seg);
+    ++it;
+    bool hasScale = mScales.size() != 0;
+    const CVector3f& scale = hasScale ? mScales[id] : CVector3f::One();
+    const CMatrix3f& parentRotation = hasScale ? mUnscaledRotations[id] : elem.mRotation;
+    for (; it != end; ++it) {
+      CElementType& child = mElements[it->val()];
+      child.mOffset = elem.mOffset + parentRotation * (child.mLocalOffset * scale);
+      RotateHierarchy(layout, *it, rotation, order);
+    }
+  }
+}
+
+static rstl::vector< CSegId >::const_iterator ConnectedPartsEnd(const CCharLayoutInfo& layout,
+                                                                const CSegId& seg) {
+  return layout.GetSegmentData(seg).GetConnectedParts().end();
+}
+
+void CPoseAsTransforms_Linear::AllocateScale() {
+  mScales.resize(mElements.size(), CVector3f::Zero());
+  mUnscaledRotations.resize(mElements.size(), CMatrix3f::Identity());
+}

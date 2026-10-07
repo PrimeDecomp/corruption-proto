@@ -1,6 +1,19 @@
-/*
- * G2MEAB Kyoto/Text/CSaveableState.cpp translation-unit scaffold.
- * .text: 0x804B6028..0x804B6218 (3 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: IsFinishedLoading88, constructorCC and vector<CTextColor> count constructor9C are the complete three native functions. Last vector helper617C stays here. Both source constructors and Echoes ordered inventory corroborate; next function is ExecuteBuffer page builder.
- */
+#include "Kyoto/Text/CSaveableState.hpp"
+
+CSaveableState::CSaveableState()
+: mColors(3, CTextColor(0, 0, 0, 255))
+, mColorOverrides(16, false)
+, mLineSpacing(1.f)
+, mExtraLineSpacing(0)
+, mEnableWordWrap(false)
+, mJust(kJustification_Left)
+, mVjust(kVerticalJustification_Top) {}
+
+bool CSaveableState::IsFinishedLoading() const {
+  if (mFont) {
+    TToken< CRasterFont > font(mFont.data());
+    return font.IsLoaded() && font.GetT()->IsFinishedLoading();
+  }
+
+  return false;
+}

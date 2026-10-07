@@ -38,7 +38,7 @@ struct LuaRun
 class LUAPLUS_CLASS LuaObject
 {
 public:
-	LuaObject() throw();
+	LuaObject();
 	LuaObject(LuaState* state) throw();
 	LuaObject(LuaState* state, int stackIndex) throw();
 	LuaObject(LuaState* state, const lua_TObject* obj);

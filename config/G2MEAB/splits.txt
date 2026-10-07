@@ -1625,6 +1625,9 @@ Lua/lobject.c:
 	.rodata     start:0x80699EA8 end:0x80699FC0
 	.sdata2     start:0x807A1708 end:0x807A1718
 
+Lua/lopcodes.c:
+	.rodata     start:0x80699FC0 end:0x80699FE8
+
 Lua/lparser.c:
 	.text       start:0x80457518 end:0x8045DF18
 	.rodata     start:0x80699FE8 end:0x8069A250

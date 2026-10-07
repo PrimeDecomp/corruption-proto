@@ -692,7 +692,7 @@ config.libs = [
         Object(Matching, "Lua/LuaPlusAddons.c"),
         Object(Matching, "Lua/LuaPlusFunctions.cpp", extra_cflags=cflags_luaplus),
         Object(Matching, "Lua/LuaMemory.cpp", extra_cflags=cflags_luaplus),
-        Object(NonMatching, "Lua/LuaState_DumpObject.cpp", extra_cflags=cflags_luaplus),
+        Object(Matching, "Lua/LuaState_DumpObject.cpp", extra_cflags=cflags_luaplus),
         Object(Matching, "Lua/lcode.c"),
         Object(Matching, "Lua/ldebug.c"),
         Object(Matching, "Lua/ldo.c"),
@@ -702,6 +702,7 @@ config.libs = [
         Object(Matching, "Lua/llex.c"),
         Object(Matching, "Lua/lmem.c"),
         Object(Matching, "Lua/lobject.c"),
+        Object(Matching, "Lua/lopcodes.c"),
         Object(Matching, "Lua/lparser.c"),
         Object(Matching, "Lua/lstate.c"),
         Object(Matching, "Lua/lstring.c"),
@@ -717,8 +718,6 @@ config.libs = [
         Object(Matching, "Lua/lstrlib.c"),
         Object(Matching, "Lua/ltablib.c"),
         Object(Matching, "Lua/lauxlib.c"),
-        # Opcode tables have no established prototype data split yet.
-        Object(NonMatching, "Lua/lopcodes.c", build_unlinked=True),
     ]),
     LzoLib("LZO", [
         Object(NonMatching, "LZO/lzo_init.c"),

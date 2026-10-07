@@ -1106,6 +1106,17 @@ Kyoto/Animation/CVisibilityAnimationData.cpp:
 Kyoto/Animation/CVisibilityAnimationDataList.cpp:
 	.text       start:0x80568024 end:0x8056834C
 
+Kyoto/Audio/CAudioHandle.cpp:
+	.text       start:0x8056834C end:0x8056872C
+
+Kyoto/Audio/CAudioManager.cpp:
+	.text       start:0x8056872C end:0x80569E0C
+	.ctors      start:0x8065BC4C end:0x8065BC50
+
+Kyoto/Audio/CAudioSampleDescription.cpp:
+	.text       start:0x80569E0C end:0x8056AA9C
+	.ctors      start:0x8065BC50 end:0x8065BC54
+
 Kyoto/Audio/CAudioSample.cpp:
 	.text       start:0x8056AA9C end:0x8056B258
 

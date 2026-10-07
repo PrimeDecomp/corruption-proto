@@ -264,7 +264,7 @@ cflags_rel = [
     "-sdata2 0",
 ]
 
-config.linker_version = "GC/1.3.2"
+config.linker_version = "GC/2.7"
 
 
 # Imported from doldecomp/dolsdk2004 (see src/Dolphin/UPSTREAM).
@@ -291,7 +291,8 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 def RuntimeLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
-        "mw_version": config.linker_version,
+        # Preserve the existing compiler profile independently of the linker.
+        "mw_version": "GC/1.3.2",
         "cflags": cflags_runtime,
         "progress_category": "sdk",
         "objects": objects,
@@ -837,7 +838,7 @@ config.libs = [
         Object(NonMatching, "Kyoto/Graphics/DolphinCGraphics.cpp"),
         Object(NonMatching, "Kyoto/Graphics/DolphinCPalette.cpp"),
         Object(NonMatching, "Kyoto/Graphics/DolphinCTexture.cpp"),
-        Object(NonMatching, "Kyoto/CCrc32.cpp"),
+        Object(Matching, "Kyoto/CCrc32.cpp"),
         Object(NonMatching, "Kyoto/Text/CStringTokenizer.cpp"),
         Object(NonMatching, "Kyoto/Alloc/CCircularBuffer.cpp"),
         Object(NonMatching, "Kyoto/Alloc/CMemory.cpp"),
@@ -1005,15 +1006,15 @@ config.libs = [
         Object(NonMatching, "Kyoto/Math/CMatrix4f.cpp"),
         Object(NonMatching, "Kyoto/Math/CNUQuaternion.cpp"),
         Object(NonMatching, "Kyoto/Math/CQuaternion.cpp"),
-        Object(NonMatching, "Kyoto/CRandom16.cpp"),
+        Object(Matching, "Kyoto/CRandom16.cpp"),
         Object(NonMatching, "Kyoto/Math/CTransform4f.cpp"),
         Object(NonMatching, "Kyoto/Math/CUnitVector3f.cpp"),
         Object(NonMatching, "Kyoto/Math/CVector2d.cpp"),
         Object(NonMatching, "Kyoto/Math/CVector2f.cpp"),
-        Object(NonMatching, "Kyoto/Math/CVector2i.cpp"),
+        Object(Matching, "Kyoto/Math/CVector2i.cpp"),
         Object(NonMatching, "Kyoto/Math/CVector3d.cpp"),
         Object(NonMatching, "Kyoto/Math/CVector3f.cpp"),
-        Object(NonMatching, "Kyoto/Math/CVector3i.cpp"),
+        Object(Matching, "Kyoto/Math/CVector3i.cpp"),
         Object(NonMatching, "Kyoto/Math/RMathUtils.cpp"),
         Object(NonMatching, "Kyoto/Math/CLine.cpp"),
         Object(NonMatching, "Kyoto/Math/CLineSeg.cpp"),

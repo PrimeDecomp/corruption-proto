@@ -447,6 +447,49 @@ Kyoto/Alloc/CMemory.cpp:
 Kyoto/Alloc/IAllocator.cpp:
 	.text       start:0x804D075C end:0x804D0844
 
+Kyoto/Particles/CColorElement.cpp:
+	.text       start:0x804D15A0 end:0x804D358C
+	.ctors      start:0x8065BBC4 end:0x8065BBC8
+
+Kyoto/Particles/CElementGen.cpp:
+	.text       start:0x804D358C end:0x804DFB6C
+	.ctors      start:0x8065BBC8 end:0x8065BBCC
+
+Kyoto/Particles/CIntElement.cpp:
+	.text       start:0x804DFB6C end:0x804E20A0
+	.ctors      start:0x8065BBCC end:0x8065BBD0
+
+Kyoto/Particles/CModVectorElement.cpp:
+	.text       start:0x804E20A0 end:0x804E4760
+
+Kyoto/Particles/CParticleDataFactory.cpp:
+	.text       start:0x804E4760 end:0x804EBFC8
+	.ctors      start:0x8065BBD0 end:0x8065BBD4
+
+Kyoto/Particles/CParticleGlobals.cpp:
+	.text       start:0x804EC1F4 end:0x804EC320
+
+Kyoto/Particles/CParticleSwoosh.cpp:
+	.text       start:0x804EC320 end:0x804F166C
+	.ctors      start:0x8065BBD8 end:0x8065BBDC
+
+Kyoto/Particles/CParticleSwooshDataFactory.cpp:
+	.text       start:0x804F166C end:0x804F1FAC
+
+Kyoto/Particles/CRealElement.cpp:
+	.text       start:0x804F1FAC end:0x804F6E70
+	.ctors      start:0x8065BBDC end:0x8065BBE0
+
+Kyoto/Particles/CSpawnSystemKeyframeData.cpp:
+	.text       start:0x804F6E70 end:0x804F7E54
+
+Kyoto/Particles/CUVElement.cpp:
+	.text       start:0x804F7E54 end:0x804F8D30
+
+Kyoto/Particles/CVectorElement.cpp:
+	.text       start:0x804F8D30 end:0x804FC3D4
+	.ctors      start:0x8065BBE0 end:0x8065BBE4
+
 Kyoto/Math/CLine.cpp:
 	.text       start:0x804FC520 end:0x804FC584
 
@@ -535,6 +578,10 @@ Kyoto/Alloc/CSmallAllocPool.cpp:
 Kyoto/Alloc/CGameAllocator.cpp:
 	.text       start:0x8051FCAC end:0x80521908
 
+Kyoto/Particles/CEmitterElement.cpp:
+	.text       start:0x80525EB0 end:0x805275D4
+	.ctors      start:0x8065BC0C end:0x8065BC10
+
 Kyoto/Text/CFontImageDef.cpp:
 	.text       start:0x80529B28 end:0x80529D48
 
@@ -543,6 +590,45 @@ Kyoto/Text/CImageInstruction.cpp:
 
 Kyoto/Text/CTextRenderBuffer.cpp:
 	.text       start:0x8052A034 end:0x8052C2D4
+
+Kyoto/Particles/CParticleElectricDataFactory.cpp:
+	.text       start:0x8052FD48 end:0x80530804
+
+Kyoto/Particles/CParticleElectric.cpp:
+	.text       start:0x80530804 end:0x8053583C
+	.ctors      start:0x8065BC10 end:0x8065BC14
+
+Kyoto/Particles/CElectricDescription.cpp:
+	.text       start:0x805375C8 end:0x8053793C
+
+Kyoto/Particles/CSwooshDescription.cpp:
+	.text       start:0x8053793C end:0x80537CF8
+
+Kyoto/Particles/CGenDescription.cpp:
+	.text       start:0x80537CF8 end:0x80538114
+
+Kyoto/Particles/CParticleSpawnSystemDataFactory.cpp:
+	.text       start:0x805485B4 end:0x80548D54
+
+Kyoto/Particles/CParticleSpawnSystem.cpp:
+	.text       start:0x80548D54 end:0x8054B27C
+	.ctors      start:0x8065BC28 end:0x8065BC2C
+
+Kyoto/Particles/CSpawnSystemDescription.cpp:
+	.text       start:0x8054B27C end:0x8054B520
+
+Kyoto/Particles/CSortedParticleSystem.cpp:
+	.text       start:0x8054B520 end:0x8054C52C
+	.ctors      start:0x8065BC2C end:0x8065BC30
+
+Kyoto/Particles/CParticleSortedSystemDataFactory.cpp:
+	.text       start:0x8054C52C end:0x8054C9DC
+
+Kyoto/Particles/CSortedParticleSystemDescription.cpp:
+	.text       start:0x8054C9DC end:0x8054CA40
+
+Kyoto/Particles/CManagedParticleGen.cpp:
+	.text       start:0x805559B0 end:0x80556320
 
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C

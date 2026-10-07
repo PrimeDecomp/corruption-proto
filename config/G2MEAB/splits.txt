@@ -743,7 +743,8 @@ rstl/rstl_misc.cpp:
 	.rodata     start:0x806A2D30 end:0x806A2D48
 
 rstl/rstl_strings.cpp:
-	.text       start:0x8050368C end:0x805050A8
+	.text       start:0x8050368C end:0x8050511C
+	.ctors      start:0x8065BBE8 end:0x8065BBEC
 
 rstl/RstlExtras.cpp:
 	.text       start:0x8050511C end:0x805061F0

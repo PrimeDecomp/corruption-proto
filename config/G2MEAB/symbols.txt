@@ -19863,7 +19863,7 @@ __ct__Q24rstl66basic_string<c,Q24rstl14char_traits<c>,Q24rstl17rmemory_allocator
 __ct__Q24rstl66basic_string<c,Q24rstl14char_traits<c>,Q24rstl17rmemory_allocator>FQ34rstl66basic_string<c,Q24rstl14char_traits<c>,Q24rstl17rmemory_allocator>9literal_tPCc = .text:0x8050500C; // type:function size:0x30
 wstring_l__4rstlFPCw = .text:0x8050503C; // type:function size:0x3C
 string_l__4rstlFPCc = .text:0x80505078; // type:function size:0x30
-fn_805050A8 = .text:0x805050A8; // type:function size:0x74
+__sinit_rstl_strings_cpp = .text:0x805050A8; // type:function size:0x74 scope:local
 fn_8050511C = .text:0x8050511C; // type:function size:0x84
 fn_805051A0 = .text:0x805051A0; // type:function size:0xB8
 fn_80505258 = .text:0x80505258; // type:function size:0x90

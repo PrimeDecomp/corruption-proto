@@ -644,6 +644,7 @@ config.libs = [
         Object(NonMatching, "Kyoto/Graphics/DolphinCModel.cpp"),
         Object(NonMatching, "Kyoto/Text/CStringTable.cpp"),
         Object(NonMatching, "Kyoto/Particles/CEmitterElement.cpp"),
+        Object(NonMatching, "Kyoto/Animation/CNamedAnimPOIData.cpp"),
         Object(NonMatching, "Kyoto/CTimeProvider.cpp"),
         Object(NonMatching, "Kyoto/CARAMToken.cpp"),
         Object(NonMatching, "Kyoto/DolphinCFIOFileSupport.cpp"),
@@ -784,6 +785,12 @@ config.libs = [
         Object(NonMatching, "Weapons/CDecal.cpp"),
         Object(NonMatching, "Weapons/CWeaponDescription.cpp"),
         Object(NonMatching, "Weapons/CDecalDescription.cpp"),
+    ]),
+    RetroLib("MetroidPrime", [
+        Object(NonMatching, "MetroidPrime/Cameras/CCameraSurface.cpp"),
+        Object(NonMatching, "MetroidPrime/Cameras/CCylinderCameraSurface.cpp"),
+        Object(NonMatching, "MetroidPrime/Cameras/CSplineCylinderCameraSurface.cpp"),
+        Object(NonMatching, "MetroidPrime/Cameras/CSplinePlaneCameraSurface.cpp"),
     ]),
     RuntimeLib("MetroTRK", [
         Object(NonMatching, "MetroTRK/mainloop.c"),

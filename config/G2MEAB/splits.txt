@@ -665,7 +665,7 @@ Kyoto/Text/CBlockInstruction.cpp:
 	.text       start:0x804BA5B0 end:0x804BA770
 
 Kyoto/Text/CFont.cpp:
-	.text       start:0x804BA770 end:0x804BAB64
+	.text       start:0x804BA770 end:0x804BAFE4
 	.rodata     start:0x8069E8F8 end:0x8069E918
 	.data       start:0x806CF340 end:0x806DF340
 	.sbss       start:0x8079B230 end:0x8079B238
@@ -767,7 +767,7 @@ Kyoto/Alloc/IAllocator.cpp:
 	.text       start:0x804D075C end:0x804D0844
 
 Kyoto/PVS/CPVSVisOctree.cpp:
-	.text       start:0x804D0F2C end:0x804D112C
+	.text       start:0x804D0844 end:0x804D112C
 
 Kyoto/PVS/CPVSVisSet.cpp:
 	.text       start:0x804D112C end:0x804D15A0
@@ -841,7 +841,7 @@ Kyoto/Math/CAABox.cpp:
 	.ctors      start:0x8065BBE4 end:0x8065BBE8
 
 Kyoto/CAssetTypesList.cpp:
-	.text       start:0x804FDEC0 end:0x804FDF60
+	.text       start:0x804FDD28 end:0x804FDF60
 	.rodata     start:0x806A1790 end:0x806A1868
 
 Kyoto/CFactoryMgr.cpp:
@@ -996,6 +996,9 @@ Kyoto/Particles/CEmitterElement.cpp:
 	.text       start:0x80525EB0 end:0x805275D4
 	.ctors      start:0x8065BC0C end:0x8065BC10
 
+Kyoto/Animation/CNamedAnimPOIData.cpp:
+	.text       start:0x805275D4 end:0x80528494
+
 Kyoto/CTimeProvider.cpp:
 	.text       start:0x80528494 end:0x8052856C
 
@@ -1135,9 +1138,21 @@ Kyoto/Math/CSpline.cpp:
 Kyoto/Math/CMotionSpline.cpp:
 	.text       start:0x8054D808 end:0x805529C0
 
+MetroidPrime/Cameras/CCameraSurface.cpp:
+	.text       start:0x805529C0 end:0x80552F28
+
 Kyoto/Graphics/PortalPlane.cpp:
 	.text       start:0x80552F28 end:0x80553144
 	.ctors      start:0x8065BC34 end:0x8065BC38
+
+MetroidPrime/Cameras/CCylinderCameraSurface.cpp:
+	.text       start:0x80553144 end:0x80553568
+
+MetroidPrime/Cameras/CSplineCylinderCameraSurface.cpp:
+	.text       start:0x80553568 end:0x80553C24
+
+MetroidPrime/Cameras/CSplinePlaneCameraSurface.cpp:
+	.text       start:0x80553C24 end:0x80554118
 
 Kyoto/Graphics/CDisplayListReader.cpp:
 	.text       start:0x80554118 end:0x80554644

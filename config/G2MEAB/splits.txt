@@ -1075,11 +1075,23 @@ Kyoto/Animation/CCompressedAnimSourceReader.cpp:
 Kyoto/Animation/CQuantizedAnimFrame.cpp:
 	.text       start:0x8055BE28 end:0x8055C124
 
+Kyoto/Particles/CUserEvaluatorDataFactory.cpp:
+	.text       start:0x8055C8B8 end:0x8055D42C
+
 Kyoto/Animation/CCECharacterInfo.cpp:
 	.text       start:0x80561380 end:0x80563AF4
 
 Kyoto/Animation/CCEAnimationSet.cpp:
 	.text       start:0x80563AF4 end:0x80564A30
+
+Kyoto/Particles/CBurstFireDataFactory.cpp:
+	.text       start:0x80566014 end:0x80566A30
+
+Kyoto/Animation/CVisibilityAnimationData.cpp:
+	.text       start:0x80567F4C end:0x80568024
+
+Kyoto/Animation/CVisibilityAnimationDataList.cpp:
+	.text       start:0x80568024 end:0x8056834C
 
 Kyoto/Audio/CAudioSample.cpp:
 	.text       start:0x8056AA9C end:0x8056B258

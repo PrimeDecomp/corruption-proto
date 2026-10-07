@@ -271,6 +271,46 @@ MetroidPrime/Cameras/CCameraFilter.cpp:
 	.text       start:0x800C21A4 end:0x800C47E4
 	.ctors      start:0x8065B5A4 end:0x8065B5A8
 
+MetroidPrime/Player/CMorphBall.cpp:
+	.text       start:0x800C47E4 end:0x800D7378
+	.ctors      start:0x8065B5A8 end:0x8065B5AC
+
+MetroidPrime/ScriptObjects/CScriptDamageableTrigger.cpp:
+	.text       start:0x800D7378 end:0x800D7D0C
+	.ctors      start:0x8065B5AC end:0x8065B5B0
+
+MetroidPrime/ScriptObjects/CScriptDebris.cpp:
+	.text       start:0x800D7D0C end:0x800DBB54
+	.ctors      start:0x8065B5B0 end:0x8065B5B4
+
+MetroidPrime/ScriptObjects/CScriptCameraShaker.cpp:
+	.text       start:0x800DBB54 end:0x800DC2EC
+	.ctors      start:0x8065B5B4 end:0x8065B5B8
+
+MetroidPrime/ScriptObjects/CScriptActorKeyframe.cpp:
+	.text       start:0x800DC2EC end:0x800DD114
+	.ctors      start:0x8065B5B8 end:0x8065B5BC
+
+MetroidPrime/CConsoleOutputWindow.cpp:
+	.text       start:0x800DD114 end:0x800DDAEC
+	.ctors      start:0x8065B5BC end:0x8065B5C0
+
+MetroidPrime/ScriptObjects/CScriptWater.cpp:
+	.text       start:0x800DDAEC end:0x800E0954
+	.ctors      start:0x8065B5C0 end:0x8065B5C4
+
+MetroidPrime/Weapons/CWeapon.cpp:
+	.text       start:0x800E0954 end:0x800E0E94
+	.ctors      start:0x8065B5C4 end:0x8065B5C8
+
+MetroidPrime/CDamageVulnerability.cpp:
+	.text       start:0x800E0E94 end:0x800E1CF8
+	.ctors      start:0x8065B5C8 end:0x8065B5CC
+
+MetroidPrime/CActorLights.cpp:
+	.text       start:0x800E1CF8 end:0x800E4C64
+	.ctors      start:0x8065B5CC end:0x8065B5D0
+
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 

@@ -8,7 +8,7 @@
 #include "Kyoto/Graphics/CCubeModel.hpp"
 #include "Kyoto/Graphics/CCubeSurface.hpp"
 #include "Kyoto/Graphics/CGX.hpp"
-#include "Kyoto/Graphics/CGXTransientBuffer.hpp"
+#include "Kyoto/Graphics/GPUMemory.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Graphics/CModel.hpp"
 #include "Kyoto/Graphics/CModelFlags.hpp"
@@ -27,7 +27,7 @@ public:
 
   ~CMatrixPoolGuard() {
     if (mActive) {
-      CGXTransientBuffer::ReleaseAllocation();
+      GPUMemory::ReleaseAllocation();
     }
   }
 
@@ -87,7 +87,7 @@ void CSkinnedModel::DolphinDrawInternal(const SSkinningWorkspace& workspace, uin
   SSkinningMatrices* matrices = workspace.mMatrices;
   if (matrices == nullptr) {
     matrices = static_cast< SSkinningMatrices* >(
-        CGXTransientBuffer::EnsureAllocation(mSkinRules->GetNumVirtualBones() *
+        GPUMemory::EnsureAllocation(mSkinRules->GetNumVirtualBones() *
                                             sizeof(SSkinningMatrices)));
     BuildSkinningMatrices(workspace.mTransforms, matrices, workspace.mUniformScale);
   }
@@ -139,7 +139,7 @@ CSkinnedModelState::CSkinnedModelState(int boneCount, bool transient) {
   if (mWorkspace.mTransient) {
     const uint transformSize = (boneCount * sizeof(CTransform4f) + 31) & ~31;
     const uint matrixSize = (boneCount * sizeof(SSkinningMatrices) + 31) & ~31;
-    void* data = CGXTransientBuffer::EnsureAllocation(transformSize + matrixSize);
+    void* data = GPUMemory::EnsureAllocation(transformSize + matrixSize);
     mWorkspace.mTransforms = static_cast< CTransform4f* >(data);
     mWorkspace.mMatrices =
         reinterpret_cast< SSkinningMatrices* >(static_cast< uchar* >(data) + transformSize);
@@ -161,7 +161,7 @@ CSkinnedModelState::~CSkinnedModelState() {
     if (mWorkspace.mTransient) {
       DCFlushRange(mWorkspace.mTransforms,
                    (mWorkspace.mBoneCount * sizeof(CTransform4f) + 31) & ~31);
-      CGXTransientBuffer::ReleaseAllocation();
+      GPUMemory::ReleaseAllocation();
     } else {
       CMemory::Free(mWorkspace.mTransforms);
     }

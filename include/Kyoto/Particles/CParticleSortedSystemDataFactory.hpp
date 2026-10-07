@@ -1,5 +1,5 @@
-#ifndef _CSORTEDPARTICLESYSTEMDATAFACTORY
-#define _CSORTEDPARTICLESYSTEMDATAFACTORY
+#ifndef _CPARTICLESORTEDSYSTEMDATAFACTORY
+#define _CPARTICLESORTEDSYSTEMDATAFACTORY
 
 #include "types.h"
 #include "Kyoto/CFactoryMgr.hpp"
@@ -9,8 +9,8 @@ class CInputStream;
 class CSimplePool;
 class CVParamTransfer;
 
-// Guessed name; class/method spellings follow sibling factories, with no original export known.
-class CSortedParticleSystemDataFactory {
+// Class name follows Corruption's CParticleSortedSystemDataFactory.cpp diagnostics.
+class CParticleSortedSystemDataFactory {
 public:
   static CSortedParticleSystemDescription* GetGeneratorDesc(CInputStream& in, CSimplePool* pool);
 
@@ -24,4 +24,4 @@ private:
 CFactoryFnReturn FSortedParticleSystemDataFactory(const SObjectTag& tag, CInputStream& in,
                                                  const CVParamTransfer& transfer);
 
-#endif // _CSORTEDPARTICLESYSTEMDATAFACTORY
+#endif // _CPARTICLESORTEDSYSTEMDATAFACTORY

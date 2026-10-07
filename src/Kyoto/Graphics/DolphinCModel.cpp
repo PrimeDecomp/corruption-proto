@@ -7,7 +7,7 @@
 #include "Kyoto/Graphics/CCubeMaterial.hpp"
 #include "Kyoto/Graphics/CCubeModel.hpp"
 #include "Kyoto/Graphics/CGX.hpp"
-#include "Kyoto/Graphics/CGXTransientBuffer.hpp"
+#include "Kyoto/Graphics/GPUMemory.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Graphics/CModelFlags.hpp"
 #include "Kyoto/Math/CAABox.hpp"
@@ -35,7 +35,7 @@ public:
   CSkinMatricesGuard(void* matrices) : mActive(matrices != nullptr) {}
   ~CSkinMatricesGuard() {
     if (mActive) {
-      CGXTransientBuffer::ReleaseAllocation();
+      GPUMemory::ReleaseAllocation();
       GXSetCurrentMtx(GX_PNMTX0);
     }
   }
@@ -183,7 +183,7 @@ void* CModel::SetupSkinMatrices() const {
   }
 
   SSkinMatrices* matrices =
-      static_cast< SSkinMatrices* >(CGXTransientBuffer::EnsureAllocation(sizeof(SSkinMatrices)));
+      static_cast< SSkinMatrices* >(GPUMemory::EnsureAllocation(sizeof(SSkinMatrices)));
   matrices->mModelView = CGraphics::GetGXModelView();
   float (*normal)[3] = matrices->mNormal;
   const Mtx& invXpose = CGraphics::GetGXModelViewInvXpose();

@@ -1,5 +1,5 @@
-#ifndef _CSTATICAUDIOPLAYER
-#define _CSTATICAUDIOPLAYER
+#ifndef _CRSFAUDIO
+#define _CRSFAUDIO
 
 #include "types.h"
 
@@ -9,23 +9,18 @@
 #include <rstl/vector.hpp>
 
 class CDvdRequest;
-typedef void (*FAudioCallback)();
 
-class CStaticAudioPlayer {
+class CRSFAudio {
 public:
-  CStaticAudioPlayer(const rstl::string& filepath, const int loopStart, const int loopEnd);
-  ~CStaticAudioPlayer();
+  CRSFAudio(const rstl::string& filepath, const int loopStart, const int loopEnd);
+  ~CRSFAudio();
 
-  const bool IsReady() const;
+  const bool IsFullyLoaded() const;
   void StartMixOut();
   void StopMixOut();
 
   static void MixCallback();
   void DoMix();
-  static void RunDMACallback(FAudioCallback);
-  static void CancelDMACallback(FAudioCallback);
-  static void InstallAICallback();
-  static void AICallback();
 
   void Decode(ushort* out, const ushort* in, int numSamples);
   void DecodeMonoAndMix(ushort* out, const ushort* in, int numSamples, int startSample,
@@ -49,6 +44,6 @@ private:
   ushort mVolume;
 };
 
-CHECK_SIZEOF(CStaticAudioPlayer, 0xC4)
+CHECK_SIZEOF(CRSFAudio, 0xC4)
 
-#endif // _CSTATICAUDIOPLAYER
+#endif // _CRSFAUDIO

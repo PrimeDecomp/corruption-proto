@@ -14,15 +14,15 @@
 #include "Kyoto/IObjectStore.hpp"
 
 class CInputStream;
-class CGroupReadCache;
+class CLookaheadRes;
 class CResLoader;
 
 // Echoes-only async read returned by CResLoader::LoadResourceAsync; it may own its destination
-// buffer or point into a CGroupReadCache. Name is a guess; methods live in the TU at 0x8034317C
+// buffer or point into a CLookaheadRes. Name is a guess; methods live in the TU at 0x8034317C
 // (after CInputStream.cpp).
 class CBufferedDvdRequest : public CDvdRequest {
 public:
-  CBufferedDvdRequest(CGroupReadCache* cache, CDvdRequest* request, uchar* buffer);
+  CBufferedDvdRequest(CLookaheadRes* cache, CDvdRequest* request, uchar* buffer);
   ~CBufferedDvdRequest();
   void WaitUntilComplete();
   bool IsComplete();
@@ -34,26 +34,25 @@ public:
   rstl::auto_ptr< uchar >& GetBuffer();
 
 private:
-  CGroupReadCache* mCache;
+  CLookaheadRes* mCache;
   rstl::auto_ptr< CDvdRequest > mRequest;
   rstl::auto_ptr< uchar > mBuffer;
   int mMediaType;
 };
 CHECK_SIZEOF(CBufferedDvdRequest, 0x1c)
 
-// Echoes-only shared read of a run of grouped pak resources; requests for resources inside it
-// are served from its buffer. Name is a guess; methods live in the same TU as
-// CBufferedDvdRequest.
-class CGroupReadCache {
+// Shared lookahead buffer. The native class and reference-release method names are
+// confirmed by Corruption diagnostics. Requests within it share the same read.
+class CLookaheadRes {
 public:
-  CGroupReadCache(uchar* buffer, CDvdFile* file, uint offset, uint size,
+  CLookaheadRes(uchar* buffer, CDvdFile* file, uint offset, uint size,
                   const rstl::auto_ptr< CDvdRequest >& request, CResLoader* owner);
-  ~CGroupReadCache();
+  ~CLookaheadRes();
 
   bool IsInvalid() const { return mInvalid; }
   bool Contains(const CDvdFile* file, uint offset, uint size) const;
   rstl::auto_ptr< CBufferedDvdRequest > MakeRequest(uint offset);
-  void Release();
+  void RequestHasDied();
   bool Cancel();
 
 private:
@@ -61,17 +60,17 @@ private:
   CDvdFile* mFile;
   uint mOffset;
   uint mSize;
-  uint mRefCount : 16;
+  uint mReferenceCount : 16;
   uint mInvalid : 1;
   rstl::auto_ptr< CDvdRequest > mRequest;
   CResLoader* mOwner;
 };
-CHECK_SIZEOF(CGroupReadCache, 0x24)
+CHECK_SIZEOF(CLookaheadRes, 0x24)
 
 class CResLoader {
 public:
   typedef rstl::list< rstl::auto_ptr< CPakFile > > PakList;
-  typedef rstl::list< CGroupReadCache > GroupCacheList;
+  typedef rstl::list< CLookaheadRes > GroupCacheList;
 
   enum ECompressionType {
     kCompressionType_Uncompressed,
@@ -108,7 +107,7 @@ public:
   // Same body as GetPakFile; identity unknown.
   CPakFile* sub_802FBB64(int idx) const;
   CPakFile* GetPakFile(int idx) const;
-  void ReleaseGroupCache(const CGroupReadCache* cache);
+  void KillLookahead(const CLookaheadRes* cache);
 
 private:
   GroupCacheList::iterator FindGroupCache(const CDvdFile* file, uint offset, uint size);
@@ -120,7 +119,7 @@ private:
   PakList mPakLoadingList;
   PakList::iterator mCurPak;
   mutable CAssetId mCachedResId;
-  mutable const CPakFile::SResInfo* mCachedResInfo;
+  mutable const CPakFile::CResInfo* mCachedResInfo;
   bool mForwardSeek;
 };
 CHECK_SIZEOF(CResLoader, 0x70)

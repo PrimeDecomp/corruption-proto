@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-#include "Kyoto/Streams/CFilePreload.hpp"
+#include "Kyoto/Streams/CStreamPreloadedToken.hpp"
 #include "rstl/auto_ptr.hpp"
 #include "rstl/optional_object.hpp"
 #include "rstl/reserved_vector.hpp"
@@ -96,7 +96,7 @@ private:
   int mType;
   int mState;
   rstl::reserved_vector< int, 2 > mVoices;
-  rstl::optional_object< CFilePreload > mPreload;
+  rstl::optional_object< CStreamPreloadedToken > mPreload;
 } ATTRIBUTE_ALIGN(32);
 CHECK_SIZEOF(CDSPStreamManager, 0x300)
 

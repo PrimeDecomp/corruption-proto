@@ -1,4 +1,4 @@
-#include "Kyoto/Graphics/CGXTransientBuffer.hpp"
+#include "Kyoto/Graphics/GPUMemory.hpp"
 
 #include "Kyoto/Alloc/CCircularBuffer.hpp"
 
@@ -24,7 +24,7 @@ static void* sBufferBase;
 static ushort sCurrentToken;
 static bool sInitialized;
 static bool sDumpedSpinLockMessage;
-static bool sAllocationActive;
+static bool sWithinAllocation;
 // Guessed name: the only known native use of this word is SetBuffer resetting it to zero.
 static int sBufferResetState;
 static int sBufferSize = 0x80000;
@@ -32,7 +32,7 @@ static rstl::optional_object< CCircularBuffer > sBuffer;
 static rstl::list< SAllocation > sAllocations;
 } // namespace
 
-void CGXTransientBuffer::SetBuffer(void* buffer, uint size) {
+void GPUMemory::SetBuffer(void* buffer, uint size) {
   sBufferSize = size;
   sAllocations.clear();
   sBufferBase = buffer;
@@ -42,7 +42,7 @@ void CGXTransientBuffer::SetBuffer(void* buffer, uint size) {
   }
 }
 
-void* CGXTransientBuffer::EnsureAllocation(int size) {
+void* GPUMemory::EnsureAllocation(int size) {
   if (!sInitialized) {
     GXSetDrawSync(0xffff);
     while (GXReadDrawSync() != 0xffff) {}
@@ -50,7 +50,7 @@ void* CGXTransientBuffer::EnsureAllocation(int size) {
     sInitialized = true;
   }
 
-  sAllocationActive = true;
+  sWithinAllocation = true;
   TickAllocations();
   int alignedSize = (size + 31) & ~31u;
   void* data = sBuffer->Alloc(alignedSize);
@@ -83,13 +83,13 @@ void* CGXTransientBuffer::EnsureAllocation(int size) {
   return data;
 }
 
-void CGXTransientBuffer::ReleaseAllocation() {
-  sAllocationActive = false;
+void GPUMemory::ReleaseAllocation() {
+  sWithinAllocation = false;
   GXSetDrawSync(sCurrentToken);
   ++sCurrentToken;
 }
 
-void CGXTransientBuffer::TickAllocations() {
+void GPUMemory::TickAllocations() {
   do {
     int syncVal = GXReadDrawSync();
     if (syncVal > static_cast< int >(sCurrentToken)) {

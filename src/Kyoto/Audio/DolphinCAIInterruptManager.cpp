@@ -1,21 +1,22 @@
 #include "Kyoto/Audio/CAudioSys.hpp"
-#include "Kyoto/Audio/CStaticAudioPlayer.hpp"
+#include "Kyoto/Audio/CAIInterruptManager.hpp"
 #include "Kyoto/Basics/CInterruptGuard.hpp"
 #include "rstl/algorithm.hpp"
+#include "rstl/reserved_vector.hpp"
 #include <dolphin/ai.h>
 
-static rstl::reserved_vector< FAudioCallback, 4 > sAICallbacks;
+static rstl::reserved_vector< FAudioCallback, 4 > sCallbacks;
 static bool sDMACallbackInstalled ATTRIBUTE_ALIGN(8) = false;
 static FAudioCallback sOldDMACallback = nullptr;
 
-void CStaticAudioPlayer::InstallAICallback() {
+void CAIInterruptManager::InstallAICallback() {
   bool old = CAudioSys::IsAICallbackEnabled();
   CAudioSys::EnableAICallback(true);
 
-  if (!sDMACallbackInstalled && sAICallbacks.size() != 0) {
+  if (!sDMACallbackInstalled && sCallbacks.size() != 0) {
     sOldDMACallback = AIRegisterDMACallback(AICallback);
     sDMACallbackInstalled = true;
-  } else if (sDMACallbackInstalled && sAICallbacks.size() == 0) {
+  } else if (sDMACallbackInstalled && sCallbacks.size() == 0) {
     AIRegisterDMACallback(sOldDMACallback);
     sOldDMACallback = 0;
     sDMACallbackInstalled = false;
@@ -24,32 +25,32 @@ void CStaticAudioPlayer::InstallAICallback() {
   CAudioSys::EnableAICallback(old);
 }
 
-void CStaticAudioPlayer::AICallback() {
+void CAIInterruptManager::AICallback() {
   sOldDMACallback();
 
-  for (int i = 0; i < sAICallbacks.size(); ++i) {
-    sAICallbacks[i]();
+  for (int i = 0; i < sCallbacks.size(); ++i) {
+    sCallbacks[i]();
   }
 }
 
-void CStaticAudioPlayer::RunDMACallback(const FAudioCallback callback) {
+void CAIInterruptManager::RunDMACallback(const FAudioCallback callback) {
   CInterruptGuard interrupts;
   const rstl::reserved_vector< FAudioCallback, 4 >::iterator it =
-      rstl::find(sAICallbacks.begin(), sAICallbacks.end(), callback);
-  if (it == sAICallbacks.end()) {
-    sAICallbacks.push_back(callback);
+      rstl::find(sCallbacks.begin(), sCallbacks.end(), callback);
+  if (it == sCallbacks.end()) {
+    sCallbacks.push_back(callback);
   }
 
   InstallAICallback();
 }
 
-void CStaticAudioPlayer::CancelDMACallback(FAudioCallback callback) {
+void CAIInterruptManager::CancelDMACallback(FAudioCallback callback) {
   CInterruptGuard interrupts;
 
   const rstl::reserved_vector< FAudioCallback, 4 >::iterator it =
-      rstl::find(sAICallbacks.begin(), sAICallbacks.end(), callback);
-  if (it != sAICallbacks.end()) {
-    sAICallbacks.erase(it);
+      rstl::find(sCallbacks.begin(), sCallbacks.end(), callback);
+  if (it != sCallbacks.end()) {
+    sCallbacks.erase(it);
   }
 
   InstallAICallback();

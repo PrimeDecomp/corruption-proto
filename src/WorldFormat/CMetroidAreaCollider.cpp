@@ -1,0 +1,6 @@
+/*
+ * G2MEAB WorldFormat/CMetroidAreaCollider.cpp translation-unit scaffold.
+ * .text: 0x8059D810..0x805A6358 (77 native functions, including emitted helpers).
+ * NonMatching: implementation has not been reconstructed.
+ * Boundary evidence: Retain eight leading prototype convex/area methods59D810..59F100, including recursive boolean/contact variants59D810/59DBC8 and wrappers59DAE0/59DF80, cache/mesh tests59E060/59E744, moving convex components59EC20 and edge/vertex flagger59F100. They use the same duplicate-check buffers/counters as ResetInternalCounters5A505C and call the same ConvexPolyCollision5A5104, not an unrelated game TU. Familiar complete both-reference collider family starts59F1AC only after these extras and includes octree caches, moving sphere/box, sphere/box boolean/contact, clipper and plane helper5A5688. Native helper closure extends through5A56F8 box-plane builder, reserved-vector dtors/push/construct helpers, writer AddTriangle5A5AB4/ReserveTriangles5A5B70, locked-allocator vector dtors5A5C1C/5A5CB4, clear5A5D4C, reserve5A5D58/5A5E38 and both lc_allocator.h71 allocation helpers5A5F10/5A6134+224. Leading59EC20 directly calls both reserves and flagger; retain all helpers instead of cutting at retail function count. Next5A6358 constructs graphics lights and uses a distinct light layout.
+ */

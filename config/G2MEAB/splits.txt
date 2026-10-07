@@ -312,6 +312,44 @@ Dolphin/odenotstub/odenotstub.c:
 Dolphin/amcstubs/AmcExi2Stubs.c:
 	.text       start:0x80442018 end:0x80442048
 
+Collision/CCollidableAABox.cpp:
+	.text       start:0x80473854 end:0x80474364
+	.ctors      start:0x8065BB60 end:0x8065BB64
+
+Collision/CCollisionInfo.cpp:
+	.text       start:0x80474364 end:0x80474888
+
+Collision/InternalColliders.cpp:
+	.text       start:0x80474888 end:0x80474A24
+
+Collision/CCollisionPrimitive.cpp:
+	.text       start:0x80474A24 end:0x80476108
+	.ctors      start:0x8065BB64 end:0x8065BB68
+
+Collision/CMaterialList.cpp:
+	.text       start:0x80476108 end:0x804762A8
+
+Collision/CollisionUtil.cpp:
+	.text       start:0x804762A8 end:0x8047AF98
+	.ctors      start:0x8065BB68 end:0x8065BB6C
+
+Collision/CCollidableSphere.cpp:
+	.text       start:0x8047AF98 end:0x8047C2D4
+	.ctors      start:0x8065BB6C end:0x8065BB70
+
+Collision/CMaterialFilter.cpp:
+	.text       start:0x8047C2D4 end:0x8047C680
+	.ctors      start:0x8065BB70 end:0x8065BB74
+
+Collision/COBBox.cpp:
+	.text       start:0x8047C680 end:0x8047E58C
+
+Collision/CMRay.cpp:
+	.text       start:0x8047E58C end:0x8047E860
+
+Collision/CCharacterPrimitiveData.cpp:
+	.text       start:0x8047E860 end:0x8047F4A0
+
 GuiSys/CAuiMeter.cpp:
 	.text       start:0x804816E4 end:0x80481E20
 
@@ -1225,6 +1263,43 @@ Weapons/CDecalDataFactory.cpp:
 
 Weapons/CDecalDescription.cpp:
 	.text       start:0x8059ADB4 end:0x8059AE44
+
+WorldFormat/CAreaOctTree_Tests.cpp:
+	.text       start:0x8059AE44 end:0x8059C9C8
+
+WorldFormat/CCollisionSurface.cpp:
+	.text       start:0x8059C9C8 end:0x8059CBFC
+
+WorldFormat/CCollisionEdge.cpp:
+	.text       start:0x8059CBFC end:0x8059CC34
+
+WorldFormat/CMetroidModelInstance.cpp:
+	.text       start:0x8059CC34 end:0x8059CE78
+
+WorldFormat/DolphinCAreaOctTree.cpp:
+	.text       start:0x8059CE78 end:0x8059D810
+
+WorldFormat/CMetroidAreaCollider.cpp:
+	.text       start:0x8059D810 end:0x805A6358
+
+WorldFormat/CWorldLight.cpp:
+	.text       start:0x805A6358 end:0x805A687C
+	.ctors      start:0x8065BC64 end:0x8065BC68
+
+WorldFormat/COBBTree.cpp:
+	.text       start:0x805A687C end:0x805A7CD0
+
+WorldFormat/CCollidableOBBTree.cpp:
+	.text       start:0x805A7CD0 end:0x805ABBE4
+
+WorldFormat/CCollidableOBBTreeGroup.cpp:
+	.text       start:0x805ABBE4 end:0x805AE030
+
+WorldFormat/CCollisionPrimitiveData.cpp:
+	.text       start:0x805B0F74 end:0x805B1818
+
+WorldFormat/CTriangleCollisionCache.cpp:
+	.text       start:0x805B1818 end:0x805B36EC
 
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C

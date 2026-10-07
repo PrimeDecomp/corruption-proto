@@ -14,6 +14,9 @@ double atof(const char* str);
 void srand(unsigned int seed);
 int rand(void);
 int abs(int n);
+#ifdef __MWERKS__
+#define abs(n) __abs(n)
+#endif
 long labs(long n);
 void exit(int status);
 void abort(void);

@@ -7,7 +7,8 @@ typedef unsigned long jmp_buf[100];
 #ifdef __cplusplus
 extern "C" {
 #endif
-int setjmp(jmp_buf env);
+int __setjmp(jmp_buf env);
+#define setjmp(env) __setjmp(env)
 void longjmp(jmp_buf env, int value);
 #ifdef __cplusplus
 }

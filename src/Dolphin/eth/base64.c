@@ -1,0 +1,5 @@
+// NonMatching translation-unit scaffold; no implementation is supplied.
+// G2MEAB .text: 0x80405F10..0x8040621C (2 native functions).
+// Filename inferred from the bounded functional family; original source basename is unproven.
+// Evidence: Both complete stateless functions share the alphabetABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/= at80699520. Encode maps3 input bytes to4 output characters, handles1/2-byte tails with= and returns end pointer; Decode uses strchr lookups, consumes4-character groups and stops at padding. Auth response calls Encode80405F10 at80404FA0 and RX filter calls Decode80406138 at80404CAC. No MD5 state/helper access. Last Decode returns80406218; next8040621C is independently established EXIBios.c interrupt-mask helper referenced by EXI lock/unlock/callback code.
+// Helpers/inlining: 2 separately emitted natives and no local emitted helper; Decode calls library strchr. Encoder has an expanded two-group loop plus tail handling; no NUL termination or input-validation helper is implied.

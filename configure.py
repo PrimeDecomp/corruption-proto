@@ -363,6 +363,9 @@ config.libs = [
     DolphinLib("AMCStubs", [
         Object(NonMatching, "Dolphin/amcstubs/AmcExi2Stubs.c"),
     ]),
+    DolphinLib("Base64", [
+        Object(NonMatching, "Dolphin/eth/base64.c"),
+    ]),
     DolphinLib("Dolphin", [
         Object(NonMatching, "Dolphin/PPCArch.c"),
         Object(NonMatching, "Dolphin/os/OS.c"),
@@ -390,10 +393,28 @@ config.libs = [
         Object(NonMatching, "Dolphin/os/OSTime.c"),
         Object(NonMatching, "Dolphin/os/__ppc_eabi_init.cpp", extra_cflags=["-lang=c"]),
     ]),
+    DolphinLib("ETH", [
+        Object(NonMatching, "Dolphin/eth/eth.c"),
+        Object(NonMatching, "Dolphin/eth/ethAuth.c"),
+    ]),
     DolphinLib("HIO", [
         Object(NonMatching, "Dolphin/hio/hio.c"),
     ]),
     DolphinLib("IP", [
+        Object(NonMatching, "Dolphin/ip/IPArp.c"),
+        Object(NonMatching, "Dolphin/ip/IPIcmp.c"),
+        Object(NonMatching, "Dolphin/ip/IPInterface.c"),
+        Object(NonMatching, "Dolphin/ip/IPRoute.c"),
+        Object(NonMatching, "Dolphin/ip/IPUdp.c"),
+        Object(NonMatching, "Dolphin/ip/IPFragment.c"),
+        Object(NonMatching, "Dolphin/ip/IPEthernet.c"),
+        Object(NonMatching, "Dolphin/ip/IPRing.c"),
+        Object(NonMatching, "Dolphin/ip/IPTcpTimer.c"),
+        Object(NonMatching, "Dolphin/ip/IPTcp.c"),
+        Object(NonMatching, "Dolphin/ip/IPTcpTimeWait.c"),
+        Object(NonMatching, "Dolphin/ip/IPDhcp.c"),
+        Object(NonMatching, "Dolphin/ip/IPAutoIP.c"),
+        Object(NonMatching, "Dolphin/ip/IPOptions.c"),
         Object(NonMatching, "Dolphin/ip/IPSocket.c"),
         Object(NonMatching, "Dolphin/ip/PPPoE.c"),
         Object(NonMatching, "Dolphin/ip/PPPLcp.c"),
@@ -406,6 +427,9 @@ config.libs = [
         Object(NonMatching, "Dolphin/mcc/mcc.c"),
         Object(NonMatching, "Dolphin/mcc/fio.c"),
         Object(NonMatching, "Dolphin/mcc/tty.c"),
+    ]),
+    DolphinLib("MD5", [
+        Object(NonMatching, "Dolphin/eth/md5.c"),
     ]),
     DolphinLib("ODENotStub", [
         Object(NonMatching, "Dolphin/odenotstub/odenotstub.c"),
@@ -496,6 +520,7 @@ config.libs = [
         Object(NonMatching, "Dolphin/vi/vi.c"),
     ]),
     FmodLib("FMOD", [
+        Object(NonMatching, "FMOD/fmod_channelpool.cpp"),
         Object(NonMatching, "FMOD/fmod_string.cpp"),
     ]),
     LzoLib("LZO", [

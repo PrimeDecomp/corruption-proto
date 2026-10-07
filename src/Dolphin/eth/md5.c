@@ -1,0 +1,5 @@
+// NonMatching translation-unit scaffold; no implementation is supplied.
+// G2MEAB .text: 0x804050A4..0x80405F10 (6 native functions).
+// Filename inferred from the bounded functional family; original source basename is unproven.
+// Evidence: Complete canonical six-function MD5 organization: Init writes67452301/EFCDAB89/98BADCFE/10325476; Update maintains64-bit bit count and64-byte buffer; Final pads to56 mod64, appends encoded8-byte count, writes16-byte digest and clears88-byte context; Transform performs64 MD5 rounds via Decode; Encode and Decode retain separate little-endian loops. Incoming refs prove Init/Update/Final serve BOTH Ethernet authentication and independent PPP CHAP80428C1C at80428CC4..80428D04. All Transform/Encode/Decode refs remain within this six-native family. Final Decode returns80405F0C; next80405F10 changes to stateless Base64 conversion and alphabet data.
+// Helpers/inlining: 6 separately emitted natives:3 external operations and3 internal helpers Transform/Encode/Decode. MD5 rotation/boolean steps are expanded in Transform, not extra natives. Do not inline away the three retained helpers merely because compiler defaults differ.

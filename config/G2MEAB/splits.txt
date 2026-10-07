@@ -141,6 +141,18 @@ Dolphin/dvd/dvdfatal.c:
 Dolphin/dvd/fstload.c:
 	.text       start:0x8040185C end:0x80401A9C
 
+Dolphin/eth/eth.c:
+	.text       start:0x80401A9C end:0x804045FC
+
+Dolphin/eth/ethAuth.c:
+	.text       start:0x804045FC end:0x804050A4
+
+Dolphin/eth/md5.c:
+	.text       start:0x804050A4 end:0x80405F10
+
+Dolphin/eth/base64.c:
+	.text       start:0x80405F10 end:0x8040621C
+
 Dolphin/exi/EXIBios.c:
 	.text       start:0x8040621C end:0x80407D10
 
@@ -188,6 +200,48 @@ Dolphin/gx/GXTransform.c:
 
 Dolphin/gx/GXPerf.c:
 	.text       start:0x8040F520 end:0x80410014
+
+Dolphin/ip/IPArp.c:
+	.text       start:0x80411074 end:0x80412414
+
+Dolphin/ip/IPIcmp.c:
+	.text       start:0x80412414 end:0x80412F90
+
+Dolphin/ip/IPInterface.c:
+	.text       start:0x80412F90 end:0x80413574
+
+Dolphin/ip/IPRoute.c:
+	.text       start:0x80413574 end:0x804149E8
+
+Dolphin/ip/IPUdp.c:
+	.text       start:0x80414AC4 end:0x80416138
+
+Dolphin/ip/IPFragment.c:
+	.text       start:0x80416138 end:0x80416878
+
+Dolphin/ip/IPEthernet.c:
+	.text       start:0x80416878 end:0x804175D4
+
+Dolphin/ip/IPRing.c:
+	.text       start:0x804175D4 end:0x80417CF0
+
+Dolphin/ip/IPTcpTimer.c:
+	.text       start:0x8041B0FC end:0x8041BABC
+
+Dolphin/ip/IPTcp.c:
+	.text       start:0x8041BABC end:0x8041D6B4
+
+Dolphin/ip/IPTcpTimeWait.c:
+	.text       start:0x8041D6B4 end:0x8041DC68
+
+Dolphin/ip/IPDhcp.c:
+	.text       start:0x8041DE3C end:0x8041FEFC
+
+Dolphin/ip/IPAutoIP.c:
+	.text       start:0x8041FEFC end:0x804202F0
+
+Dolphin/ip/IPOptions.c:
+	.text       start:0x804202F0 end:0x80420684
 
 Dolphin/ip/IPSocket.c:
 	.text       start:0x80420684 end:0x804232FC
@@ -1442,6 +1496,9 @@ WorldFormat/CTriangleCollisionCache.cpp:
 
 WorldFormat/CCollidableTranslatedConvexPH.cpp:
 	.text       start:0x805B36EC end:0x805B5D10
+
+FMOD/fmod_channelpool.cpp:
+	.text       start:0x805C11FC end:0x805C168C
 
 FMOD/fmod_string.cpp:
 	.text       start:0x80619D8C end:0x8061A228

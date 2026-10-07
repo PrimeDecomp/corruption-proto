@@ -380,6 +380,11 @@ config.libs = [
     ]),
     DolphinLib("IP", [
         Object(NonMatching, "Dolphin/ip/IPSocket.c"),
+        Object(NonMatching, "Dolphin/ip/PPPoE.c"),
+        Object(NonMatching, "Dolphin/ip/PPPLcp.c"),
+        Object(NonMatching, "Dolphin/ip/PPPIpcp.c"),
+        Object(NonMatching, "Dolphin/ip/PPPPap.c"),
+        Object(NonMatching, "Dolphin/ip/PPPChap.c"),
         Object(NonMatching, "Dolphin/ip/IPIgmp.c"),
     ]),
     DolphinLib("MCC", [

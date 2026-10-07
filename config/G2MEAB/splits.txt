@@ -192,6 +192,21 @@ Dolphin/gx/GXPerf.c:
 Dolphin/ip/IPSocket.c:
 	.text       start:0x80420684 end:0x804232FC
 
+Dolphin/ip/PPPoE.c:
+	.text       start:0x80426828 end:0x804274A8
+
+Dolphin/ip/PPPLcp.c:
+	.text       start:0x804274A8 end:0x80427BE0
+
+Dolphin/ip/PPPIpcp.c:
+	.text       start:0x80427BE0 end:0x804281C8
+
+Dolphin/ip/PPPPap.c:
+	.text       start:0x804281C8 end:0x80428854
+
+Dolphin/ip/PPPChap.c:
+	.text       start:0x80428854 end:0x80428E44
+
 Dolphin/ip/IPIgmp.c:
 	.text       start:0x80428E44 end:0x804299D4
 

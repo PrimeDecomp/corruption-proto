@@ -96,7 +96,7 @@ LuaObject::LuaObject(LuaState* state, int stackIndex) throw()
 }
 
 
-inline LuaObject::LuaObject(LuaState* state, const TObject* obj)
+LuaObject::LuaObject(LuaState* state, const TObject* obj)
 {
 	luaplus_assert(obj);
 	setnilvalue2n(&m_object);

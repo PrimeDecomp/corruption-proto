@@ -1526,6 +1526,9 @@ Lua/LuaPlusFunctions.cpp:
 	.text       start:0x8044787C end:0x804479DC
 	.rodata     start:0x80699888 end:0x806998A8
 
+Lua/LuaMemory.cpp:
+	.text       start:0x804479DC end:0x80447AE8
+
 Lua/LuaState_DumpObject.cpp:
 	.text       start:0x80447AE8 end:0x8044A01C
 	.rodata     start:0x806998A8 end:0x806999A0

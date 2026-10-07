@@ -45,6 +45,9 @@ static int default_panic (lua_State *L) {
 }
 
 
+#ifdef __MWERKS__
+#include "LuaMemory.h"
+#else
 static void* luaHelper_ReallocFunction(void* ptr, int oldsize, int size, void* data, const char* allocName, unsigned int allocFlags)
 {
 	UNUSED(oldsize);
@@ -61,6 +64,7 @@ static void luaHelper_FreeFunction(void* ptr, int oldsize, void* data)
 	UNUSED(oldsize);
 	free(ptr);
 }
+#endif
 
 
 static lua_ReallocFunction luaHelper_Realloc = luaHelper_ReallocFunction;

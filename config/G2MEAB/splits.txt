@@ -613,6 +613,50 @@ MetroidPrime/ScriptObjects/CScriptPlayerActor.cpp:
 	.text       start:0x80143CF4 end:0x801468C8
 	.ctors      start:0x8065B6E8 end:0x8065B6EC
 
+MetroidPrime/Enemies/CBurstFire.cpp:
+	.text       start:0x801468C8 end:0x80147600
+	.ctors      start:0x8065B6EC end:0x8065B6F0
+
+MetroidPrime/Player/CPlayerEnergyDrain.cpp:
+	.text       start:0x80147600 end:0x80148228
+	.ctors      start:0x8065B6F0 end:0x8065B6F4
+
+MetroidPrime/GameObjectLists.cpp:
+	.text       start:0x801482C4 end:0x80148720
+	.ctors      start:0x8065B6F8 end:0x8065B6FC
+
+MetroidPrime/ScriptObjects/CScriptAreaAttributes.cpp:
+	.text       start:0x80148720 end:0x80148F1C
+	.ctors      start:0x8065B6FC end:0x8065B700
+
+MetroidPrime/Player/CStaticInterference.cpp:
+	.text       start:0x80148F1C end:0x8014952C
+	.ctors      start:0x8065B700 end:0x8065B704
+
+MetroidPrime/PathFinding/CPathFindSearch.cpp:
+	.text       start:0x8014952C end:0x8014CC04
+
+MetroidPrime/PathFinding/CPathFindRegion.cpp:
+	.text       start:0x8014CC04 end:0x8014E1F8
+
+MetroidPrime/PathFinding/CPathFindArea.cpp:
+	.text       start:0x8014E1F8 end:0x8015060C
+
+MetroidPrime/PathFinding/CPathFindSpline.cpp:
+	.text       start:0x80151858 end:0x80151F14
+
+MetroidPrime/ScriptObjects/CFishCloud.cpp:
+	.text       start:0x80151F14 end:0x8015971C
+	.ctors      start:0x8065B704 end:0x8065B708
+
+MetroidPrime/CHealthInfo.cpp:
+	.text       start:0x8015971C end:0x80159850
+	.ctors      start:0x8065B708 end:0x8065B70C
+
+MetroidPrime/Player/CGameState.cpp:
+	.text       start:0x80159850 end:0x8015F36C
+	.ctors      start:0x8065B70C end:0x8065B710
+
 MetroidPrime/CGameCollision_TriangleCache.cpp:
 	.text       start:0x8024AFE4 end:0x8024E548
 	.ctors      start:0x8065B8CC end:0x8065B8D0

@@ -1205,6 +1205,9 @@ Kyoto/Math/CQuaternion.cpp:
 
 Kyoto/CRandom16.cpp:
 	.text       start:0x804C9EAC end:0x804CA138
+	.rodata     start:0x8069F078 end:0x8069F108
+	.sbss       start:0x8079B398 end:0x8079B3A0
+	.sdata2     start:0x807A1E10 end:0x807A1E20
 
 Kyoto/Math/CTransform4f.cpp:
 	.text       start:0x804CA138 end:0x804CB8AC
@@ -1234,6 +1237,7 @@ Kyoto/Math/CVector3f.cpp:
 Kyoto/Math/CVector3i.cpp:
 	.text       start:0x804CC9C0 end:0x804CCBCC
 	.ctors      start:0x8065BBB8 end:0x8065BBBC
+	.bss        start:0x80782CC0 end:0x80782D20 align:4 common
 
 Kyoto/Math/RMathUtils.cpp:
 	.text       start:0x804CCBCC end:0x804CF8F0
@@ -1241,6 +1245,7 @@ Kyoto/Math/RMathUtils.cpp:
 
 Kyoto/CCrc32.cpp:
 	.text       start:0x804CF8F0 end:0x804CF9FC
+	.rodata     start:0x8069F128 end:0x8069F528
 
 Kyoto/Text/CStringTokenizer.cpp:
 	.text       start:0x804CF9FC end:0x804CFE58
@@ -2322,8 +2327,9 @@ Runtime/runtime.c:
 
 Runtime/__init_cpp_exceptions.cpp:
 	.text       start:0x8063D040 end:0x8063D0B0
-	.ctors      start:0x8065B4C0 end:0x8065B4C4
-	.dtors      start:0x8065BD20 end:0x8065BD28
+	.ctors      start:0x8065B4C0 end:0x8065B4C4 rename:.ctors$10
+	.dtors      start:0x8065BD20 end:0x8065BD24 rename:.dtors$10
+	.dtors      start:0x8065BD24 end:0x8065BD28 rename:.dtors$15
 
 Runtime/Gecko_ExceptionPPC.cpp:
 	extab       start:0x800056EC end:0x80005760

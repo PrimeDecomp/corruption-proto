@@ -438,13 +438,19 @@ Kyoto/Basics/CSWDataDolphin.cpp:
 	.text       start:0x804906E0 end:0x804907F0
 
 Kyoto/Basics/RAssertDolphin.cpp:
-	.text       start:0x804907F0 end:0x80490DA0
+	.text       start:0x804907F0 end:0x804912D0
 
 Kyoto/Animation/CAnimation.cpp:
 	.text       start:0x804912D0 end:0x804913A8
 
+Kyoto/Animation/CMetaAnimDatabase.cpp:
+	.text       start:0x804913A8 end:0x80491760
+
 Kyoto/Animation/CAnimationManager.cpp:
 	.text       start:0x80491760 end:0x80491804
+
+Kyoto/Animation/CAnimSysContext.cpp:
+	.text       start:0x80491804 end:0x80491A2C
 
 Kyoto/Animation/CAnimTreeLoopIn.cpp:
 	.text       start:0x80491A2C end:0x80494198
@@ -1026,6 +1032,12 @@ Kyoto/Graphics/DolphinCColor.cpp:
 
 Kyoto/CDependencyGroup.cpp:
 	.text       start:0x80535D04 end:0x80536438
+
+Kyoto/Streams/CTextOutStream.cpp:
+	.text       start:0x80536438 end:0x80536548
+
+Kyoto/Streams/CTextInStream.cpp:
+	.text       start:0x80536548 end:0x8053664C
 
 Kyoto/Audio/CStreamAudioManager.cpp:
 	.text       start:0x8053664C end:0x805375C8

@@ -938,8 +938,11 @@ Kyoto/Input/CRumbleGenerator.cpp:
 Kyoto/Audio/g721.cpp:
 	.text       start:0x8053B680 end:0x8053BFFC
 
-Kyoto/Audio/CStaticAudioPlayer.cpp:
-	.text       start:0x8053BFFC end:0x8053D1C4
+Kyoto/Audio/DolphinCRSFAudio.cpp:
+	.text       start:0x8053BFFC end:0x8053CE48
+
+Kyoto/Audio/DolphinCAIInterruptManager.cpp:
+	.text       start:0x8053CE48 end:0x8053D1C4
 	.ctors      start:0x8065BC18 end:0x8065BC1C
 
 Kyoto/CFrameDelayedKiller.cpp:

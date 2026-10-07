@@ -119,6 +119,22 @@ enum __ReadProcActions { __GetChar, __UngetChar, __CheckForError };
 #define _IOFBF 2
 
 int puts(const char* s);
+extern FILE __files[];
+#define stdin (&__files[0])
+#define stdout (&__files[1])
+#define stderr (&__files[2])
+FILE* fopen(const char* path, const char* mode);
+FILE* freopen(const char* path, const char* mode, FILE* stream);
+int fclose(FILE* stream);
+int fputs(const char* str, FILE* stream);
+char* fgets(char* str, int count, FILE* stream);
+int fputc(int ch, FILE* stream);
+int getc(FILE* stream);
+int ungetc(int ch, FILE* stream);
+int feof(FILE* stream);
+int ferror(FILE* stream);
+int fprintf(FILE* stream, const char* format, ...);
+int sscanf(const char* str, const char* format, ...);
 int printf(const char*, ...);
 int sprintf(char* s, const char* format, ...);
 int vprintf(const char* format, va_list arg);

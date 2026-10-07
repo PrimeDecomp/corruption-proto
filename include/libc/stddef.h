@@ -12,6 +12,11 @@ extern "C" {
 //typedef __typeof__((char*)0 - (char*)0) ptrdiff_t;
 typedef unsigned long size_t;
 typedef long ptrdiff_t;
+#if defined(__cplusplus) && defined(__MWERKS__)
+#if !__option(wchar_type)
+typedef unsigned short wchar_t;
+#endif
+#endif
 #ifndef NULL
 #define NULL 0L
 #endif

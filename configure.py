@@ -354,7 +354,16 @@ def VorbisLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 
 # Provisional Lua/LuaPlus profile, independent from Dolphin and Retro flags.
 # The target's Lua version string does not establish its compiler settings.
-cflags_lua = [*cflags_base]
+cflags_lua = [
+    *cflags_base,
+    "-i include/Lua",
+    "-DLUAPLUS_LIB",
+    "-wchar_t off",
+    "-requireprotos",
+    # The supplied LuaPlus wrappers use C++ exceptions. This profile remains
+    # provisional; all imported units stay NonMatching.
+    "-Cpp_exceptions on",
+]
 
 
 def LuaLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
@@ -700,6 +709,8 @@ config.libs = [
         Object(NonMatching, "Lua/lstrlib.c"),
         Object(NonMatching, "Lua/ltablib.c"),
         Object(NonMatching, "Lua/lauxlib.c"),
+        # Opcode tables have no established prototype data split yet.
+        Object(NonMatching, "Lua/lopcodes.c", build_unlinked=True),
     ]),
     LzoLib("LZO", [
         Object(NonMatching, "LZO/lzo_init.c"),

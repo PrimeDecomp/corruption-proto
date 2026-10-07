@@ -1443,6 +1443,9 @@ WorldFormat/CTriangleCollisionCache.cpp:
 WorldFormat/CCollidableTranslatedConvexPH.cpp:
 	.text       start:0x805B36EC end:0x805B5D10
 
+FMOD/fmod_string.cpp:
+	.text       start:0x80619D8C end:0x8061A228
+
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C
 

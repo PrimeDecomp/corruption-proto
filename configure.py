@@ -309,6 +309,21 @@ def LzoLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
+# Provisional profile for FMOD scaffolds; historical compiler and flags are unverified.
+# Keep this independent from the imported Dolphin SDK and Retro inlining settings.
+cflags_fmod = [*cflags_base]
+
+
+def FmodLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/2.7",
+        "cflags": cflags_fmod,
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
 # Helper function for Retro game, Kyoto, and rstl libraries
 def RetroLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
@@ -479,6 +494,9 @@ config.libs = [
     ]),
     DolphinLib("vi", [
         Object(NonMatching, "Dolphin/vi/vi.c"),
+    ]),
+    FmodLib("FMOD", [
+        Object(NonMatching, "FMOD/fmod_string.cpp"),
     ]),
     LzoLib("LZO", [
         Object(NonMatching, "LZO/lzo_init.c"),

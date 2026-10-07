@@ -472,6 +472,66 @@ MetroidPrime/BodyState/CBSProjectileAttack.cpp:
 	.text       start:0x8010B110 end:0x8010B3D8
 	.ctors      start:0x8065B664 end:0x8065B668
 
+MetroidPrime/CSortedLists.cpp:
+	.text       start:0x8010B3D8 end:0x8010CD98
+	.ctors      start:0x8065B668 end:0x8065B66C
+
+MetroidPrime/ScriptObjects/CScriptSpiderBallAttractionSurface.cpp:
+	.text       start:0x8010CD98 end:0x8010D1B0
+	.ctors      start:0x8065B66C end:0x8065B670
+
+MetroidPrime/BodyState/CBSScripted.cpp:
+	.text       start:0x8010D1B0 end:0x8010D5D4
+	.ctors      start:0x8065B670 end:0x8065B674
+
+MetroidPrime/ScriptObjects/CScriptDistanceFog.cpp:
+	.text       start:0x8010D5D4 end:0x8010DEF0
+	.ctors      start:0x8065B674 end:0x8065B678
+
+MetroidPrime/BodyState/CBSTaunt.cpp:
+	.text       start:0x8010DEF0 end:0x8010E428
+	.ctors      start:0x8065B678 end:0x8065B67C
+
+MetroidPrime/ScriptObjects/CScriptSpecialFunction.cpp:
+	.text       start:0x8010E428 end:0x80118360
+	.ctors      start:0x8065B67C end:0x8065B680
+
+MetroidPrime/Player/CSamusFaceReflection.cpp:
+	.text       start:0x80118360 end:0x80118E28
+	.ctors      start:0x8065B680 end:0x8065B684
+
+MetroidPrime/ScriptObjects/CScriptPlayerHint.cpp:
+	.text       start:0x80118E28 end:0x801193F8
+	.ctors      start:0x8065B684 end:0x8065B688
+
+MetroidPrime/ScriptObjects/CScriptPointOfInterest.cpp:
+	.text       start:0x801193F8 end:0x801199AC
+	.ctors      start:0x8065B688 end:0x8065B68C
+
+MetroidPrime/CMapWorldInfo.cpp:
+	.text       start:0x801199AC end:0x8011BAB4
+	.ctors      start:0x8065B68C end:0x8065B690
+
+MetroidPrime/Factories/CScannableObjectInfo.cpp:
+	.text       start:0x8011BAB4 end:0x8011D000
+	.ctors      start:0x8065B690 end:0x8065B694
+
+MetroidPrime/Player/CScanDisplay.cpp:
+	.text       start:0x8011D000 end:0x801202C8
+	.ctors      start:0x8065B694 end:0x8065B698
+
+MetroidPrime/ScriptObjects/CScriptSteam.cpp:
+	.text       start:0x801202C8 end:0x80120A7C
+	.ctors      start:0x8065B698 end:0x8065B69C
+
+MetroidPrime/ScriptObjects/CScriptRipple.cpp:
+	.text       start:0x80120A7C end:0x80120D74
+	.ctors      start:0x8065B69C end:0x8065B6A0
+
+MetroidPrime/CControllerRecorder.cpp:
+	.text       start:0x80120D74 end:0x8012478C
+	.ctors      start:0x8065B6A0 end:0x8065B6A4
+
 MetroidPrime/CPlayerGuiManager.cpp:
 	.text       start:0x8025BC48 end:0x8025FC44
 	.ctors      start:0x8065B8E8 end:0x8065B8EC
@@ -763,6 +823,38 @@ MetroidPrime/ScriptObjects/CScriptShipCommandPath.cpp:
 MetroidPrime/CRigidBody.cpp:
 	.text       start:0x802E56BC end:0x802E7750
 	.ctors      start:0x8065BA00 end:0x8065BA04
+
+MetroidPrime/Enemies/CNoseTurret.cpp:
+	.text       start:0x80357900 end:0x803599AC
+	.ctors      start:0x8065BAA8 end:0x8065BAAC
+
+MetroidPrime/CFootTracking.cpp:
+	.text       start:0x8035AFD8 end:0x8035CB70
+	.ctors      start:0x8065BAAC end:0x8065BAB0
+
+MetroidPrime/ScriptObjects/CScriptWeaponGenerator.cpp:
+	.text       start:0x8035DABC end:0x8035E5E8
+	.ctors      start:0x8065BAB0 end:0x8065BAB4
+
+MetroidPrime/Enemies/CPhazonLeech.cpp:
+	.text       start:0x8035E5E8 end:0x803628B0
+	.ctors      start:0x8065BAB4 end:0x8065BAB8
+
+MetroidPrime/ScriptObjects/CScriptGeneratedObjectDeleter.cpp:
+	.text       start:0x803628B0 end:0x80362EB0
+	.ctors      start:0x8065BAB8 end:0x8065BABC
+
+MetroidPrime/ScriptObjects/CScriptCrossAreaRelay.cpp:
+	.text       start:0x80362EB0 end:0x80364614
+	.ctors      start:0x8065BABC end:0x8065BAC0
+
+MetroidPrime/ScriptLoader.cpp:
+	.text       start:0x80364614 end:0x80365C48
+	.ctors      start:0x8065BAC0 end:0x8065BAC4
+
+MetroidPrime/Enemies/CReptilicusHunter.cpp:
+	.text       start:0x80365C48 end:0x8036E530
+	.ctors      start:0x8065BAC4 end:0x8065BAC8
 
 MetroidPrime/Enemies/CBlinkWolf.cpp:
 	.text       start:0x8036E530 end:0x80375C88

@@ -525,8 +525,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Graphics/CThreeSegmentModel.cpp",
-      "mapped": false
+      "path": "Kyoto/Graphics/CFoldySurface.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Graphics/DolphinCColor.cpp",
@@ -593,8 +593,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Math/CGameSpline.cpp",
-      "mapped": false
+      "path": "Kyoto/Math/CSpline.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Math/CLine.cpp",
@@ -761,8 +761,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Particles/CSortedParticleSystemDataFactory.cpp",
-      "mapped": false
+      "path": "Kyoto/Particles/CParticleSortedSystemDataFactory.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Particles/CSortedParticleSystemDescription.cpp",

@@ -715,6 +715,9 @@ MetroidPrime/BodyState/CABSPose.cpp:
 
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
+	.rodata     start:0x80686778 end:0x806867B0
+	.sdata      start:0x80796118 end:0x80796120
+	.sdata2     start:0x8079F0E0 end:0x8079F0E8
 
 MetroidPrime/CObjectListSmall.cpp:
 	.text       start:0x80261CD0 end:0x80262A40
@@ -2674,6 +2677,8 @@ Kyoto/Particles/CSortedParticleSystem.cpp:
 
 Kyoto/Particles/CParticleSortedSystemDataFactory.cpp:
 	.text       start:0x8054C52C end:0x8054C9DC
+	.rodata     start:0x806A96A8 end:0x806A9728
+	.data       start:0x806E1CB0 end:0x806E1CC0
 
 Kyoto/Particles/CSortedParticleSystemDescription.cpp:
 	.text       start:0x8054C9DC end:0x8054CA40
@@ -2691,6 +2696,8 @@ Kyoto/Math/CGameCameraSpline.cpp:
 
 Kyoto/Math/CSpline.cpp:
 	.text       start:0x8054D31C end:0x8054D808
+	.rodata     start:0x806A98A8 end:0x806A99C8
+	.data       start:0x806E1CD0 end:0x806E1CE0
 
 Kyoto/Math/CMotionSpline.cpp:
 	.text       start:0x8054D808 end:0x805529C0

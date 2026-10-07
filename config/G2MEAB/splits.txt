@@ -26,11 +26,46 @@ MetroidPrime/CObjectList.cpp:
 	.ctors      start:0x8065B4CC end:0x8065B4D0
 
 MetroidPrime/Player/CPlayer.cpp:
-	.text       start:0x80011B5C end:0x8002329C
+	.text       start:0x80011B5C end:0x800232E4
 	.ctors      start:0x8065B4D0 end:0x8065B4D4
 
+MetroidPrime/CArchMsgParmUserInput.cpp:
+	.text       start:0x800232E4 end:0x80023394
+
+MetroidPrime/CInputGenerator.cpp:
+	.text       start:0x8002339C end:0x80023698
+	.ctors      start:0x8065B4D4 end:0x8065B4D8
+
+MetroidPrime/CMainFlow.cpp:
+	.text       start:0x80023698 end:0x80023EC8
+	.ctors      start:0x8065B4D8 end:0x8065B4DC
+
+MetroidPrime/CMFGame.cpp:
+	.text       start:0x80023EC8 end:0x800255B8
+	.ctors      start:0x8065B4DC end:0x8065B4E0
+
+MetroidPrime/CPlayMovie.cpp:
+	.text       start:0x800255B8 end:0x80029790
+	.ctors      start:0x8065B4E0 end:0x8065B4E4
+
+MetroidPrime/CSplashScreen.cpp:
+	.text       start:0x80029790 end:0x8002A210
+	.ctors      start:0x8065B4E4 end:0x8065B4E8
+
+MetroidPrime/Tweaks/TweakGlobals.cpp:
+	.text       start:0x8002A210 end:0x8002A99C
+	.ctors      start:0x8065B4E8 end:0x8065B4EC
+
+MetroidPrime/Weapons/CGameProjectile.cpp:
+	.text       start:0x8002A99C end:0x8002E8F0
+	.ctors      start:0x8065B4EC end:0x8065B4F0
+
+MetroidPrime/CDbgDraw.cpp:
+	.text       start:0x8002E8F0 end:0x80030E8C
+	.ctors      start:0x8065B4F0 end:0x8065B4F4
+
 MetroidPrime/CEntity.cpp:
-	.text       start:0x80030F78 end:0x800332B0
+	.text       start:0x80030E8C end:0x800332B0
 	.ctors      start:0x8065B4F4 end:0x8065B4F8
 
 MetroidPrime/CArchMsgParmInt32.cpp:
@@ -61,8 +96,27 @@ MetroidPrime/CActor.cpp:
 	.ctors      start:0x8065B500 end:0x8065B504
 
 MetroidPrime/CWorld.cpp:
-	.text       start:0x80037424 end:0x8003C188
+	.text       start:0x80037424 end:0x8003B898
 	.ctors      start:0x8065B504 end:0x8065B508
+
+MetroidPrime/CGameDebug.cpp:
+	.text       start:0x8003B898 end:0x800492C8
+	.ctors      start:0x8065B508 end:0x8065B50C
+
+MetroidPrime/CDebugMenu.cpp:
+	.text       start:0x800492C8 end:0x80049F68
+	.ctors      start:0x8065B50C end:0x8065B510
+
+MetroidPrime/CArchMsgParmControllerStatus.cpp:
+	.text       start:0x80049F68 end:0x80049FE8
+
+MetroidPrime/CExplosion.cpp:
+	.text       start:0x80049FE8 end:0x8004BE78
+	.ctors      start:0x8065B510 end:0x8065B514
+
+MetroidPrime/CEffect.cpp:
+	.text       start:0x8004BE78 end:0x8004BFAC
+	.ctors      start:0x8065B514 end:0x8065B518
 
 MetroidPrime/CGameArea.cpp:
 	.text       start:0x8004BFAC end:0x8005CAE8

@@ -1212,6 +1212,7 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/ScriptObjects/CFishCloud.cpp"),
         Object(NonMatching, "MetroidPrime/CHealthInfo.cpp"),
         Object(NonMatching, "MetroidPrime/Player/CGameState.cpp"),
+        Object(NonMatching, "MetroidPrime/Enemies/CSpacePirate.cpp"),
         Object(NonMatching, "MetroidPrime/Tweaks/TweaksLoader.cpp"),
         Object(NonMatching, "MetroidPrime/Tweaks/TweaksAccessors.cpp"),
         Object(NonMatching, "MetroidPrime/CGameCollision_TriangleCache.cpp"),

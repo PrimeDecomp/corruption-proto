@@ -613,6 +613,18 @@ MetroidPrime/ScriptObjects/CScriptPlayerActor.cpp:
 	.text       start:0x80143CF4 end:0x801468C8
 	.ctors      start:0x8065B6E8 end:0x8065B6EC
 
+MetroidPrime/CGameCollision_TriangleCache.cpp:
+	.text       start:0x8024AFE4 end:0x8024E548
+	.ctors      start:0x8065B8CC end:0x8065B8D0
+
+MetroidPrime/ScriptObjects/CScriptPlayerProxy.cpp:
+	.text       start:0x8024E548 end:0x8024FE30
+	.ctors      start:0x8065B8D0 end:0x8065B8D4
+
+MetroidPrime/HUD/CHudScanInterface.cpp:
+	.text       start:0x8024FE30 end:0x80251F48
+	.ctors      start:0x8065B8D4 end:0x8065B8D8
+
 MetroidPrime/ScriptObjects/CScriptFrontEndDataNetwork.cpp:
 	.text       start:0x80251F48 end:0x80258E58
 	.ctors      start:0x8065B8D8 end:0x8065B8DC
@@ -972,6 +984,54 @@ MetroidPrime/Weapons/CSamusNovaBeam.cpp:
 MetroidPrime/Weapons/CSamusPhazonBeam.cpp:
 	.text       start:0x803154F0 end:0x80316408
 	.ctors      start:0x8065BA34 end:0x8065BA38
+
+MetroidPrime/ScriptObjects/CScriptContextSensitiveAction.cpp:
+	.text       start:0x8032A348 end:0x8032AE3C
+	.ctors      start:0x8065BA44 end:0x8065BA48
+
+MetroidPrime/Enemies/CFlyerSwarm.cpp:
+	.text       start:0x8032AE3C end:0x8032C218
+	.ctors      start:0x8065BA48 end:0x8065BA4C
+
+MetroidPrime/Enemies/CPatternedCollisionManager.cpp:
+	.text       start:0x8032C218 end:0x8032D9B4
+	.ctors      start:0x8065BA4C end:0x8065BA50
+
+MetroidPrime/Enemies/CPatternedAttachmentManager.cpp:
+	.text       start:0x8032D9B4 end:0x8032ECB8
+	.ctors      start:0x8065BA50 end:0x8065BA54
+
+MetroidPrime/Enemies/CFargullHatcherSwarm.cpp:
+	.text       start:0x8032ECB8 end:0x8032FD18
+	.ctors      start:0x8065BA54 end:0x8065BA58
+
+MetroidPrime/ScriptObjects/CScriptContextSensitiveActivator.cpp:
+	.text       start:0x8032FD18 end:0x80330414
+	.ctors      start:0x8065BA58 end:0x8065BA5C
+
+MetroidPrime/Enemies/CPhazonPuddle.cpp:
+	.text       start:0x80330414 end:0x80337498
+	.ctors      start:0x8065BA5C end:0x8065BA60
+
+MetroidPrime/ScriptObjects/CScriptPathControl.cpp:
+	.text       start:0x80337918 end:0x80338160
+	.ctors      start:0x8065BA60 end:0x8065BA64
+
+MetroidPrime/ScriptObjects/CScriptSurfaceControl.cpp:
+	.text       start:0x80338160 end:0x80338FF4
+	.ctors      start:0x8065BA64 end:0x8065BA68
+
+MetroidPrime/Cameras/CFieldOfViewBehavior.cpp:
+	.text       start:0x80338FF4 end:0x803396DC
+	.ctors      start:0x8065BA68 end:0x8065BA6C
+
+MetroidPrime/Cameras/CInterpolationBehavior.cpp:
+	.text       start:0x803396DC end:0x80339A18
+	.ctors      start:0x8065BA6C end:0x8065BA70
+
+MetroidPrime/Cameras/CMotionBehavior.cpp:
+	.text       start:0x80339A18 end:0x8033A624
+	.ctors      start:0x8065BA70 end:0x8065BA74
 
 MetroidPrime/Cameras/CAvoidanceBehavior.cpp:
 	.text       start:0x8033A624 end:0x8033A824

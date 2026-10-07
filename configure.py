@@ -285,6 +285,17 @@ def RuntimeLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
+# Tentative LZO compiler profile from Echoes; prototype optimization remains unverified.
+def LzoLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/2.7",
+        "cflags": cflags_runtime,
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
 # Helper function for Retro game, Kyoto, and rstl libraries
 def RetroLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
@@ -430,6 +441,11 @@ config.libs = [
     DolphinLib("vi", [
         Object(NonMatching, "Dolphin/vi/vi.c"),
     ]),
+    LzoLib("LZO", [
+        Object(NonMatching, "LZO/lzo_init.c"),
+        Object(NonMatching, "LZO/lzo_ptr.c"),
+        Object(NonMatching, "LZO/lzo1x_d1.c"),
+    ]),
     RetroLib("Kyoto", [
         Object(NonMatching, "Kyoto/Basics/CBasics.cpp"),
         Object(NonMatching, "Kyoto/Basics/CStopwatch.cpp"),
@@ -489,6 +505,7 @@ config.libs = [
         Object(NonMatching, "Kyoto/Animation/CTimeScaleFunctions.cpp"),
         Object(NonMatching, "Kyoto/Animation/IAnimReader.cpp"),
         Object(NonMatching, "Kyoto/Animation/CAllFormatsAnimSource.cpp"),
+        Object(NonMatching, "Kyoto/CDvdRequest.cpp"),
         Object(NonMatching, "Kyoto/Text/CColorInstruction.cpp"),
         Object(NonMatching, "Kyoto/Text/CColorOverrideInstruction.cpp"),
         Object(NonMatching, "Kyoto/Text/CDrawStringOptions.cpp"),
@@ -525,6 +542,7 @@ config.libs = [
         Object(NonMatching, "Kyoto/Particles/CSpawnSystemKeyframeData.cpp"),
         Object(NonMatching, "Kyoto/Particles/CUVElement.cpp"),
         Object(NonMatching, "Kyoto/Particles/CVectorElement.cpp"),
+        Object(NonMatching, "Kyoto/Math/CCylinder.cpp"),
         Object(NonMatching, "Kyoto/Animation/CCharAnimTime.cpp"),
         Object(NonMatching, "Kyoto/Animation/CSegIdList.cpp"),
         Object(NonMatching, "Kyoto/Alloc/CMediumAllocPool.cpp"),
@@ -540,9 +558,16 @@ config.libs = [
         Object(NonMatching, "Kyoto/Animation/CAdditiveAnimPlayback.cpp"),
         Object(NonMatching, "Kyoto/Particles/CParticleElectricDataFactory.cpp"),
         Object(NonMatching, "Kyoto/Particles/CParticleElectric.cpp"),
+        Object(NonMatching, "Kyoto/Graphics/DolphinCColor.cpp"),
+        Object(NonMatching, "Kyoto/Audio/CStreamAudioManager.cpp"),
         Object(NonMatching, "Kyoto/Particles/CElectricDescription.cpp"),
         Object(NonMatching, "Kyoto/Particles/CSwooshDescription.cpp"),
         Object(NonMatching, "Kyoto/Particles/CGenDescription.cpp"),
+        Object(NonMatching, "Kyoto/Input/CRumbleVoice.cpp"),
+        Object(NonMatching, "Kyoto/Input/RumbleAdsr.cpp"),
+        Object(NonMatching, "Kyoto/Input/CRumbleGenerator.cpp"),
+        Object(NonMatching, "Kyoto/Audio/g721.cpp"),
+        Object(NonMatching, "Kyoto/Audio/CStaticAudioPlayer.cpp"),
         Object(NonMatching, "Kyoto/Animation/CTimeRemainderAndFraction.cpp"),
         Object(NonMatching, "Kyoto/Particles/CParticleSpawnSystemDataFactory.cpp"),
         Object(NonMatching, "Kyoto/Particles/CParticleSpawnSystem.cpp"),
@@ -553,6 +578,14 @@ config.libs = [
         Object(NonMatching, "Kyoto/Animation/CSoundPOINode.cpp"),
         Object(NonMatching, "Kyoto/Animation/CPoseAsTransforms_Linear.cpp"),
         Object(NonMatching, "Kyoto/Particles/CManagedParticleGen.cpp"),
+        Object(NonMatching, "Kyoto/Streams/CBitStreamWriter.cpp"),
+        Object(NonMatching, "Kyoto/Streams/CBitStreamReader.cpp"),
+        Object(NonMatching, "Kyoto/Streams/DolphinCInputStream.cpp"),
+        Object(NonMatching, "Kyoto/Streams/DolphinCZipInputStream.cpp"),
+        Object(NonMatching, "Kyoto/Streams/CLookaheadRes.cpp"),
+        Object(NonMatching, "Kyoto/Streams/CLZOSupport.cpp"),
+        Object(NonMatching, "Kyoto/Streams/DolphinCLZOInputStream.cpp"),
+        Object(NonMatching, "Kyoto/Streams/CStreamPreloadedToken.cpp"),
         Object(NonMatching, "Kyoto/Animation/CJointData_LinearStorage.cpp"),
     ]),
     RetroLib("Kyoto.Math", [

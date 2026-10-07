@@ -459,6 +459,9 @@ Kyoto/Animation/IAnimReader.cpp:
 Kyoto/Animation/CAllFormatsAnimSource.cpp:
 	.text       start:0x804B1ED0 end:0x804B27CC
 
+Kyoto/CDvdRequest.cpp:
+	.text       start:0x804B27CC end:0x804B2A2C
+
 Kyoto/Text/CColorInstruction.cpp:
 	.text       start:0x804B2A2C end:0x804B2AE4
 
@@ -645,6 +648,9 @@ Kyoto/Particles/CVectorElement.cpp:
 	.text       start:0x804F8D30 end:0x804FC3D4
 	.ctors      start:0x8065BBE0 end:0x8065BBE4
 
+Kyoto/Math/CCylinder.cpp:
+	.text       start:0x804FC3D4 end:0x804FC520
+
 Kyoto/Math/CLine.cpp:
 	.text       start:0x804FC520 end:0x804FC584
 
@@ -771,6 +777,13 @@ Kyoto/Particles/CParticleElectric.cpp:
 	.text       start:0x80530804 end:0x8053583C
 	.ctors      start:0x8065BC10 end:0x8065BC14
 
+Kyoto/Graphics/DolphinCColor.cpp:
+	.text       start:0x8053583C end:0x80535D04
+
+Kyoto/Audio/CStreamAudioManager.cpp:
+	.text       start:0x8053664C end:0x805375C8
+	.ctors      start:0x8065BC14 end:0x8065BC18
+
 Kyoto/Particles/CElectricDescription.cpp:
 	.text       start:0x805375C8 end:0x8053793C
 
@@ -779,6 +792,22 @@ Kyoto/Particles/CSwooshDescription.cpp:
 
 Kyoto/Particles/CGenDescription.cpp:
 	.text       start:0x80537CF8 end:0x80538114
+
+Kyoto/Input/CRumbleVoice.cpp:
+	.text       start:0x8053A8EC end:0x8053B22C
+
+Kyoto/Input/RumbleAdsr.cpp:
+	.text       start:0x8053B22C end:0x8053B354
+
+Kyoto/Input/CRumbleGenerator.cpp:
+	.text       start:0x8053B354 end:0x8053B680
+
+Kyoto/Audio/g721.cpp:
+	.text       start:0x8053B680 end:0x8053BFFC
+
+Kyoto/Audio/CStaticAudioPlayer.cpp:
+	.text       start:0x8053BFFC end:0x8053D1C4
+	.ctors      start:0x8065BC18 end:0x8065BC1C
 
 Kyoto/Animation/CTimeRemainderAndFraction.cpp:
 	.text       start:0x8053D770 end:0x8053D854
@@ -811,6 +840,40 @@ Kyoto/Animation/CPoseAsTransforms_Linear.cpp:
 
 Kyoto/Particles/CManagedParticleGen.cpp:
 	.text       start:0x805559B0 end:0x80556320
+
+Kyoto/Streams/CBitStreamWriter.cpp:
+	.text       start:0x805563F4 end:0x80556644
+
+Kyoto/Streams/CBitStreamReader.cpp:
+	.text       start:0x80556644 end:0x80556864
+
+Kyoto/Streams/DolphinCInputStream.cpp:
+	.text       start:0x80556864 end:0x80556D94
+
+Kyoto/Streams/DolphinCZipInputStream.cpp:
+	.text       start:0x80556D94 end:0x80556F84
+
+Kyoto/Streams/CLookaheadRes.cpp:
+	.text       start:0x80556F84 end:0x8055773C
+
+Kyoto/Streams/CLZOSupport.cpp:
+	.text       start:0x8055773C end:0x805577DC
+
+LZO/lzo_init.c:
+	.text       start:0x805577DC end:0x80557E2C
+
+LZO/lzo_ptr.c:
+	.text       start:0x80557E2C end:0x80557E44
+
+LZO/lzo1x_d1.c:
+	.text       start:0x80557E44 end:0x80558244
+
+Kyoto/Streams/DolphinCLZOInputStream.cpp:
+	.text       start:0x80558244 end:0x805584B4
+
+Kyoto/Streams/CStreamPreloadedToken.cpp:
+	.text       start:0x805584B4 end:0x80559008
+	.ctors      start:0x8065BC3C end:0x8065BC40
 
 Kyoto/Animation/CJointData_LinearStorage.cpp:
 	.text       start:0x80559378 end:0x80559CD0

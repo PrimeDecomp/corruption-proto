@@ -1,4 +1,4 @@
 // NonMatching translation-unit scaffold.
-// G2MEAB .text 0x80125E4C..0x801265C8 (end exclusive).
+// G2MEAB .text 0x8013DD38..0x8013F628 (end exclusive).
 // Complete native/helper inventory: 9 functions; implementation remains pending.
 // Boundary evidence is retained outside this repository in the agent workflow.

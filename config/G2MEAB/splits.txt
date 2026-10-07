@@ -460,7 +460,7 @@ MetroidPrime/BodyState/CBSHurled.cpp:
 	.text       start:0x801081E8 end:0x80109370
 	.ctors      start:0x8065B658 end:0x8065B65C
 
-MetroidPrime/BodyState/CBSCover.cpp:
+MetroidPrime/BodyState/CBSJump.cpp:
 	.text       start:0x80109370 end:0x8010ADA0
 	.ctors      start:0x8065B65C end:0x8065B660
 
@@ -531,6 +531,87 @@ MetroidPrime/ScriptObjects/CScriptRipple.cpp:
 MetroidPrime/CControllerRecorder.cpp:
 	.text       start:0x80120D74 end:0x8012478C
 	.ctors      start:0x8065B6A0 end:0x8065B6A4
+
+MetroidPrime/CBoneTracking.cpp:
+	.text       start:0x8012478C end:0x80125B68
+	.ctors      start:0x8065B6A4 end:0x8065B6A8
+
+MetroidPrime/Player/CFaceplateDecoration.cpp:
+	.text       start:0x80125B68 end:0x80125E4C
+	.ctors      start:0x8065B6A8 end:0x8065B6AC
+
+MetroidPrime/BodyState/CBSCover.cpp:
+	.text       start:0x80125E4C end:0x801265C8
+	.ctors      start:0x8065B6AC end:0x8065B6B0
+
+MetroidPrime/ScriptObjects/CScriptBallTrigger.cpp:
+	.text       start:0x801265C8 end:0x80126FA0
+	.ctors      start:0x8065B6B0 end:0x8065B6B4
+
+MetroidPrime/Weapons/CPlasmaProjectile.cpp:
+	.text       start:0x80126FA0 end:0x80129AD0
+	.ctors      start:0x8065B6B4 end:0x8065B6B8
+
+MetroidPrime/Player/CPlayerOrbit.cpp:
+	.text       start:0x80129AD0 end:0x801301F8
+	.ctors      start:0x8065B6B8 end:0x8065B6BC
+
+MetroidPrime/CGameCollision.cpp:
+	.text       start:0x801301F8 end:0x80135AFC
+	.ctors      start:0x8065B6BC end:0x8065B6C0
+
+MetroidPrime/CBallFilter.cpp:
+	.text       start:0x80135AFC end:0x80135B24
+
+MetroidPrime/CAABoxFilter.cpp:
+	.text       start:0x80135B24 end:0x80135CAC
+
+MetroidPrime/CGroundMovement.cpp:
+	.text       start:0x80135CAC end:0x8013A6F8
+	.ctors      start:0x8065B6C0 end:0x8065B6C4
+
+MetroidPrime/ScriptObjects/CScriptTargetingPoint.cpp:
+	.text       start:0x8013A6F8 end:0x8013AA38
+	.ctors      start:0x8065B6C4 end:0x8065B6C8
+
+MetroidPrime/BodyState/CBSWallHang.cpp:
+	.text       start:0x8013AA38 end:0x8013BEEC
+	.ctors      start:0x8065B6C8 end:0x8065B6CC
+
+MetroidPrime/ScriptObjects/CScriptEMPulse.cpp:
+	.text       start:0x8013BEEC end:0x8013C8C8
+	.ctors      start:0x8065B6CC end:0x8065B6D0
+
+MetroidPrime/HUD/CHudEnergyInterface.cpp:
+	.text       start:0x8013C8C8 end:0x8013CF2C
+
+MetroidPrime/HUD/CHudRadarInterface.cpp:
+	.text       start:0x8013CF2C end:0x8013DD38
+	.ctors      start:0x8065B6D0 end:0x8065B6D4
+
+MetroidPrime/HUD/CHudVisorBeamMenu.cpp:
+	.text       start:0x8013DD38 end:0x8013F628
+	.ctors      start:0x8065B6D4 end:0x8065B6D8
+
+MetroidPrime/Weapons/CBeamProjectile.cpp:
+	.text       start:0x8013F628 end:0x80140034
+	.ctors      start:0x8065B6D8 end:0x8065B6DC
+
+MetroidPrime/ScriptObjects/CScriptRoomAcoustics.cpp:
+	.text       start:0x80140034 end:0x801412AC
+	.ctors      start:0x8065B6DC end:0x8065B6E0
+
+MetroidPrime/CCollisionActorManager.cpp:
+	.text       start:0x801412AC end:0x80142760
+	.ctors      start:0x8065B6E0 end:0x8065B6E4
+
+MetroidPrime/CCollisionActor.cpp:
+	.text       start:0x80142760 end:0x80143CF4
+	.ctors      start:0x8065B6E4 end:0x8065B6E8
+
+MetroidPrime/ScriptObjects/CScriptPlayerActor.cpp:
+	.text       start:0x80143CF4 end:0x801468C8
+	.ctors      start:0x8065B6E8 end:0x8065B6EC
 
 MetroidPrime/CYesNoMenu.cpp:
 	.text       start:0x8025B340 end:0x8025BC48
@@ -831,6 +912,58 @@ MetroidPrime/CRigidBody.cpp:
 MetroidPrime/Enemies/CRundas.cpp:
 	.text       start:0x802E7750 end:0x802FDA3C
 	.ctors      start:0x8065BA04 end:0x8065BA08
+
+MetroidPrime/Cameras/CAvoidanceBehavior.cpp:
+	.text       start:0x8033A624 end:0x8033A824
+	.ctors      start:0x8065BA74 end:0x8065BA78
+
+MetroidPrime/Cameras/COrientationBehavior.cpp:
+	.text       start:0x8033A824 end:0x8033E4F0
+	.ctors      start:0x8065BA78 end:0x8065BA7C
+
+MetroidPrime/Cameras/CSpindlePosition.cpp:
+	.text       start:0x8033E4F0 end:0x8033F984
+	.ctors      start:0x8065BA7C end:0x8065BA80
+
+MetroidPrime/Cameras/CChasePosition.cpp:
+	.text       start:0x8033F984 end:0x803401D8
+	.ctors      start:0x8065BA80 end:0x8065BA84
+
+MetroidPrime/Cameras/CColliderPosition.cpp:
+	.text       start:0x803401D8 end:0x80342E2C
+	.ctors      start:0x8065BA84 end:0x8065BA88
+
+MetroidPrime/Cameras/COffsetPosition.cpp:
+	.text       start:0x80342E2C end:0x803434F8
+	.ctors      start:0x8065BA88 end:0x8065BA8C
+
+MetroidPrime/Cameras/CPathPosition.cpp:
+	.text       start:0x803434F8 end:0x803445EC
+	.ctors      start:0x8065BA8C end:0x8065BA90
+
+MetroidPrime/Cameras/CPositionBehavior.cpp:
+	.text       start:0x803445EC end:0x80345C48
+	.ctors      start:0x8065BA90 end:0x8065BA94
+
+MetroidPrime/Cameras/CSplineSpindlePosition.cpp:
+	.text       start:0x80345C48 end:0x80347BCC
+	.ctors      start:0x8065BA94 end:0x8065BA98
+
+MetroidPrime/Cameras/CAngularMotionBehavior.cpp:
+	.text       start:0x80347BCC end:0x80348050
+	.ctors      start:0x8065BA98 end:0x8065BA9C
+
+MetroidPrime/Enemies/CKorakk.cpp:
+	.text       start:0x80348050 end:0x80353920
+	.ctors      start:0x8065BA9C end:0x8065BAA0
+
+MetroidPrime/Enemies/CBeastRider.cpp:
+	.text       start:0x80353920 end:0x803573F0
+	.ctors      start:0x8065BAA0 end:0x8065BAA4
+
+MetroidPrime/CPlayerFollowingExplosion.cpp:
+	.text       start:0x803573F0 end:0x80357900
+	.ctors      start:0x8065BAA4 end:0x8065BAA8
 
 MetroidPrime/Enemies/CNoseTurret.cpp:
 	.text       start:0x80357900 end:0x803599AC

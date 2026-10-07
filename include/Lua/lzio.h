@@ -52,7 +52,7 @@ char *luaZ_openspace (lua_State *L, Mbuffer *buff, size_t n);
 
 struct Zio {
   size_t n;			/* bytes still unread */
-  const lua_WChar *p;		/* current position in buffer */
+  const char *p;			/* current position in buffer */
   lua_Chunkreader reader;
   void* data;			/* additional data */
   const char *name;

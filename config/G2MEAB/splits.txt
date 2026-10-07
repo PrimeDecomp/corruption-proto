@@ -1383,15 +1383,24 @@ Lua/LuaState_DumpObject.cpp:
 
 Lua/lcode.c:
 	.text       start:0x8044A01C end:0x8044CB08
+	.rodata     start:0x806999A0 end:0x80699A28
+	.data       start:0x806CDB20 end:0x806CDB50
+	.sdata2     start:0x807A16E8 end:0x807A16F0
 
 Lua/ldebug.c:
 	.text       start:0x8044CB08 end:0x8044E0D0
+	.rodata     start:0x80699A28 end:0x80699B38
+	.data       start:0x806CDB50 end:0x806CDBEC
 
 Lua/ldo.c:
 	.text       start:0x8044E0D0 end:0x804509B4
+	.rodata     start:0x80699B38 end:0x80699C20
+	.sdata2     start:0x807A16F0 end:0x807A16F8
 
 Lua/ldump.c:
 	.text       start:0x804509B4 end:0x8045188C
+	.rodata     start:0x80699C20 end:0x80699C28
+	.sdata2     start:0x807A16F8 end:0x807A1700
 
 Lua/lfunc.c:
 	.text       start:0x8045188C end:0x80451CC8
@@ -1402,6 +1411,8 @@ Lua/lgc.c:
 
 Lua/llex.c:
 	.text       start:0x80453784 end:0x80456A1C
+	.rodata     start:0x80699C28 end:0x80699E80
+	.sdata2     start:0x807A1700 end:0x807A1708
 
 Lua/lmem.c:
 	.text       start:0x80456A1C end:0x80456CA4
@@ -1409,9 +1420,14 @@ Lua/lmem.c:
 
 Lua/lobject.c:
 	.text       start:0x80456CA4 end:0x80457518
+	.rodata     start:0x80699EA8 end:0x80699FC0
+	.sdata2     start:0x807A1708 end:0x807A1718
 
 Lua/lparser.c:
 	.text       start:0x80457518 end:0x8045DF18
+	.rodata     start:0x80699FE8 end:0x8069A250
+	.data       start:0x806CDC50 end:0x806CDCA4
+	.sdata2     start:0x807A1718 end:0x807A1720
 
 Lua/lstate.c:
 	.text       start:0x8045DF18 end:0x8045E874
@@ -1421,6 +1437,8 @@ Lua/lstring.c:
 
 Lua/ltable.c:
 	.text       start:0x8045EFF4 end:0x80460998
+	.rodata     start:0x8069A268 end:0x8069A2B8
+	.sdata2     start:0x807A1720 end:0x807A1730
 
 Lua/ltm.c:
 	.text       start:0x80460998 end:0x80460B74
@@ -1428,30 +1446,50 @@ Lua/ltm.c:
 
 Lua/lundump.c:
 	.text       start:0x80460B74 end:0x80462B40
+	.rodata     start:0x8069A3C0 end:0x8069A560
+	.sdata2     start:0x807A1730 end:0x807A1738
 
 Lua/lvm.c:
 	.text       start:0x80462B40 end:0x80466150
+	.rodata     start:0x8069A560 end:0x8069A630
+	.data       start:0x806CDCA8 end:0x806CDD68
+	.sdata2     start:0x807A1738 end:0x807A1748
 
 Lua/lzio.c:
 	.text       start:0x80466150 end:0x80466460
 
 Lua/lapi.c:
 	.text       start:0x80466460 end:0x80469D10
+	.rodata     start:0x8069A630 end:0x8069A650
+	.sdata2     start:0x807A1748 end:0x807A1750
 
 Lua/lbaselib.c:
 	.text       start:0x80469D10 end:0x8046C034
+	.rodata     start:0x8069A650 end:0x8069AC30
+	.data       start:0x806CDD68 end:0x806CDDB8
+	.sdata      start:0x80796B80 end:0x80796B88
+	.sdata2     start:0x807A1750 end:0x807A1770
 
 Lua/ldblib.c:
 	.text       start:0x8046C034 end:0x8046CDD8
+	.rodata     start:0x8069AC30 end:0x8069AE28
+	.sdata2     start:0x807A1770 end:0x807A1788
 
 Lua/lmathlib.c:
 	.text       start:0x8046CDD8 end:0x8046D838
+	.rodata     start:0x8069AE28 end:0x8069AFA8
+	.sdata2     start:0x807A1788 end:0x807A17A0
 
 Lua/lstrlib.c:
 	.text       start:0x8046D838 end:0x80470B40
+	.rodata     start:0x8069AFA8 end:0x8069B220
+	.data       start:0x806CDDB8 end:0x806CE088
+	.sdata2     start:0x807A17A0 end:0x807A17C0
 
 Lua/ltablib.c:
 	.text       start:0x80470B40 end:0x80471768
+	.rodata     start:0x8069B220 end:0x8069B2E8
+	.sdata2     start:0x807A17C0 end:0x807A17D0
 
 Lua/lauxlib.c:
 	.text       start:0x80471768 end:0x80473854

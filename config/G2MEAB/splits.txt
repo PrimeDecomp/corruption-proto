@@ -638,6 +638,9 @@ Kyoto/Math/RMathUtils.cpp:
 Kyoto/CCrc32.cpp:
 	.text       start:0x804CF8F0 end:0x804CF9FC
 
+Kyoto/Text/CStringTokenizer.cpp:
+	.text       start:0x804CF9FC end:0x804CFE58
+
 Kyoto/Alloc/CCircularBuffer.cpp:
 	.text       start:0x804CFE58 end:0x804D00A4
 
@@ -1013,6 +1016,10 @@ Kyoto/Graphics/CDisplayListReader.cpp:
 
 Kyoto/Audio/CDSPStreamManager.cpp:
 	.text       start:0x80554644 end:0x80554694
+
+Kyoto/Basics/CScopedProfiler.cpp:
+	.text       start:0x80554694 end:0x805549F0
+	.ctors      start:0x8065BC38 end:0x8065BC3C
 
 Kyoto/Alloc/LockedCache.cpp:
 	.text       start:0x805549F0 end:0x80554B24

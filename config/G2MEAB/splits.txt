@@ -830,6 +830,9 @@ Kyoto/Animation/CCharAnimTime.cpp:
 Kyoto/Animation/CSegIdList.cpp:
 	.text       start:0x8051A2D0 end:0x8051A374
 
+Kyoto/Input/CFinalInput.cpp:
+	.text       start:0x8051A374 end:0x8051A93C
+
 Kyoto/Graphics/CColor.cpp:
 	.text       start:0x8051A93C end:0x8051A9EC
 	.ctors      start:0x8065BC00 end:0x8065BC04
@@ -1007,6 +1010,9 @@ Kyoto/Graphics/PortalPlane.cpp:
 Kyoto/Graphics/CDisplayListReader.cpp:
 	.text       start:0x80554118 end:0x80554644
 
+Kyoto/Audio/CDSPStreamManager.cpp:
+	.text       start:0x80554644 end:0x80554694
+
 Kyoto/Alloc/LockedCache.cpp:
 	.text       start:0x805549F0 end:0x80554B24
 
@@ -1073,6 +1079,21 @@ Kyoto/Animation/CCECharacterInfo.cpp:
 
 Kyoto/Animation/CCEAnimationSet.cpp:
 	.text       start:0x80563AF4 end:0x80564A30
+
+Kyoto/Audio/CAudioSample.cpp:
+	.text       start:0x8056AA9C end:0x8056B258
+
+Kyoto/Audio/CAudioSoundEffect.cpp:
+	.text       start:0x8056B7D4 end:0x8056C884
+
+Kyoto/Audio/CSoundEvaluator.cpp:
+	.text       start:0x8056E67C end:0x8056EB20
+
+Kyoto/Input/RevolutionIController.cpp:
+	.text       start:0x8056F51C end:0x8056F5B8
+
+Kyoto/Input/CRevolutionController.cpp:
+	.text       start:0x8056F5B8 end:0x805708F4
 
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C

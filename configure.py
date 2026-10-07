@@ -527,6 +527,15 @@ config.libs = [
         Object(NonMatching, "Dolphin/vi/vi.c"),
     ]),
     FmodLib("FMOD", [
+        Object(NonMatching, "FMOD/fmod.cpp"),
+        Object(NonMatching, "FMOD/fmod_async.cpp"),
+        Object(NonMatching, "FMOD/fmod_channel.cpp"),
+        Object(NonMatching, "FMOD/fmod_channel_emulated.cpp"),
+        Object(NonMatching, "FMOD/fmod_channelbase.cpp"),
+        Object(NonMatching, "FMOD/fmod_channeldsp.cpp"),
+        Object(NonMatching, "FMOD/fmod_channelgroup.cpp"),
+        Object(NonMatching, "FMOD/fmod_channelgroupi.cpp"),
+        Object(NonMatching, "FMOD/fmod_channeli.cpp"),
         Object(NonMatching, "FMOD/fmod_channelpool.cpp"),
         Object(NonMatching, "FMOD/fmod_memory.cpp"),
         Object(NonMatching, "FMOD/fmod_metadata.cpp"),
@@ -858,11 +867,17 @@ config.libs = [
         Object(NonMatching, "Weapons/CWeaponDescription.cpp"),
         Object(NonMatching, "Weapons/CDecalDescription.cpp"),
     ]),
+    RetroLib("MetaRender", [
+        Object(NonMatching, "MetaRender/CCubeRenderer.cpp"),
+    ]),
     RetroLib("MetroidPrime", [
         Object(NonMatching, "MetroidPrime/Cameras/CCameraSurface.cpp"),
         Object(NonMatching, "MetroidPrime/Cameras/CCylinderCameraSurface.cpp"),
         Object(NonMatching, "MetroidPrime/Cameras/CSplineCylinderCameraSurface.cpp"),
         Object(NonMatching, "MetroidPrime/Cameras/CSplinePlaneCameraSurface.cpp"),
+        Object(NonMatching, "MetroidPrime/CAnimData.cpp"),
+        Object(NonMatching, "MetroidPrime/CParticleDatabase.cpp"),
+        Object(NonMatching, "MetroidPrime/CParticleGenInfoGeneric.cpp"),
     ]),
     RuntimeLib("MetroTRK", [
         Object(NonMatching, "MetroTRK/mainloop.c"),

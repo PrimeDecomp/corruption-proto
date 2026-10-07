@@ -1431,6 +1431,20 @@ Kyoto/Input/RevolutionIController.cpp:
 Kyoto/Input/CRevolutionController.cpp:
 	.text       start:0x8056F5B8 end:0x805708F4
 
+MetaRender/CCubeRenderer.cpp:
+	.text       start:0x80570B0C end:0x805802DC
+	.ctors      start:0x8065BC54 end:0x8065BC58
+
+MetroidPrime/CAnimData.cpp:
+	.text       start:0x80580324 end:0x80587F14
+	.ctors      start:0x8065BC58 end:0x8065BC5C
+
+MetroidPrime/CParticleDatabase.cpp:
+	.text       start:0x80587F14 end:0x8058D4D0
+
+MetroidPrime/CParticleGenInfoGeneric.cpp:
+	.text       start:0x8058D4D0 end:0x8058D9D0
+
 Kyoto/Animation/CCECharacterFactoryBuilder.cpp:
 	.text       start:0x8058D9D0 end:0x8058E0C4
 
@@ -1517,6 +1531,34 @@ WorldFormat/CTriangleCollisionCache.cpp:
 
 WorldFormat/CCollidableTranslatedConvexPH.cpp:
 	.text       start:0x805B36EC end:0x805B5D10
+
+FMOD/fmod.cpp:
+	.text       start:0x805B5DA4 end:0x805B60A0
+
+FMOD/fmod_async.cpp:
+	.text       start:0x805B60A0 end:0x805B67C0
+	.ctors      start:0x8065BC68 end:0x8065BC6C
+
+FMOD/fmod_channel.cpp:
+	.text       start:0x805B67C0 end:0x805B6C3C
+
+FMOD/fmod_channel_emulated.cpp:
+	.text       start:0x805B6C3C end:0x805B6E70
+
+FMOD/fmod_channelbase.cpp:
+	.text       start:0x805B6E70 end:0x805B8A3C
+
+FMOD/fmod_channeldsp.cpp:
+	.text       start:0x805B8A3C end:0x805BAB64
+
+FMOD/fmod_channelgroup.cpp:
+	.text       start:0x805BAB64 end:0x805BC8B8
+
+FMOD/fmod_channelgroupi.cpp:
+	.text       start:0x805BC8B8 end:0x805BCCA8
+
+FMOD/fmod_channeli.cpp:
+	.text       start:0x805BCCA8 end:0x805C11FC
 
 FMOD/fmod_channelpool.cpp:
 	.text       start:0x805C11FC end:0x805C168C

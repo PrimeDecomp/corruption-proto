@@ -189,6 +189,74 @@ MetroidPrime/Enemies/CAi.cpp:
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 
+MetroidPrime/CObjectListSmall.cpp:
+	.text       start:0x80261CD0 end:0x80262A40
+	.ctors      start:0x8065B8FC end:0x8065B900
+
+MetroidPrime/CSurfacePathWalker.cpp:
+	.text       start:0x80262A40 end:0x80264B78
+	.ctors      start:0x8065B900 end:0x8065B904
+
+MetroidPrime/CCollisionTracker.cpp:
+	.text       start:0x80264B78 end:0x80266BB0
+	.ctors      start:0x8065B904 end:0x8065B908
+
+MetroidPrime/Enemies/CSwarmBasics.cpp:
+	.text       start:0x80266BB0 end:0x80271294
+	.ctors      start:0x8065B908 end:0x8065B90C
+
+MetroidPrime/Weapons/CBeamProjectileManager.cpp:
+	.text       start:0x803D9B0C end:0x803D9FC4
+	.ctors      start:0x8065BB2C end:0x8065BB30
+
+MetroidPrime/Enemies/CFlyingPirate.cpp:
+	.text       start:0x803D9FC4 end:0x803E5418
+	.ctors      start:0x8065BB30 end:0x8065BB34
+
+MetroidPrime/ScriptObjects/CFishCloudModifier.cpp:
+	.text       start:0x803E5418 end:0x803E5A48
+	.ctors      start:0x8065BB34 end:0x8065BB38
+
+MetroidPrime/Enemies/CSteamLord.cpp:
+	.text       start:0x803E5A70 end:0x803E7850
+	.ctors      start:0x8065BB38 end:0x8065BB3C
+
+MetroidPrime/ScriptObjects/CScriptPositionRelay.cpp:
+	.text       start:0x803E7850 end:0x803E7CE4
+	.ctors      start:0x8065BB3C end:0x8065BB40
+
+MetroidPrime/AudioDebug.cpp:
+	.text       start:0x803E7CE4 end:0x803E9990
+	.ctors      start:0x8065BB40 end:0x8065BB44
+
+MetroidPrime/PathFinding/CPathFindRegionReservation.cpp:
+	.text       start:0x803E9990 end:0x803EA01C
+	.ctors      start:0x8065BB44 end:0x8065BB48
+
+MetroidPrime/Weapons/CAnimatedTargetableProjectile.cpp:
+	.text       start:0x803EA01C end:0x803EA360
+	.ctors      start:0x8065BB48 end:0x8065BB4C
+
+MetroidPrime/Player/CPlayerAimControl.cpp:
+	.text       start:0x803EA360 end:0x803EB5F4
+	.ctors      start:0x8065BB4C end:0x8065BB50
+
+MetroidPrime/Enemies/CSeedBoss1Hand.cpp:
+	.text       start:0x803EB5F4 end:0x803ED240
+	.ctors      start:0x8065BB50 end:0x8065BB54
+
+MetroidPrime/CScriptMsgUtils.cpp:
+	.text       start:0x803ED240 end:0x803ED580
+	.ctors      start:0x8065BB54 end:0x8065BB58
+
+MetroidPrime/Enemies/CEyePod.cpp:
+	.text       start:0x803ED580 end:0x803EFC0C
+	.ctors      start:0x8065BB58 end:0x8065BB5C
+
+MetroidPrime/Enemies/CAtomicAlpha.cpp:
+	.text       start:0x803EFC0C end:0x803F14A8
+	.ctors      start:0x8065BB5C end:0x8065BB60
+
 Dolphin/vi/vi.c:
 	.text       start:0x803F14A8 end:0x803F367C
 

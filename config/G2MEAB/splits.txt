@@ -2612,10 +2612,15 @@ Kyoto/Audio/g721.cpp:
 
 Kyoto/Audio/DolphinCRSFAudio.cpp:
 	.text       start:0x8053BFFC end:0x8053CE48
+	.rodata     start:0x806A7F90 end:0x806A81E0
+	.sbss       start:0x8079B580 end:0x8079B588
 
 Kyoto/Audio/DolphinCAIInterruptManager.cpp:
 	.text       start:0x8053CE48 end:0x8053D1C4
 	.ctors      start:0x8065BC18 end:0x8065BC1C
+	.rodata     start:0x806A81E0 end:0x806A82A0
+	.bss        start:0x80716460 end:0x80716480
+	.sbss       start:0x8079B588 end:0x8079B590
 
 Kyoto/CFrameDelayedKiller.cpp:
 	.text       start:0x8053D1C4 end:0x8053D770

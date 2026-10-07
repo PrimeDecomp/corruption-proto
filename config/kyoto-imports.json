@@ -373,8 +373,12 @@
       "mapped": false
     },
     {
-      "path": "Kyoto/Audio/CStaticAudioPlayer.cpp",
-      "mapped": false
+      "path": "Kyoto/Audio/DolphinCRSFAudio.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Audio/DolphinCAIInterruptManager.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Audio/CStreamAudioManager.cpp",

@@ -790,6 +790,10 @@ MetroidPrime/Cameras/CGameSpline.cpp:
 	.text       start:0x802130DC end:0x80213FB8
 	.ctors      start:0x8065B874 end:0x8065B878
 
+MetroidPrime/RenderGeometryRayCast.cpp:
+	.text       start:0x80213FB8 end:0x8021541C
+	.ctors      start:0x8065B878 end:0x8065B87C
+
 MetroidPrime/ScriptObjects/CScriptAIWaypoint.cpp:
 	.text       start:0x8021541C end:0x802158D0
 	.ctors      start:0x8065B87C end:0x8065B880

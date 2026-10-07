@@ -1246,6 +1246,7 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/ScriptObjects/CScriptShadowProjector.cpp"),
         Object(NonMatching, "MetroidPrime/ScriptLoader.cpp"),
         Object(NonMatching, "MetroidPrime/Cameras/CGameSpline.cpp"),
+        Object(NonMatching, "MetroidPrime/RenderGeometryRayCast.cpp"),
         Object(NonMatching, "MetroidPrime/ScriptObjects/CScriptAIWaypoint.cpp"),
         Object(NonMatching, "MetroidPrime/ScriptObjects/CPathMeshCtrl.cpp"),
         Object(NonMatching, "MetroidPrime/Player/CGameVisor.cpp"),

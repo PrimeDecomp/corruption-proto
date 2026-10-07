@@ -532,6 +532,10 @@ MetroidPrime/CControllerRecorder.cpp:
 	.text       start:0x80120D74 end:0x8012478C
 	.ctors      start:0x8065B6A0 end:0x8065B6A4
 
+MetroidPrime/CYesNoMenu.cpp:
+	.text       start:0x8025B340 end:0x8025BC48
+	.ctors      start:0x8065B8E4 end:0x8065B8E8
+
 MetroidPrime/CPlayerGuiManager.cpp:
 	.text       start:0x8025BC48 end:0x8025FC44
 	.ctors      start:0x8065B8E8 end:0x8065B8EC
@@ -823,6 +827,10 @@ MetroidPrime/ScriptObjects/CScriptShipCommandPath.cpp:
 MetroidPrime/CRigidBody.cpp:
 	.text       start:0x802E56BC end:0x802E7750
 	.ctors      start:0x8065BA00 end:0x8065BA04
+
+MetroidPrime/Enemies/CRundas.cpp:
+	.text       start:0x802E7750 end:0x802FDA3C
+	.ctors      start:0x8065BA04 end:0x8065BA08
 
 MetroidPrime/Enemies/CNoseTurret.cpp:
 	.text       start:0x80357900 end:0x803599AC

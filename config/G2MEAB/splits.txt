@@ -312,8 +312,73 @@ Dolphin/odenotstub/odenotstub.c:
 Dolphin/amcstubs/AmcExi2Stubs.c:
 	.text       start:0x80442018 end:0x80442048
 
+GuiSys/CAuiMeter.cpp:
+	.text       start:0x804816E4 end:0x80481E20
+
+GuiSys/CGuiCamera.cpp:
+	.text       start:0x80481E20 end:0x80482334
+
+GuiSys/CGuiCompoundWidget.cpp:
+	.text       start:0x80482334 end:0x80482468
+
+GuiSys/CGuiFactories.cpp:
+	.text       start:0x80482468 end:0x804829D8
+
+GuiSys/CGuiFrame.cpp:
+	.text       start:0x804829D8 end:0x80484540
+
+GuiSys/CGuiHeadWidget.cpp:
+	.text       start:0x80484540 end:0x80484644
+
+GuiSys/CGuiLight.cpp:
+	.text       start:0x80484644 end:0x80484BFC
+
+GuiSys/CGuiModel.cpp:
+	.text       start:0x80484BFC end:0x804856D0
+	.ctors      start:0x8065BB74 end:0x8065BB78
+
+GuiSys/CGuiObject.cpp:
+	.text       start:0x804856D0 end:0x80486290
+
+GuiSys/CGuiPane.cpp:
+	.text       start:0x80486290 end:0x80486930
+
+GuiSys/CGuiSliderGroup.cpp:
+	.text       start:0x80486930 end:0x80486ED0
+
+GuiSys/CGuiTableGroup.cpp:
+	.text       start:0x80486ED0 end:0x80487E8C
+
+GuiSys/CGuiTextPane.cpp:
+	.text       start:0x80487E8C end:0x80488C24
+
 Kyoto/Text/CGuiTextSupport.cpp:
 	.text       start:0x80488C24 end:0x8048BA2C
+
+GuiSys/CGuiWidget.cpp:
+	.text       start:0x8048BA2C end:0x8048C4E4
+
+GuiSys/CGuiWidgetIdDB.cpp:
+	.text       start:0x8048C4E4 end:0x8048C75C
+
+GuiSys/CGuiWidgetDrawParms.cpp:
+	.text       start:0x8048C75C end:0x8048C77C
+	.ctors      start:0x8065BB78 end:0x8065BB7C
+
+GuiSys/CAuiEnergyBarT01.cpp:
+	.text       start:0x8048C77C end:0x8048D2A4
+
+GuiSys/CAuiImagePane.cpp:
+	.text       start:0x8048D2A4 end:0x8048E7EC
+
+GuiSys/CRepeatState.cpp:
+	.text       start:0x8048E7EC end:0x8048E860
+
+GuiSys/CAuiBarMeter.cpp:
+	.text       start:0x8048E860 end:0x8048F1CC
+
+GuiSys/DolphinCGuiFrameModels.cpp:
+	.text       start:0x8048F1CC end:0x8048FF38
 
 Kyoto/Basics/CBasics.cpp:
 	.text       start:0x8048FF38 end:0x80490000

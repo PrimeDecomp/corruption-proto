@@ -322,6 +322,92 @@ MetroidPrime/Player/CHolsterKeeper.cpp:
 	.text       start:0x80275D40 end:0x80275EF8
 	.ctors      start:0x8065B928 end:0x8065B92C
 
+MetroidPrime/ScriptObjects/CScriptDestructibleBarrier.cpp:
+	.text       start:0x80275EF8 end:0x8027C558
+	.ctors      start:0x8065B92C end:0x8065B930
+
+MetroidPrime/ScriptObjects/CScriptSoundModifier.cpp:
+	.text       start:0x8027C558 end:0x8027D90C
+	.ctors      start:0x8065B930 end:0x8065B934
+
+MetroidPrime/ScriptObjects/CScriptLayerController.cpp:
+	.text       start:0x8027D90C end:0x8027E690
+	.ctors      start:0x8065B934 end:0x8065B938
+
+MetroidPrime/Enemies/CPlantScarabSwarm.cpp:
+	.text       start:0x8027E690 end:0x802801A0
+	.ctors      start:0x8065B938 end:0x8065B93C
+
+MetroidPrime/ScriptObjects/CScriptSkyRipple.cpp:
+	.text       start:0x802801A0 end:0x80280A14
+	.ctors      start:0x8065B93C end:0x8065B940
+
+MetroidPrime/HUD/CMannedTurretHud.cpp:
+	.text       start:0x80280A14 end:0x80280EF0
+	.ctors      start:0x8065B940 end:0x8065B944
+
+MetroidPrime/ScriptObjects/CScriptFogOverlay.cpp:
+	.text       start:0x80280EF0 end:0x80281D10
+	.ctors      start:0x8065B944 end:0x8065B948
+
+MetroidPrime/CObjectTagToFilenameMapping.cpp:
+	.text       start:0x80281D10 end:0x80282420
+
+MetroidPrime/ScriptObjects/CScriptHUDHint.cpp:
+	.text       start:0x80282420 end:0x80282F5C
+	.ctors      start:0x8065B948 end:0x8065B94C
+
+MetroidPrime/CScriptObjectLoaderHelper.cpp:
+	.text       start:0x80282F5C end:0x80284D20
+	.ctors      start:0x8065B94C end:0x8065B950
+
+MetroidPrime/SwarmRenderHelpers.cpp:
+	.text       start:0x80284D20 end:0x80285508
+
+MetroidPrime/ScriptObjects/CScriptGuiPlayerJoinManager.cpp:
+	.text       start:0x80285508 end:0x80285DE4
+	.ctors      start:0x8065B950 end:0x8065B954
+
+MetroidPrime/Enemies/CParasiteAiFunctions.cpp:
+	.text       start:0x80285DE4 end:0x80288558
+	.ctors      start:0x8065B954 end:0x8065B958
+
+MetroidPrime/Enemies/CWallWalker.cpp:
+	.text       start:0x80288558 end:0x8028A67C
+	.ctors      start:0x8065B958 end:0x8065B95C
+
+MetroidPrime/Enemies/CGenericFSM2.cpp:
+	.text       start:0x8028A67C end:0x8028F448
+	.ctors      start:0x8065B95C end:0x8065B960
+
+MetroidPrime/Enemies/CPirateDrone.cpp:
+	.text       start:0x803A6A04 end:0x803AC394
+	.ctors      start:0x8065BB04 end:0x8065BB08
+
+MetroidPrime/ScriptObjects/CScriptCable.cpp:
+	.text       start:0x803AC394 end:0x803B0750
+	.ctors      start:0x8065BB08 end:0x8065BB0C
+
+MetroidPrime/Enemies/CBerserker.cpp:
+	.text       start:0x803B0750 end:0x803BA2C0
+	.ctors      start:0x8065BB0C end:0x8065BB10
+
+MetroidPrime/Enemies/CDarkSamus.cpp:
+	.text       start:0x803BA2C0 end:0x803BEC88
+	.ctors      start:0x8065BB10 end:0x8065BB14
+
+MetroidPrime/Weapons/CSplitterBeamEffect.cpp:
+	.text       start:0x803BEC88 end:0x803C0304
+	.ctors      start:0x8065BB14 end:0x8065BB18
+
+MetroidPrime/Enemies/CPhazonFlyerSwarm.cpp:
+	.text       start:0x803C0304 end:0x803C1478
+	.ctors      start:0x8065BB18 end:0x8065BB1C
+
+MetroidPrime/BodyState/CBSCodeDriven.cpp:
+	.text       start:0x803C1478 end:0x803C15A4
+	.ctors      start:0x8065BB1C end:0x8065BB20
+
 MetroidPrime/Enemies/CSeedBoss1Orb.cpp:
 	.text       start:0x803C15A4 end:0x803C31D8
 	.ctors      start:0x8065BB20 end:0x8065BB24

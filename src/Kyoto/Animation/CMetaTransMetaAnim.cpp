@@ -1,6 +1,21 @@
-/*
- * G2MEAB Kyoto/Animation/CMetaTransMetaAnim.cpp translation-unit scaffold.
- * .text: 0x80498C64..0x80498EA4 (5 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Complete five-function destructor/type/write/tree/constructor family follows both references. Destructor has both-reference fingerprint, constructor Echoes fingerprint. Ends at next transition variant's own destructor/vtable.
- */
+#include "Kyoto/Animation/CMetaTransMetaAnim.hpp"
+#include "Kyoto/Animation/CAnimTreeLoopIn.hpp"
+#include "Kyoto/Animation/CMetaAnimFactory.hpp"
+#include "Kyoto/Animation/IMetaAnim.hpp"
+#include "Kyoto/Streams/CInputStream.hpp"
+#include "Kyoto/Streams/COutputStream.hpp"
+
+CMetaTransMetaAnim::CMetaTransMetaAnim(CInputStream& in)
+: mMetaAnim(CMetaAnimFactory::CreateMetaAnim(in)) {}
+
+rstl::ncrc_ptr< CAnimTreeNode >
+CMetaTransMetaAnim::VGetTransitionTree(const rstl::ncrc_ptr< CAnimTreeNode >& a,
+                                       const rstl::ncrc_ptr< CAnimTreeNode >& b,
+                                       const CAnimSysContext& animSys) const {
+  rstl::ncrc_ptr< CAnimTreeNode > animNode =
+      mMetaAnim->GetAnimationTree(animSys, CMetaAnimTreeBuildOrders::NoSpecialOrders());
+  return rs_new CAnimTreeLoopIn(a, b, animNode, animSys,
+                                CAnimTreeLoopIn::CreatePrimitiveName(a, b, animNode));
+}
+
+void CMetaTransMetaAnim::WriteTransData(COutputStream& out) const { mMetaAnim->PutTo(out); }

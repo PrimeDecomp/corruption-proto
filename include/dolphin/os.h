@@ -2,6 +2,7 @@
 #define _DOLPHIN_OS_H_
 
 #include <dolphin/types.h>
+#include <dolphin/os/OSFastCast.h>
 #include <dolphin/gx/GXStruct.h>
 
 #ifdef __cplusplus

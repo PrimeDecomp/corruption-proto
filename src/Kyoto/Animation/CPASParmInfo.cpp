@@ -1,6 +1,41 @@
-/*
- * G2MEAB Kyoto/Animation/CPASParmInfo.cpp translation-unit scaffold.
- * .text: 0x8049C1BC..0x8049C378 (1 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Single1BC-byte constructor has distinctive Echoes structural fingerprint, and Prime source corroborates PAS parameter metadata decoding. The entire constructor ends at CPrimitive writer, not at Prime's shorter158 size.
- */
+#include "Kyoto/Animation/CPASParmInfo.hpp"
+
+#include "Kyoto/Streams/CInputStream.hpp"
+
+CPASParmInfo::CPASParmInfo(CInputStream& in)
+: mType(CPASAnimParm::kPT_None)
+, mWeightFunction(kWF_Invalid)
+, mWeight(0.f)
+, mMin(CPASAnimParm::FromInt32(0).GetParameterValue())
+, mMax(CPASAnimParm::FromInt32(0).GetParameterValue()) {
+
+  CPASAnimParm::EParmType type = CPASAnimParm::EParmType(in.ReadInt32());
+  mType = type;
+  mWeightFunction = EWeightFunction(in.ReadInt32());
+  mWeight = in.ReadFloat();
+
+  switch (type) {
+  case CPASAnimParm::kPT_Int32:
+    mMin.m_int = in.ReadInt32();
+    mMax.m_int = in.ReadInt32();
+    break;
+  case CPASAnimParm::kPT_UInt32:
+    mMin.m_uint = in.ReadInt32();
+    mMax.m_uint = in.ReadInt32();
+    break;
+  case CPASAnimParm::kPT_Float:
+    mMin.m_float = in.ReadFloat();
+    mMax.m_float = in.ReadFloat();
+    break;
+  case CPASAnimParm::kPT_Bool:
+    mMin.m_bool = in.ReadBool();
+    mMax.m_bool = in.ReadBool();
+    break;
+  case CPASAnimParm::kPT_Enum:
+    mMin.m_int = in.ReadInt32();
+    mMax.m_int = in.ReadInt32();
+    break;
+  default:
+    break;
+  }
+}

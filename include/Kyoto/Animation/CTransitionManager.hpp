@@ -1,0 +1,22 @@
+#ifndef _CTRANSITIONMANAGER
+#define _CTRANSITIONMANAGER
+
+#include "Kyoto/Animation/CAnimSysContext.hpp"
+
+class CAnimTreeNode;
+class IMetaTrans;
+class CTransitionManager {
+public:
+  CTransitionManager(const CAnimSysContext& context);
+  ~CTransitionManager();
+  // Guessed name, corresponding to CTreeUtils::GetMetaTrans.
+  rstl::rc_ptr< IMetaTrans > GetMetaTrans(const rstl::ncrc_ptr< CAnimTreeNode >& a,
+                                          const rstl::ncrc_ptr< CAnimTreeNode >& b) const;
+  rstl::ncrc_ptr< CAnimTreeNode > GetTransitionTree(const rstl::ncrc_ptr< CAnimTreeNode >& a,
+                                                    const rstl::ncrc_ptr< CAnimTreeNode >& b) const;
+
+private:
+  CAnimSysContext mContext;
+};
+
+#endif // _CTRANSITIONMANAGER

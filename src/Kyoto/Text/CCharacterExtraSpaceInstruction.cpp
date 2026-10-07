@@ -1,6 +1,13 @@
-/*
- * G2MEAB Kyoto/Text/CCharacterExtraSpaceInstruction.cpp translation-unit scaffold.
- * .text: 0x8053D854..0x8053D8E8, end exclusive; 3 native functions.
- * Source basename is inferred; original prototype filename is unverified.
- * NonMatching: implementation and declarations remain to be reconstructed.
- */
+#include "Kyoto/Text/CCharacterExtraSpaceInstruction.hpp"
+
+#include "Kyoto/Text/CFontRenderState.hpp"
+
+void CCharacterExtraSpaceInstruction::Invoke(CFontRenderState& state,
+                                             CTextRenderBuffer* buffer) const {
+  state.GetOptions().SetCharacterExtraSpace(mSpacing);
+}
+
+void CCharacterExtraSpaceInstruction::PageInvoke(CFontRenderState& state,
+                                                 CTextRenderBuffer* buffer) const {
+  Invoke(state, buffer);
+}

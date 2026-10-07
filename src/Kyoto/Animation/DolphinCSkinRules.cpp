@@ -1,6 +1,57 @@
-/*
- * G2MEAB Kyoto/Animation/DolphinCSkinRules.cpp translation-unit scaffold.
- * .text: 0x80522CDC..0x80523D04 (30 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Leading LoadMatrixBank reads ushort bank vector+20 and GX matrix index loads. Factory22DBC allocates0x4C with DolphinCSkinRules.cpp(143). Both sources corroborate transforms/stream constructor/bone banks. Final ushort-vector reserve23C60 belongs this family, after bone copy/construction helpers23BB0/23C18/23C38; do not cut at a reference-count boundary.
- */
+#include "Kyoto/Animation/CSkinRules.hpp"
+
+#include "Kyoto/Animation/CCharLayoutInfo.hpp"
+#include "Kyoto/Animation/CPoseAsTransforms_Linear.hpp"
+#include "Kyoto/CFactoryMgr.hpp"
+#include "Kyoto/Graphics/CModel.hpp"
+
+#include "dolphin/gx.h"
+
+CSkinRules::CSkinRules(CInputStream& in)
+: mVirtualBones(in), mMatrixIndices(in), mVertexCount(in.ReadInt32()), mVertexToBone(nullptr) {
+  if (mVertexCount > 0) {
+    mVertexToBone = rs_new uchar[mVertexCount];
+    in.Get(mVertexToBone.get(), mVertexCount);
+  }
+  CModel::AddToTotal(sizeof(CSkinRules) + mVirtualBones.size() * sizeof(CVirtualBone));
+}
+
+CSkinRules::~CSkinRules() {
+  CModel::RemoveFromTotal(sizeof(CSkinRules) + mVirtualBones.size() * sizeof(CVirtualBone));
+}
+
+void CSkinRules::BuildAccumulatedTransforms(const CPoseAsTransforms_Linear& pose,
+                                            const CCharLayoutInfo& layoutInfo,
+                                            CTransform4f* out) const {
+  float pointStorage[100][3];
+  CVector3f* points = reinterpret_cast< CVector3f* >(pointStorage);
+  const CVector3f* offsets = layoutInfo.GetLinearReferenceStanceOffsets().data();
+  const int count = pose.GetElements().size();
+  const CPoseAsTransforms_Linear::CElementType* elements = pose.GetElements().data();
+  for (int i = 0; i < count; ++i) {
+    points[i] = elements[i].mOffset - elements[i].mRotation * offsets[i];
+  }
+
+  const int boneCount = mVirtualBones.size();
+  for (int i = 0; i < boneCount; ++i) {
+    mVirtualBones[i].BuildAccumulatedTransform(pose, points, out[i]);
+  }
+}
+
+CFactoryFnReturn FSkinRulesFactory(const SObjectTag& tag, CInputStream& in,
+                                   const CVParamTransfer& params) {
+  return rs_new CSkinRules(in);
+}
+
+void CSkinRules::LoadMatrixBank(int bank) const {
+  const int start = bank * 10;
+  const int end = start + 10 > mMatrixIndices.size() ? mMatrixIndices.size() : start + 10;
+  for (int i = start; i < end; ++i) {
+    const int index = mMatrixIndices[i];
+    if (index != -1) {
+      const int slot = (i - start) * 3;
+      GXLoadPosMtxIndx(index, slot);
+      GXLoadNrmMtxIndx3x3(index, slot);
+    }
+  }
+}

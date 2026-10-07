@@ -1,0 +1,53 @@
+#ifndef _CRELANGLE
+#define _CRELANGLE
+
+#include "types.h"
+
+#include "Kyoto/Math/CMath.hpp"
+
+class CRelAngle {
+public:
+  float AsDegrees() const { return mAngle * (180.f / M_PIF); }
+  float AsRadians() const { return mAngle; }
+  // ArcCosine__9CRelAngleFf weak
+
+  CRelAngle& operator+=(const CRelAngle& v) {
+    mAngle += v.mAngle;
+    return *this;
+  }
+  CRelAngle& operator-=(const CRelAngle& v) {
+    mAngle -= v.mAngle;
+    return *this;
+  }
+  CRelAngle& operator*=(float v) {
+    mAngle *= v;
+    return *this;
+  }
+  CRelAngle& operator/=(float v) {
+    mAngle /= v;
+    return *this;
+  }
+
+  // __lt__9CRelAngleCFRC9CRelAngle
+
+  static CRelAngle FromDegrees(float deg) { return CRelAngle(deg * (M_PIF / 180.f)); }
+  static CRelAngle FromRadians(float rad) { return CRelAngle(rad); }
+
+private:
+  CRelAngle(float rad) : mAngle(rad) {}
+
+  float mAngle;
+};
+CHECK_SIZEOF(CRelAngle, 0x4)
+
+// __mi__FRC9CRelAngleRC9CRelAngle
+// __pl__FRC9CRelAngleRC9CRelAngle
+inline CRelAngle operator/(const CRelAngle& a, float b) {
+  CRelAngle out(a);
+  out /= b;
+  return out;
+}
+static inline float sine(const CRelAngle& angle) { return sin(angle.AsRadians()); }
+static inline float cosine(const CRelAngle& angle) { return cos(angle.AsRadians()); }
+
+#endif // _CRELANGLE

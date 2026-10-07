@@ -1,0 +1,924 @@
+{
+  "repository": "https://github.com/PrimeDecomp/echoes",
+  "commit": "b90d6c13b3ef082f49bcd5979f310770ef8ea063",
+  "version": "G2ME01",
+  "cflags": "-nodefaults -proc gekko -align powerpc -enum int -fp hardware -Cpp_exceptions off -O4,p -inline auto -pragma \"cats off\" -pragma \"warn_notinlined off\" -maxerrors 1 -nosyspath -RTTI off -fp_contract on -str reuse -DBUILD_VERSION=0 -DVERSION=0 -multibyte -DNDEBUG=1 -W error -use_lmw_stmw on -str reuse,pool,readonly -gccinc -inline deferred,noauto -common on -DMUSY_TARGET=MUSY_TARGET_DOLPHIN -DMUSY_VERSION_MAJOR=2 -DMUSY_VERSION_MINOR=0 -DMUSY_VERSION_PATCH=3 -pragma \"inline_max_size(125)\"",
+  "files": [
+    {
+      "path": "Kyoto/Alloc/CCallStackDolphin.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Alloc/CCircularBuffer.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Alloc/CGameAllocator.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Alloc/CMediumAllocPool.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Alloc/CMemory.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Alloc/CSmallAllocPool.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Alloc/IAllocator.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Alloc/LockedCache.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAdditiveAnimPlayback.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAdvancementDeltas.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAllFormatsAnimSource.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimCharacterSet.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Animation/CAnimMathUtils.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimPOIData.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimSource.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimSourceReader.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimSourceReaderBase.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeAnimReaderContainer.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeBlend.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeDoubleChild.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeLoopIn.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeNode.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeSequence.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeSingleChild.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeTimeScale.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeTransition.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimTreeTweenBase.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimation.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimationManager.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CAnimationSet.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Animation/CBoolPOINode.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CCharAnimMemoryMetrics.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CCharAnimTime.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CCharLayoutInfo.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CCharacterInfo.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Animation/CCharacterSet.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Animation/CFBStreamedAnimReader.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CFBStreamedCompression.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CHalfTransition.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CHierarchyPoseBuilder.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Animation/CInt32POINode.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CJointData_LinearStorage.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaAnimBlend.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaAnimFactory.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaAnimPhaseBlend.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaAnimPlay.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaAnimRandom.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaAnimSequence.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaTransFactory.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaTransMetaAnim.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaTransPhaseTrans.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaTransSnap.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CMetaTransTrans.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CPASAnimInfo.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CPASAnimParm.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CPASAnimState.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CPASDatabase.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CPASParmInfo.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CPOINode.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CParticlePOINode.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CPoseAsTransforms_Linear.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CPrimitive.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CSegId.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CSegIdList.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CSegStatementSet.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CSequenceHelper.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CSoundPOINode.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CTimeRemainderAndFraction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CTimeScaleFunctions.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CTransition.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CTransitionManager.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Animation/CTreeUtils.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/DolphinCSkinRules.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/DolphinCSkinnedModel.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/DolphinCVirtualBone.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/IAnimReader.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/IMetaAnim.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Audio/AudioEffect.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/AudioEffectX.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CAudioSys.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CAuxEffect.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CAuxEffectManager.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CBitcrusher.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CCustomAudioAux.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CDSPStreamManager.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Audio/CFilteredDelayAux.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CFlanger.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CMidiManager.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CPhaser.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CSfxHandle.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CSfxManager.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CSfxPitchBend.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CStaticAudioPlayer.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/CStreamAudioManager.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Audio/DolphinCAudioGroupSet.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/DolphinCAudioSys.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Audio/g721.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Basics/CBasics.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Basics/CBasicsDolphin.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Basics/COsContextDolphin.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Basics/CSWDataDolphin.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Basics/CStopwatch.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Basics/RAssertDolphin.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CARAMManager.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CARAMToken.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CDependencyGroup.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CDvdRequest.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CDvdRequestManager.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/CFactoryMgr.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CFactoryStore.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/CFrameDelayedKiller.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CObjectReference.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CPakFile.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CRelFileDebugInfo.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CResFactory.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CResLoader.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CSimplePool.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/CTimeProvider.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/DolphinCDvdFile.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/DolphinCMemoryCardSys.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CColor.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CCubeMaterial.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CCubeModel.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CCubeMoviePlayer.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CCubeSurface.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CDisplayListReader.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CGX.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CGXTransientBuffer.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Graphics/CLight.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CTevCombiners.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/CThreeSegmentModel.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Graphics/DolphinCColor.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/DolphinCGraphics.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/DolphinCModel.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/DolphinCPalette.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/DolphinCTexture.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Graphics/PortalPlane.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Input/CDolphinController.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Input/CFinalInput.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Input/CRumbleGenerator.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Input/CRumbleVoice.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Input/DolphinIController.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Input/RumbleAdsr.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CAABox.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CCylinder.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CFrustumPlanes.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CGameCameraSpline.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CGameSpline.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Math/CLine.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CMatrix3f.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CMatrix4f.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CMayaSpline.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CMotionSpline.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CNUQuaternion.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CPlane.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CQuad.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CQuaternion.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CSphere.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CTransform4f.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CTri.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CUnitVector3f.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CVector2f.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CVector3d.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CVector3f.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/CloseEnough.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Math/RMathUtils.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/PVS/CPVSVisOctree.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/PVS/CPVSVisSet.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CColorElement.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CDeferredParticleEffect.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Particles/CEffectComponent.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Particles/CElectricDescription.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CElementGen.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CEmitterElement.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CGenDescription.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CIntElement.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CModVectorElement.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CParticleData.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Particles/CParticleDataFactory.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CParticleElectric.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CParticleElectricDataFactory.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CParticleGen.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Particles/CParticleGlobals.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CParticleSpawnSystem.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CParticleSpawnSystemDataFactory.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CParticleSwoosh.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CParticleSwooshDataFactory.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CRealElement.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CSortedParticleSystem.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CSortedParticleSystemDataFactory.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Particles/CSortedParticleSystemDescription.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CSpawnSystemDescription.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CSpawnSystemKeyframeData.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CSwooshDescription.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CUVElement.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Particles/CVectorElement.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Streams/CBitStreamReader.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Streams/CBitStreamWriter.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Streams/CBufferedDvdRequest.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Streams/CFilePreload.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Streams/CLZOSupport.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Streams/DolphinCInputStream.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Streams/DolphinCLZOInputStream.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CBlockInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CCharacterExtraSpaceInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CColorInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CColorOverrideInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CDrawStringOptions.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CFont.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CFontImageDef.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CFontInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CFontRenderState.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CGuiTextSupport.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CImageInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CLineExtraSpaceInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CLineInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CLineSpacingInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CPopStateInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CPushStateInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CRasterFont.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CRemoveColorOverrideInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CSaveableState.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CStringTable.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CTextExecuteBuffer.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CTextInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CTextParser.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CTextRenderBuffer.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Text/CWordBreakTables.cpp",
+      "mapped": false
+    },
+    {
+      "path": "Kyoto/Text/CWordInstruction.cpp",
+      "mapped": true
+    }
+  ]
+}

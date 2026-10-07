@@ -1,7 +1,27 @@
-/*
- * G2MEAB CGameCameraSpline.cpp translation-unit scaffold (NonMatching).
- * .text: 0x8054D27C - 0x8054D31C (end exclusive).
- * 2 native functions; Prime and Echoes references inspected.
- * Descriptive source basename inferred; no original class/symbol spelling assumed.
- * Nonfunctional: implementation, declarations and data ownership remain to be recovered.
- */
+#include "Kyoto/Math/CGameCameraSpline.hpp"
+
+CGameCameraSpline::CGameCameraSpline(float duration, uint flags,
+                                     const CMayaSpline& positionTimeSpline,
+                                     const CMayaSpline& lookAtTimeSpline,
+                                     const CMayaSpline& fovSpline, const CMayaSpline& rollSpline,
+                                     CMotionSpline::ESplineType positionType,
+                                     CMotionSpline::ESplineType lookAtType)
+: CGameSpline(duration, flags, positionTimeSpline, lookAtTimeSpline, positionType, lookAtType)
+, mFovSpline(fovSpline)
+, mRollSpline(rollSpline) {}
+
+CGameCameraSpline::~CGameCameraSpline() {}
+
+float CGameCameraSpline::GetFovByTime(float time) { return mFovSpline.EvaluateAt(time); }
+
+float CGameCameraSpline::GetFovByLength(float distance) {
+  float time = 0.f;
+  if (GetLookAtSpline().GetControlPointCount() != 0) {
+    time = GetDuration() * (distance / GetLookAtSpline().GetLength());
+  } else if (GetPositionSpline().GetControlPointCount() != 0) {
+    time = GetDuration() * (distance / GetPositionSpline().GetLength());
+  }
+  return mFovSpline.EvaluateAt(time);
+}
+
+float CGameCameraSpline::GetRollByTime(float time) { return mRollSpline.EvaluateAt(time); }

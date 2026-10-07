@@ -7,18 +7,22 @@
 extern "C" {
 #endif
 
-void *memcpy(void *dest, const void *src, size_t num);
-void *memmove(void *dest, const void *src, size_t num);
-void *memset(void *dest, int ch, size_t count);
-int memcmp(const void *ptr1, const void *ptr2, size_t num);
+#pragma section code_type ".init"
+void* memcpy(void* dst, const void* src, size_t n);
+void* memset(void* dst, int val, size_t n);
+void __fill_mem(void* dst, int val, size_t n);
+#pragma section code_type
 
-size_t strlen(const char *s);
-char *strcpy(char *dest, const char *src);
-char *strncpy(char *dest, const char *src, size_t num);
-int strcmp(const char *s1, const char *s2);
-int strncmp(const char *s1, const char *s2, size_t n);
-char *strncat(char *dest, const char *src, size_t n);
-char *strchr(const char *str, int c);
+size_t strlen(const char* s);
+char* strcpy(char* dest, const char* src);
+char* strncpy(char* dest, const char* src, size_t num);
+char* strcat(char* dst, const char* src);
+char* strchr(const char* str, int chr);
+int memcmp(const void* a, const void* b, size_t n);
+void* memmove(void* dst, const void* src, size_t n);
+int strcmp(const char* s1, const char* s2);
+int strncmp(const char* s1, const char* s2, size_t n);
+char* strncat(char* dest, const char* src, size_t n);
 
 #ifdef __cplusplus
 }

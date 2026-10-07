@@ -1,6 +1,33 @@
-/*
- * G2MEAB Kyoto/Text/CFontImageDef.cpp translation-unit scaffold.
- * .text: 0x80529B28..0x80529D48 (5 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: All five native functions align Echoes full unit: CalculateBaseline58, IsLoaded3C, vector-token constructor80, single-token constructor90, vector-token count helper7C. Prime source corroborates object family. Prior29894 is CFIOInStream constructor carrying CFIOInStream.cpp(35); next9D48 derived ImageInstruction destructor.
- */
+#include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Text/CFontImageDef.hpp"
+
+CFontImageDef::CFontImageDef(const TToken< CTexture >& texture, const CVector2f& cropFactor)
+: mFPS(0.f), mTextures(1, texture), mCropFactor(cropFactor) {
+  rstl::vector< TToken< CTexture > >::iterator it = mTextures.begin();
+  for (; it != mTextures.end(); ++it) {
+    it->Lock();
+  }
+}
+
+CFontImageDef::CFontImageDef(const rstl::vector< TToken< CTexture > >& textures, float fps,
+                             const CVector2f& cropFactor)
+: mFPS(fps), mTextures(textures), mCropFactor(cropFactor) {
+  rstl::vector< TToken< CTexture > >::iterator it = mTextures.begin();
+  for (; it != mTextures.end(); ++it) {
+    it->Lock();
+  }
+}
+
+bool CFontImageDef::IsLoaded() const {
+  for (int i = 0; i < mTextures.size(); ++i) {
+    if (!mTextures[i].IsLoaded()) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+int CFontImageDef::CalculateBaseline() const {
+  return (2.5f * GetHeight()) / 3.f;
+}

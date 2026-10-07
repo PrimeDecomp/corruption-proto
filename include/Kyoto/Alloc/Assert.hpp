@@ -1,12 +1,7 @@
 #ifndef KYOTO_ALLOC_ASSERT_HPP
 #define KYOTO_ALLOC_ASSERT_HPP
 
-class CCallStack {
-  unsigned int mFields[2];
-
-public:
-  CCallStack(int depth, const char* source, const char* type);
-};
+#include "Kyoto/Alloc/CCallStack.hpp"
 
 extern "C" void rs_log_assert_failure(const CCallStack* stack, const char* source, int line,
                                         const char* kind, const char* condition,

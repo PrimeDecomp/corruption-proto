@@ -1,6 +1,35 @@
-/*
- * G2MEAB Kyoto/Text/CImageInstruction.cpp translation-unit scaffold.
- * .text: 0x80529D48..0x8052A034 (5 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Five functions: destructor78, asset count8, GetAssetsF8, Invoke118, CalculateHeight5C emitted helper. Target GetAssets decompile shows vector.h(482) capacity assertion and CToken copy; extra assert code explains larger size. Height helper9FD8 belongs this TU per Echoes inventory and call use. Ends at buffer text-bounds method.
- */
+#include "Kyoto/Text/CImageInstruction.hpp"
+
+#include "Kyoto/Math/CVector2i.hpp"
+#include "Kyoto/Text/CFontRenderState.hpp"
+#include "Kyoto/Text/CLineInstruction.hpp"
+#include "Kyoto/Text/CTextRenderBuffer.hpp"
+
+int CFontImageDef::CalculateHeight() const {
+  return GetHeight() - (GetHeight() - CalculateBaseline());
+}
+
+void CImageInstruction::Invoke(CFontRenderState& state, CTextRenderBuffer* buf) const {
+  if (mImage.IsLoaded() && !mImage.GetImages().empty()) {
+    if (state.GetBlock()->GetTextDirection() == kTD_Horizontal) {
+      if (buf) {
+        buf->AddImage(CVector2i(state.GetX(), state.GetY() + state.GetLine()->GetBaseline() -
+                                                  mImage.CalculateBaseline()),
+                      mImage);
+      }
+      state.SetX(state.GetX() + mImage.GetWidth());
+    } else {
+      int offset = (state.GetLine()->GetWidth() - mImage.GetWidth()) / 2;
+      if (buf) {
+        buf->AddImage(CVector2i(offset + state.GetX(), state.GetY()), mImage);
+      }
+      state.SetY(state.GetY() + mImage.CalculateHeight());
+    }
+  }
+}
+
+void CImageInstruction::GetAssets(rstl::vector< CToken >& assetsOut) const {
+  for (int i = 0; i < mImage.GetImages().size(); ++i) {
+    assetsOut.push_back_unsafe(mImage.GetImages()[i]);
+  }
+}

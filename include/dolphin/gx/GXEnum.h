@@ -585,6 +585,7 @@ typedef enum _GXTevScale {
 
 typedef enum _GXTevKColorSel {
     GX_TEV_KCSEL_1    = 0x00,
+    GX_TEV_KCSEL_8_8  = GX_TEV_KCSEL_1,
     GX_TEV_KCSEL_7_8  = 0x01,
     GX_TEV_KCSEL_3_4  = 0x02,
     GX_TEV_KCSEL_5_8  = 0x03,
@@ -616,6 +617,7 @@ typedef enum _GXTevKColorSel {
 
 typedef enum _GXTevKAlphaSel {
     GX_TEV_KASEL_1    = 0x00,
+    GX_TEV_KASEL_8_8  = GX_TEV_KASEL_1,
     GX_TEV_KASEL_7_8  = 0x01,
     GX_TEV_KASEL_3_4  = 0x02,
     GX_TEV_KASEL_5_8  = 0x03,

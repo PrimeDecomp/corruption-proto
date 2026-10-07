@@ -1,6 +1,35 @@
-/*
- * G2MEAB Kyoto/Text/CTextInstruction.cpp translation-unit scaffold.
- * .text: 0x804B8580..0x804B88DC (4 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Derived destructor8580 writes806CF0E8, exactly same vtable as constructor85DC. Constructor has explicit CTextInstruction.cpp(54) assertion. Invoke8770 matches Echoes and Create8870 follows. Four native functions belong together; existing split85DC incorrectly excludes destructor.
- */
+#include "Kyoto/Text/CTextInstruction.hpp"
+#include "Kyoto/Text/CBlockInstruction.hpp"
+#include "Kyoto/Text/CFontRenderState.hpp"
+#include "Kyoto/Text/CInstruction.hpp"
+#include "Kyoto/Text/CLineInstruction.hpp"
+#include "Kyoto/Text/TextCommon.hpp"
+
+CTextInstruction* CTextInstruction::Create(const wchar_t* str, const int len) {
+  char* storage = rs_new char[len * sizeof(wchar_t) + sizeof(CTextInstruction) + sizeof(wchar_t)];
+  return new (storage) CTextInstruction(str, len);
+}
+
+void CTextInstruction::Invoke(CFontRenderState& state, CTextRenderBuffer* buffer) const {
+  if (state.GetBlock()->GetTextDirection() == kTD_Horizontal) {
+    int xOut;
+    int yOut;
+    int baseline = state.GetLine()->GetBaseline();
+    state.GetFont()->DrawString(state.GetOptions(), state.GetX(), baseline + state.GetY(), xOut,
+                                yOut, buffer, mString, mLength);
+    state.SetX(xOut);
+  } else {
+    int xOut;
+    int yOut;
+    int scale = (state.GetLine()->GetWidth() - state.GetFont()->GetMonoWidth()) / 2;
+    state.GetFont()->DrawString(state.GetOptions(), scale + state.GetX(), state.GetY(), xOut, yOut,
+                                buffer, mString, mLength);
+    state.SetY(yOut);
+  }
+}
+
+CTextInstruction::CTextInstruction(const wchar_t* str, const int len) : mLength(len) {
+  for (int i = 0; i < len; ++i) {
+    mString[i] = str[i];
+  }
+}

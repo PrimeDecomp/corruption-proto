@@ -1,6 +1,48 @@
-/*
- * G2MEAB Kyoto/Animation/CPOINode.cpp translation-unit scaffold.
- * .text: 0x804B0DEC..0x804B1060 (5 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Five ordered methods compare/GetHash/stream constructor/parameter constructor/ReadNameHash follow both reference family; compare has distinctive Echoes anchor. Prototype hashed names and base layout differences are preserved without importing Prime string-based ABI.
- */
+#include "Kyoto/Animation/CPOINode.hpp"
+
+#include "Kyoto/CCrc32.hpp"
+#include "Kyoto/Streams/CInputStream.hpp"
+#include "rstl/string.hpp"
+
+static uint ReadNameHash(ushort version, CInputStream& in) {
+  if (version >= 3) {
+    // Skip the stored name; the hash follows it.
+    while (in.ReadUint8()) {
+    }
+    return in.ReadInt32();
+  }
+  rstl::string name(in);
+  return CPOINode::GetHashForString(name.data());
+}
+
+CPOINode::CPOINode(const uint nameHash, const EPOIType type, const CCharAnimTime& time,
+                   const int index, const bool unique, const float weight, const int charIdx,
+                   const int flags)
+: mVersion(2)
+, mNameHash(nameHash)
+, mType(type)
+, mTime(time)
+, mIndex(index)
+, mUnique(unique)
+, mWeight(weight)
+, mCharIdx(charIdx)
+, mFlags(flags) {}
+
+CPOINode::CPOINode(CInputStream& in)
+: mVersion(in.Get< ushort >())
+, mNameHash(ReadNameHash(mVersion, in))
+, mType(in.Get< ushort >())
+, mTime(in)
+, mIndex(in.Get< int >())
+, mUnique(in.Get< bool >())
+, mWeight(in.Get< float >())
+, mCharIdx(in.Get< int >())
+, mFlags(in.Get< int >()) {}
+
+uint CPOINode::GetHashForString(const char* str) { return CCRC32::CalculateString(str, -1); }
+
+int CPOINode::compare(const void* a, const void* b) {
+  const CPOINode& aNode = *static_cast< const CPOINode* >(a);
+  const CPOINode& bNode = *static_cast< const CPOINode* >(b);
+  return aNode > bNode ? 1 : aNode < bNode ? -1 : 0;
+}

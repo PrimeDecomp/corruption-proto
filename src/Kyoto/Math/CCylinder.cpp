@@ -1,6 +1,13 @@
-/*
- * G2MEAB CCylinder.cpp translation-unit scaffold (NonMatching).
- * .text: 0x804fc3d4 - 0x804fc520 (end exclusive).
- * 2 native functions including retained helpers; both reference trees inspected.
- * Nonfunctional: implementation, declarations and data ownership remain to be recovered.
- */
+#include "Kyoto/Math/CCylinder.hpp"
+
+CVector3f CCylinder::GetSurfacePoint(const CVector3f& point) const {
+  CVector3f axisPoint(GetAxisPoint(point));
+  return axisPoint + CVector3f(point - axisPoint).AsNormalized() * mRadius;
+}
+
+CVector3f CCylinder::GetAxisPoint(CVector3f point) const { return mAxis.GetClosestPoint(point); }
+
+bool CCylinder::PointInside(const CVector3f& point) const {
+  CVector3f axisPoint(GetAxisPoint(point));
+  return CVector3f(axisPoint - point).Magnitude() <= mRadius;
+}

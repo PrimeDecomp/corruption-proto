@@ -1,6 +1,67 @@
-/*
- * G2MEAB Kyoto/Animation/IMetaAnim.cpp translation-unit scaffold.
- * .text: 0x8049DE74..0x8049E220 (6 native functions, including emitted helpers).
- * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Six ordered methods Advance/GetTime/PutTo/GetTree/PreAdvance/NoSpecialOrders form both reference family, with several distinctive Echoes anchors. Prototype GetTime is34 rather than reference13C because special-time handling differs; no extra reference functions are imposed.
- */
+#include "Kyoto/Animation/IMetaAnim.hpp"
+
+#include "Kyoto/Animation/CBoolPOINode.hpp"
+#include "Kyoto/Streams/COutputStream.hpp"
+
+CMetaAnimTreeBuildOrders CMetaAnimTreeBuildOrders::NoSpecialOrders() {
+  return CMetaAnimTreeBuildOrders();
+}
+
+CMetaAnimTreeBuildOrders
+CMetaAnimTreeBuildOrders::PreAdvanceForAll(const CPreAdvanceIndicator& ind) {
+  CMetaAnimTreeBuildOrders ret;
+  ret.mSingleAdvance = ind;
+  return ret;
+}
+
+rstl::ncrc_ptr< CAnimTreeNode >
+IMetaAnim::GetAnimationTree(const CAnimSysContext& animSys,
+                            const CMetaAnimTreeBuildOrders& orders) const {
+  if (orders.mSingleAdvance) {
+    rstl::ncrc_ptr< CAnimTreeNode > tree =
+        VGetAnimationTree(animSys, CMetaAnimTreeBuildOrders::NoSpecialOrders());
+    if (orders.mSingleAdvance->IsTime() || orders.mSingleAdvance->IsString()) {
+      AdvanceAnim(*tree, GetTime(*orders.mSingleAdvance, *tree));
+    }
+    return tree;
+  }
+  if (orders.mRecursiveAdvance) {
+    rstl::ncrc_ptr< CAnimTreeNode > tree =
+        VGetAnimationTree(animSys, CMetaAnimTreeBuildOrders::NoSpecialOrders());
+    if (orders.mRecursiveAdvance->IsTime() || orders.mRecursiveAdvance->IsString()) {
+      AdvanceAnim(*tree, GetTime(*orders.mRecursiveAdvance, *tree));
+    }
+    return tree;
+  }
+  return VGetAnimationTree(animSys, CMetaAnimTreeBuildOrders::NoSpecialOrders());
+}
+
+void IMetaAnim::PutTo(COutputStream& out) const {
+  out.WriteInt32(GetType());
+  WriteAnimData(out);
+}
+
+CCharAnimTime IMetaAnim::GetTime(const CPreAdvanceIndicator& ind, const IAnimReader& anim) {
+  if (ind.IsTime()) {
+    return ind.GetTime();
+  }
+
+  CBoolPOINode nodes[64];
+  const uint nameHash = ind.GetNameHash();
+  const uint count = anim.GetBoolPOIList(anim.VGetTimeRemaining(), nodes, 64, 0, 0);
+  for (uint i = 0; i < count; ++i) {
+    const CBoolPOINode& node = nodes[i];
+    if (node.GetNameHash() == nameHash && node.GetValue()) {
+      return node.GetTime();
+    }
+  }
+  return CCharAnimTime::ZeroFlat();
+}
+
+void IMetaAnim::AdvanceAnim(IAnimReader& anim, const CCharAnimTime& dt) {
+  CCharAnimTime remaining = dt;
+  while (remaining > CCharAnimTime::ZeroFlat()) {
+    SAdvancementResults result = anim.VAdvanceView(remaining);
+    remaining = result.mRemTime;
+  }
+}

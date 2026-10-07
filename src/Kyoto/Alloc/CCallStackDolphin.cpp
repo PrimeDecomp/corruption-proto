@@ -1,6 +1,10 @@
-/*
- * G2MEAB CCallStackDolphin.cpp translation-unit scaffold (NonMatching).
- * .text: 0x804904e8 - 0x80490504 (end exclusive).
- * 3 native functions including retained helpers; boundaries checked against Prime and Echoes.
- * Nonfunctional: implementation, declarations and data-section ownership remain to be recovered.
- */
+#include "Kyoto/Alloc/CCallStack.hpp"
+
+const char CCallStack::kUnknownType[] = "UnknownType\0";
+
+CCallStack::CCallStack(uint lineNum, const char* fileAndLine, const char* type)
+: mLine(fileAndLine), mType(type) {}
+
+const char* CCallStack::GetFileAndLineText() const { return mLine; }
+
+const char* CCallStack::GetTypeText() const { return mType; }

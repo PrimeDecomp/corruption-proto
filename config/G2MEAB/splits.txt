@@ -632,6 +632,9 @@ Kyoto/Math/RMathUtils.cpp:
 	.text       start:0x804CCBCC end:0x804CF8F0
 	.ctors      start:0x8065BBBC end:0x8065BBC0
 
+Kyoto/CCrc32.cpp:
+	.text       start:0x804CF8F0 end:0x804CF9FC
+
 Kyoto/Alloc/CCircularBuffer.cpp:
 	.text       start:0x804CFE58 end:0x804D00A4
 
@@ -1013,8 +1016,23 @@ Kyoto/Streams/CStreamPreloadedToken.cpp:
 	.text       start:0x805584B4 end:0x80559008
 	.ctors      start:0x8065BC3C end:0x8065BC40
 
+Kyoto/Animation/CCompressedAnimSource.cpp:
+	.text       start:0x80559008 end:0x80559378
+
 Kyoto/Animation/CJointData_LinearStorage.cpp:
 	.text       start:0x80559378 end:0x80559CD0
+
+Kyoto/Animation/CCompressedAnimSourceReader.cpp:
+	.text       start:0x80559CD0 end:0x8055BD34
+
+Kyoto/Animation/CQuantizedAnimFrame.cpp:
+	.text       start:0x8055BE28 end:0x8055C124
+
+Kyoto/Animation/CCECharacterInfo.cpp:
+	.text       start:0x80561380 end:0x80563AF4
+
+Kyoto/Animation/CCEAnimationSet.cpp:
+	.text       start:0x80563AF4 end:0x80564A30
 
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C

@@ -657,6 +657,14 @@ MetroidPrime/Player/CGameState.cpp:
 	.text       start:0x80159850 end:0x8015F36C
 	.ctors      start:0x8065B70C end:0x8065B710
 
+MetroidPrime/Tweaks/TweaksLoader.cpp:
+	.text       start:0x8023E088 end:0x802471C0
+	.ctors      start:0x8065B8C4 end:0x8065B8C8
+
+MetroidPrime/Tweaks/TweaksAccessors.cpp:
+	.text       start:0x802471C0 end:0x8024AFE4
+	.ctors      start:0x8065B8C8 end:0x8065B8CC
+
 MetroidPrime/CGameCollision_TriangleCache.cpp:
 	.text       start:0x8024AFE4 end:0x8024E548
 	.ctors      start:0x8065B8CC end:0x8065B8D0

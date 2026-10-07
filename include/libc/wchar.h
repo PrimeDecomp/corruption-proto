@@ -25,7 +25,8 @@ static inline int iswpunct(wint_t ch) { return ch < 256 ? __wctype_map[ch] & 0x0
 static inline int iswspace(wint_t ch) { return ch < 256 ? __wctype_map[ch] & 0x06 : 0; }
 static inline int iswupper(wint_t ch) { return ch < 256 ? __wctype_map[ch] & 0x80 : 0; }
 static inline int iswxdigit(wint_t ch) { return ch < 256 ? __wctype_map[ch] & 0x20 : 0; }
-wint_t towlower(wint_t ch);
+extern unsigned short __wlower_map[];
+static inline wint_t towlower(wint_t ch) { return ch >= 256 ? ch : __wlower_map[ch]; }
 wint_t towupper(wint_t ch);
 
 #ifdef __cplusplus

@@ -468,29 +468,15 @@ LUALIB_API void luaL_unref (lua_State *L, int t, int ref) {
 
 typedef struct LoadF {
   FILE *f;
-  lua_WChar buff[LUAL_BUFFERSIZE];
+  char buff[LUAL_BUFFERSIZE * sizeof(lua_WChar)];
 } LoadF;
 
 
-static const lua_WChar* getF (lua_State *L, void *ud, size_t *size) {
-  int i;
+static const char* getF (lua_State *L, void *ud, size_t *size) {
   LoadF *lf = (LoadF *)ud;
   (void)L;
   if (feof(lf->f)) return NULL;
   *size = fread(lf->buff, 1, LUAL_BUFFERSIZE, lf->f);
-  /* upconvert to lua_WChar */
-  for (i = LUAL_BUFFERSIZE - 1; i >= 0; --i) {
-    lf->buff[i] = (lua_WChar)((char*)lf->buff)[i];
-  }
-  return (*size > 0) ? lf->buff : NULL;
-}
-
-
-static const lua_WChar* getWF (lua_State *L, void *ud, size_t *size) {
-  LoadF *lf = (LoadF *)ud;
-  (void)L;
-  if (feof(lf->f)) return NULL;
-  *size = fread(lf->buff, 1, LUAL_BUFFERSIZE * sizeof(lua_WChar), lf->f) / sizeof(lua_WChar);
   return (*size > 0) ? lf->buff : NULL;
 }
 
@@ -520,14 +506,9 @@ LUALIB_API int luaL_loadfile (lua_State *L, const char *filename) {
   if (lf.f == NULL) return errfile(L, fnameindex);  /* unable to open file */
   c = ungetc(getc(lf.f), lf.f);
   if (!(isspace(c) || isprint(c)) && lf.f != stdin) {  /* binary file? */
-    lua_WChar w;
     fclose(lf.f);
     lf.f = fopen(filename, "rb");  /* reopen in binary mode */
     if (lf.f == NULL) return errfile(L, fnameindex); /* unable to reopen file */
-	if (fread(&w, 1, 2, lf.f) == 2 && w == 0xFEFF)
-      chunkReader = getWF;
-	else
-      fseek(lf.f, 0, SEEK_SET);
   }
   status = lua_load(L, chunkReader, &lf, lua_tostring(L, -1));
   readstatus = ferror(lf.f);
@@ -541,27 +522,19 @@ LUALIB_API int luaL_loadfile (lua_State *L, const char *filename) {
 }
 
 
-#define NUM_CHARS 100
-
 typedef struct LoadS {
   const char *s;
-  lua_WChar buf[NUM_CHARS];
   size_t size;
 } LoadS;
 
 
-static const lua_WChar *getS (lua_State *L, void *ud, size_t *size) {
-  int i, numChars;
+static const char *getS (lua_State *L, void *ud, size_t *size) {
   LoadS *ls = (LoadS *)ud;
   (void)L;
   if (ls->size == 0) return NULL;
-  numChars = ls->size < NUM_CHARS ? ls->size : NUM_CHARS;
-  for (i = 0; i < numChars; ++i)
-    ls->buf[i] = (lua_WChar)ls->s[i];
-  ls->s += numChars;
-  *size = numChars;
-  ls->size -= numChars;
-  return ls->buf;
+  *size = ls->size;
+  ls->size = 0;
+  return ls->s;
 }
 
 
@@ -580,13 +553,13 @@ typedef struct LoadWS {
 } LoadWS;
 
 
-static const lua_WChar *getWS (lua_State *L, void *ud, size_t *size) {
+static const char *getWS (lua_State *L, void *ud, size_t *size) {
   LoadWS *ls = (LoadWS *)ud;
   (void)L;
   if (ls->size == 0) return NULL;
   *size = ls->size;
   ls->size = 0;
-  return ls->s;
+  return (const char *)ls->s;
 }
 
 
@@ -616,8 +589,8 @@ static void callalert (lua_State *L, int status) {
       lua_insert(L, -2);
       lua_call(L, 1, 0);
     }
-    else {  /* no _ALERT function; print it on stderr */
-      fprintf(stderr, "%s\n", lua_tostring(L, -2));
+    else {  /* no _ALERT function; print it on the console */
+      printf("%s\n", lua_tostring(L, -2));
       lua_pop(L, 2);  /* remove error message and _ALERT */
     }
   }

@@ -358,6 +358,7 @@ cflags_lua = [
     "-i include/Lua",
     "-DLUAPLUS_LIB",
     "-DMSL_NO_INLINE_SQRT",
+    "-DMSL_NO_DISK_FILE_SUPPORT",
     "-wchar_t off",
     "-requireprotos",
     "-use_lmw_stmw on",
@@ -679,7 +680,7 @@ config.libs = [
         Object(NonMatching, "FMOD/fmod_dsp_codecpool.cpp"),
     ]),
     LuaLib("Lua", [
-        Object(NonMatching, "Lua/lwstrlib.c"),
+        Object(Matching, "Lua/lwstrlib.c"),
         Object(NonMatching, "Lua/LuaObject.cpp", extra_cflags=["-Cpp_exceptions on"]),
         Object(NonMatching, "Lua/LuaPlus.cpp", extra_cflags=["-Cpp_exceptions on"]),
         Object(Matching, "Lua/LuaPlusAddons.c"),
@@ -708,7 +709,7 @@ config.libs = [
         Object(Matching, "Lua/lmathlib.c"),
         Object(Matching, "Lua/lstrlib.c"),
         Object(Matching, "Lua/ltablib.c"),
-        Object(NonMatching, "Lua/lauxlib.c"),
+        Object(Matching, "Lua/lauxlib.c"),
         # Opcode tables have no established prototype data split yet.
         Object(NonMatching, "Lua/lopcodes.c", build_unlinked=True),
     ]),

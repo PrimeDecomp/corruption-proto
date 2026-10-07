@@ -33,6 +33,7 @@ const lua_WChar *wmemchr(const lua_WChar *S, lua_WChar C, size_t N);
 int wmemcmp(const lua_WChar *S1, const lua_WChar *S2, size_t N);
 int wstr_format_helper(luaL_Buffer* b, lua_State* L, int arg);
 
+#ifndef __MWERKS__
 const lua_WChar *wmemchr(const lua_WChar *S, lua_WChar C, size_t N)
         {for (; 0 < N; ++S, --N)
                 if (*S == C)
@@ -43,8 +44,7 @@ int wmemcmp(const lua_WChar *S1, const lua_WChar *S2, size_t N)
                 if (*S1 != *S2)
                         return (*S1 < *S2 ? -1 : +1);
         return (0); }
-
-
+#endif
 
 typedef long sint32;	/* a signed version for size_t */
 

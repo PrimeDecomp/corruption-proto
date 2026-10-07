@@ -987,6 +987,11 @@ config.libs = [
         Object(NonMatching, "MetaRender/CCubeRenderer.cpp"),
     ]),
     RetroLib("MetroidPrime", [
+        Object(NonMatching, "MetroidPrime/CArchMsgParmInt32.cpp"),
+        Object(NonMatching, "MetroidPrime/CArchMsgParmInt32Int32VoidPtr.cpp"),
+        Object(NonMatching, "MetroidPrime/CArchMsgParmNull.cpp"),
+        Object(NonMatching, "MetroidPrime/CArchMsgParmReal32.cpp"),
+        Object(NonMatching, "MetroidPrime/CIOWin.cpp"),
         Object(NonMatching, "MetroidPrime/Cameras/CCameraSurface.cpp"),
         Object(NonMatching, "MetroidPrime/Cameras/CCylinderCameraSurface.cpp"),
         Object(NonMatching, "MetroidPrime/Cameras/CSplineCylinderCameraSurface.cpp"),

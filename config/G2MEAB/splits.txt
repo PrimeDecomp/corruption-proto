@@ -25,6 +25,18 @@ MetroidPrime/CEntity.cpp:
 	.text       start:0x80030F78 end:0x800332B0
 	.ctors      start:0x8065B4F4 end:0x8065B4F8
 
+MetroidPrime/CArchMsgParmInt32.cpp:
+	.text       start:0x800332B0 end:0x8003332C
+
+MetroidPrime/CArchMsgParmInt32Int32VoidPtr.cpp:
+	.text       start:0x8003332C end:0x800333B0
+
+MetroidPrime/CArchMsgParmNull.cpp:
+	.text       start:0x800333B0 end:0x80033428
+
+MetroidPrime/CArchMsgParmReal32.cpp:
+	.text       start:0x80033428 end:0x800334A4
+
 MetroidPrime/Decode.cpp:
 	.text       start:0x800334A4 end:0x80033B7C
 	.ctors      start:0x8065B4F8 end:0x8065B4FC
@@ -32,6 +44,9 @@ MetroidPrime/Decode.cpp:
 MetroidPrime/CIOWinManager.cpp:
 	.text       start:0x80033B7C end:0x80034A5C
 	.ctors      start:0x8065B4FC end:0x8065B500
+
+MetroidPrime/CIOWin.cpp:
+	.text       start:0x80034A5C end:0x80034B04
 
 MetroidPrime/CActor.cpp:
 	.text       start:0x80034B04 end:0x80037424

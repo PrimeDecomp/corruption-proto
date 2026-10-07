@@ -837,6 +837,7 @@ Lua/LuaPlus.cpp:
 
 Lua/LuaPlusAddons.c:
 	.text       start:0x80447500 end:0x8044787C
+	.data       start:0x806CDAF8 end:0x806CDB04
 
 Lua/LuaPlusFunctions.cpp:
 	.text       start:0x8044787C end:0x804479DC
@@ -861,12 +862,14 @@ Lua/lfunc.c:
 
 Lua/lgc.c:
 	.text       start:0x80451CC8 end:0x80453784
+	.data       start:0x806CDBF0 end:0x806CDC50
 
 Lua/llex.c:
 	.text       start:0x80453784 end:0x80456A1C
 
 Lua/lmem.c:
 	.text       start:0x80456A1C end:0x80456CA4
+	.rodata     start:0x80699E80 end:0x80699EA8
 
 Lua/lobject.c:
 	.text       start:0x80456CA4 end:0x80457518
@@ -885,6 +888,7 @@ Lua/ltable.c:
 
 Lua/ltm.c:
 	.text       start:0x80460998 end:0x80460B74
+	.rodata     start:0x8069A2B8 end:0x8069A3C0
 
 Lua/lundump.c:
 	.text       start:0x80460B74 end:0x80462B40

@@ -352,17 +352,16 @@ def VorbisLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-# Provisional Lua/LuaPlus profile, independent from Dolphin and Retro flags.
-# The target's Lua version string does not establish its compiler settings.
+# Lua C core settings; the LuaPlus C++ wrappers enable exceptions below.
 cflags_lua = [
     *cflags_base,
     "-i include/Lua",
     "-DLUAPLUS_LIB",
     "-wchar_t off",
     "-requireprotos",
-    # The supplied LuaPlus wrappers use C++ exceptions. This profile remains
-    # provisional; all imported units stay NonMatching.
-    "-Cpp_exceptions on",
+    "-use_lmw_stmw on",
+    "-inline deferred,auto",
+    "-str reuse,pool,readonly",
 ]
 
 
@@ -680,25 +679,25 @@ config.libs = [
     ]),
     LuaLib("Lua", [
         Object(NonMatching, "Lua/lwstrlib.c"),
-        Object(NonMatching, "Lua/LuaObject.cpp"),
-        Object(NonMatching, "Lua/LuaPlus.cpp"),
-        Object(NonMatching, "Lua/LuaPlusAddons.c"),
-        Object(NonMatching, "Lua/LuaPlusFunctions.cpp"),
-        Object(NonMatching, "Lua/LuaState_DumpObject.cpp"),
+        Object(NonMatching, "Lua/LuaObject.cpp", extra_cflags=["-Cpp_exceptions on"]),
+        Object(NonMatching, "Lua/LuaPlus.cpp", extra_cflags=["-Cpp_exceptions on"]),
+        Object(Matching, "Lua/LuaPlusAddons.c"),
+        Object(NonMatching, "Lua/LuaPlusFunctions.cpp", extra_cflags=["-Cpp_exceptions on"]),
+        Object(NonMatching, "Lua/LuaState_DumpObject.cpp", extra_cflags=["-Cpp_exceptions on"]),
         Object(NonMatching, "Lua/lcode.c"),
         Object(NonMatching, "Lua/ldebug.c"),
         Object(NonMatching, "Lua/ldo.c"),
         Object(NonMatching, "Lua/ldump.c"),
-        Object(NonMatching, "Lua/lfunc.c"),
-        Object(NonMatching, "Lua/lgc.c"),
+        Object(Matching, "Lua/lfunc.c"),
+        Object(Matching, "Lua/lgc.c"),
         Object(NonMatching, "Lua/llex.c"),
-        Object(NonMatching, "Lua/lmem.c"),
+        Object(Matching, "Lua/lmem.c"),
         Object(NonMatching, "Lua/lobject.c"),
         Object(NonMatching, "Lua/lparser.c"),
         Object(NonMatching, "Lua/lstate.c"),
-        Object(NonMatching, "Lua/lstring.c"),
+        Object(Matching, "Lua/lstring.c"),
         Object(NonMatching, "Lua/ltable.c"),
-        Object(NonMatching, "Lua/ltm.c"),
+        Object(Matching, "Lua/ltm.c"),
         Object(NonMatching, "Lua/lundump.c"),
         Object(NonMatching, "Lua/lvm.c"),
         Object(NonMatching, "Lua/lzio.c"),

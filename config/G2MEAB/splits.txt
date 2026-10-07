@@ -472,6 +472,22 @@ MetroidPrime/BodyState/CBSProjectileAttack.cpp:
 	.text       start:0x8010B110 end:0x8010B3D8
 	.ctors      start:0x8065B664 end:0x8065B668
 
+MetroidPrime/CPlayerGuiManager.cpp:
+	.text       start:0x8025BC48 end:0x8025FC44
+	.ctors      start:0x8065B8E8 end:0x8065B8EC
+
+MetroidPrime/ScriptObjects/CScriptDamageableTriggerOrientated.cpp:
+	.text       start:0x8025FD58 end:0x8026065C
+	.ctors      start:0x8065B8F0 end:0x8065B8F4
+
+MetroidPrime/ScriptObjects/CScriptRepulsor.cpp:
+	.text       start:0x8026075C end:0x80260B84
+	.ctors      start:0x8065B8F4 end:0x8065B8F8
+
+MetroidPrime/BodyState/CABSPose.cpp:
+	.text       start:0x80260B84 end:0x80261258
+	.ctors      start:0x8065B8F8 end:0x8065B8FC
+
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 
@@ -715,6 +731,38 @@ MetroidPrime/Cameras/CBallCamera.cpp:
 MetroidPrime/CGameProfiler.cpp:
 	.text       start:0x802D7B74 end:0x802D8C2C
 	.ctors      start:0x8065B9E0 end:0x8065B9E4
+
+MetroidPrime/CShip.cpp:
+	.text       start:0x802D8C2C end:0x802DEE10
+	.ctors      start:0x8065B9E4 end:0x8065B9E8
+
+MetroidPrime/ScriptObjects/CScriptShipCommandIcon.cpp:
+	.text       start:0x802DEE10 end:0x802DFA74
+	.ctors      start:0x8065B9E8 end:0x8065B9EC
+
+MetroidPrime/Cameras/CDebugCameraBehavior.cpp:
+	.text       start:0x802DFA74 end:0x802DFB44
+	.ctors      start:0x8065B9EC end:0x8065B9F0
+
+MetroidPrime/PathFinding/CPathFindRegionAvoidance.cpp:
+	.text       start:0x802DFB44 end:0x802DFEEC
+	.ctors      start:0x8065B9F0 end:0x8065B9F4
+
+MetroidPrime/Enemies/CKorbaSnatcher.cpp:
+	.text       start:0x802DFEEC end:0x802E3D64
+	.ctors      start:0x8065B9F4 end:0x8065B9F8
+
+MetroidPrime/Enemies/CKorbaMaw.cpp:
+	.text       start:0x802E3D64 end:0x802E517C
+	.ctors      start:0x8065B9F8 end:0x8065B9FC
+
+MetroidPrime/ScriptObjects/CScriptShipCommandPath.cpp:
+	.text       start:0x802E517C end:0x802E56BC
+	.ctors      start:0x8065B9FC end:0x8065BA00
+
+MetroidPrime/CRigidBody.cpp:
+	.text       start:0x802E56BC end:0x802E7750
+	.ctors      start:0x8065BA00 end:0x8065BA04
 
 MetroidPrime/Enemies/CBlinkWolf.cpp:
 	.text       start:0x8036E530 end:0x80375C88

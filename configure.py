@@ -1123,6 +1123,7 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/CFluidPlane.cpp"),
         Object(NonMatching, "MetroidPrime/CFluidPlaneManager.cpp"),
         Object(NonMatching, "MetroidPrime/ScriptObjects/CScriptGrapplePoint.cpp"),
+        Object(NonMatching, "MetroidPrime/ScriptObjects/CHUDBillboardEffect.cpp"),
         Object(NonMatching, "MetroidPrime/CObjectListSmall.cpp"),
         Object(NonMatching, "MetroidPrime/CSurfacePathWalker.cpp"),
         Object(NonMatching, "MetroidPrime/CCollisionTracker.cpp"),

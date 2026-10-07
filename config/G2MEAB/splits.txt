@@ -381,6 +381,10 @@ MetroidPrime/ScriptObjects/CScriptGrapplePoint.cpp:
 	.text       start:0x800F7B24 end:0x800F9238
 	.ctors      start:0x8065B60C end:0x8065B610
 
+MetroidPrime/ScriptObjects/CHUDBillboardEffect.cpp:
+	.text       start:0x800F9238 end:0x800F9BB4
+	.ctors      start:0x8065B610 end:0x8065B614
+
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 

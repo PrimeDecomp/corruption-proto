@@ -1636,11 +1636,67 @@ FMOD/fmod_dsp_chorus.cpp:
 FMOD/fmod_dsp_connection.cpp:
 	.text       start:0x805F1364 end:0x805F3F7C
 
+FMOD/fmod_dsp_connectionpool.cpp:
+	.text       start:0x805F3F7C end:0x805F4538
+
+FMOD/fmod_dsp_distortion.cpp:
+	.text       start:0x805F4538 end:0x805F4AB8
+	.ctors      start:0x8065BCAC end:0x8065BCB0
+
+FMOD/fmod_dsp_echo.cpp:
+	.text       start:0x805F4AB8 end:0x805F5914
+	.ctors      start:0x8065BCB0 end:0x8065BCB4
+
 FMOD/fmod_memory.cpp:
 	.text       start:0x8060B560 end:0x8060C2B4
 
 FMOD/fmod_metadata.cpp:
 	.text       start:0x8060C2B4 end:0x8060CA08
+
+FMOD/fmod_music.cpp:
+	.text       start:0x8060CA08 end:0x8060D428
+	.ctors      start:0x8065BCE4 end:0x8065BCE8
+
+FMOD/fmod_octree.cpp:
+	.text       start:0x8060D428 end:0x8060E934
+
+FMOD/fmod_output.cpp:
+	.text       start:0x8060E934 end:0x8060EEEC
+
+FMOD/fmod_output_emulated.cpp:
+	.text       start:0x8060EEEC end:0x8060F1B8
+
+FMOD/fmod_output_nosound.cpp:
+	.text       start:0x8060F1B8 end:0x8060F80C
+	.ctors      start:0x8065BCE8 end:0x8065BCEC
+
+FMOD/fmod_output_polling.cpp:
+	.text       start:0x8060F80C end:0x80610154
+
+FMOD/fmod_output_software.cpp:
+	.text       start:0x80610154 end:0x80610930
+
+FMOD/fmod_plugin.cpp:
+	.text       start:0x80610930 end:0x80610968
+
+FMOD/fmod_pluginfactory.cpp:
+	.text       start:0x80610968 end:0x80611C3C
+
+FMOD/fmod_sample_software.cpp:
+	.text       start:0x80611C3C end:0x80612998
+
+FMOD/fmod_sound.cpp:
+	.text       start:0x80612998 end:0x80612B54
+
+FMOD/fmod_sound_sample.cpp:
+	.text       start:0x80612B54 end:0x80615750
+
+FMOD/fmod_sound_stream.cpp:
+	.text       start:0x80615750 end:0x8061606C
+
+FMOD/fmod_soundi.cpp:
+	.text       start:0x8061606C end:0x80619D8C
+	.ctors      start:0x8065BCEC end:0x8065BCF0
 
 FMOD/fmod_string.cpp:
 	.text       start:0x80619D8C end:0x8061A228

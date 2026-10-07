@@ -565,6 +565,74 @@ MetroidPrime/ScriptObjects/CScriptLUA.cpp:
 	.text       start:0x802B3D08 end:0x802B9354
 	.ctors      start:0x8065B9A0 end:0x8065B9A4
 
+MetroidPrime/Player/CPlayerArms.cpp:
+	.text       start:0x802B9354 end:0x802BDC6C
+	.ctors      start:0x8065B9A4 end:0x8065B9A8
+
+MetroidPrime/Player/CPlayerBombController.cpp:
+	.text       start:0x802BDC6C end:0x802BE48C
+	.ctors      start:0x8065B9A8 end:0x8065B9AC
+
+MetroidPrime/Player/CPlayerFidget.cpp:
+	.text       start:0x802BE48C end:0x802BE844
+	.ctors      start:0x8065B9AC end:0x8065B9B0
+
+MetroidPrime/Player/CPlayerLasso.cpp:
+	.text       start:0x802BE844 end:0x802C3488
+	.ctors      start:0x8065B9B0 end:0x8065B9B4
+
+MetroidPrime/Player/CPlayerLeftArm.cpp:
+	.text       start:0x802C3488 end:0x802C5858
+	.ctors      start:0x8065B9B4 end:0x8065B9B8
+
+MetroidPrime/Player/CPlayerRightArm.cpp:
+	.text       start:0x802C5858 end:0x802C9354
+	.ctors      start:0x8065B9B8 end:0x8065B9BC
+
+MetroidPrime/Player/CPlayerGrappleTargeting.cpp:
+	.text       start:0x802C9354 end:0x802C9F50
+	.ctors      start:0x8065B9BC end:0x8065B9C0
+
+MetroidPrime/CElectricArcs.cpp:
+	.text       start:0x802C9F50 end:0x802CBBD8
+	.ctors      start:0x8065B9C0 end:0x8065B9C4
+
+MetroidPrime/Enemies/CActorAiDebugRecorder.cpp:
+	.text       start:0x802CBBD8 end:0x802CEF80
+	.ctors      start:0x8065B9C4 end:0x8065B9C8
+
+MetroidPrime/CActorTriangleCollisionCache.cpp:
+	.text       start:0x802CEF80 end:0x802CF35C
+	.ctors      start:0x8065B9C8 end:0x8065B9CC
+
+MetroidPrime/Player/CGrappleBlock.cpp:
+	.text       start:0x802CF35C end:0x802CFD90
+	.ctors      start:0x8065B9CC end:0x8065B9D0
+
+MetroidPrime/ScriptObjects/CScriptEffectRepulsor.cpp:
+	.text       start:0x802CFD90 end:0x802D0D74
+	.ctors      start:0x8065B9D0 end:0x8065B9D4
+
+MetroidPrime/Enemies/CBlinkWolf.cpp:
+	.text       start:0x8036E530 end:0x80375C88
+	.ctors      start:0x8065BAC8 end:0x8065BACC
+
+MetroidPrime/ScriptObjects/CScriptShipProxy.cpp:
+	.text       start:0x80375C88 end:0x80376180
+	.ctors      start:0x8065BACC end:0x8065BAD0
+
+MetroidPrime/Enemies/CMetroidHopper.cpp:
+	.text       start:0x80376180 end:0x8037A5BC
+	.ctors      start:0x8065BAD0 end:0x8065BAD4
+
+MetroidPrime/Enemies/CSwarmBot.cpp:
+	.text       start:0x8037A5BC end:0x80388598
+	.ctors      start:0x8065BAD4 end:0x8065BAD8
+
+MetroidPrime/ScriptObjects/CScriptFalsePerspective.cpp:
+	.text       start:0x80388598 end:0x80389960
+	.ctors      start:0x8065BAD8 end:0x8065BADC
+
 MetroidPrime/Enemies/CMantha.cpp:
 	.text       start:0x80389960 end:0x8038B30C
 	.ctors      start:0x8065BADC end:0x8065BAE0

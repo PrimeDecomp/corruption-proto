@@ -304,6 +304,161 @@ Kyoto/Basics/CSWDataDolphin.cpp:
 Kyoto/Basics/RAssertDolphin.cpp:
 	.text       start:0x804907F0 end:0x80490DA0
 
+Kyoto/Animation/CAnimation.cpp:
+	.text       start:0x804912D0 end:0x804913A8
+
+Kyoto/Animation/CAnimationManager.cpp:
+	.text       start:0x80491760 end:0x80491804
+
+Kyoto/Animation/CAnimTreeLoopIn.cpp:
+	.text       start:0x80491A2C end:0x80494198
+
+Kyoto/Animation/CAnimTreeSequence.cpp:
+	.text       start:0x80494198 end:0x804967B4
+
+Kyoto/Animation/CMetaAnimBlend.cpp:
+	.text       start:0x804967B4 end:0x80496C80
+
+Kyoto/Animation/CMetaAnimFactory.cpp:
+	.text       start:0x80496C80 end:0x80496F18
+
+Kyoto/Animation/CMetaAnimPhaseBlend.cpp:
+	.text       start:0x80496F18 end:0x80497724
+
+Kyoto/Animation/CMetaAnimPlay.cpp:
+	.text       start:0x80497724 end:0x80497D5C
+
+Kyoto/Animation/CMetaAnimRandom.cpp:
+	.text       start:0x80497D5C end:0x80498524
+
+Kyoto/Animation/CMetaAnimSequence.cpp:
+	.text       start:0x80498524 end:0x80498A3C
+
+Kyoto/Animation/CMetaTransFactory.cpp:
+	.text       start:0x80498A3C end:0x80498C64
+
+Kyoto/Animation/CMetaTransMetaAnim.cpp:
+	.text       start:0x80498C64 end:0x80498EA4
+
+Kyoto/Animation/CMetaTransPhaseTrans.cpp:
+	.text       start:0x80498EA4 end:0x804997E4
+
+Kyoto/Animation/CMetaTransSnap.cpp:
+	.text       start:0x804997E4 end:0x80499870
+
+Kyoto/Animation/CMetaTransTrans.cpp:
+	.text       start:0x80499870 end:0x80499BD8
+
+Kyoto/Animation/CPASAnimInfo.cpp:
+	.text       start:0x80499BD8 end:0x80499CD0
+
+Kyoto/Animation/CPASAnimParm.cpp:
+	.text       start:0x80499CD0 end:0x80499E34
+
+Kyoto/Animation/CPASAnimState.cpp:
+	.text       start:0x80499E34 end:0x8049B1E0
+
+Kyoto/Animation/CPASDatabase.cpp:
+	.text       start:0x8049B1E0 end:0x8049C1BC
+
+Kyoto/Animation/CPASParmInfo.cpp:
+	.text       start:0x8049C1BC end:0x8049C378
+
+Kyoto/Animation/CPrimitive.cpp:
+	.text       start:0x8049C378 end:0x8049C448
+
+Kyoto/Animation/CSequenceHelper.cpp:
+	.text       start:0x8049C448 end:0x8049DBC0
+
+Kyoto/Animation/CTreeUtils.cpp:
+	.text       start:0x8049DBC0 end:0x8049DE74
+
+Kyoto/Animation/IMetaAnim.cpp:
+	.text       start:0x8049DE74 end:0x8049E220
+
+Kyoto/Animation/CAdvancementDeltas.cpp:
+	.text       start:0x8049E220 end:0x8049E5E0
+
+Kyoto/Animation/CAnimMathUtils.cpp:
+	.text       start:0x8049E5E0 end:0x8049EAC0
+
+Kyoto/Animation/CAnimPOIData.cpp:
+	.text       start:0x8049ED50 end:0x8049F4F4
+
+Kyoto/Animation/CAnimSource.cpp:
+	.text       start:0x8049F4F4 end:0x804A1540
+
+Kyoto/Animation/CAnimSourceReader.cpp:
+	.text       start:0x804A1540 end:0x804A2E8C
+
+Kyoto/Animation/CAnimSourceReaderBase.cpp:
+	.text       start:0x804A2E8C end:0x804A497C
+
+Kyoto/Animation/CAnimTreeAnimReaderContainer.cpp:
+	.text       start:0x804A497C end:0x804A50D0
+
+Kyoto/Animation/CAnimTreeBlend.cpp:
+	.text       start:0x804A50D0 end:0x804A5904
+
+Kyoto/Animation/CAnimTreeDoubleChild.cpp:
+	.text       start:0x804A5904 end:0x804A6A74
+
+Kyoto/Animation/CAnimTreeNode.cpp:
+	.text       start:0x804A6A74 end:0x804A6C30
+
+Kyoto/Animation/CAnimTreeSingleChild.cpp:
+	.text       start:0x804A6C30 end:0x804A70C8
+
+Kyoto/Animation/CAnimTreeTimeScale.cpp:
+	.text       start:0x804A70C8 end:0x804A87CC
+
+Kyoto/Animation/CAnimTreeTransition.cpp:
+	.text       start:0x804A87CC end:0x804A9B0C
+
+Kyoto/Animation/CAnimTreeTweenBase.cpp:
+	.text       start:0x804A9B0C end:0x804AADCC
+
+Kyoto/Animation/CBoolPOINode.cpp:
+	.text       start:0x804AADCC end:0x804AAEDC
+
+Kyoto/Animation/CCharAnimMemoryMetrics.cpp:
+	.text       start:0x804AAEDC end:0x804AAF10
+
+Kyoto/Animation/CCharLayoutInfo.cpp:
+	.text       start:0x804AAF10 end:0x804AC608
+
+Kyoto/Animation/CFBStreamedAnimReader.cpp:
+	.text       start:0x804AC608 end:0x804AFED4
+	.ctors      start:0x8065BB80 end:0x8065BB84
+
+Kyoto/Animation/CFBStreamedCompression.cpp:
+	.text       start:0x804AFED4 end:0x804B0BAC
+
+Kyoto/Animation/CInt32POINode.cpp:
+	.text       start:0x804B0BAC end:0x804B0C08
+
+Kyoto/Animation/CParticlePOINode.cpp:
+	.text       start:0x804B0C08 end:0x804B0DEC
+
+Kyoto/Animation/CPOINode.cpp:
+	.text       start:0x804B0DEC end:0x804B1060
+
+Kyoto/Animation/CSegId.cpp:
+	.text       start:0x804B1060 end:0x804B1110
+	.ctors      start:0x8065BB84 end:0x8065BB88
+
+Kyoto/Animation/CSegStatementSet.cpp:
+	.text       start:0x804B1110 end:0x804B13DC
+
+Kyoto/Animation/CTimeScaleFunctions.cpp:
+	.text       start:0x804B152C end:0x804B1A14
+
+Kyoto/Animation/IAnimReader.cpp:
+	.text       start:0x804B1A14 end:0x804B1ED0
+
+Kyoto/Animation/CAllFormatsAnimSource.cpp:
+	.text       start:0x804B1ED0 end:0x804B27CC
+
 Kyoto/Text/CColorInstruction.cpp:
 	.text       start:0x804B2A2C end:0x804B2AE4
 
@@ -569,6 +724,12 @@ Kyoto/CToken.cpp:
 	.text       start:0x8050821C end:0x80508574
 	.rodata     start:0x806A3368 end:0x806A3380
 
+Kyoto/Animation/CCharAnimTime.cpp:
+	.text       start:0x805197AC end:0x8051A2D0
+
+Kyoto/Animation/CSegIdList.cpp:
+	.text       start:0x8051A2D0 end:0x8051A374
+
 Kyoto/Alloc/CMediumAllocPool.cpp:
 	.text       start:0x8051EF9C end:0x8051F998
 
@@ -577,6 +738,15 @@ Kyoto/Alloc/CSmallAllocPool.cpp:
 
 Kyoto/Alloc/CGameAllocator.cpp:
 	.text       start:0x8051FCAC end:0x80521908
+
+Kyoto/Animation/DolphinCSkinnedModel.cpp:
+	.text       start:0x80521908 end:0x80522CDC
+
+Kyoto/Animation/DolphinCSkinRules.cpp:
+	.text       start:0x80522CDC end:0x80523D04
+
+Kyoto/Animation/DolphinCVirtualBone.cpp:
+	.text       start:0x80523D04 end:0x80524448
 
 Kyoto/Particles/CEmitterElement.cpp:
 	.text       start:0x80525EB0 end:0x805275D4
@@ -590,6 +760,9 @@ Kyoto/Text/CImageInstruction.cpp:
 
 Kyoto/Text/CTextRenderBuffer.cpp:
 	.text       start:0x8052A034 end:0x8052C2D4
+
+Kyoto/Animation/CAdditiveAnimPlayback.cpp:
+	.text       start:0x8052FAA4 end:0x8052FD48
 
 Kyoto/Particles/CParticleElectricDataFactory.cpp:
 	.text       start:0x8052FD48 end:0x80530804
@@ -606,6 +779,9 @@ Kyoto/Particles/CSwooshDescription.cpp:
 
 Kyoto/Particles/CGenDescription.cpp:
 	.text       start:0x80537CF8 end:0x80538114
+
+Kyoto/Animation/CTimeRemainderAndFraction.cpp:
+	.text       start:0x8053D770 end:0x8053D854
 
 Kyoto/Particles/CParticleSpawnSystemDataFactory.cpp:
 	.text       start:0x805485B4 end:0x80548D54
@@ -627,8 +803,17 @@ Kyoto/Particles/CParticleSortedSystemDataFactory.cpp:
 Kyoto/Particles/CSortedParticleSystemDescription.cpp:
 	.text       start:0x8054C9DC end:0x8054CA40
 
+Kyoto/Animation/CSoundPOINode.cpp:
+	.text       start:0x80554B24 end:0x80554D88
+
+Kyoto/Animation/CPoseAsTransforms_Linear.cpp:
+	.text       start:0x80554D88 end:0x805559B0
+
 Kyoto/Particles/CManagedParticleGen.cpp:
 	.text       start:0x805559B0 end:0x80556320
+
+Kyoto/Animation/CJointData_LinearStorage.cpp:
+	.text       start:0x80559378 end:0x80559CD0
 
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C

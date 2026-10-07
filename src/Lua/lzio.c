@@ -19,7 +19,7 @@
 
 int luaZ_fill (ZIO *z) {
   size_t size;
-  const char *buff = (const char *)z->reader(NULL, z->data, &size);
+  const char *buff = z->reader(NULL, z->data, &size);
   if (buff == NULL || size == 0) return EOZ;
   z->n = size - 1;
   z->p = buff;

@@ -51,14 +51,14 @@ typedef int (*lua_CFunction) (lua_State *L);
 /*
 ** functions that read/write blocks when loading/dumping Lua chunks
 */
-/* type of lex characters in Lua */
+/* type of characters stored in Lua wide strings */
 #ifdef LUAPLUS_HAS_WCHAR_T
 typedef wchar_t lua_WChar;
 #else
 typedef unsigned short lua_WChar;
 #endif
 
-typedef const lua_WChar * (*lua_Chunkreader) (lua_State *L, void *ud, size_t *sz);
+typedef const char * (*lua_Chunkreader) (lua_State *L, void *ud, size_t *sz);
 
 typedef int (*lua_Chunkwriter) (lua_State *L, const void* p,
                                 size_t sz, void* ud);

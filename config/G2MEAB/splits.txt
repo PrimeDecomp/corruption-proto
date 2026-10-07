@@ -1364,6 +1364,9 @@ Dolphin/amcstubs/AmcExi2Stubs.c:
 
 Lua/lwstrlib.c:
 	.text       start:0x80442048 end:0x804454F0
+	.rodata     start:0x806995F8 end:0x80699808
+	.data       start:0x806CD890 end:0x806CDAE0
+	.sdata2     start:0x807A16B8 end:0x807A16D8
 
 Lua/LuaObject.cpp:
 	.text       start:0x804454F0 end:0x804466D4
@@ -1493,6 +1496,8 @@ Lua/ltablib.c:
 
 Lua/lauxlib.c:
 	.text       start:0x80471768 end:0x80473854
+	.rodata     start:0x8069B2E8 end:0x8069B3A8
+	.sdata2     start:0x807A17D0 end:0x807A17E0
 
 Collision/CCollidableAABox.cpp:
 	.text       start:0x80473854 end:0x80474364

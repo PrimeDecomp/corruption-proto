@@ -186,6 +186,12 @@ Dolphin/gx/GXTransform.c:
 Dolphin/gx/GXPerf.c:
 	.text       start:0x8040F520 end:0x80410014
 
+Dolphin/ip/IPSocket.c:
+	.text       start:0x80420684 end:0x804232FC
+
+Dolphin/ip/IPIgmp.c:
+	.text       start:0x80428E44 end:0x804299D4
+
 Dolphin/mtx/mtx.c:
 	.text       start:0x804299D4 end:0x80429BFC
 
@@ -281,6 +287,27 @@ Dolphin/thp/THPAudio.c:
 
 Dolphin/ai.c:
 	.text       start:0x8043C3C4 end:0x8043CCCC
+
+Dolphin/hio/hio.c:
+	.text       start:0x8043CCCC end:0x8043DC80
+
+Dolphin/mcc/mcc.c:
+	.text       start:0x8043DC80 end:0x80440120
+
+Dolphin/mcc/fio.c:
+	.text       start:0x80440120 end:0x80441218
+
+Dolphin/mcc/tty.c:
+	.text       start:0x80441218 end:0x80441590
+
+Dolphin/odemuexi2/DebuggerDriver.c:
+	.text       start:0x80441590 end:0x80442010
+
+Dolphin/odenotstub/odenotstub.c:
+	.text       start:0x80442010 end:0x80442018
+
+Dolphin/amcstubs/AmcExi2Stubs.c:
+	.text       start:0x80442018 end:0x80442048
 
 Kyoto/Basics/CBasics.cpp:
 	.text       start:0x8048FF38 end:0x80490000

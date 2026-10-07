@@ -332,6 +332,9 @@ config.warn_missing_config = True
 config.warn_missing_source = False
 config.libs = [
     # SDK translation units investigated from the prototype.
+    DolphinLib("AMCStubs", [
+        Object(NonMatching, "Dolphin/amcstubs/AmcExi2Stubs.c"),
+    ]),
     DolphinLib("Dolphin", [
         Object(NonMatching, "Dolphin/PPCArch.c"),
         Object(NonMatching, "Dolphin/os/OS.c"),
@@ -358,6 +361,24 @@ config.libs = [
         Object(NonMatching, "Dolphin/os/OSThread.c"),
         Object(NonMatching, "Dolphin/os/OSTime.c"),
         Object(NonMatching, "Dolphin/os/__ppc_eabi_init.cpp"),
+    ]),
+    DolphinLib("HIO", [
+        Object(NonMatching, "Dolphin/hio/hio.c"),
+    ]),
+    DolphinLib("IP", [
+        Object(NonMatching, "Dolphin/ip/IPSocket.c"),
+        Object(NonMatching, "Dolphin/ip/IPIgmp.c"),
+    ]),
+    DolphinLib("MCC", [
+        Object(NonMatching, "Dolphin/mcc/mcc.c"),
+        Object(NonMatching, "Dolphin/mcc/fio.c"),
+        Object(NonMatching, "Dolphin/mcc/tty.c"),
+    ]),
+    DolphinLib("ODENotStub", [
+        Object(NonMatching, "Dolphin/odenotstub/odenotstub.c"),
+    ]),
+    DolphinLib("OdemuExi2", [
+        Object(NonMatching, "Dolphin/odemuexi2/DebuggerDriver.c"),
     ]),
     DolphinLib("Revolution", [
         Object(NonMatching, "Revolution/WPAD.c"),

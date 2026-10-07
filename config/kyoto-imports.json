@@ -513,8 +513,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Graphics/CGXTransientBuffer.cpp",
-      "mapped": false
+      "path": "Kyoto/Graphics/DolphinGPUMemory.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Graphics/CLight.cpp",
@@ -797,12 +797,12 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Streams/CBufferedDvdRequest.cpp",
-      "mapped": false
+      "path": "Kyoto/Streams/CLookaheadRes.cpp",
+      "mapped": true
     },
     {
-      "path": "Kyoto/Streams/CFilePreload.cpp",
-      "mapped": false
+      "path": "Kyoto/Streams/CStreamPreloadedToken.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Streams/CLZOSupport.cpp",

@@ -385,6 +385,93 @@ MetroidPrime/ScriptObjects/CHUDBillboardEffect.cpp:
 	.text       start:0x800F9238 end:0x800F9BB4
 	.ctors      start:0x8065B610 end:0x8065B614
 
+MetroidPrime/CDebugOption.cpp:
+	.text       start:0x800F9BB4 end:0x800FA784
+
+MetroidPrime/BodyState/CBodyStateCmdMgr.cpp:
+	.text       start:0x800FA784 end:0x800FC4B4
+	.ctors      start:0x8065B614 end:0x8065B618
+
+MetroidPrime/BodyState/CBodyStateInfo.cpp:
+	.text       start:0x800FC4B4 end:0x800FE460
+	.ctors      start:0x8065B618 end:0x8065B61C
+
+MetroidPrime/BodyState/CBSAttack.cpp:
+	.text       start:0x800FE460 end:0x800FED10
+	.ctors      start:0x8065B61C end:0x8065B620
+
+MetroidPrime/BodyState/CBSDie.cpp:
+	.text       start:0x800FED10 end:0x800FEF98
+	.ctors      start:0x8065B620 end:0x8065B624
+
+MetroidPrime/BodyState/CBSFall.cpp:
+	.text       start:0x800FEF98 end:0x800FF47C
+	.ctors      start:0x8065B624 end:0x8065B628
+
+MetroidPrime/BodyState/CBSGetup.cpp:
+	.text       start:0x800FF47C end:0x800FF76C
+	.ctors      start:0x8065B628 end:0x8065B62C
+
+MetroidPrime/BodyState/CBSKnockBack.cpp:
+	.text       start:0x800FF76C end:0x800FFD68
+	.ctors      start:0x8065B62C end:0x8065B630
+
+MetroidPrime/BodyState/CBSLieOnGround.cpp:
+	.text       start:0x800FFD68 end:0x80100068
+	.ctors      start:0x8065B630 end:0x8065B634
+
+MetroidPrime/BodyState/CBSLocomotion.cpp:
+	.text       start:0x80100068 end:0x80102B9C
+	.ctors      start:0x8065B634 end:0x8065B638
+
+MetroidPrime/BodyState/CBSStep.cpp:
+	.text       start:0x80102B9C end:0x80103110
+	.ctors      start:0x8065B638 end:0x8065B63C
+
+MetroidPrime/BodyState/CBSTurn.cpp:
+	.text       start:0x80103110 end:0x8010418C
+	.ctors      start:0x8065B63C end:0x8065B640
+
+MetroidPrime/BodyState/CBodyController.cpp:
+	.text       start:0x8010418C end:0x80105C0C
+	.ctors      start:0x8065B640 end:0x8065B644
+
+MetroidPrime/BodyState/CBSLoopAttack.cpp:
+	.text       start:0x80105C0C end:0x80106774
+	.ctors      start:0x8065B644 end:0x8065B648
+
+MetroidPrime/Weapons/CTargetableProjectile.cpp:
+	.text       start:0x80106774 end:0x80106FAC
+	.ctors      start:0x8065B648 end:0x8065B64C
+
+MetroidPrime/BodyState/CBSLoopReaction.cpp:
+	.text       start:0x80106FAC end:0x801078CC
+	.ctors      start:0x8065B64C end:0x8065B650
+
+MetroidPrime/BodyState/CBSGroundHit.cpp:
+	.text       start:0x801078CC end:0x80107DE4
+	.ctors      start:0x8065B650 end:0x8065B654
+
+MetroidPrime/BodyState/CBSSlide.cpp:
+	.text       start:0x80107DE4 end:0x801081E8
+	.ctors      start:0x8065B654 end:0x8065B658
+
+MetroidPrime/BodyState/CBSHurled.cpp:
+	.text       start:0x801081E8 end:0x80109370
+	.ctors      start:0x8065B658 end:0x8065B65C
+
+MetroidPrime/BodyState/CBSCover.cpp:
+	.text       start:0x80109370 end:0x8010ADA0
+	.ctors      start:0x8065B65C end:0x8065B660
+
+MetroidPrime/BodyState/CBSGenerate.cpp:
+	.text       start:0x8010ADA0 end:0x8010B110
+	.ctors      start:0x8065B660 end:0x8065B664
+
+MetroidPrime/BodyState/CBSProjectileAttack.cpp:
+	.text       start:0x8010B110 end:0x8010B3D8
+	.ctors      start:0x8065B664 end:0x8065B668
+
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 
@@ -612,6 +699,22 @@ MetroidPrime/Player/CGrappleBlock.cpp:
 MetroidPrime/ScriptObjects/CScriptEffectRepulsor.cpp:
 	.text       start:0x802CFD90 end:0x802D0D74
 	.ctors      start:0x8065B9D0 end:0x8065B9D4
+
+MetroidPrime/Enemies/CMysteryFlyer.cpp:
+	.text       start:0x802D0D74 end:0x802D4680
+	.ctors      start:0x8065B9D4 end:0x8065B9D8
+
+MetroidPrime/ScriptObjects/CScriptPlayerUserAnimPoint.cpp:
+	.text       start:0x802D4680 end:0x802D6BAC
+	.ctors      start:0x8065B9D8 end:0x8065B9DC
+
+MetroidPrime/Cameras/CBallCamera.cpp:
+	.text       start:0x802D6BAC end:0x802D7B74
+	.ctors      start:0x8065B9DC end:0x8065B9E0
+
+MetroidPrime/CGameProfiler.cpp:
+	.text       start:0x802D7B74 end:0x802D8C2C
+	.ctors      start:0x8065B9E0 end:0x8065B9E4
 
 MetroidPrime/Enemies/CBlinkWolf.cpp:
 	.text       start:0x8036E530 end:0x80375C88

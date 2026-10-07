@@ -45,11 +45,318 @@ MetroidPrime/CGameArea.cpp:
 	.text       start:0x8004BFAC end:0x8005CAE8
 	.ctors      start:0x8065B518 end:0x8065B51C
 
+Dolphin/vi/vi.c:
+	.text       start:0x803F14A8 end:0x803F367C
+
+Dolphin/ar/ar.c:
+	.text       start:0x803F367C end:0x803F5240
+
+Dolphin/ar/arq.c:
+	.text       start:0x803F5240 end:0x803F55DC
+
+Dolphin/PPCArch.c:
+	.text       start:0x803F55DC end:0x803F56F8
+
+Dolphin/card/CARDBios.c:
+	.text       start:0x803F56F8 end:0x803F6CA0
+
+Dolphin/card/CARDUnlock.c:
+	.text       start:0x803F6CA0 end:0x803F7F00
+
+Dolphin/card/CARDRdwr.c:
+	.text       start:0x803F7F00 end:0x803F8190
+
+Dolphin/card/CARDBlock.c:
+	.text       start:0x803F8190 end:0x803F8594
+
+Dolphin/card/CARDDir.c:
+	.text       start:0x803F8594 end:0x803F87F8
+
+Dolphin/card/CARDCheck.c:
+	.text       start:0x803F87F8 end:0x803F9788
+
+Dolphin/card/CARDMount.c:
+	.text       start:0x803F9788 end:0x803FA28C
+
+Dolphin/card/CARDFormat.c:
+	.text       start:0x803FA28C end:0x803FAAC4
+
+Dolphin/card/CARDOpen.c:
+	.text       start:0x803FAAC4 end:0x803FB0B0
+
+Dolphin/card/CARDCreate.c:
+	.text       start:0x803FB0B0 end:0x803FB448
+
+Dolphin/card/CARDRead.c:
+	.text       start:0x803FB448 end:0x803FB8BC
+
+Dolphin/card/CARDWrite.c:
+	.text       start:0x803FB8BC end:0x803FBC38
+
+Dolphin/card/CARDDelete.c:
+	.text       start:0x803FBC38 end:0x803FBF60
+
+Dolphin/card/CARDStat.c:
+	.text       start:0x803FBF60 end:0x803FC428
+
+Dolphin/card/CARDNet.c:
+	.text       start:0x803FC428 end:0x803FC4EC
+
+Dolphin/db.c:
+	.text       start:0x803FC4EC end:0x803FC5F4
+
+Dolphin/dsp/dsp.c:
+	.text       start:0x803FC5F4 end:0x803FC884
+
+Dolphin/dsp/dsp_debug.c:
+	.text       start:0x803FC884 end:0x803FC8D4
+
+Dolphin/dsp/dsp_task.c:
+	.text       start:0x803FC8D4 end:0x803FD158
+
+Dolphin/dvd/dvdlow.c:
+	.text       start:0x803FD158 end:0x803FDFD4
+
+Dolphin/dvd/dvdfs.c:
+	.text       start:0x803FDFD4 end:0x803FEA34
+
+Dolphin/dvd/dvd.c:
+	.text       start:0x803FEA34 end:0x804012A8
+
+Dolphin/dvd/dvdqueue.c:
+	.text       start:0x804012A8 end:0x804014A0
+
+Dolphin/dvd/dvderror.c:
+	.text       start:0x804014A0 end:0x80401638
+
+Dolphin/dvd/dvdidutils.c:
+	.text       start:0x80401638 end:0x80401730
+
+Dolphin/dvd/dvdfatal.c:
+	.text       start:0x80401730 end:0x8040185C
+
+Dolphin/dvd/fstload.c:
+	.text       start:0x8040185C end:0x80401A9C
+
+Dolphin/exi/EXIBios.c:
+	.text       start:0x8040621C end:0x80407D10
+
+Dolphin/exi/EXIUart.c:
+	.text       start:0x80407D10 end:0x804082C8
+
+Dolphin/gx/GXInit.c:
+	.text       start:0x804082C8 end:0x80409654
+
+Dolphin/gx/GXFifo.c:
+	.text       start:0x80409654 end:0x80409F64
+
+Dolphin/gx/GXAttr.c:
+	.text       start:0x80409F64 end:0x8040AEE4
+
+Dolphin/gx/GXMisc.c:
+	.text       start:0x8040AEE4 end:0x8040B7B8
+
+Dolphin/gx/GXGeometry.c:
+	.text       start:0x8040B7B8 end:0x8040BAD8
+
+Dolphin/gx/GXFrameBuf.c:
+	.text       start:0x8040BAD8 end:0x8040C580
+
+Dolphin/gx/GXLight.c:
+	.text       start:0x8040C580 end:0x8040CA9C
+
+Dolphin/gx/GXTexture.c:
+	.text       start:0x8040CA9C end:0x8040DC58
+
+Dolphin/gx/GXBump.c:
+	.text       start:0x8040DC58 end:0x8040E130
+
+Dolphin/gx/GXTev.c:
+	.text       start:0x8040E130 end:0x8040E850
+
+Dolphin/gx/GXPixel.c:
+	.text       start:0x8040E850 end:0x8040EEB8
+
+Dolphin/gx/GXDisplayList.c:
+	.text       start:0x8040EEB8 end:0x8040EF28
+
+Dolphin/gx/GXTransform.c:
+	.text       start:0x8040EF28 end:0x8040F520
+
+Dolphin/gx/GXPerf.c:
+	.text       start:0x8040F520 end:0x80410014
+
+Dolphin/mtx/mtx.c:
+	.text       start:0x804299D4 end:0x80429BFC
+
+Dolphin/mtx/mtxvec.c:
+	.text       start:0x80429BFC end:0x80429CA4
+
+Dolphin/mtx/mtx44.c:
+	.text       start:0x80429CA4 end:0x80429DD8
+
+Dolphin/os/OS.c:
+	.text       start:0x80429DD8 end:0x8042A8A4
+
+Dolphin/os/OSAlarm.c:
+	.text       start:0x8042A8A4 end:0x8042B07C
+
+Dolphin/os/OSAlloc.c:
+	.text       start:0x8042B07C end:0x8042B2A0
+
+Dolphin/os/OSArena.c:
+	.text       start:0x8042B2A0 end:0x8042B2EC
+
+Dolphin/os/OSAudioSystem.c:
+	.text       start:0x8042B2EC end:0x8042B580
+
+Dolphin/os/OSCache.c:
+	.text       start:0x8042B580 end:0x8042BBCC
+
+Dolphin/os/OSContext.c:
+	.text       start:0x8042BBCC end:0x8042C46C
+
+Dolphin/os/OSError.c:
+	.text       start:0x8042C46C end:0x8042CB18
+
+Dolphin/os/OSExec.c:
+	.text       start:0x8042CB18 end:0x8042D478
+
+Dolphin/os/OSFatal.c:
+	.text       start:0x8042D478 end:0x8042E108
+
+Dolphin/os/OSFont.c:
+	.text       start:0x8042E108 end:0x8042EC94
+
+Dolphin/os/OSInterrupt.c:
+	.text       start:0x8042EC94 end:0x8042F500
+
+Dolphin/os/OSLink.c:
+	.text       start:0x8042F500 end:0x8042F518
+
+Dolphin/os/OSMemory.c:
+	.text       start:0x8042F518 end:0x8042F8C0
+
+Dolphin/os/OSMutex.c:
+	.text       start:0x8042F8C0 end:0x8042FCB8
+
+Dolphin/os/OSReboot.c:
+	.text       start:0x8042FCB8 end:0x8042FD64
+
+Dolphin/os/OSReset.c:
+	.text       start:0x8042FD64 end:0x804301E8
+
+Dolphin/os/OSResetSW.c:
+	.text       start:0x804301E8 end:0x80430574
+
+Dolphin/os/OSRtc.c:
+	.text       start:0x80430574 end:0x80431328
+
+Dolphin/os/OSSem.c:
+	.text       start:0x80431328 end:0x80431450
+
+Dolphin/os/OSSync.c:
+	.text       start:0x80431450 end:0x804314D4
+
+Dolphin/os/OSThread.c:
+	.text       start:0x804314D4 end:0x80432F1C
+
+Dolphin/os/OSTime.c:
+	.text       start:0x80432F1C end:0x80433398
+
+Dolphin/os/__ppc_eabi_init.cpp:
+	.text       start:0x80433398 end:0x8043342C
+
+Dolphin/si/SIBios.c:
+	.text       start:0x8043342C end:0x80434824
+
+Dolphin/si/SISamplingRate.c:
+	.text       start:0x80434824 end:0x8043492C
+
+Dolphin/thp/THPDec.c:
+	.text       start:0x8043492C end:0x8043BE94
+
+Dolphin/thp/THPAudio.c:
+	.text       start:0x8043BE94 end:0x8043C3C4
+
+Dolphin/ai.c:
+	.text       start:0x8043C3C4 end:0x8043CCCC
+
+Kyoto/Basics/CBasics.cpp:
+	.text       start:0x8048FF38 end:0x80490000
+
+Kyoto/Basics/CStopwatch.cpp:
+	.text       start:0x80490000 end:0x804900E0
+	.ctors      start:0x8065BB7C end:0x8065BB80
+
+Kyoto/Basics/CBasicsDolphin.cpp:
+	.text       start:0x8049024C end:0x804904E8
+
+Kyoto/Alloc/CCallStackDolphin.cpp:
+	.text       start:0x804904E8 end:0x80490504
+
+Kyoto/Basics/COsContextDolphin.cpp:
+	.text       start:0x80490504 end:0x804906E0
+
+Kyoto/Basics/CSWDataDolphin.cpp:
+	.text       start:0x804906E0 end:0x804907F0
+
+Kyoto/Basics/RAssertDolphin.cpp:
+	.text       start:0x804907F0 end:0x80490DA0
+
+Kyoto/Text/CColorInstruction.cpp:
+	.text       start:0x804B2A2C end:0x804B2AE4
+
+Kyoto/Text/CColorOverrideInstruction.cpp:
+	.text       start:0x804B2AE4 end:0x804B2BCC
+
+Kyoto/Text/CDrawStringOptions.cpp:
+	.text       start:0x804B2BCC end:0x804B2C1C
+
+Kyoto/Text/CFontInstruction.cpp:
+	.text       start:0x804B2C1C end:0x804B2F10
+
+Kyoto/Text/CFontRenderState.cpp:
+	.text       start:0x804B2F10 end:0x804B3B7C
+
+Kyoto/Text/CLineExtraSpaceInstruction.cpp:
+	.text       start:0x804B3B7C end:0x804B3C10
+
+Kyoto/Text/CLineInstruction.cpp:
+	.text       start:0x804B3C10 end:0x804B3FF0
+
+Kyoto/Text/CLineSpacingInstruction.cpp:
+	.text       start:0x804B3FF0 end:0x804B4084
+
+Kyoto/Text/CPopStateInstruction.cpp:
+	.text       start:0x804B4084 end:0x804B416C
+
+Kyoto/Text/CPushStateInstruction.cpp:
+	.text       start:0x804B416C end:0x804B4218
+
+Kyoto/Text/CRasterFont.cpp:
+	.text       start:0x804B4218 end:0x804B5F6C
+
+Kyoto/Text/CRemoveColorOverrideInstruction.cpp:
+	.text       start:0x804B5F6C end:0x804B6028
+
+Kyoto/Text/CSaveableState.cpp:
+	.text       start:0x804B6028 end:0x804B6218
+
 Kyoto/Text/CTextExecuteBuffer.cpp:
-	.text       start:0x804B68C0 end:0x804B85DC
+	.text       start:0x804B6218 end:0x804B8580
 
 Kyoto/Text/CTextInstruction.cpp:
-	.text       start:0x804B85DC end:0x804B88DC
+	.text       start:0x804B8580 end:0x804B88DC
+
+Kyoto/Text/CTextParser.cpp:
+	.text       start:0x804B88DC end:0x804BA3C0
+
+Kyoto/Text/CWordInstruction.cpp:
+	.text       start:0x804BA3C0 end:0x804BA5B0
+
+Kyoto/Text/CBlockInstruction.cpp:
+	.text       start:0x804BA5B0 end:0x804BA770
 
 Kyoto/Text/CFont.cpp:
 	.text       start:0x804BA770 end:0x804BAB64
@@ -57,15 +364,120 @@ Kyoto/Text/CFont.cpp:
 	.data       start:0x806CF340 end:0x806DF340
 	.sbss       start:0x8079B230 end:0x8079B238
 
+Kyoto/Graphics/CGX.cpp:
+	.text       start:0x804BCA64 end:0x804BE6C4
+	.ctors      start:0x8065BB8C end:0x8065BB90
+
+Kyoto/Graphics/CTevCombiners.cpp:
+	.text       start:0x804BE6C4 end:0x804BEB44
+	.ctors      start:0x8065BB90 end:0x8065BB94
+
+Kyoto/Graphics/DolphinCGraphics.cpp:
+	.text       start:0x804BEB44 end:0x804C4D6C
+	.ctors      start:0x8065BB94 end:0x8065BB98
+
+Kyoto/Graphics/DolphinCPalette.cpp:
+	.text       start:0x804C4D6C end:0x804C50EC
+
+Kyoto/Graphics/DolphinCTexture.cpp:
+	.text       start:0x804C50EC end:0x804C74C8
+
+Kyoto/Math/CloseEnough.cpp:
+	.text       start:0x804C74C8 end:0x804C7650
+	.ctors      start:0x8065BB98 end:0x8065BB9C
+
+Kyoto/Math/CMatrix3f.cpp:
+	.text       start:0x804C7650 end:0x804C7CF8
+	.ctors      start:0x8065BB9C end:0x8065BBA0
+
+Kyoto/Math/CMatrix4f.cpp:
+	.text       start:0x804C7CF8 end:0x804C7F2C
+	.ctors      start:0x8065BBA0 end:0x8065BBA4
+
+Kyoto/Math/CNUQuaternion.cpp:
+	.text       start:0x804C7F2C end:0x804C8588
+
+Kyoto/Math/CQuaternion.cpp:
+	.text       start:0x804C8588 end:0x804C9EAC
+	.ctors      start:0x8065BBA4 end:0x8065BBA8
+
+Kyoto/CRandom16.cpp:
+	.text       start:0x804C9EAC end:0x804CA138
+
+Kyoto/Math/CTransform4f.cpp:
+	.text       start:0x804CA138 end:0x804CB8AC
+	.ctors      start:0x8065BBA8 end:0x8065BBAC
+
+Kyoto/Math/CUnitVector3f.cpp:
+	.text       start:0x804CB8AC end:0x804CB940
+
+Kyoto/Math/CVector2d.cpp:
+	.text       start:0x804CB940 end:0x804CB9EC
+
+Kyoto/Math/CVector2f.cpp:
+	.text       start:0x804CB9EC end:0x804CBE74
+	.ctors      start:0x8065BBAC end:0x8065BBB0
+
+Kyoto/Math/CVector2i.cpp:
+	.text       start:0x804CBE74 end:0x804CBF20
+
+Kyoto/Math/CVector3d.cpp:
+	.text       start:0x804CBF20 end:0x804CC40C
+	.ctors      start:0x8065BBB0 end:0x8065BBB4
+
+Kyoto/Math/CVector3f.cpp:
+	.text       start:0x804CC40C end:0x804CC9C0
+	.ctors      start:0x8065BBB4 end:0x8065BBB8
+
+Kyoto/Math/CVector3i.cpp:
+	.text       start:0x804CC9C0 end:0x804CCBCC
+	.ctors      start:0x8065BBB8 end:0x8065BBBC
+
+Kyoto/Math/RMathUtils.cpp:
+	.text       start:0x804CCBCC end:0x804CF8F0
+	.ctors      start:0x8065BBBC end:0x8065BBC0
+
+Kyoto/Alloc/CCircularBuffer.cpp:
+	.text       start:0x804CFE58 end:0x804D00A4
+
+Kyoto/Alloc/CMemory.cpp:
+	.text       start:0x804D00A4 end:0x804D075C
+	.ctors      start:0x8065BBC0 end:0x8065BBC4
+
+Kyoto/Alloc/IAllocator.cpp:
+	.text       start:0x804D075C end:0x804D0844
+
+Kyoto/Math/CLine.cpp:
+	.text       start:0x804FC520 end:0x804FC584
+
+Kyoto/Math/CLineSeg.cpp:
+	.text       start:0x804FC584 end:0x804FC644
+
+Kyoto/Math/CPlane.cpp:
+	.text       start:0x804FC644 end:0x804FC854
+
+Kyoto/Math/CTri.cpp:
+	.text       start:0x804FC854 end:0x804FC9A4
+
+Kyoto/Math/CQuad.cpp:
+	.text       start:0x804FC9A4 end:0x804FCA44
+
+Kyoto/Math/CSphere.cpp:
+	.text       start:0x804FCA44 end:0x804FCC88
+
+Kyoto/Math/CAABox.cpp:
+	.text       start:0x804FCC88 end:0x804FDD28
+	.ctors      start:0x8065BBE4 end:0x8065BBE8
+
 Kyoto/CAssetTypesList.cpp:
 	.text       start:0x804FDEC0 end:0x804FDF60
 	.rodata     start:0x806A1790 end:0x806A1868
 
 Kyoto/CFactoryMgr.cpp:
-	.text       start:0x804FDF60 end:0x804FE444
+	.text       start:0x804FDF60 end:0x804FE6B8
 
 Kyoto/CResFactory.cpp:
-	.text       start:0x804FE444 end:0x80500080
+	.text       start:0x804FE6B8 end:0x80500080
 
 Kyoto/CResLoader.cpp:
 	.text       start:0x80500080 end:0x80502F64
@@ -105,11 +517,359 @@ Kyoto/Streams/CZipSupport.cpp:
 	.rodata     start:0x806A2F68 end:0x806A3088
 
 Kyoto/CObjectReference.cpp:
-	.text       start:0x80506BB8 end:0x80507638
+	.text       start:0x80506C24 end:0x80507134
 
 Kyoto/CSimplePool.cpp:
-	.text       start:0x80507638 end:0x8050821C
+	.text       start:0x80507134 end:0x8050821C
 
 Kyoto/CToken.cpp:
 	.text       start:0x8050821C end:0x80508574
 	.rodata     start:0x806A3368 end:0x806A3380
+
+Kyoto/Alloc/CMediumAllocPool.cpp:
+	.text       start:0x8051EF9C end:0x8051F998
+
+Kyoto/Alloc/CSmallAllocPool.cpp:
+	.text       start:0x8051F998 end:0x8051FCAC
+
+Kyoto/Alloc/CGameAllocator.cpp:
+	.text       start:0x8051FCAC end:0x80521908
+
+Kyoto/Text/CFontImageDef.cpp:
+	.text       start:0x80529B28 end:0x80529D48
+
+Kyoto/Text/CImageInstruction.cpp:
+	.text       start:0x80529D48 end:0x8052A034
+
+Kyoto/Text/CTextRenderBuffer.cpp:
+	.text       start:0x8052A034 end:0x8052C2D4
+
+Runtime/__va_arg.c:
+	.text       start:0x8063BF64 end:0x8063C02C
+
+Runtime/global_destructor_chain.c:
+	.text       start:0x8063C02C end:0x8063C08C
+
+Runtime/CPlusLibPPC.cpp:
+	.text       start:0x8063C08C end:0x8063C0BC
+
+Runtime/NMWException.cpp:
+	extab       start:0x80005600 end:0x800056EC
+	extabindex  start:0x80005760 end:0x800057E4
+	.text       start:0x8063C0BC end:0x8063C7A8
+
+Runtime/ptmf.c:
+	.text       start:0x8063C7A8 end:0x8063C800
+
+Runtime/runtime.c:
+	.text       start:0x8063C800 end:0x8063D040
+
+Runtime/__init_cpp_exceptions.cpp:
+	.text       start:0x8063D040 end:0x8063D0B0
+	.ctors      start:0x8065B4C0 end:0x8065B4C4
+	.dtors      start:0x8065BD20 end:0x8065BD28
+
+Runtime/Gecko_ExceptionPPC.cpp:
+	extab       start:0x800056EC end:0x80005760
+	extabindex  start:0x800057E4 end:0x80005838
+	.text       start:0x8063D0B0 end:0x8063E6FC
+
+Runtime/abort_exit.c:
+	.text       start:0x8063E6FC end:0x8063E888
+
+Runtime/alloc.c:
+	.text       start:0x8063E888 end:0x8063F8C0
+
+Runtime/ansi_files.c:
+	.text       start:0x8063F8C0 end:0x8063F9D8
+
+Runtime/ansi_fp.c:
+	.text       start:0x8063F9D8 end:0x80642FB4
+
+Runtime/arith.c:
+	.text       start:0x80642FB4 end:0x80642FC4
+
+Runtime/buffer_io.c:
+	.text       start:0x80642FC4 end:0x806431CC
+
+Runtime/char_io.c:
+	.text       start:0x806431CC end:0x806439C8
+
+Runtime/critical_regions.gamecube.c:
+	.text       start:0x806439C8 end:0x806439D4
+
+Runtime/ctype.c:
+	.text       start:0x806439D4 end:0x806439F8
+
+Runtime/direct_io.c:
+	.text       start:0x806439F8 end:0x8064414C
+
+Runtime/file_io.c:
+	.text       start:0x8064414C end:0x80644440
+
+Runtime/FILE_POS.c:
+	.text       start:0x80644440 end:0x80644800
+
+Runtime/mbstring.c:
+	.text       start:0x80644800 end:0x80644CAC
+
+Runtime/mem.c:
+	.text       start:0x80644CAC end:0x80644E1C
+
+Runtime/mem_funcs.c:
+	.text       start:0x80644E1C end:0x806450EC
+
+Runtime/misc_io.c:
+	.text       start:0x806450EC end:0x806450FC
+
+Runtime/printf.c:
+	.text       start:0x806450FC end:0x80647270
+
+Runtime/qsort.c:
+	.text       start:0x80647270 end:0x806473DC
+
+Runtime/rand.c:
+	.text       start:0x806473DC end:0x80647404
+
+Runtime/sscanf.c:
+	.text       start:0x80647404 end:0x8064844C
+
+Runtime/signal.c:
+	.text       start:0x8064844C end:0x8064850C
+
+Runtime/strerror.c:
+	.text       start:0x8064850C end:0x8064898C
+
+Runtime/string.c:
+	.text       start:0x8064898C end:0x8064901C
+
+Runtime/strtold.c:
+	.text       start:0x8064901C end:0x8064A170
+
+Runtime/strtoul.c:
+	.text       start:0x8064A170 end:0x8064AA60
+
+Runtime/wstrtold.c:
+	.text       start:0x8064AA60 end:0x8064B2E8
+
+Runtime/wstrtoul.c:
+	.text       start:0x8064B2E8 end:0x8064B788
+
+Runtime/wmem.c:
+	.text       start:0x8064B788 end:0x8064B80C
+
+Runtime/wprintf.c:
+	.text       start:0x8064B80C end:0x8064D3E8
+
+Runtime/wscanf.c:
+	.text       start:0x8064D3E8 end:0x8064D480
+
+Runtime/wstring.c:
+	.text       start:0x8064D480 end:0x8064D4EC
+
+Runtime/wchar_io.c:
+	.text       start:0x8064D4EC end:0x8064D684
+
+Runtime/uart_console_io.c:
+	.text       start:0x8064D684 end:0x8064D764
+
+Runtime/e_acos.c:
+	.text       start:0x8064D764 end:0x8064D9A0
+
+Runtime/e_asin.c:
+	.text       start:0x8064D9A0 end:0x8064DBD8
+
+Runtime/e_atan2.c:
+	.text       start:0x8064DBD8 end:0x8064DE68
+
+Runtime/e_exp.c:
+	.text       start:0x8064DE68 end:0x8064E08C
+
+Runtime/e_fmod.c:
+	.text       start:0x8064E08C end:0x8064E3C8
+
+Runtime/e_log.c:
+	.text       start:0x8064E3C8 end:0x8064E644
+
+Runtime/e_log10.c:
+	.text       start:0x8064E644 end:0x8064E754
+
+Runtime/e_pow.c:
+	.text       start:0x8064E754 end:0x8064EF84
+
+Runtime/e_rem_pio2.c:
+	.text       start:0x8064EF84 end:0x8064F324
+
+Runtime/k_cos.c:
+	.text       start:0x8064F324 end:0x8064F418
+
+Runtime/k_rem_pio2.c:
+	.text       start:0x8064F418 end:0x8065026C
+
+Runtime/k_sin.c:
+	.text       start:0x8065026C end:0x8065030C
+
+Runtime/k_tan.c:
+	.text       start:0x8065030C end:0x80650520
+
+Runtime/s_atan.c:
+	.text       start:0x80650520 end:0x80650738
+
+Runtime/s_ceil.c:
+	.text       start:0x80650738 end:0x8065087C
+
+Runtime/s_copysign.c:
+	.text       start:0x8065087C end:0x806508A4
+
+Runtime/s_cos.c:
+	.text       start:0x806508A4 end:0x80650978
+
+Runtime/s_floor.c:
+	.text       start:0x80650978 end:0x80650AC0
+
+Runtime/s_frexp.c:
+	.text       start:0x80650AC0 end:0x80650B4C
+
+Runtime/s_ldexp.c:
+	.text       start:0x80650B4C end:0x80650D10
+
+Runtime/s_modf.c:
+	.text       start:0x80650D10 end:0x80650E0C
+
+Runtime/s_nextafter.c:
+	.text       start:0x80650E0C end:0x80650F68
+
+Runtime/s_sin.c:
+	.text       start:0x80650F68 end:0x80651040
+
+Runtime/s_tan.c:
+	.text       start:0x80651040 end:0x806510B8
+
+Runtime/w_acos.c:
+	.text       start:0x806510B8 end:0x806510D8
+
+Runtime/w_asin.c:
+	.text       start:0x806510D8 end:0x806510F8
+
+Runtime/w_atan2.c:
+	.text       start:0x806510F8 end:0x80651118
+
+Runtime/w_exp.c:
+	.text       start:0x80651118 end:0x80651138
+
+Runtime/w_fmod.c:
+	.text       start:0x80651138 end:0x80651158
+
+Runtime/w_log.c:
+	.text       start:0x80651158 end:0x80651178
+
+Runtime/w_log10.c:
+	.text       start:0x80651178 end:0x80651198
+
+Runtime/w_pow.c:
+	.text       start:0x80651198 end:0x806511B8
+
+Runtime/e_sqrt.c:
+	.text       start:0x806511B8 end:0x806513DC
+
+Runtime/math_ppc.c:
+	.text       start:0x806513DC end:0x80651424
+
+Runtime/w_sqrt.c:
+	.text       start:0x80651424 end:0x80651444
+
+Runtime/stricmp.c:
+	.text       start:0x80651444 end:0x806514D0
+
+MetroTRK/mainloop.c:
+	.text       start:0x806514D0 end:0x806515C8
+
+MetroTRK/nubevent.c:
+	.text       start:0x806515C8 end:0x806517F0
+
+MetroTRK/nubinit.c:
+	.text       start:0x806517F0 end:0x80651988
+
+MetroTRK/msg.c:
+	.text       start:0x80651988 end:0x806519CC
+
+MetroTRK/msgbuf.c:
+	.text       start:0x806519CC end:0x80652208
+
+MetroTRK/serpoll.c:
+	.text       start:0x80652208 end:0x806524C0
+
+MetroTRK/usr_put.c:
+	.text       start:0x806524C0 end:0x8065254C
+
+MetroTRK/dispatch.c:
+	.text       start:0x8065254C end:0x806526C4
+
+MetroTRK/msghndlr.c:
+	.text       start:0x806526C4 end:0x8065368C
+
+MetroTRK/support.c:
+	.text       start:0x8065368C end:0x80653E48
+
+MetroTRK/mutex_TRK.c:
+	.text       start:0x80653E48 end:0x80653E60
+
+MetroTRK/notify.c:
+	.text       start:0x80653E60 end:0x80653EF8
+
+MetroTRK/flush_cache.c:
+	.text       start:0x80653EF8 end:0x80653F30
+
+MetroTRK/mem_TRK.c:
+	.text       start:0x80653F30 end:0x80653FE8
+
+MetroTRK/targimpl.c:
+	.text       start:0x80653FE8 end:0x80655B80
+
+MetroTRK/targsupp.s:
+	.text       start:0x80655B80 end:0x80655BA0
+
+MetroTRK/mpc_7xx_603e.c:
+	.text       start:0x80655BA0 end:0x80655F10
+
+MetroTRK/dolphin_trk.c:
+	.text       start:0x80655F10 end:0x8065654C
+
+MetroTRK/main_TRK.c:
+	.text       start:0x8065654C end:0x806565A4
+
+MetroTRK/dolphin_trk_glue.c:
+	.text       start:0x806565A4 end:0x80656AFC
+
+MetroTRK/targcont.c:
+	.text       start:0x80656AFC end:0x80656B30
+
+MetroTRK/target_options.c:
+	.text       start:0x80656B30 end:0x80656B4C
+
+MetroTRK/mslsupp.c:
+	.text       start:0x80656B4C end:0x80656CC4
+
+MetroTRK/udp_cc.c:
+	.text       start:0x80656CC4 end:0x80656D0C
+
+MetroTRK/ddh_cc.c:
+	.text       start:0x80656D0C end:0x80657050
+
+MetroTRK/circle_buffer.c:
+	.text       start:0x80657050 end:0x806572B8
+
+MetroTRK/gdev_cc.c:
+	.text       start:0x806572B8 end:0x80657604
+
+MetroTRK/MWTrace.c:
+	.text       start:0x80657604 end:0x80657654
+
+MetroTRK/critical_section.c:
+	.text       start:0x80657654 end:0x806576AC
+
+Revolution/WPAD.c:
+	.text       start:0x806576AC end:0x80658800
+
+Revolution/KPAD.c:
+	.text       start:0x80658800 end:0x8065B4A0

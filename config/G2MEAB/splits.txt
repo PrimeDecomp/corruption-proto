@@ -162,6 +162,30 @@ MetroidPrime/CGameDebugDraw.cpp:
 	.text       start:0x80080F40 end:0x80087404
 	.ctors      start:0x8065B540 end:0x8065B544
 
+MetroidPrime/Player/CPlayerState.cpp:
+	.text       start:0x80087404 end:0x80089F50
+	.ctors      start:0x8065B544 end:0x8065B548
+
+MetroidPrime/ScriptObjects/CScriptTimer.cpp:
+	.text       start:0x80089F50 end:0x8008A774
+	.ctors      start:0x8065B548 end:0x8065B54C
+
+MetroidPrime/CAutoMapper.cpp:
+	.text       start:0x8008A774 end:0x80097DD4
+	.ctors      start:0x8065B54C end:0x8065B550
+
+MetroidPrime/ScriptObjects/CScriptCounter.cpp:
+	.text       start:0x80097DD4 end:0x800987DC
+	.ctors      start:0x8065B550 end:0x8065B554
+
+MetroidPrime/CMapWorld.cpp:
+	.text       start:0x800987DC end:0x8009D0BC
+	.ctors      start:0x8065B554 end:0x8065B558
+
+MetroidPrime/Enemies/CAi.cpp:
+	.text       start:0x8009D0BC end:0x8009FD78
+	.ctors      start:0x8065B558 end:0x8065B55C
+
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 

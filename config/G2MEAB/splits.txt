@@ -657,6 +657,209 @@ MetroidPrime/Player/CGameState.cpp:
 	.text       start:0x80159850 end:0x8015F36C
 	.ctors      start:0x8065B70C end:0x8065B710
 
+MetroidPrime/ScriptObjects/CScriptVisorFlare.cpp:
+	.text       start:0x8015F36C end:0x80160360
+	.ctors      start:0x8065B710 end:0x8065B714
+
+MetroidPrime/ScriptObjects/CScriptWorldTeleporter.cpp:
+	.text       start:0x80160360 end:0x80161608
+	.ctors      start:0x8065B714 end:0x8065B718
+
+MetroidPrime/ScriptObjects/CScriptVisorGoo.cpp:
+	.text       start:0x80161608 end:0x80162930
+	.ctors      start:0x8065B718 end:0x8065B71C
+
+MetroidPrime/ScriptObjects/CScriptControllerAction.cpp:
+	.text       start:0x80162930 end:0x80163528
+	.ctors      start:0x8065B71C end:0x8065B720
+
+MetroidPrime/ScriptObjects/CScriptSwitch.cpp:
+	.text       start:0x80163528 end:0x80163908
+	.ctors      start:0x8065B720 end:0x8065B724
+
+MetroidPrime/BodyState/CABSAim.cpp:
+	.text       start:0x80163908 end:0x80164370
+	.ctors      start:0x8065B724 end:0x8065B728
+
+MetroidPrime/BodyState/CABSFlinch.cpp:
+	.text       start:0x80164370 end:0x80164738
+	.ctors      start:0x8065B728 end:0x8065B72C
+
+MetroidPrime/BodyState/CABSIdle.cpp:
+	.text       start:0x80164738 end:0x80164810
+	.ctors      start:0x8065B72C end:0x8065B730
+
+MetroidPrime/CGameMemoryCardInterface.cpp:
+	.text       start:0x80164810 end:0x801652A0
+	.ctors      start:0x8065B730 end:0x8065B734
+
+MetroidPrime/CActorModelParticles.cpp:
+	.text       start:0x801652A0 end:0x80169DE4
+	.ctors      start:0x8065B734 end:0x8065B738
+
+MetroidPrime/ScriptObjects/CScriptAiJumpPoint.cpp:
+	.text       start:0x80169DE4 end:0x8016A290
+	.ctors      start:0x8065B738 end:0x8065B73C
+
+MetroidPrime/CMessageScreen.cpp:
+	.text       start:0x8016A290 end:0x8016AC00
+	.ctors      start:0x8065B73C end:0x8065B740
+
+MetroidPrime/BodyState/CABSReaction.cpp:
+	.text       start:0x8016AC00 end:0x8016B138
+	.ctors      start:0x8065B740 end:0x8065B744
+
+MetroidPrime/Enemies/CPatternedAiFunctions.cpp:
+	.text       start:0x8016B138 end:0x8016C99C
+	.ctors      start:0x8065B744 end:0x8065B748
+
+MetroidPrime/CGameProfiler.cpp:
+	.text       start:0x8016C99C end:0x8016E430
+
+MetroidPrime/ScriptObjects/CScriptColorModulate.cpp:
+	.text       start:0x8016E430 end:0x80170544
+	.ctors      start:0x8065B748 end:0x8065B74C
+
+MetroidPrime/CMapUniverse.cpp:
+	.text       start:0x80170544 end:0x801714E4
+	.ctors      start:0x8065B74C end:0x8065B750
+
+MetroidPrime/CVisorFlare.cpp:
+	.text       start:0x801714E4 end:0x80172A3C
+	.ctors      start:0x8065B750 end:0x8065B754
+
+MetroidPrime/CWorldTransManager.cpp:
+	.text       start:0x80172A3C end:0x80177574
+	.ctors      start:0x8065B754 end:0x8065B758
+
+MetroidPrime/ScriptObjects/CScriptStreamedMusic.cpp:
+	.text       start:0x80177574 end:0x80178660
+	.ctors      start:0x8065B758 end:0x8065B75C
+
+MetroidPrime/CPauseScreenBackground.cpp:
+	.text       start:0x801A4400 end:0x801A4994
+	.ctors      start:0x8065B7A4 end:0x8065B7A8
+
+MetroidPrime/CRedundantHintManager.cpp:
+	.text       start:0x801A4994 end:0x801A6734
+	.ctors      start:0x8065B7A8 end:0x8065B7AC
+
+MetroidPrime/CErrorOutputWindow.cpp:
+	.text       start:0x801A6734 end:0x801A71B0
+
+MetroidPrime/CRainSplashGenerator.cpp:
+	.text       start:0x801A71B0 end:0x801A8478
+	.ctors      start:0x8065B7AC end:0x8065B7B0
+
+MetroidPrime/CWorldSaveGameInfo.cpp:
+	.text       start:0x801A8478 end:0x801A9958
+	.ctors      start:0x8065B7B0 end:0x8065B7B4
+
+MetroidPrime/Player/CPlayerMovement.cpp:
+	.text       start:0x801A9958 end:0x801AF5F0
+	.ctors      start:0x8065B7B4 end:0x8065B7B8
+
+MetroidPrime/Weapons/WeaponTypes.cpp:
+	.text       start:0x801AF5F0 end:0x801AFD18
+	.ctors      start:0x8065B7B8 end:0x8065B7BC
+
+MetroidPrime/Player/CMorphBallShadow.cpp:
+	.text       start:0x801AFD18 end:0x801B1238
+	.ctors      start:0x8065B7BC end:0x8065B7C0
+
+MetroidPrime/CSlideShow.cpp:
+	.text       start:0x801B18F0 end:0x801B7878
+	.ctors      start:0x8065B7C0 end:0x8065B7C4
+
+MetroidPrime/CProjectedShadow.cpp:
+	.text       start:0x801B7878 end:0x801B8A08
+	.ctors      start:0x8065B7C4 end:0x8065B7C8
+
+MetroidPrime/CPreFrontEnd.cpp:
+	.text       start:0x801B8A08 end:0x801B8B64
+
+MetroidPrime/ScriptObjects/CScriptShadowProjector.cpp:
+	.text       start:0x801B8B64 end:0x801B95C8
+	.ctors      start:0x8065B7C8 end:0x8065B7CC
+
+MetroidPrime/ScriptLoader.cpp:
+	.text       start:0x801B95C8 end:0x801D5D68
+	.ctors      start:0x8065B7CC end:0x8065B7D0
+
+MetroidPrime/Cameras/CGameSpline.cpp:
+	.text       start:0x802130DC end:0x80213FB8
+	.ctors      start:0x8065B874 end:0x8065B878
+
+MetroidPrime/ScriptObjects/CScriptAIWaypoint.cpp:
+	.text       start:0x8021541C end:0x802158D0
+	.ctors      start:0x8065B87C end:0x8065B880
+
+MetroidPrime/ScriptObjects/CPathMeshCtrl.cpp:
+	.text       start:0x802158D0 end:0x80215E70
+	.ctors      start:0x8065B880 end:0x8065B884
+
+MetroidPrime/Player/CGameVisor.cpp:
+	.text       start:0x80215E70 end:0x80218234
+	.ctors      start:0x8065B884 end:0x8065B888
+
+MetroidPrime/CEditorToGeometryMap.cpp:
+	.text       start:0x80218234 end:0x80218AD8
+	.ctors      start:0x8065B888 end:0x8065B88C
+
+MetroidPrime/NewMain.cpp:
+	.text       start:0x80218AD8 end:0x802193FC
+
+MetroidPrime/CMFGameLoader.cpp:
+	.text       start:0x802193FC end:0x8021A5D8
+	.ctors      start:0x8065B88C end:0x8065B890
+
+MetroidPrime/CRulesManager.cpp:
+	.text       start:0x8021A5D8 end:0x8021C688
+
+MetroidPrime/ScriptObjects/CScriptTimeKeyframe.cpp:
+	.text       start:0x8021C95C end:0x8021CED8
+	.ctors      start:0x8065B890 end:0x8065B894
+
+MetroidPrime/Cameras/CCameraColliderGroup.cpp:
+	.text       start:0x8021CED8 end:0x8021E304
+	.ctors      start:0x8065B894 end:0x8065B898
+
+MetroidPrime/ScriptObjects/CPlatformWaypointTracker.cpp:
+	.text       start:0x8021E304 end:0x8021F340
+	.ctors      start:0x8065B898 end:0x8065B89C
+
+MetroidPrime/ScriptObjects/CScriptCameraPitch.cpp:
+	.text       start:0x8021F378 end:0x8021FD30
+	.ctors      start:0x8065B8A0 end:0x8065B8A4
+
+MetroidPrime/ScriptObjects/CScriptTextPane.cpp:
+	.text       start:0x8021FD30 end:0x802210E0
+	.ctors      start:0x8065B8A4 end:0x8065B8A8
+
+MetroidPrime/ScriptObjects/CScriptGuiScreen.cpp:
+	.text       start:0x802210E0 end:0x80221418
+	.ctors      start:0x8065B8A8 end:0x8065B8AC
+
+MetroidPrime/ScriptObjects/CScriptGuiWidget.cpp:
+	.text       start:0x80221418 end:0x80221F2C
+	.ctors      start:0x8065B8AC end:0x8065B8B0
+
+MetroidPrime/ScriptObjects/CScriptGuiMenu.cpp:
+	.text       start:0x80221F2C end:0x802230A0
+	.ctors      start:0x8065B8B0 end:0x8065B8B4
+
+MetroidPrime/ScriptObjects/CScriptGuiSlider.cpp:
+	.text       start:0x802230A0 end:0x80223E6C
+	.ctors      start:0x8065B8B4 end:0x8065B8B8
+
+MetroidPrime/ScriptObjects/CScriptSubtitles.cpp:
+	.text       start:0x80223E6C end:0x80224F54
+	.ctors      start:0x8065B8B8 end:0x8065B8BC
+
+MetroidPrime/ScriptObjects/CScriptGuiScreenFrontEndUI.cpp:
+	.text       start:0x80224F54 end:0x8022C2DC
+	.ctors      start:0x8065B8BC end:0x8065B8C0
+
 MetroidPrime/Enemies/CSpacePirate.cpp:
 	.text       start:0x8022C350 end:0x8023E088
 	.ctors      start:0x8065B8C0 end:0x8065B8C4
@@ -956,7 +1159,7 @@ MetroidPrime/Cameras/CBallCamera.cpp:
 	.text       start:0x802D6BAC end:0x802D7B74
 	.ctors      start:0x8065B9DC end:0x8065B9E0
 
-MetroidPrime/CGameProfiler.cpp:
+MetroidPrime/CGameProfileStats.cpp:
 	.text       start:0x802D7B74 end:0x802D8C2C
 	.ctors      start:0x8065B9E0 end:0x8065B9E4
 
@@ -1180,7 +1383,7 @@ MetroidPrime/ScriptObjects/CScriptCrossAreaRelay.cpp:
 	.text       start:0x80362EB0 end:0x80364614
 	.ctors      start:0x8065BABC end:0x8065BAC0
 
-MetroidPrime/ScriptLoader.cpp:
+MetroidPrime/ScriptLoaderRegistry.cpp:
 	.text       start:0x80364614 end:0x80365C48
 	.ctors      start:0x8065BAC0 end:0x8065BAC4
 

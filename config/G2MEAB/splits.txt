@@ -613,6 +613,18 @@ MetroidPrime/ScriptObjects/CScriptPlayerActor.cpp:
 	.text       start:0x80143CF4 end:0x801468C8
 	.ctors      start:0x8065B6E8 end:0x8065B6EC
 
+MetroidPrime/ScriptObjects/CScriptFrontEndDataNetwork.cpp:
+	.text       start:0x80251F48 end:0x80258E58
+	.ctors      start:0x8065B8D8 end:0x8065B8DC
+
+MetroidPrime/ScriptObjects/CScriptCannonBall.cpp:
+	.text       start:0x80258E58 end:0x80259938
+	.ctors      start:0x8065B8DC end:0x8065B8E0
+
+MetroidPrime/ScriptObjects/CScriptDynamicLight.cpp:
+	.text       start:0x80259938 end:0x8025B340
+	.ctors      start:0x8065B8E0 end:0x8065B8E4
+
 MetroidPrime/CYesNoMenu.cpp:
 	.text       start:0x8025B340 end:0x8025BC48
 	.ctors      start:0x8065B8E4 end:0x8065B8E8

@@ -63,7 +63,7 @@ void lua_pushtobject(lua_State *L, void* tobject);
 #define api_check(L, o)		luaplus_assert(o)
 #endif
 
-LuaObject::LuaObject() throw() :
+LuaObject::LuaObject() :
 	m_state(NULL),
 	m_next(NULL),
 	m_prev(NULL)

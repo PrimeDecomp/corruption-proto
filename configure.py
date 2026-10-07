@@ -692,7 +692,7 @@ config.libs = [
         Object(Matching, "Lua/LuaPlusAddons.c"),
         Object(Matching, "Lua/LuaPlusFunctions.cpp", extra_cflags=cflags_luaplus),
         Object(Matching, "Lua/LuaMemory.cpp", extra_cflags=cflags_luaplus),
-        Object(NonMatching, "Lua/LuaState_DumpObject.cpp", extra_cflags=cflags_luaplus),
+        Object(Matching, "Lua/LuaState_DumpObject.cpp", extra_cflags=cflags_luaplus),
         Object(Matching, "Lua/lcode.c"),
         Object(Matching, "Lua/ldebug.c"),
         Object(Matching, "Lua/ldo.c"),

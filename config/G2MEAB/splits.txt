@@ -1207,8 +1207,14 @@ Kyoto/Animation/CJointData_LinearStorage.cpp:
 Kyoto/Animation/CCompressedAnimSourceReader.cpp:
 	.text       start:0x80559CD0 end:0x8055BD34
 
+Kyoto/Animation/CAnimChannelMask.cpp:
+	.text       start:0x8055BD34 end:0x8055BE28
+
 Kyoto/Animation/CQuantizedAnimFrame.cpp:
 	.text       start:0x8055BE28 end:0x8055C124
+
+Kyoto/Animation/CAnimBitStream.cpp:
+	.text       start:0x8055C124 end:0x8055C49C
 
 Kyoto/Particles/CUserEvaluatorDescription.cpp:
 	.text       start:0x8055C49C end:0x8055C8B8
@@ -1222,11 +1228,20 @@ Kyoto/Animation/CCECharacterInfo.cpp:
 Kyoto/Animation/CCEAnimationSet.cpp:
 	.text       start:0x80563AF4 end:0x80564A30
 
+Kyoto/CUnpredictableRandom.cpp:
+	.text       start:0x80564A30 end:0x80565D8C
+
 Kyoto/Particles/CBurstFireDescription.cpp:
 	.text       start:0x80565D8C end:0x80566014
 
 Kyoto/Particles/CBurstFireDataFactory.cpp:
 	.text       start:0x80566014 end:0x80566A30
+
+MetroidPrime/Collision/CJointCollisionDescription.cpp:
+	.text       start:0x80566A30 end:0x80567328
+
+Kyoto/Graphics/CMaterialDataFactory.cpp:
+	.text       start:0x805674E0 end:0x80567F4C
 
 Kyoto/Animation/CVisibilityAnimationData.cpp:
 	.text       start:0x80567F4C end:0x80568024

@@ -1650,6 +1650,75 @@ FMOD/fmod_dsp_echo.cpp:
 	.text       start:0x805F4AB8 end:0x805F5914
 	.ctors      start:0x8065BCB0 end:0x8065BCB4
 
+FMOD/fmod_dsp_fft.cpp:
+	.text       start:0x805F5914 end:0x805F69AC
+
+FMOD/fmod_dsp_filter.cpp:
+	.text       start:0x805F69AC end:0x805F70D0
+
+FMOD/fmod_dsp_flange.cpp:
+	.text       start:0x805F70D0 end:0x805F7D24
+	.ctors      start:0x8065BCB4 end:0x8065BCB8
+
+FMOD/fmod_dsp_highpass.cpp:
+	.text       start:0x805F7D24 end:0x805F8734
+	.ctors      start:0x8065BCB8 end:0x8065BCBC
+
+FMOD/fmod_dsp_itecho.cpp:
+	.text       start:0x805F8734 end:0x805F9180
+	.ctors      start:0x8065BCBC end:0x8065BCC0
+
+FMOD/fmod_dsp_itlowpass.cpp:
+	.text       start:0x805F9180 end:0x805F9E1C
+	.ctors      start:0x8065BCC0 end:0x8065BCC4
+
+FMOD/fmod_dsp_lowpass.cpp:
+	.text       start:0x805F9E1C end:0x805FA884
+	.ctors      start:0x8065BCC4 end:0x8065BCC8
+
+FMOD/fmod_dsp_normalize.cpp:
+	.text       start:0x805FA884 end:0x805FAED8
+	.ctors      start:0x8065BCC8 end:0x8065BCCC
+
+FMOD/fmod_dsp_oscillator.cpp:
+	.text       start:0x805FAED8 end:0x805FB6F0
+	.ctors      start:0x8065BCCC end:0x8065BCD0
+
+FMOD/fmod_dsp_parameq.cpp:
+	.text       start:0x805FB6F0 end:0x805FC024
+	.ctors      start:0x8065BCD0 end:0x8065BCD4
+
+FMOD/fmod_dsp_pitchshift.cpp:
+	.text       start:0x805FC024 end:0x805FDA60
+	.ctors      start:0x8065BCD4 end:0x8065BCD8
+
+FMOD/fmod_dsp_resampler.cpp:
+	.text       start:0x805FDA60 end:0x80605958
+
+FMOD/fmod_dsp_reverb.cpp:
+	.text       start:0x80605958 end:0x80606150
+	.ctors      start:0x8065BCD8 end:0x8065BCDC
+
+FMOD/fmod_dsp_soundcard.cpp:
+	.text       start:0x80606150 end:0x80606428
+
+FMOD/fmod_dsp_source.cpp:
+	.text       start:0x80606428 end:0x80606C50
+
+FMOD/fmod_dspi.cpp:
+	.text       start:0x80606C50 end:0x806083B8
+
+FMOD/fmod_file.cpp:
+	.text       start:0x806083B8 end:0x8060A3C8
+	.ctors      start:0x8065BCDC end:0x8065BCE0
+
+FMOD/fmod_geometry.cpp:
+	.text       start:0x8060A3C8 end:0x8060B08C
+
+FMOD/fmod_global.cpp:
+	.text       start:0x8060B08C end:0x8060B560
+	.ctors      start:0x8065BCE0 end:0x8065BCE4
+
 FMOD/fmod_memory.cpp:
 	.text       start:0x8060B560 end:0x8060C2B4
 

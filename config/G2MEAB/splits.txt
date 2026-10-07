@@ -236,6 +236,41 @@ MetroidPrime/CScriptMailbox.cpp:
 	.text       start:0x800BD728 end:0x800BDE0C
 	.ctors      start:0x8065B584 end:0x8065B588
 
+MetroidPrime/ScriptObjects/CScriptRelay.cpp:
+	.text       start:0x800BDE0C end:0x800BE3E8
+	.ctors      start:0x8065B588 end:0x8065B58C
+
+MetroidPrime/ScriptObjects/CScriptSpawnPoint.cpp:
+	.text       start:0x800BE3E8 end:0x800BF03C
+	.ctors      start:0x8065B58C end:0x8065B590
+
+MetroidPrime/HUD/CHUDMemoParms.cpp:
+	.text       start:0x800BF03C end:0x800BF064
+
+MetroidPrime/ScriptObjects/CScriptHUDMemo.cpp:
+	.text       start:0x800BF064 end:0x800BF98C
+	.ctors      start:0x8065B590 end:0x8065B594
+
+MetroidPrime/CMappableObject.cpp:
+	.text       start:0x800BF98C end:0x800C0738
+	.ctors      start:0x8065B594 end:0x8065B598
+
+MetroidPrime/Player/CPlayerCameraBob.cpp:
+	.text       start:0x800C0738 end:0x800C16B4
+	.ctors      start:0x8065B598 end:0x8065B59C
+
+MetroidPrime/ScriptObjects/CScriptCameraFilterKeyframe.cpp:
+	.text       start:0x800C16B4 end:0x800C1D20
+	.ctors      start:0x8065B59C end:0x8065B5A0
+
+MetroidPrime/ScriptObjects/CScriptCameraBlurKeyframe.cpp:
+	.text       start:0x800C1D20 end:0x800C21A4
+	.ctors      start:0x8065B5A0 end:0x8065B5A4
+
+MetroidPrime/Cameras/CCameraFilter.cpp:
+	.text       start:0x800C21A4 end:0x800C47E4
+	.ctors      start:0x8065B5A4 end:0x8065B5A8
+
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 

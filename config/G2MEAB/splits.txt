@@ -1138,6 +1138,13 @@ Kyoto/Input/RevolutionIController.cpp:
 Kyoto/Input/CRevolutionController.cpp:
 	.text       start:0x8056F5B8 end:0x805708F4
 
+Weapons/IWeaponRenderer.cpp:
+	.text       start:0x805971B8 end:0x80597290
+	.ctors      start:0x8065BC5C end:0x8065BC60
+
+Weapons/CDecalDescription.cpp:
+	.text       start:0x8059ADB4 end:0x8059AE44
+
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C
 

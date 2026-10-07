@@ -696,6 +696,10 @@ config.libs = [
         Object(NonMatching, "Kyoto/Math/CSphere.cpp"),
         Object(NonMatching, "Kyoto/Math/CAABox.cpp"),
     ]),
+    RetroLib("Kyoto.Weapons", [
+        Object(NonMatching, "Weapons/IWeaponRenderer.cpp"),
+        Object(NonMatching, "Weapons/CDecalDescription.cpp"),
+    ]),
     RuntimeLib("MetroTRK", [
         Object(NonMatching, "MetroTRK/mainloop.c"),
         Object(NonMatching, "MetroTRK/nubevent.c"),

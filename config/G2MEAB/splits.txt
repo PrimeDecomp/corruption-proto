@@ -68,10 +68,10 @@ Kyoto/CResFactory.cpp:
 	.text       start:0x804FE444 end:0x80500080
 
 Kyoto/CResLoader.cpp:
-	.text       start:0x80500080 end:0x80503000
+	.text       start:0x80500080 end:0x80502F64
 
 rstl/rstl_map.cpp:
-	.text       start:0x80503000 end:0x80503650
+	.text       start:0x80502F64 end:0x80503650
 
 rstl/rstl_misc.cpp:
 	.text       start:0x80503650 end:0x8050368C

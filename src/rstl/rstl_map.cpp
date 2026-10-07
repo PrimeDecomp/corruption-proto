@@ -323,4 +323,45 @@ void* rbtree_rebalance_for_erase(void* header_void, void* node_void) {
 
   return successor;
 }
+
+void* rbtree_traverse_forward(const void* header_void, void* node_void) {
+  const fake_header* header = static_cast< const fake_header* >(header_void);
+  fake_node* node = static_cast< fake_node* >(node_void);
+
+  if (node == 0) {
+    return header->mLeftmost;
+  }
+  fake_node* right = node->mRight;
+  if (right == 0 && node->mParent == 0) {
+    return 0;
+  }
+  if (right == 0 && node->mParent->mLeft == node) {
+    return node->mParent;
+  }
+
+  if (right != 0) {
+    fake_node* result = right;
+    goto enter_middle;
+    do {
+      result = right;
+    enter_middle:
+      right = result->mLeft;
+    } while (right != 0);
+    return result;
+  }
+
+  fake_node* parent = 0;
+  goto enter_final;
+  do {
+    node = parent;
+  enter_final:
+    parent = node->mParent;
+    if (parent == 0) {
+      break;
+    }
+  } while (parent->mRight == node);
+
+  return parent != 0 ? parent : 0;
+}
+
 } // namespace rstl

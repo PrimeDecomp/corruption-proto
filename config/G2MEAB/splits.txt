@@ -1093,6 +1093,13 @@ Kyoto/Animation/CTimeRemainderAndFraction.cpp:
 Kyoto/Network/CNetworkMessage.cpp:
 	.text       start:0x8053D8E8 end:0x8053DB34
 
+Kyoto/Network/DolphinCBBACommon.cpp:
+	.text       start:0x8053DB34 end:0x8053EB74
+
+Kyoto/Network/CBBASupport.cpp:
+	.text       start:0x8053EB74 end:0x80543CA8
+	.ctors      start:0x8065BC20 end:0x8065BC24
+
 Kyoto/Network/CBBACommon.cpp:
 	.text       start:0x805446B8 end:0x8054498C
 
@@ -1292,6 +1299,9 @@ Kyoto/Animation/CAssetSoundPOINode.cpp:
 
 Kyoto/Audio/CSoundEvaluator.cpp:
 	.text       start:0x8056E67C end:0x8056EB20
+
+Kyoto/Math/CAngularPIDController.cpp:
+	.text       start:0x8056EB20 end:0x8056F39C
 
 Kyoto/Animation/CAssetPOINode.cpp:
 	.text       start:0x8056F39C end:0x8056F51C

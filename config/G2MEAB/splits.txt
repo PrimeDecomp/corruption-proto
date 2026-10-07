@@ -201,6 +201,12 @@ Dolphin/gx/GXTransform.c:
 Dolphin/gx/GXPerf.c:
 	.text       start:0x8040F520 end:0x80410014
 
+Dolphin/ip/IPCommon.c:
+	.text       start:0x80410014 end:0x80410A74
+
+Dolphin/ip/IPPacket.c:
+	.text       start:0x80410A74 end:0x80411074
+
 Dolphin/ip/IPArp.c:
 	.text       start:0x80411074 end:0x80412414
 
@@ -212,6 +218,9 @@ Dolphin/ip/IPInterface.c:
 
 Dolphin/ip/IPRoute.c:
 	.text       start:0x80413574 end:0x804149E8
+
+Dolphin/ip/IPError.c:
+	.text       start:0x804149E8 end:0x80414AC4
 
 Dolphin/ip/IPUdp.c:
 	.text       start:0x80414AC4 end:0x80416138
@@ -225,6 +234,12 @@ Dolphin/ip/IPEthernet.c:
 Dolphin/ip/IPRing.c:
 	.text       start:0x804175D4 end:0x80417CF0
 
+Dolphin/ip/IPTcpInput.c:
+	.text       start:0x80417CF0 end:0x8041A4DC
+
+Dolphin/ip/IPTcpOutput.c:
+	.text       start:0x8041A4DC end:0x8041B0FC
+
 Dolphin/ip/IPTcpTimer.c:
 	.text       start:0x8041B0FC end:0x8041BABC
 
@@ -233,6 +248,9 @@ Dolphin/ip/IPTcp.c:
 
 Dolphin/ip/IPTcpTimeWait.c:
 	.text       start:0x8041D6B4 end:0x8041DC68
+
+Dolphin/ip/IPDns.c:
+	.text       start:0x8041DC68 end:0x8041DE3C
 
 Dolphin/ip/IPDhcp.c:
 	.text       start:0x8041DE3C end:0x8041FEFC
@@ -245,6 +263,9 @@ Dolphin/ip/IPOptions.c:
 
 Dolphin/ip/IPSocket.c:
 	.text       start:0x80420684 end:0x804232FC
+
+Dolphin/ip/PPP.c:
+	.text       start:0x804232FC end:0x80426828
 
 Dolphin/ip/PPPoE.c:
 	.text       start:0x80426828 end:0x804274A8
@@ -1499,6 +1520,12 @@ WorldFormat/CCollidableTranslatedConvexPH.cpp:
 
 FMOD/fmod_channelpool.cpp:
 	.text       start:0x805C11FC end:0x805C168C
+
+FMOD/fmod_memory.cpp:
+	.text       start:0x8060B560 end:0x8060C2B4
+
+FMOD/fmod_metadata.cpp:
+	.text       start:0x8060C2B4 end:0x8060CA08
 
 FMOD/fmod_string.cpp:
 	.text       start:0x80619D8C end:0x8061A228

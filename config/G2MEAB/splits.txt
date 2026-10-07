@@ -186,6 +186,56 @@ MetroidPrime/Enemies/CAi.cpp:
 	.text       start:0x8009D0BC end:0x8009FD78
 	.ctors      start:0x8065B558 end:0x8065B55C
 
+MetroidPrime/ScriptObjects/CScriptSound.cpp:
+	.text       start:0x8009FD78 end:0x800A1488
+	.ctors      start:0x8065B55C end:0x8065B560
+
+MetroidPrime/ScriptObjects/CScriptPlatform.cpp:
+	.text       start:0x800A1488 end:0x800A7400
+	.ctors      start:0x8065B560 end:0x8065B564
+
+MetroidPrime/UserNames.cpp:
+	.text       start:0x800A7400 end:0x800A7410
+
+MetroidPrime/ScriptObjects/CScriptGenerator.cpp:
+	.text       start:0x800A7410 end:0x800A9220
+	.ctors      start:0x8065B564 end:0x8065B568
+
+MetroidPrime/CGameLight.cpp:
+	.text       start:0x800A9220 end:0x800A95DC
+	.ctors      start:0x8065B568 end:0x8065B56C
+
+MetroidPrime/CTargetReticles.cpp:
+	.text       start:0x800A95DC end:0x800B0FE4
+	.ctors      start:0x8065B56C end:0x8065B570
+
+MetroidPrime/CWeaponMgr.cpp:
+	.text       start:0x800B0FE4 end:0x800B18D8
+	.ctors      start:0x8065B570 end:0x8065B574
+
+MetroidPrime/ScriptObjects/CScriptPickup.cpp:
+	.text       start:0x800B18D8 end:0x800B3A44
+	.ctors      start:0x8065B574 end:0x8065B578
+
+MetroidPrime/CDamageInfo.cpp:
+	.text       start:0x800B3A44 end:0x800B3E44
+	.ctors      start:0x8065B578 end:0x8065B57C
+
+MetroidPrime/CMemoryDrawEnum.cpp:
+	.text       start:0x800B3E44 end:0x800B4C70
+
+MetroidPrime/ScriptObjects/CScriptDock.cpp:
+	.text       start:0x800B4C70 end:0x800B656C
+	.ctors      start:0x8065B57C end:0x8065B580
+
+MetroidPrime/ScriptObjects/CScriptCameraHint.cpp:
+	.text       start:0x800B656C end:0x800BD728
+	.ctors      start:0x8065B580 end:0x8065B584
+
+MetroidPrime/CScriptMailbox.cpp:
+	.text       start:0x800BD728 end:0x800BDE0C
+	.ctors      start:0x8065B584 end:0x8065B588
+
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0
 
@@ -204,6 +254,50 @@ MetroidPrime/CCollisionTracker.cpp:
 MetroidPrime/Enemies/CSwarmBasics.cpp:
 	.text       start:0x80266BB0 end:0x80271294
 	.ctors      start:0x8065B908 end:0x8065B90C
+
+MetroidPrime/ScriptObjects/CScriptStreamedMovie.cpp:
+	.text       start:0x80271294 end:0x80272394
+	.ctors      start:0x8065B90C end:0x8065B910
+
+MetroidPrime/Weapons/CControlHintProjectile.cpp:
+	.text       start:0x80272394 end:0x802727F8
+	.ctors      start:0x8065B910 end:0x8065B914
+
+MetroidPrime/ScriptObjects/CScriptAIHint.cpp:
+	.text       start:0x802727F8 end:0x80272CE4
+	.ctors      start:0x8065B914 end:0x8065B918
+
+MetroidPrime/CControlHintManager.cpp:
+	.text       start:0x80272CE4 end:0x80273624
+	.ctors      start:0x8065B918 end:0x8065B91C
+
+MetroidPrime/Player/CPlayerHints.cpp:
+	.text       start:0x80273624 end:0x80274DB4
+	.ctors      start:0x8065B91C end:0x8065B920
+
+MetroidPrime/ScriptObjects/CScriptControlHint.cpp:
+	.text       start:0x80274DB4 end:0x80275B1C
+	.ctors      start:0x8065B920 end:0x8065B924
+
+MetroidPrime/CGameHint.cpp:
+	.text       start:0x80275B1C end:0x80275D40
+	.ctors      start:0x8065B924 end:0x8065B928
+
+MetroidPrime/Player/CHolsterKeeper.cpp:
+	.text       start:0x80275D40 end:0x80275EF8
+	.ctors      start:0x8065B928 end:0x8065B92C
+
+MetroidPrime/Enemies/CSeedBoss1Orb.cpp:
+	.text       start:0x803C15A4 end:0x803C31D8
+	.ctors      start:0x8065BB20 end:0x8065BB24
+
+MetroidPrime/Enemies/CRidley1.cpp:
+	.text       start:0x803C31D8 end:0x803D41F0
+	.ctors      start:0x8065BB24 end:0x8065BB28
+
+MetroidPrime/Enemies/CSteamBot.cpp:
+	.text       start:0x803D41F0 end:0x803D9B0C
+	.ctors      start:0x8065BB28 end:0x8065BB2C
 
 MetroidPrime/Weapons/CBeamProjectileManager.cpp:
 	.text       start:0x803D9B0C end:0x803D9FC4

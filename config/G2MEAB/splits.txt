@@ -817,6 +817,9 @@ Kyoto/CARAMManager.cpp:
 	.text       start:0x80510798 end:0x805113CC
 	.ctors      start:0x8065BBF4 end:0x8065BBF8
 
+Kyoto/Math/CFrustumPlanes.cpp:
+	.text       start:0x805113CC end:0x80511B0C
+
 Kyoto/Graphics/CCubeSurface.cpp:
 	.text       start:0x805196F0 end:0x805197AC
 	.ctors      start:0x8065BBFC end:0x8065BC00
@@ -964,6 +967,9 @@ Kyoto/Streams/CBBAInStream.cpp:
 Kyoto/Streams/CBBAOutStream.cpp:
 	.text       start:0x80544CDC end:0x80544EC0
 
+Kyoto/Math/CMayaSpline.cpp:
+	.text       start:0x80544EC0 end:0x805485B4
+
 Kyoto/Particles/CParticleSpawnSystemDataFactory.cpp:
 	.text       start:0x805485B4 end:0x80548D54
 
@@ -987,6 +993,12 @@ Kyoto/Particles/CSortedParticleSystemDescription.cpp:
 Kyoto/Graphics/DolphinGPUMemory.cpp:
 	.text       start:0x8054CA40 end:0x8054D27C
 	.ctors      start:0x8065BC30 end:0x8065BC34
+
+Kyoto/Math/CSpline.cpp:
+	.text       start:0x8054D31C end:0x8054D808
+
+Kyoto/Math/CMotionSpline.cpp:
+	.text       start:0x8054D808 end:0x805529C0
 
 Kyoto/Graphics/PortalPlane.cpp:
 	.text       start:0x80552F28 end:0x80553144

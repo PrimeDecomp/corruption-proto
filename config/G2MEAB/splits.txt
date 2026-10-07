@@ -1082,6 +1082,9 @@ Kyoto/Animation/CCompressedAnimSourceReader.cpp:
 Kyoto/Animation/CQuantizedAnimFrame.cpp:
 	.text       start:0x8055BE28 end:0x8055C124
 
+Kyoto/Particles/CUserEvaluatorDescription.cpp:
+	.text       start:0x8055C49C end:0x8055C8B8
+
 Kyoto/Particles/CUserEvaluatorDataFactory.cpp:
 	.text       start:0x8055C8B8 end:0x8055D42C
 
@@ -1090,6 +1093,9 @@ Kyoto/Animation/CCECharacterInfo.cpp:
 
 Kyoto/Animation/CCEAnimationSet.cpp:
 	.text       start:0x80563AF4 end:0x80564A30
+
+Kyoto/Particles/CBurstFireDescription.cpp:
+	.text       start:0x80565D8C end:0x80566014
 
 Kyoto/Particles/CBurstFireDataFactory.cpp:
 	.text       start:0x80566014 end:0x80566A30
@@ -1103,8 +1109,14 @@ Kyoto/Animation/CVisibilityAnimationDataList.cpp:
 Kyoto/Audio/CAudioSample.cpp:
 	.text       start:0x8056AA9C end:0x8056B258
 
+Kyoto/Audio/CAudioChannel.cpp:
+	.text       start:0x8056B258 end:0x8056B7D4
+
 Kyoto/Audio/CAudioSoundEffect.cpp:
 	.text       start:0x8056B7D4 end:0x8056C884
+
+Kyoto/Audio/CAudioVoice.cpp:
+	.text       start:0x8056C884 end:0x8056E2A8
 
 Kyoto/Audio/CSoundEvaluator.cpp:
 	.text       start:0x8056E67C end:0x8056EB20

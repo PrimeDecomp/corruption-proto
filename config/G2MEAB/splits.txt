@@ -45,6 +45,9 @@ MetroidPrime/CGameArea.cpp:
 	.text       start:0x8004BFAC end:0x8005CAE8
 	.ctors      start:0x8065B518 end:0x8065B51C
 
+Kyoto/Graphics/CFoldySurface.cpp:
+	.text       start:0x80261258 end:0x80261CD0
+
 Dolphin/vi/vi.c:
 	.text       start:0x803F14A8 end:0x803F367C
 
@@ -549,6 +552,13 @@ Kyoto/Text/CFont.cpp:
 	.data       start:0x806CF340 end:0x806DF340
 	.sbss       start:0x8079B230 end:0x8079B238
 
+Kyoto/Graphics/CLight.cpp:
+	.text       start:0x804BAFE4 end:0x804BB6E0
+	.ctors      start:0x8065BB88 end:0x8065BB8C
+
+Kyoto/Graphics/CCubeModel.cpp:
+	.text       start:0x804BB6E0 end:0x804BCA64
+
 Kyoto/Graphics/CGX.cpp:
 	.text       start:0x804BCA64 end:0x804BE6C4
 	.ctors      start:0x8065BB8C end:0x8065BB90
@@ -795,11 +805,19 @@ Kyoto/CARAMManager.cpp:
 	.text       start:0x80510798 end:0x805113CC
 	.ctors      start:0x8065BBF4 end:0x8065BBF8
 
+Kyoto/Graphics/CCubeSurface.cpp:
+	.text       start:0x805196F0 end:0x805197AC
+	.ctors      start:0x8065BBFC end:0x8065BC00
+
 Kyoto/Animation/CCharAnimTime.cpp:
 	.text       start:0x805197AC end:0x8051A2D0
 
 Kyoto/Animation/CSegIdList.cpp:
 	.text       start:0x8051A2D0 end:0x8051A374
+
+Kyoto/Graphics/CColor.cpp:
+	.text       start:0x8051A93C end:0x8051A9EC
+	.ctors      start:0x8065BC00 end:0x8065BC04
 
 Kyoto/DolphinCMemoryCardSys.cpp:
 	.text       start:0x8051A9EC end:0x8051DD9C
@@ -825,6 +843,9 @@ Kyoto/Animation/DolphinCSkinRules.cpp:
 
 Kyoto/Animation/DolphinCVirtualBone.cpp:
 	.text       start:0x80523D04 end:0x80524448
+
+Kyoto/Graphics/DolphinCModel.cpp:
+	.text       start:0x80524448 end:0x80525418
 
 Kyoto/Particles/CEmitterElement.cpp:
 	.text       start:0x80525EB0 end:0x805275D4
@@ -853,6 +874,9 @@ Kyoto/Text/CImageInstruction.cpp:
 
 Kyoto/Text/CTextRenderBuffer.cpp:
 	.text       start:0x8052A034 end:0x8052C2D4
+
+Kyoto/Graphics/CCubeMoviePlayer.cpp:
+	.text       start:0x8052C2D4 end:0x8052FAA4
 
 Kyoto/Animation/CAdditiveAnimPlayback.cpp:
 	.text       start:0x8052FAA4 end:0x8052FD48
@@ -928,6 +952,20 @@ Kyoto/Particles/CParticleSortedSystemDataFactory.cpp:
 
 Kyoto/Particles/CSortedParticleSystemDescription.cpp:
 	.text       start:0x8054C9DC end:0x8054CA40
+
+Kyoto/Graphics/DolphinGPUMemory.cpp:
+	.text       start:0x8054CA40 end:0x8054D27C
+	.ctors      start:0x8065BC30 end:0x8065BC34
+
+Kyoto/Graphics/PortalPlane.cpp:
+	.text       start:0x80552F28 end:0x80553144
+	.ctors      start:0x8065BC34 end:0x8065BC38
+
+Kyoto/Graphics/CDisplayListReader.cpp:
+	.text       start:0x80554118 end:0x80554644
+
+Kyoto/Alloc/LockedCache.cpp:
+	.text       start:0x805549F0 end:0x80554B24
 
 Kyoto/Animation/CSoundPOINode.cpp:
 	.text       start:0x80554B24 end:0x80554D88

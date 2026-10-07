@@ -985,6 +985,18 @@ MetroidPrime/Weapons/CSamusPhazonBeam.cpp:
 	.text       start:0x803154F0 end:0x80316408
 	.ctors      start:0x8065BA34 end:0x8065BA38
 
+MetroidPrime/Enemies/CTaskFollower.cpp:
+	.text       start:0x80316408 end:0x8031D658
+	.ctors      start:0x8065BA38 end:0x8065BA3C
+
+MetroidPrime/Enemies/CFargullHatcher.cpp:
+	.text       start:0x8031D658 end:0x80320B84
+	.ctors      start:0x8065BA3C end:0x8065BA40
+
+MetroidPrime/Enemies/CDefenseMechanoid.cpp:
+	.text       start:0x80320B84 end:0x8032A348
+	.ctors      start:0x8065BA40 end:0x8065BA44
+
 MetroidPrime/ScriptObjects/CScriptContextSensitiveAction.cpp:
 	.text       start:0x8032A348 end:0x8032AE3C
 	.ctors      start:0x8065BA44 end:0x8065BA48

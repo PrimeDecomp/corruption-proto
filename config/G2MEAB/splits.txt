@@ -2669,6 +2669,10 @@ Kyoto/Particles/CSortedParticleSystemDescription.cpp:
 Kyoto/Graphics/DolphinGPUMemory.cpp:
 	.text       start:0x8054CA40 end:0x8054D27C
 	.ctors      start:0x8065BC30 end:0x8065BC34
+	.rodata     start:0x806A9728 end:0x806A98A8
+	.bss        start:0x80716720 end:0x80716770
+	.sdata      start:0x80796E38 end:0x80796E40
+	.sbss       start:0x8079B5C8 end:0x8079B5D8
 
 Kyoto/Math/CGameCameraSpline.cpp:
 	.text       start:0x8054D27C end:0x8054D31C
@@ -2734,6 +2738,8 @@ Kyoto/Streams/DolphinCZipInputStream.cpp:
 
 Kyoto/Streams/CLookaheadRes.cpp:
 	.text       start:0x80556F84 end:0x8055773C
+	.rodata     start:0x806AA328 end:0x806AA520
+	.data       start:0x806E1DB0 end:0x806E1DD0
 
 Kyoto/Streams/CLZOSupport.cpp:
 	.text       start:0x8055773C end:0x805577DC
@@ -2753,6 +2759,8 @@ Kyoto/Streams/DolphinCLZOInputStream.cpp:
 Kyoto/Streams/CStreamPreloadedToken.cpp:
 	.text       start:0x805584B4 end:0x80559008
 	.ctors      start:0x8065BC3C end:0x8065BC40
+	.rodata     start:0x806AA630 end:0x806AA840
+	.bss        start:0x807167C0 end:0x807167E8
 
 Kyoto/Animation/CCompressedAnimSource.cpp:
 	.text       start:0x80559008 end:0x80559378

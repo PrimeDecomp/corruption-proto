@@ -1563,6 +1563,79 @@ FMOD/fmod_channeli.cpp:
 FMOD/fmod_channelpool.cpp:
 	.text       start:0x805C11FC end:0x805C168C
 
+FMOD/fmod_codec.cpp:
+	.text       start:0x805C168C end:0x805C2540
+
+FMOD/fmod_codec_aiff.cpp:
+	.text       start:0x805C2540 end:0x805C3308
+	.ctors      start:0x8065BC6C end:0x8065BC70
+
+FMOD/fmod_codec_dls.cpp:
+	.text       start:0x805C3308 end:0x805C5794
+	.ctors      start:0x8065BC70 end:0x8065BC74
+
+FMOD/fmod_codec_fsb.cpp:
+	.text       start:0x805C5794 end:0x805C84F4
+	.ctors      start:0x8065BC74 end:0x8065BC78
+
+FMOD/fmod_codec_it.cpp:
+	.text       start:0x805C84F4 end:0x805D12C8
+	.ctors      start:0x8065BC78 end:0x8065BC7C
+
+FMOD/fmod_codec_midi.cpp:
+	.text       start:0x805D12C8 end:0x805D4E84
+	.ctors      start:0x8065BC7C end:0x8065BC80
+
+FMOD/fmod_codec_mod.cpp:
+	.text       start:0x805D4E84 end:0x805D8160
+	.ctors      start:0x8065BC80 end:0x8065BC84
+
+FMOD/fmod_codec_mpeg.cpp:
+	.text       start:0x805D8160 end:0x805D975C
+	.ctors      start:0x8065BC84 end:0x8065BC88
+
+FMOD/fmod_codec_oggvorbis.cpp:
+	.text       start:0x805E113C end:0x805E1C88
+	.ctors      start:0x8065BC88 end:0x8065BC8C
+
+FMOD/fmod_codec_playlist.cpp:
+	.text       start:0x805E1C88 end:0x805E308C
+	.ctors      start:0x8065BC8C end:0x8065BC90
+
+FMOD/fmod_codec_raw.cpp:
+	.text       start:0x805E308C end:0x805E3420
+	.ctors      start:0x8065BC90 end:0x8065BC94
+
+FMOD/fmod_codec_s3m.cpp:
+	.text       start:0x805E3420 end:0x805E733C
+	.ctors      start:0x8065BC94 end:0x8065BC98
+
+FMOD/fmod_codec_tag.cpp:
+	.text       start:0x805E733C end:0x805E8310
+	.ctors      start:0x8065BC98 end:0x8065BC9C
+
+FMOD/fmod_codec_user.cpp:
+	.text       start:0x805E8310 end:0x805E85D4
+	.ctors      start:0x8065BC9C end:0x8065BCA0
+
+FMOD/fmod_codec_wav.cpp:
+	.text       start:0x805E85D4 end:0x805E9924
+	.ctors      start:0x8065BCA0 end:0x8065BCA4
+
+FMOD/fmod_codec_wav_riff.cpp:
+	.text       start:0x805EAD1C end:0x805EB6EC
+
+FMOD/fmod_codec_xm.cpp:
+	.text       start:0x805EB6EC end:0x805F0414
+	.ctors      start:0x8065BCA4 end:0x8065BCA8
+
+FMOD/fmod_dsp_chorus.cpp:
+	.text       start:0x805F0414 end:0x805F1364
+	.ctors      start:0x8065BCA8 end:0x8065BCAC
+
+FMOD/fmod_dsp_connection.cpp:
+	.text       start:0x805F1364 end:0x805F3F7C
+
 FMOD/fmod_memory.cpp:
 	.text       start:0x8060B560 end:0x8060C2B4
 
@@ -1571,6 +1644,44 @@ FMOD/fmod_metadata.cpp:
 
 FMOD/fmod_string.cpp:
 	.text       start:0x80619D8C end:0x8061A228
+
+FMOD/fmod_system.cpp:
+	.text       start:0x8061A228 end:0x8061A6E0
+
+FMOD/fmod_systemi.cpp:
+	.text       start:0x8061A6E0 end:0x80621870
+	.ctors      start:0x8065BCF0 end:0x8065BCF4
+
+FMOD/fmod_channel_gc.cpp:
+	.text       start:0x80621870 end:0x80622C90
+
+FMOD/fmod_os_misc.cpp:
+	.text       start:0x80622C90 end:0x806236F0
+
+FMOD/fmod_output_gc.cpp:
+	.text       start:0x806236F0 end:0x8062591C
+	.ctors      start:0x8065BCF4 end:0x8065BCF8
+
+FMOD/fmod_reverb_model.cpp:
+	.text       start:0x8062591C end:0x806262F4
+
+FMOD/fmod_output_nosound_nrt.cpp:
+	.text       start:0x806262F4 end:0x806267E0
+	.ctors      start:0x8065BCF8 end:0x8065BCFC
+
+FMOD/fmod_codec_gcadpcm.cpp:
+	.text       start:0x806267E0 end:0x80626F40
+	.ctors      start:0x8065BCFC end:0x8065BD00
+
+FMOD/fmod_sample_converter.cpp:
+	.text       start:0x80626F40 end:0x806281C4
+
+FMOD/fmod_dsp_codec.cpp:
+	.text       start:0x806281C4 end:0x80628C88
+	.ctors      start:0x8065BD00 end:0x8065BD04
+
+FMOD/fmod_dsp_codecpool.cpp:
+	.text       start:0x80628C88 end:0x806293B4
 
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C

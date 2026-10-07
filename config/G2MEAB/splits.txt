@@ -913,6 +913,54 @@ MetroidPrime/Enemies/CRundas.cpp:
 	.text       start:0x802E7750 end:0x802FDA3C
 	.ctors      start:0x8065BA04 end:0x8065BA08
 
+MetroidPrime/ScriptObjects/CScriptAITaskPoint.cpp:
+	.text       start:0x802FDA3C end:0x802FE800
+	.ctors      start:0x8065BA08 end:0x8065BA0C
+
+MetroidPrime/Enemies/CFriendly.cpp:
+	.text       start:0x802FEF4C end:0x802FFB1C
+	.ctors      start:0x8065BA0C end:0x8065BA10
+
+MetroidPrime/ScriptObjects/CScriptPhysicsDebris.cpp:
+	.text       start:0x8030085C end:0x803041C4
+	.ctors      start:0x8065BA10 end:0x8065BA14
+
+MetroidPrime/BodyState/CAnimationAlignmentHelper.cpp:
+	.text       start:0x803041C4 end:0x803050F0
+	.ctors      start:0x8065BA14 end:0x8065BA18
+
+MetroidPrime/CGameAreaIterator.cpp:
+	.text       start:0x803050F0 end:0x80305130
+	.ctors      start:0x8065BA18 end:0x8065BA1C
+
+MetroidPrime/Player/CPlayerStateHelpers.cpp:
+	.text       start:0x80305130 end:0x80305184
+	.ctors      start:0x8065BA1C end:0x8065BA20
+
+MetroidPrime/ScriptObjects/CScriptActorMorph.cpp:
+	.text       start:0x80305748 end:0x80308934
+	.ctors      start:0x8065BA20 end:0x8065BA24
+
+MetroidPrime/Enemies/CGunTurretBase.cpp:
+	.text       start:0x80309050 end:0x8030B2C8
+	.ctors      start:0x8065BA24 end:0x8065BA28
+
+MetroidPrime/Enemies/CGunTurretTop.cpp:
+	.text       start:0x8030B2C8 end:0x8030EB3C
+	.ctors      start:0x8065BA28 end:0x8065BA2C
+
+MetroidPrime/Enemies/CGragnolFlyer.cpp:
+	.text       start:0x8030EB3C end:0x803145D8
+	.ctors      start:0x8065BA2C end:0x8065BA30
+
+MetroidPrime/Weapons/CSamusNovaBeam.cpp:
+	.text       start:0x803145D8 end:0x803154F0
+	.ctors      start:0x8065BA30 end:0x8065BA34
+
+MetroidPrime/Weapons/CSamusPhazonBeam.cpp:
+	.text       start:0x803154F0 end:0x80316408
+	.ctors      start:0x8065BA34 end:0x8065BA38
+
 MetroidPrime/Cameras/CAvoidanceBehavior.cpp:
 	.text       start:0x8033A624 end:0x8033A824
 	.ctors      start:0x8065BA74 end:0x8065BA78

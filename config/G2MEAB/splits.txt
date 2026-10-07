@@ -312,6 +312,9 @@ Dolphin/odenotstub/odenotstub.c:
 Dolphin/amcstubs/AmcExi2Stubs.c:
 	.text       start:0x80442018 end:0x80442048
 
+Kyoto/Text/CGuiTextSupport.cpp:
+	.text       start:0x80488C24 end:0x8048BA2C
+
 Kyoto/Basics/CBasics.cpp:
 	.text       start:0x8048FF38 end:0x80490000
 
@@ -645,6 +648,12 @@ Kyoto/Alloc/CMemory.cpp:
 Kyoto/Alloc/IAllocator.cpp:
 	.text       start:0x804D075C end:0x804D0844
 
+Kyoto/PVS/CPVSVisOctree.cpp:
+	.text       start:0x804D0F2C end:0x804D112C
+
+Kyoto/PVS/CPVSVisSet.cpp:
+	.text       start:0x804D112C end:0x804D15A0
+
 Kyoto/Particles/CColorElement.cpp:
 	.text       start:0x804D15A0 end:0x804D358C
 	.ctors      start:0x8065BBC4 end:0x8065BBC8
@@ -849,6 +858,10 @@ Kyoto/Animation/DolphinCVirtualBone.cpp:
 
 Kyoto/Graphics/DolphinCModel.cpp:
 	.text       start:0x80524448 end:0x80525418
+
+Kyoto/Text/CStringTable.cpp:
+	.text       start:0x80525418 end:0x80525EB0
+	.ctors      start:0x8065BC08 end:0x8065BC0C
 
 Kyoto/Particles/CEmitterElement.cpp:
 	.text       start:0x80525EB0 end:0x805275D4

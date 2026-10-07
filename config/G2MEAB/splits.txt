@@ -842,7 +842,7 @@ Kyoto/Particles/CManagedParticleGen.cpp:
 	.text       start:0x805559B0 end:0x80556320
 
 Kyoto/Streams/CBitStreamWriter.cpp:
-	.text       start:0x805563F4 end:0x80556644
+	.text       start:0x805563A4 end:0x80556644
 
 Kyoto/Streams/CBitStreamReader.cpp:
 	.text       start:0x80556644 end:0x80556864

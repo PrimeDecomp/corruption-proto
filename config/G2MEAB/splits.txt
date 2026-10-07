@@ -119,8 +119,48 @@ MetroidPrime/CEffect.cpp:
 	.ctors      start:0x8065B514 end:0x8065B518
 
 MetroidPrime/CGameArea.cpp:
-	.text       start:0x8004BFAC end:0x8005CAE8
+	.text       start:0x8004BFAC end:0x8005CAAC
 	.ctors      start:0x8065B518 end:0x8065B51C
+
+MetroidPrime/HUD/CSamusHud.cpp:
+	.text       start:0x8005CAAC end:0x80067F2C
+	.ctors      start:0x8065B51C end:0x8065B520
+
+MetroidPrime/ScriptObjects/CScriptActor.cpp:
+	.text       start:0x80067F2C end:0x8006AC40
+	.ctors      start:0x8065B520 end:0x8065B524
+
+MetroidPrime/ScriptObjects/CScriptTrigger.cpp:
+	.text       start:0x8006AC40 end:0x8006D970
+	.ctors      start:0x8065B524 end:0x8065B528
+
+MetroidPrime/ScriptObjects/CScriptWaypoint.cpp:
+	.text       start:0x8006D970 end:0x8006E178
+	.ctors      start:0x8065B528 end:0x8065B52C
+
+MetroidPrime/Enemies/CPatterned.cpp:
+	.text       start:0x8006E178 end:0x80076EFC
+	.ctors      start:0x8065B52C end:0x8065B530
+
+MetroidPrime/ScriptObjects/CScriptDoor.cpp:
+	.text       start:0x80076EFC end:0x8007AD7C
+	.ctors      start:0x8065B530 end:0x8065B534
+
+MetroidPrime/CMapArea.cpp:
+	.text       start:0x8007AD7C end:0x8007D018
+	.ctors      start:0x8065B534 end:0x8065B538
+
+MetroidPrime/ScriptObjects/CScriptEffect.cpp:
+	.text       start:0x8007D018 end:0x8007FD68
+	.ctors      start:0x8065B538 end:0x8065B53C
+
+MetroidPrime/Weapons/CBomb.cpp:
+	.text       start:0x8007FD68 end:0x80080F40
+	.ctors      start:0x8065B53C end:0x8065B540
+
+MetroidPrime/CGameDebugDraw.cpp:
+	.text       start:0x80080F40 end:0x80087404
+	.ctors      start:0x8065B540 end:0x8065B544
 
 Kyoto/Graphics/CFoldySurface.cpp:
 	.text       start:0x80261258 end:0x80261CD0

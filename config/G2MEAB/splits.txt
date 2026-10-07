@@ -767,6 +767,9 @@ MetroidPrime/Player/CMorphBallShadow.cpp:
 	.text       start:0x801AFD18 end:0x801B1238
 	.ctors      start:0x8065B7BC end:0x8065B7C0
 
+MetroidPrime/Player/CPlayerStuckTracker.cpp:
+	.text       start:0x801B1238 end:0x801B18F0
+
 MetroidPrime/CSlideShow.cpp:
 	.text       start:0x801B18F0 end:0x801B7878
 	.ctors      start:0x8065B7C0 end:0x8065B7C4

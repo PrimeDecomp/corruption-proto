@@ -1240,6 +1240,7 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/Player/CPlayerMovement.cpp"),
         Object(NonMatching, "MetroidPrime/Weapons/WeaponTypes.cpp"),
         Object(NonMatching, "MetroidPrime/Player/CMorphBallShadow.cpp"),
+        Object(NonMatching, "MetroidPrime/Player/CPlayerStuckTracker.cpp"),
         Object(NonMatching, "MetroidPrime/CSlideShow.cpp"),
         Object(NonMatching, "MetroidPrime/CProjectedShadow.cpp"),
         Object(NonMatching, "MetroidPrime/CPreFrontEnd.cpp"),

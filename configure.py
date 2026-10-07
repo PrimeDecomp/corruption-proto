@@ -324,6 +324,32 @@ def FmodLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
+# Provisional bundled codec profiles; original compilers and flags remain unverified.
+# Keep each library independent for later prototype-specific compilation checks.
+cflags_ogg = [*cflags_base]
+cflags_vorbis = [*cflags_base]
+
+
+def OggLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/2.7",
+        "cflags": cflags_ogg,
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
+def VorbisLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/2.7",
+        "cflags": cflags_vorbis,
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
 # Helper function for Retro game, Kyoto, and rstl libraries
 def RetroLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
@@ -362,6 +388,22 @@ config.libs = [
     # SDK translation units investigated from the prototype.
     DolphinLib("AMCStubs", [
         Object(NonMatching, "Dolphin/amcstubs/AmcExi2Stubs.c"),
+    ]),
+    DolphinLib("AX", [
+        Object(NonMatching, "Dolphin/ax/AX.c"),
+        Object(NonMatching, "Dolphin/ax/AXAlloc.c"),
+        Object(NonMatching, "Dolphin/ax/AXAux.c"),
+        Object(NonMatching, "Dolphin/ax/AXCL.c"),
+        Object(NonMatching, "Dolphin/ax/AXOut.c"),
+        Object(NonMatching, "Dolphin/ax/AXSPB.c"),
+        Object(NonMatching, "Dolphin/ax/AXVPB.c"),
+        Object(NonMatching, "Dolphin/ax/AXProf.c"),
+    ]),
+    DolphinLib("AXFX", [
+        Object(NonMatching, "Dolphin/axfx/AXFXReverbHi.c"),
+        Object(NonMatching, "Dolphin/axfx/AXFXReverbStd.c"),
+        Object(NonMatching, "Dolphin/axfx/AXFXHooks.c"),
+        Object(NonMatching, "Dolphin/axfx/AXFXReverbHiDpl2.c"),
     ]),
     DolphinLib("Base64", [
         Object(NonMatching, "Dolphin/eth/base64.c"),
@@ -437,6 +479,9 @@ config.libs = [
     ]),
     DolphinLib("MD5", [
         Object(NonMatching, "Dolphin/eth/md5.c"),
+    ]),
+    DolphinLib("MIX", [
+        Object(NonMatching, "Dolphin/mix/mix.c"),
     ]),
     DolphinLib("ODENotStub", [
         Object(NonMatching, "Dolphin/odenotstub/odenotstub.c"),
@@ -592,6 +637,10 @@ config.libs = [
         Object(NonMatching, "LZO/lzo_init.c"),
         Object(NonMatching, "LZO/lzo_ptr.c"),
         Object(NonMatching, "LZO/lzo1x_d1.c"),
+    ]),
+    OggLib("Ogg", [
+        Object(NonMatching, "Ogg/bitwise.c"),
+        Object(NonMatching, "Ogg/framing.c"),
     ]),
     RetroLib("Game", [
         Object(NonMatching, "MetroidPrime/CTransitionDatabaseGame.cpp"),
@@ -1048,6 +1097,25 @@ config.libs = [
         Object(NonMatching, "zlib-1.1.3/infutil.c"),
         Object(NonMatching, "zlib-1.1.3/trees.c"),
         Object(NonMatching, "zlib-1.1.3/zutil.c"),
+    ]),
+    VorbisLib("Vorbis", [
+        Object(NonMatching, "Vorbis/block.c"),
+        Object(NonMatching, "Vorbis/codebook.c"),
+        Object(NonMatching, "Vorbis/envelope.c"),
+        Object(NonMatching, "Vorbis/floor0.c"),
+        Object(NonMatching, "Vorbis/floor1.c"),
+        Object(NonMatching, "Vorbis/info.c"),
+        Object(NonMatching, "Vorbis/lookup.c"),
+        Object(NonMatching, "Vorbis/lsp.c"),
+        Object(NonMatching, "Vorbis/mapping0.c"),
+        Object(NonMatching, "Vorbis/mdct.c"),
+        Object(NonMatching, "Vorbis/psy.c"),
+        Object(NonMatching, "Vorbis/res0.c"),
+        Object(NonMatching, "Vorbis/sharedbook.c"),
+        Object(NonMatching, "Vorbis/smallft.c"),
+        Object(NonMatching, "Vorbis/synthesis.c"),
+        Object(NonMatching, "Vorbis/vorbisfile.c"),
+        Object(NonMatching, "Vorbis/window.c"),
     ]),
     # End SDK translation units.
     RetroLib("Game",

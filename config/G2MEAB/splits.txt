@@ -1742,6 +1742,102 @@ FMOD/fmod_dsp_codec.cpp:
 FMOD/fmod_dsp_codecpool.cpp:
 	.text       start:0x80628C88 end:0x806293B4
 
+Ogg/bitwise.c:
+	.text       start:0x806293B4 end:0x806295F0
+
+Ogg/framing.c:
+	.text       start:0x806295F0 end:0x8062A3CC
+
+Vorbis/block.c:
+	.text       start:0x8062A3CC end:0x8062B48C
+
+Vorbis/codebook.c:
+	.text       start:0x8062B48C end:0x8062BF44
+
+Vorbis/envelope.c:
+	.text       start:0x8062BF44 end:0x8062BFF8
+
+Vorbis/floor0.c:
+	.text       start:0x8062BFF8 end:0x8062C89C
+
+Vorbis/floor1.c:
+	.text       start:0x8062C89C end:0x8062D2F4
+
+Vorbis/info.c:
+	.text       start:0x8062D2F4 end:0x8062DE34
+
+Vorbis/lookup.c:
+	.text       start:0x8062DE34 end:0x8062DFF8
+
+Vorbis/lsp.c:
+	.text       start:0x8062DFF8 end:0x8062E1FC
+
+Vorbis/mapping0.c:
+	.text       start:0x8062E1FC end:0x8062E8AC
+
+Vorbis/mdct.c:
+	.text       start:0x8062E8AC end:0x8062F990
+
+Vorbis/psy.c:
+	.text       start:0x8062F990 end:0x8062FB84
+
+Vorbis/res0.c:
+	.text       start:0x8062FB84 end:0x80630550
+
+Vorbis/sharedbook.c:
+	.text       start:0x80630550 end:0x80631268
+
+Vorbis/smallft.c:
+	.text       start:0x80631268 end:0x806312E0
+
+Vorbis/synthesis.c:
+	.text       start:0x806312E0 end:0x80631664
+
+Vorbis/vorbisfile.c:
+	.text       start:0x80631664 end:0x806344EC
+
+Vorbis/window.c:
+	.text       start:0x806344EC end:0x806345C0
+
+Dolphin/mix/mix.c:
+	.text       start:0x806345C0 end:0x806368F4
+
+Dolphin/ax/AX.c:
+	.text       start:0x806368F4 end:0x80636998
+
+Dolphin/ax/AXAlloc.c:
+	.text       start:0x80636998 end:0x80636E60
+
+Dolphin/ax/AXAux.c:
+	.text       start:0x80636E60 end:0x80637300
+
+Dolphin/ax/AXCL.c:
+	.text       start:0x80637300 end:0x80637A30
+
+Dolphin/ax/AXOut.c:
+	.text       start:0x80637A30 end:0x8063823C
+
+Dolphin/ax/AXSPB.c:
+	.text       start:0x8063823C end:0x80638704
+
+Dolphin/ax/AXVPB.c:
+	.text       start:0x80638704 end:0x80639848
+
+Dolphin/ax/AXProf.c:
+	.text       start:0x80639848 end:0x806398F8
+
+Dolphin/axfx/AXFXReverbHi.c:
+	.text       start:0x806398F8 end:0x8063A800
+
+Dolphin/axfx/AXFXReverbStd.c:
+	.text       start:0x8063A800 end:0x8063B23C
+
+Dolphin/axfx/AXFXHooks.c:
+	.text       start:0x8063B23C end:0x8063B28C
+
+Dolphin/axfx/AXFXReverbHiDpl2.c:
+	.text       start:0x8063B28C end:0x8063BF64
+
 Runtime/__va_arg.c:
 	.text       start:0x8063BF64 end:0x8063C02C
 

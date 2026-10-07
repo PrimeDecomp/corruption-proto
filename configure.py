@@ -352,7 +352,7 @@ def VorbisLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-# Lua C core settings; the LuaPlus C++ wrappers enable exceptions below.
+# Lua C core settings.
 cflags_lua = [
     *cflags_base,
     "-i include/Lua",
@@ -364,6 +364,12 @@ cflags_lua = [
     "-use_lmw_stmw on",
     "-inline deferred,auto",
     "-str reuse,pool,readonly",
+]
+
+cflags_luaplus = [
+    "-inline deferred,noauto",
+    '-pragma "inline_max_size(125)"',
+    "-Cpp_exceptions on" if args.debug else "-Cpp_exceptions off",
 ]
 
 
@@ -681,11 +687,11 @@ config.libs = [
     ]),
     LuaLib("Lua", [
         Object(Matching, "Lua/lwstrlib.c"),
-        Object(NonMatching, "Lua/LuaObject.cpp", extra_cflags=["-Cpp_exceptions on"]),
-        Object(NonMatching, "Lua/LuaPlus.cpp", extra_cflags=["-Cpp_exceptions on"]),
+        Object(NonMatching, "Lua/LuaObject.cpp", extra_cflags=cflags_luaplus),
+        Object(Matching, "Lua/LuaPlus.cpp", extra_cflags=cflags_luaplus),
         Object(Matching, "Lua/LuaPlusAddons.c"),
-        Object(NonMatching, "Lua/LuaPlusFunctions.cpp", extra_cflags=["-Cpp_exceptions on"]),
-        Object(NonMatching, "Lua/LuaState_DumpObject.cpp", extra_cflags=["-Cpp_exceptions on"]),
+        Object(Matching, "Lua/LuaPlusFunctions.cpp", extra_cflags=cflags_luaplus),
+        Object(NonMatching, "Lua/LuaState_DumpObject.cpp", extra_cflags=cflags_luaplus),
         Object(Matching, "Lua/lcode.c"),
         Object(Matching, "Lua/ldebug.c"),
         Object(Matching, "Lua/ldo.c"),

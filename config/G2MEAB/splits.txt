@@ -1370,9 +1370,12 @@ Lua/lwstrlib.c:
 
 Lua/LuaObject.cpp:
 	.text       start:0x804454F0 end:0x804466D4
+	.sdata2     start:0x807A16D8 end:0x807A16E0
 
 Lua/LuaPlus.cpp:
 	.text       start:0x804466D4 end:0x80447500
+	.rodata     start:0x80699808 end:0x80699888
+	.data       start:0x806CDAE0 end:0x806CDAF8
 
 Lua/LuaPlusAddons.c:
 	.text       start:0x80447500 end:0x8044787C
@@ -1380,9 +1383,13 @@ Lua/LuaPlusAddons.c:
 
 Lua/LuaPlusFunctions.cpp:
 	.text       start:0x8044787C end:0x804479DC
+	.rodata     start:0x80699888 end:0x806998A8
 
 Lua/LuaState_DumpObject.cpp:
 	.text       start:0x80447AE8 end:0x8044A01C
+	.rodata     start:0x806998A8 end:0x806999A0
+	.data       start:0x806CDB08 end:0x806CDB20
+	.sdata2     start:0x807A16E0 end:0x807A16E8
 
 Lua/lcode.c:
 	.text       start:0x8044A01C end:0x8044CB08
@@ -1434,6 +1441,9 @@ Lua/lparser.c:
 
 Lua/lstate.c:
 	.text       start:0x8045DF18 end:0x8045E874
+	.rodata     start:0x8069A250 end:0x8069A268
+	.sdata      start:0x80796B70 end:0x80796B80
+	.sbss       start:0x8079B170 end:0x8079B178
 
 Lua/lstring.c:
 	.text       start:0x8045E874 end:0x8045EFF4

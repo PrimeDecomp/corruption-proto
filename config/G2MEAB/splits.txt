@@ -1261,6 +1261,13 @@ Weapons/IWeaponRenderer.cpp:
 Weapons/CDecalDataFactory.cpp:
 	.text       start:0x80597290 end:0x80598024
 
+Weapons/CDecal.cpp:
+	.text       start:0x80598024 end:0x8059A6CC
+	.ctors      start:0x8065BC60 end:0x8065BC64
+
+Weapons/CWeaponDescription.cpp:
+	.text       start:0x8059A6CC end:0x8059ADB4
+
 Weapons/CDecalDescription.cpp:
 	.text       start:0x8059ADB4 end:0x8059AE44
 

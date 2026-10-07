@@ -747,6 +747,8 @@ config.libs = [
     RetroLib("Kyoto.Weapons", [
         Object(NonMatching, "Weapons/IWeaponRenderer.cpp"),
         Object(NonMatching, "Weapons/CDecalDataFactory.cpp"),
+        Object(NonMatching, "Weapons/CDecal.cpp"),
+        Object(NonMatching, "Weapons/CWeaponDescription.cpp"),
         Object(NonMatching, "Weapons/CDecalDescription.cpp"),
     ]),
     RuntimeLib("MetroTRK", [

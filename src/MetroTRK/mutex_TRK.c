@@ -1,7 +1,7 @@
-/*
- * G2MEAB prototype mutex_TRK.c translation-unit scaffold.
- * Investigated .text: 0x80653E48..0x80653E60 (end exclusive).
- * Functional group investigated from native code and read-only references.
- * Nonfunctional scaffold: native routines and data have not been ported.
- * Keep this object NonMatching until implementation and full verification.
- */
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/mutex_TRK.h"
+
+DSError TRKInitializeMutex(void*) { return DS_NoError; }
+
+DSError TRKAcquireMutex(void*) { return DS_NoError; }
+
+DSError TRKReleaseMutex(void*) { return DS_NoError; }

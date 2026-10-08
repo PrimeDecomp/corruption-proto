@@ -1,7 +1,12 @@
-/*
- * G2MEAB prototype targcont.c translation-unit scaffold.
- * Investigated .text: 0x80656AFC..0x80656B30 (end exclusive).
- * Functional group investigated from native code and read-only references.
- * Nonfunctional scaffold: native routines and data have not been ported.
- * Keep this object NonMatching until implementation and full verification.
- */
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/targcont.h"
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
+#include "TRK_MINNOW_DOLPHIN/ppc/Generic/targimpl.h"
+
+DSError TRKTargetContinue(void)
+{
+	TRKTargetSetStopped(0);
+	UnreserveEXI2Port();
+	TRKSwapAndGo();
+	ReserveEXI2Port();
+	return 0;
+}

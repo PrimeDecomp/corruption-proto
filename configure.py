@@ -301,12 +301,48 @@ def RuntimeLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
+# Provisional zlib 1.1.3 profile; Prime's zlib compiler profile is the starting point.
+def ZlibLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/1.3.2",
+        "cflags": [*cflags_runtime, "-inline deferred", "-i include/zlib-1.1.3"],
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
+# Provisional MetroTRK profile borrowed from the Mario Party 4 TRK_MINNOW_DOLPHIN build.
+cflags_trk = [
+    *cflags_base,
+    "-use_lmw_stmw on",
+    "-str reuse,readonly",
+    "-common off",
+    "-sdata 0",
+    "-sdata2 0",
+    "-inline auto,deferred",
+    "-enum min",
+    "-sdatathreshold 0",
+    "-i include/TRK_MINNOW_DOLPHIN",
+]
+
+
+def TrkLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/1.3",
+        "cflags": cflags_trk,
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
 # Tentative LZO compiler profile from Echoes; prototype optimization remains unverified.
 def LzoLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/2.7",
-        "cflags": cflags_runtime,
+        "cflags": [*cflags_runtime, "-i include/LZO"],
         "progress_category": "sdk",
         "objects": objects,
     }
@@ -1547,7 +1583,7 @@ config.libs = [
     RetroLib("rstl", [
         Object(NonMatching, "rstl/locked_cache_allocator.cpp"),
     ]),
-    RuntimeLib("MetroTRK", [
+    TrkLib("MetroTRK", [
         Object(NonMatching, "MetroTRK/mainloop.c"),
         Object(NonMatching, "MetroTRK/nubevent.c"),
         Object(NonMatching, "MetroTRK/nubinit.c"),
@@ -1657,7 +1693,7 @@ config.libs = [
         Object(NonMatching, "Runtime/w_sqrt.c"),
         Object(NonMatching, "Runtime/stricmp.c"),
     ]),
-    RuntimeLib("zlib", [
+    ZlibLib("zlib", [
         Object(NonMatching, "zlib-1.1.3/adler32.c"),
         Object(NonMatching, "zlib-1.1.3/deflate.c"),
         Object(NonMatching, "zlib-1.1.3/infblock.c"),

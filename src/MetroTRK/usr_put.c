@@ -1,7 +1,26 @@
-/*
- * G2MEAB prototype usr_put.c translation-unit scaffold.
- * Investigated .text: 0x806524C0..0x8065254C (end exclusive).
- * Functional group investigated from native code and read-only references.
- * Nonfunctional scaffold: native routines and data have not been ported.
- * Keep this object NonMatching until implementation and full verification.
- */
+#include "TRK_MINNOW_DOLPHIN/Os/dolphin/usr_put.h"
+#include "TRK_MINNOW_DOLPHIN/MetroTRK/Portable/msghndlr.h"
+#include "PowerPC_EABI_Support/MetroTRK/trk.h"
+
+BOOL usr_puts_serial(const char* msg)
+{
+	BOOL connect_ = FALSE;
+	char c;
+	char buf[2];
+
+	while (!connect_ && (c = *msg++) != '\0') {
+		BOOL connect = GetTRKConnected();
+
+		buf[0] = c;
+		buf[1] = '\0';
+
+		SetTRKConnected(FALSE);
+		OSReport(buf);
+
+		SetTRKConnected(connect);
+		connect_ = FALSE;
+	}
+	return connect_;
+}
+
+void usr_put_initialize(void) { }

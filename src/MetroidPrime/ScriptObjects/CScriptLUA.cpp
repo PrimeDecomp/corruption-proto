@@ -1,8 +1,6 @@
 // G2MEAB prototype NonMatching translation unit.
 // .text: 0x802B3D08..0x802B9354 (70 native functions). Deferred inlining emits functions in
 // reverse source order. Functions not yet implemented:
-// 0x802B3F54 +0x98: LUA loader-data destructor
-// 0x802B3FEC +0x70: LUA loader-data constructor
 // 0x802B41D0 +0xFD0: AcceptScriptMsg; registers bindings, runs On<Message> handlers
 // 0x802B51A0 +0x4C: owned native method/helper retained; exact source-level name unresolved
 // 0x802B51EC +0x64: owned native method/helper retained; exact source-level name unresolved
@@ -16,7 +14,6 @@
 // 0x802B5AF0 +0x78: owned native method/helper retained; exact source-level name unresolved
 // 0x802B5B68 +0x2C: owned native method/helper retained; exact source-level name unresolved
 // 0x802B5B94 +0x90: owned native method/helper retained; exact source-level name unresolved
-// 0x802B5C24 +0x1B4: RandomRange binding (from the registration table)
 // 0x802B5DD8 +0x120: SetGlobalState binding (from the registration table)
 // 0x802B5EF8 +0x130: GetGlobalState binding (from the registration table)
 // 0x802B6028 +0x1AC: SetPlayerInventoryAmount binding (from the registration table)
@@ -28,7 +25,6 @@
 // 0x802B6CC4 +0x4C: owned native method/helper retained; exact source-level name unresolved
 // 0x802B6D10 +0xBC: owned native method/helper retained; exact source-level name unresolved
 // 0x802B6DCC +0x1A0: SendEvent binding (from the registration table)
-// 0x802B6F6C +0x114: GetObjectActive binding (from the registration table)
 // 0x802B7080 +0x14C: SetObjectTranslation binding (from the registration table)
 // 0x802B71CC +0x29C: SetObjectTransform binding (from the registration table)
 // 0x802B7468 +0x208: owned native method/helper retained; exact source-level name unresolved
@@ -36,7 +32,6 @@
 // 0x802B77B8 +0x2B0: GetObjectTransform binding (from the registration table)
 // 0x802B7A68 +0xBC: owned native method/helper retained; exact source-level name unresolved
 // 0x802B7B24 +0x330: GetObjectConnectionList binding (from the registration table)
-// 0x802B7EC4 +0x11C: GetObjectName binding (from the registration table)
 // 0x802B86FC +0xC: raw signal disconnect wrapper: clearword8; noGhidralisting
 // 0x802B8708 +0x94: emitted LUA signal subscription destructor
 // 0x802B879C +0x50: owned native method/helper retained; exact source-level name unresolved
@@ -48,7 +43,11 @@
 
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Text/CStringTokenizer.hpp"
+#include "MetroidPrime/CStateManager.hpp"
+#include "MetroidPrime/CStateManagerObject.hpp"
 #include "MetroidPrime/CVisorParameters.hpp"
+#include "MetroidPrime/ScriptLoader.hpp"
+#include "MetroidPrime/ScriptLoader/SLdrLUAScript.hpp"
 #include "rstl/StringExtras.hpp"
 
 #include <string.h>
@@ -305,7 +304,6 @@ T LookupScriptName(const SScriptNameEntry< T >* table, const char* name, int mod
 static const char kOnThink[] = "OnThink";
 static const char kOnGlobalEvent[] = "OnGlobalEvent";
 
-
 // Guessed name. Installed with lua_atpanic by the constructor.
 static int LuaPanic(lua_State* L) {
   rs_debugger_printf("%s\n", lua_tostring(L, 1));
@@ -314,8 +312,8 @@ static int LuaPanic(lua_State* L) {
 
 CScriptLUA::CScriptLUA(TUniqueId uid, const rstl::string& name, const CEntityInfo& info,
                        const CTransform4f& xf, const rstl::string& stateAliases,
-                       const rstl::string& messageAliases,
-                       const rstl::string& initializationScript, const rstl::string& script)
+                       const rstl::string& messageAliases, const rstl::string& initializationScript,
+                       const rstl::string& script)
 : CActor(uid, name, info, 0, xf, CMaterialList(), CVisorParameters::None())
 , mInitializationScript(initializationScript)
 , mScript(script)
@@ -349,9 +347,50 @@ CScriptLUA::CScriptLUA(TUniqueId uid, const rstl::string& name, const CEntityInf
 
 CScriptLUA::~CScriptLUA() {}
 
+// With no argument the original returns 1 without pushing a value.
+int CScriptLUA::GetObjectName(lua_State* L) {
+  LuaPlus::LuaObject result;
+  if (lua_gettop(L) < 1) {
+    result.AssignString(mLuaState, GetName().data());
+  } else {
+    if (!lua_isstring(L, 1)) {
+      lua_pushstring(L, "incorrect argument to function 'GetObjectName'");
+      lua_error(L);
+    }
+    // Script ids travel as decimal strings; only the low 16 bits (the slot) are kept.
+    const TUniqueId id = TUniqueId(
+        static_cast< ushort >(CStringExtras::ConvertToInteger(rstl::string_l(lua_tostring(L, 1)))));
+    const CEntity* entity = mStateMgr->ObjectManager().GetObjectById(id);
+    if (entity == nullptr) {
+      result.AssignNil(mLuaState);
+    } else {
+      result.AssignString(mLuaState, entity->GetName().data());
+    }
+    result.PushStack();
+  }
+  return 1;
+}
+
 int CScriptLUA::GetObjectId(lua_State* L) {
   LuaPlus::LuaObject result;
   result.AssignString(mLuaState, CStringExtras::CreateFromInteger(GetUniqueId().value).data());
+  result.PushStack();
+  return 1;
+}
+
+int CScriptLUA::GetObjectActive(lua_State* L) {
+  TUniqueId id = GetUniqueId();
+  if (lua_gettop(L) > 0) {
+    if (!lua_isstring(L, 1)) {
+      lua_pushstring(L, "incorrect argument to function 'GetObjectActive'");
+      lua_error(L);
+    }
+    id = TUniqueId(
+        static_cast< ushort >(CStringExtras::ConvertToInteger(rstl::string_l(lua_tostring(L, 1)))));
+  }
+  const CEntity* entity = mStateMgr->ObjectManager().GetObjectById(id);
+  LuaPlus::LuaObject result;
+  result.AssignBoolean(mLuaState, entity != nullptr && entity->GetActive());
   result.PushStack();
   return 1;
 }
@@ -368,10 +407,32 @@ int CScriptLUA::Print(lua_State* L) {
   return 0;
 }
 
+int CScriptLUA::RandomRange(lua_State* L) {
+  LuaPlus::LuaObject result;
+  if (lua_gettop(L) != 2) {
+    lua_pushstring(L, "missing arguments to function 'RandomRange'");
+    lua_error(L);
+  } else {
+    if (!lua_isstring(L, 1) && !lua_isnumber(L, 1)) {
+      lua_pushstring(L, "incorrect argument to function 'RandomRange'");
+      lua_error(L);
+    }
+    if (!lua_isstring(L, 2) && !lua_isnumber(L, 2)) {
+      lua_pushstring(L, "incorrect argument to function 'RandomRange'");
+      lua_error(L);
+    }
+    const float min = lua_tonumber(L, 1);
+    const float max = lua_tonumber(L, 2);
+    result.AssignNumber(mLuaState, mStateMgr->Random()->Range(min, max));
+    result.PushStack();
+    return 1;
+  }
+  return 0;
+}
+
 void CScriptLUA::RunScript(const char* buffer, int size, const char* name) {
   if (mLuaState->LoadBuffer(buffer, size, name) != 0) {
-    rs_debugger_printf("LUA Load Error(%s): %s\n", name,
-                       lua_tostring(mLuaState->GetCState(), -1));
+    rs_debugger_printf("LUA Load Error(%s): %s\n", name, lua_tostring(mLuaState->GetCState(), -1));
   } else if (mLuaState->PCall(0, 0, 0) != 0) {
     rs_debugger_printf("LUA Run Error(%s): %s\n", name, lua_tostring(mLuaState->GetCState(), -1));
   }
@@ -405,4 +466,16 @@ void CScriptLUA::Think(float dt, CStateManager& mgr) {
                          lua_tostring(mLuaState->GetCState(), -1));
     }
   }
+}
+
+// The four strings feed the constructor in order: state aliases, message aliases, the
+// initialization script and the script.
+CEntity* LoadLUAScript(CStateManager& mgr, CInputStream& input, CEntityInfo& info) {
+  SLdrLUAScript sldrThis;
+#include "MetroidPrime/ScriptLoader/SLdrLUAScript.inc"
+  return new ("CScriptLUA.cpp(1191) : ", (const char*)0) CScriptLUA(
+      mgr.ObjectManager().AllocateUniqueId(), sldrThis.editorProperties.name,
+      LdrToEntityInfo(info, sldrThis.editorProperties), LdrToTransform4f(sldrThis.editorProperties),
+      sldrThis.unknown_0xed4a2787, sldrThis.unknown_0x9facea01, sldrThis.unknown_0xea46b664,
+      sldrThis.unknown_0xa1ecc54b);
 }

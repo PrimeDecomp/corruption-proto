@@ -20,9 +20,6 @@
 
 #include "MetroidPrime/ScriptLoader/TweaksLoaderDefinitions.inc"
 
-// Guessed name. 0x80796BF0: initialized to rs_debugger_printf.
-extern void (*gpfnWarningPrintf)(const char* format, ...);
-
 // Guessed name. The controller interface queried for its type (virtual slot 0x18).
 class IControllerType {
 public:

@@ -9,6 +9,9 @@ extern "C" void rs_debugger_printf(const char* format, ...);
 extern "C" void RAssert_TriggerIllegalInstruction();
 extern "C" const char kUnknownType[];
 
+// Guessed name. 0x80796BF0: initialized to rs_debugger_printf.
+extern void (*gpfnWarningPrintf)(const char* format, ...);
+
 #define RS_STRINGIZE_IMPL(x) #x
 #define RS_STRINGIZE(x) RS_STRINGIZE_IMPL(x)
 

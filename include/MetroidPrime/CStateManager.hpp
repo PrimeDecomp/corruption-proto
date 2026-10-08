@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+#include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/CRandom16.hpp"
 
 class CStateManagerCallbackLists;
@@ -15,7 +16,14 @@ class CStateManagerObject;
 class CStateManager {
 public:
   CStateManagerObject& ObjectManager() { return *mObjectManager; } // Guessed name
-  CRandom16* Random() { return &mRandom; }
+  // CScriptLUA's RandomRange (0x802B5C24) inlines this warning before using the generator.
+  CRandom16* Random() {
+    if (!mRandomAvailable) {
+      gpfnWarningPrintf("BUG THIS! Random() called when not deterministic!\n");
+      rs_debugger_printf("BUG THIS! Random() called when not deterministic!\n");
+    }
+    return &mRandom;
+  }
   bool IsRandomAvailable() const { return mRandomAvailable; }
 
 private:

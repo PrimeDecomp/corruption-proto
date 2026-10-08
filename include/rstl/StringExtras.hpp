@@ -13,6 +13,8 @@ public:
   static rstl::string ConvertToLowerCase(const rstl::string& str);
   static rstl::string CreatePrefix(const rstl::string& str, int count);
   static rstl::string CreateFromInteger(int v);
+  // Guessed name: the inverse of CreateFromInteger; asserts kException_NotInt on bad input.
+  static int ConvertToInteger(const rstl::string& str);
   static rstl::string ConvertToANSI(const rstl::wstring& str);
   static rstl::wstring ConvertToUNICODE(const rstl::string& str);
   static rstl::string ReadString(CInputStream& in);

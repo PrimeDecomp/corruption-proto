@@ -736,6 +736,80 @@ MetroidPrime/ScriptObjects/CScriptStreamedMusic.cpp:
 	.text       start:0x80177574 end:0x80178660
 	.ctors      start:0x8065B758 end:0x8065B75C
 
+MetroidPrime/CRagDoll.cpp:
+	.text       start:0x80178660 end:0x8017C854
+	.ctors      start:0x8065B75C end:0x8065B760
+
+MetroidPrime/Player/CGameOptions.cpp:
+	.text       start:0x8017C854 end:0x8017DE00
+
+MetroidPrime/CIngameTweakManager.cpp:
+	.text       start:0x8017DE00 end:0x80180944
+
+MetroidPrime/CEnvFxManager.cpp:
+	.text       start:0x80180944 end:0x801863B4
+	.ctors      start:0x8065B760 end:0x8065B764
+
+MetroidPrime/Weapons/CEnergyProjectile.cpp:
+	.text       start:0x801863B4 end:0x80188CA4
+	.ctors      start:0x8065B764 end:0x8065B768
+
+MetroidPrime/Weapons/CProjectileInfo.cpp:
+	.text       start:0x80188CA4 end:0x801894B0
+	.ctors      start:0x8065B768 end:0x8065B76C
+
+MetroidPrime/RumbleFxTable.cpp:
+	.text       start:0x801894B0 end:0x80189EF4
+	.ctors      start:0x8065B76C end:0x8065B770
+
+MetroidPrime/CRumbleManager.cpp:
+	.text       start:0x80189EF4 end:0x8018A0F0
+	.ctors      start:0x8065B770 end:0x8065B774
+
+MetroidPrime/Enemies/CBouncyGrenade.cpp:
+	.text       start:0x8018A0F0 end:0x8018EF90
+	.ctors      start:0x8065B774 end:0x8065B778
+
+MetroidPrime/Weapons/CShockWave.cpp:
+	.text       start:0x8018EF90 end:0x801900A8
+	.ctors      start:0x8065B778 end:0x8065B77C
+
+MetroidPrime/CScriptLayerManager.cpp:
+	.text       start:0x801900A8 end:0x80190CCC
+	.ctors      start:0x8065B77C end:0x8065B780
+
+MetroidPrime/ScriptObjects/CScriptTeamAiMgr.cpp:
+	.text       start:0x80190CCC end:0x80194298
+	.ctors      start:0x8065B780 end:0x8065B784
+
+MetroidPrime/ScriptObjects/CScriptMemoryRelay.cpp:
+	.text       start:0x80194298 end:0x80194670
+	.ctors      start:0x8065B784 end:0x8065B788
+
+MetroidPrime/CFrontEndUIDevelopment.cpp:
+	.text       start:0x80194670 end:0x8019837C
+	.ctors      start:0x8065B788 end:0x8065B78C
+
+MetroidPrime/CUniverseInfo.cpp:
+	.text       start:0x8019837C end:0x8019B714
+	.ctors      start:0x8065B78C end:0x8065B790
+
+MetroidPrime/ScriptObjects/CScriptAmbientAI.cpp:
+	.text       start:0x8019B714 end:0x8019C6D4
+	.ctors      start:0x8065B790 end:0x8065B794
+
+MetroidPrime/CSaveGameManager.cpp:
+	.text       start:0x8019C6D4 end:0x801A10D4
+	.ctors      start:0x8065B794 end:0x8065B798
+
+MetroidPrime/CSaveGameInterface.cpp:
+	.text       start:0x801A10D4 end:0x801A3708
+	.ctors      start:0x8065B798 end:0x8065B79C
+
+MetroidPrime/ScriptObjects/CDamageEffect.cpp:
+	.text       start:0x801A3B68 end:0x801A4400
+	.ctors      start:0x8065B7A0 end:0x8065B7A4
+
 MetroidPrime/CPauseScreenBackground.cpp:
 	.text       start:0x801A4400 end:0x801A4994
 	.ctors      start:0x8065B7A4 end:0x8065B7A8

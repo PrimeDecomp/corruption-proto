@@ -2467,6 +2467,9 @@ Kyoto/Basics/CStopwatch.cpp:
 	.sbss       start:0x8079B1B0 end:0x8079B1B8
 	.sdata2     start:0x807A1A90 end:0x807A1A98 align:4
 
+Kyoto/Basics/RAssert.cpp:
+	.text       start:0x804900E0 end:0x80490234
+
 Kyoto/Basics/CBasicsDolphin.cpp:
 	.text       start:0x8049024C end:0x804904E8
 	.sbss       start:0x8079B1B8 end:0x8079B1C0 align:4
@@ -2596,6 +2599,9 @@ Kyoto/Animation/CAnimMathUtils.cpp:
 	.text       start:0x8049E5E0 end:0x8049EAC0
 	.rodata     start:0x8069D398 end:0x8069D438
 	.sdata2     start:0x807A1B34 end:0x807A1B58 align:4
+
+Kyoto/Animation/CAnimPerSegmentData.cpp:
+	.text       start:0x8049EAC0 end:0x8049ED50
 
 Kyoto/Animation/CAnimPOIData.cpp:
 	.text       start:0x8049ED50 end:0x8049F4F4
@@ -2995,6 +3001,10 @@ Kyoto/Particles/CParticleDataFactory.cpp:
 Kyoto/Particles/CParticleGen.cpp:
 	.text       start:0x804EBFC8 end:0x804EC0A0
 	.sbss       start:0x8079B3F8 end:0x8079B400
+
+Kyoto/Particles/CParticleCollisionSignal.cpp:
+	.text       start:0x804EC0A0 end:0x804EC1F4
+	.ctors      start:0x8065BBD4 end:0x8065BBD8
 
 Kyoto/Particles/CParticleGlobals.cpp:
 	.text       start:0x804EC1F4 end:0x804EC320
@@ -3690,6 +3700,9 @@ Kyoto/Input/CRevolutionController.cpp:
 MetaRender/CCubeRenderer.cpp:
 	.text       start:0x80570B0C end:0x805802DC
 	.ctors      start:0x8065BC54 end:0x8065BC58
+
+Kyoto/IObjFactory.cpp:
+	.text       start:0x805802DC end:0x80580324
 
 MetroidPrime/CAnimData.cpp:
 	.text       start:0x80580324 end:0x80587F14

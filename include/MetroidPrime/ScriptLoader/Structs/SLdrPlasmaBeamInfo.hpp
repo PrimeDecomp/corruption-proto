@@ -12,11 +12,11 @@ struct SLdrPlasmaBeamInfo {
   ~SLdrPlasmaBeamInfo();
 
   int unknown_0xff713aad;   // 0xff713aad
-  CAssetId weaponSystem;    // 0x459ae4a8
-  CAssetId contactEffect;   // 0x4f387c49
-  CAssetId pulseEffect;     // 0xddd52e3a
-  CAssetId beamTexture;     // 0xc6f229c6
-  CAssetId glowTexture;     // 0x8f1a76c3
+  CAssetId weaponSystem;  // 0x459ae4a8
+  CAssetId contactEffect; // 0x4f387c49
+  CAssetId pulseEffect;   // 0xddd52e3a
+  CAssetId beamTexture;   // 0xc6f229c6
+  CAssetId glowTexture;   // 0x8f1a76c3
   float length;             // 0xc26c291c
   float radius;             // 0x78c507eb
   float expansionSpeed;     // 0xec773d1d
@@ -28,7 +28,7 @@ struct SLdrPlasmaBeamInfo {
   float travelSpeed;        // 0x3fed5e52
   CColor innerColor;        // 0x1afb2b73
   CColor outerColor;        // 0x9fd338fc
-  CAssetId beamStreaks;     // 0xaeb31af3
+  CAssetId beamStreaks;   // 0xaeb31af3
 };
 
 void LoadTypedefPlasmaBeamInfo(SLdrPlasmaBeamInfo& data, CInputStream& input);

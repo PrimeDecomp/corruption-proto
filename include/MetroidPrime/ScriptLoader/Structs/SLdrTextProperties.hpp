@@ -19,7 +19,7 @@ struct SLdrTextProperties {
   CColor foregroundColor;      // 0x3f39e635
   CColor outlineColor;         // 0x60d78569
   CColor geometryColor;        // 0x5908ef39
-  CAssetId defaultFont;        // 0x0db9f8b6
+  CAssetId defaultFont;      // 0x0db9f8b6
   int horizontalJustification; // 0x18dd95cd
   int verticalJustification;   // 0x42091548
   bool wrapText;               // 0x330573e9

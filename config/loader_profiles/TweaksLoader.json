@@ -1,0 +1,33 @@
+{
+  "template_ref": "99fd35d6e18c604406625d84c7626172f8cde108",
+  "sources": [
+    "SLdrTweakAutoMapper.cpp",
+    "SLdrTweakBall.cpp",
+    "SLdrTweakCameraBob.cpp",
+    "SLdrTweakGame.cpp",
+    "SLdrTweakGui.cpp",
+    "SLdrTweakGuiColors.cpp",
+    "SLdrTweakParticle.cpp",
+    "SLdrTweakPlayer.cpp",
+    "SLdrTweakPlayerGun.cpp",
+    "SLdrTweakPlayerRes.cpp",
+    "SLdrTweakSlideShow.cpp",
+    "SLdrTweakTargeting.cpp",
+    "Structs/SLdrControlCommands.cpp",
+    "Structs/SLdrRevolutionPhysicalControl.cpp",
+    "Structs/SLdrRevolutionControl.cpp",
+    "Structs/SLdrInventoryControls.cpp",
+    "Structs/SLdrMapControls.cpp",
+    "Structs/SLdrDebugControls.cpp",
+    "Structs/SLdrMiscControls.cpp",
+    "Structs/SLdrCameraControls.cpp",
+    "Structs/SLdrBallMiscControls.cpp",
+    "Structs/SLdrBallMovementControls.cpp",
+    "Structs/SLdrPlayerMiscControls.cpp",
+    "Structs/SLdrPlayerWeaponControls.cpp",
+    "Structs/SLdrPlayerMovementControls.cpp",
+    "Structs/SLdrPlayerControls.cpp",
+    "SLdrTweakPlayerControls.cpp"
+  ],
+  "aggregate": "TweaksLoaderDefinitions.inc"
+}

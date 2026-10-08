@@ -867,6 +867,9 @@ MetroidPrime/TypesMatch.cpp:
 	.text       start:0x801D5D68 end:0x801DA6D8
 	.ctors      start:0x8065B7D0 end:0x8065B7D4
 
+MetroidPrime/CDevelopmentMenu.cpp:
+	.text       start:0x801DA6D8 end:0x801DB8F0
+
 MetroidPrime/Player/CGMSinglePlayer.cpp:
 	.text       start:0x801DB8F0 end:0x801DBBB0
 	.ctors      start:0x8065B7D4 end:0x8065B7D8
@@ -1457,9 +1460,15 @@ MetroidPrime/ScriptObjects/CScriptAITaskPoint.cpp:
 	.text       start:0x802FDA3C end:0x802FE800
 	.ctors      start:0x8065BA08 end:0x8065BA0C
 
+MetroidPrime/Factories/CStateManagerAssetFactory.cpp:
+	.text       start:0x802FE800 end:0x802FEF4C
+
 MetroidPrime/Enemies/CFriendly.cpp:
 	.text       start:0x802FEF4C end:0x802FFB1C
 	.ctors      start:0x8065BA0C end:0x8065BA10
+
+MetroidPrime/CStateManagerCallbackLists.cpp:
+	.text       start:0x802FFB1C end:0x8030085C
 
 MetroidPrime/ScriptObjects/CScriptPhysicsDebris.cpp:
 	.text       start:0x8030085C end:0x803041C4
@@ -1477,9 +1486,15 @@ MetroidPrime/Player/CPlayerStateHelpers.cpp:
 	.text       start:0x80305130 end:0x80305184
 	.ctors      start:0x8065BA1C end:0x8065BA20
 
+MetroidPrime/CAreaFog.cpp:
+	.text       start:0x80305184 end:0x80305748
+
 MetroidPrime/ScriptObjects/CScriptActorMorph.cpp:
 	.text       start:0x80305748 end:0x80308934
 	.ctors      start:0x8065BA20 end:0x8065BA24
+
+MetroidPrime/CStringPropertyManager.cpp:
+	.text       start:0x80308934 end:0x80309050
 
 MetroidPrime/Enemies/CGunTurretBase.cpp:
 	.text       start:0x80309050 end:0x8030B2C8
@@ -3517,6 +3532,10 @@ MetroidPrime/CEulerAngles.cpp:
 Kyoto/Animation/CParticleResData.cpp:
 	.text       start:0x805610AC end:0x80561278
 
+Kyoto/Math/CVector4f.cpp:
+	.text       start:0x80561300 end:0x80561380
+	.ctors      start:0x8065BC48 end:0x8065BC4C
+
 Kyoto/Animation/CCECharacterInfo.cpp:
 	.text       start:0x80561380 end:0x80563AF4
 
@@ -3534,6 +3553,9 @@ Kyoto/Particles/CBurstFireDataFactory.cpp:
 
 MetroidPrime/Collision/CJointCollisionDescription.cpp:
 	.text       start:0x80566A30 end:0x80567328
+
+Kyoto/Animation/CSegIdPointerMap.cpp:
+	.text       start:0x80567328 end:0x805674E0
 
 Kyoto/Graphics/CMaterialDataFactory.cpp:
 	.text       start:0x805674E0 end:0x80567F4C

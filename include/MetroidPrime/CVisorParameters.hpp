@@ -13,8 +13,8 @@ public:
 
   CVisorParameters(bool b, uint visorFlags);
 
-  // Echoes has the same all-flags factory under this name (fn_8006D5BC here).
-  static CVisorParameters None() { return CVisorParameters(false, kVF_All); }
+  // Echoes has the same all-flags factory under this name. G2MEAB callers do not inline it.
+  static CVisorParameters None();
 
 private:
   uint x0_ : 31;

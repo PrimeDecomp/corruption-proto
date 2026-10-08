@@ -34,6 +34,7 @@ public:
   uchar* GetScales() { return mScales; }
   const uchar* GetScales() const { return mScales; }
 
+  int GetNumJoints() const { return mCount; }
   int GetStride() const { return mStride; }
 
   CQuaternion& Rotation(int index) {

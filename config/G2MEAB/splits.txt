@@ -621,6 +621,10 @@ MetroidPrime/Player/CPlayerEnergyDrain.cpp:
 	.text       start:0x80147600 end:0x80148228
 	.ctors      start:0x8065B6F0 end:0x8065B6F4
 
+MetroidPrime/Weapons/CIceImpact.cpp:
+	.text       start:0x80148228 end:0x801482C4
+	.ctors      start:0x8065B6F4 end:0x8065B6F8
+
 MetroidPrime/GameObjectLists.cpp:
 	.text       start:0x801482C4 end:0x80148720
 	.ctors      start:0x8065B6F8 end:0x8065B6FC
@@ -641,6 +645,9 @@ MetroidPrime/PathFinding/CPathFindRegion.cpp:
 
 MetroidPrime/PathFinding/CPathFindArea.cpp:
 	.text       start:0x8014E1F8 end:0x8015060C
+
+MetroidPrime/PathFinding/CPathFindDebug.cpp:
+	.text       start:0x8015060C end:0x80151858
 
 MetroidPrime/PathFinding/CPathFindSpline.cpp:
 	.text       start:0x80151858 end:0x80151F14
@@ -1066,6 +1073,9 @@ MetroidPrime/CMFGameLoader.cpp:
 MetroidPrime/CRulesManager.cpp:
 	.text       start:0x8021A5D8 end:0x8021C688
 
+MetroidPrime/PathFinding/CPathFindPointSearch.cpp:
+	.text       start:0x8021C688 end:0x8021C95C
+
 MetroidPrime/ScriptObjects/CScriptTimeKeyframe.cpp:
 	.text       start:0x8021C95C end:0x8021CED8
 	.ctors      start:0x8065B890 end:0x8065B894
@@ -1109,6 +1119,9 @@ MetroidPrime/ScriptObjects/CScriptSubtitles.cpp:
 MetroidPrime/ScriptObjects/CScriptGuiScreenFrontEndUI.cpp:
 	.text       start:0x80224F54 end:0x8022C2DC
 	.ctors      start:0x8065B8BC end:0x8065B8C0
+
+Kyoto/CDummyDvdRequest.cpp:
+	.text       start:0x8022C2DC end:0x8022C350
 
 MetroidPrime/Enemies/CSpacePirate.cpp:
 	.text       start:0x8022C350 end:0x8023E088

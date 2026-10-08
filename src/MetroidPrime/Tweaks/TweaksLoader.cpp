@@ -34,6 +34,12 @@ public:
 };
 extern IControllerType* gpController; // Guessed name, 0x80797108
 
+// Guessed names. Controller types in the input code's .sdata2 (0x807A26E4..0x807A26EC),
+// beside 'UNKN' (CRevolutionController.cpp); loaded, not folded, by the comparisons.
+extern const uint kControllerTypeCube;  // 'CUBE'
+extern const uint kControllerTypeRevn;  // 'REVN'
+extern const uint kControllerTypeChak;  // 'CHAK'
+
 // Only the string survives in the pool (lbl_80684260); no pointer is emitted.
 static const char* gkTweakContainer = "Standard.NTWK";
 CTweakContents* gpTweakLdrs;
@@ -149,12 +155,12 @@ void CreateTweakGlobals() {
   gpTweakTargeting =
       new ("TweaksLoader.cpp(3774) : ", nullptr) CTweakTargeting(gpTweakLdrs->mTargeting);
 
-  if (gpController->GetControllerType() == 'CHAK' ||
-      gpController->GetControllerType() == 'REVN') {
+  if (kControllerTypeChak == gpController->GetControllerType() ||
+      kControllerTypeRevn == gpController->GetControllerType()) {
     gpTweakPlayerControls = new ("TweaksLoader.cpp(3782) : ", nullptr)
         CTweakPlayerControls(gpTweakLdrs->mPlayerControls.revolutionControls);
     rs_debugger_printf("Using REVOLUTION control tweaks\n");
-  } else if (gpController->GetControllerType() == 'CUBE') {
+  } else if (kControllerTypeCube == gpController->GetControllerType()) {
     gpTweakPlayerControls = new ("TweaksLoader.cpp(3787) : ", nullptr)
         CTweakPlayerControls(gpTweakLdrs->mPlayerControls.gamecubeControls);
     rs_debugger_printf("Using GAMECUBE control tweaks\n");

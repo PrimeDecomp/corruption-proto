@@ -867,7 +867,7 @@ MetroidPrime/TypesMatch.cpp:
 	.text       start:0x801D5D68 end:0x801DA6D8
 	.ctors      start:0x8065B7D0 end:0x8065B7D4
 
-MetroidPrime/Player/CFrontEndGameMode.cpp:
+MetroidPrime/Player/CGMSinglePlayer.cpp:
 	.text       start:0x801DB8F0 end:0x801DBBB0
 	.ctors      start:0x8065B7D4 end:0x8065B7D8
 
@@ -1151,9 +1151,16 @@ MetroidPrime/CPlayerGuiManager.cpp:
 	.text       start:0x8025BC48 end:0x8025FC44
 	.ctors      start:0x8065B8E8 end:0x8065B8EC
 
+MetroidPrime/Player/CFrontEndGameMode.cpp:
+	.text       start:0x8025FC44 end:0x8025FD58
+	.ctors      start:0x8065B8EC end:0x8065B8F0
+
 MetroidPrime/ScriptObjects/CScriptDamageableTriggerOrientated.cpp:
 	.text       start:0x8025FD58 end:0x8026065C
 	.ctors      start:0x8065B8F0 end:0x8065B8F4
+
+MetroidPrime/Player/CPlayerOptions.cpp:
+	.text       start:0x8026065C end:0x8026075C
 
 MetroidPrime/ScriptObjects/CScriptRepulsor.cpp:
 	.text       start:0x8026075C end:0x80260B84

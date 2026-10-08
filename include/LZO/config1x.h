@@ -1,4 +1,4 @@
-/* lzo_ptr.c -- low-level pointer constructs
+/* config1x.h -- configuration for the LZO1X algorithm
 
    This file is part of the LZO real-time data compression library.
 
@@ -25,56 +25,82 @@
  */
 
 
+/* WARNING: this file should *not* be used by applications. It is
+   part of the implementation of the library and is subject
+   to change.
+ */
+
+
+#ifndef __LZO_CONFIG1X_H
+#define __LZO_CONFIG1X_H
+
+#if !defined(LZO1X) && !defined(LZO1Y) && !defined(LZO1Z)
+#  define LZO1X
+#endif
+
+#if !defined(__LZO_IN_MINILZO)
+#include <lzo1x.h>
+#endif
 #include "lzo_conf.h"
+#include "lzo_util.h"
 
 
 /***********************************************************************
 //
 ************************************************************************/
 
-LZO_PUBLIC(lzo_ptr_t)
-__lzo_ptr_linear(const lzo_voidp ptr)
-{
-	lzo_ptr_t p;
+#define LZO_EOF_CODE
+#undef LZO_DETERMINISTIC
 
-#if defined(__LZO_DOS16) || defined(__LZO_WIN16)
-    p = (((lzo_ptr_t)(_FP_SEG(ptr))) << (16 - __LZO_HShift)) + (_FP_OFF(ptr));
-#else
-    p = PTR_LINEAR(ptr);
+#define M1_MAX_OFFSET	0x0400
+#ifndef M2_MAX_OFFSET
+#define M2_MAX_OFFSET	0x0800
 #endif
+#define M3_MAX_OFFSET	0x4000
+#define M4_MAX_OFFSET	0xbfff
 
-	return p;
-}
+#define MX_MAX_OFFSET	(M1_MAX_OFFSET + M2_MAX_OFFSET)
+
+#define M1_MIN_LEN		2
+#define M1_MAX_LEN		2
+#define M2_MIN_LEN		3
+#ifndef M2_MAX_LEN
+#define M2_MAX_LEN		8
+#endif
+#define M3_MIN_LEN		3
+#define M3_MAX_LEN		33
+#define M4_MIN_LEN		3
+#define M4_MAX_LEN		9
+
+#define M1_MARKER		0
+#define M2_MARKER		64
+#define M3_MARKER		32
+#define M4_MARKER		16
 
 
 /***********************************************************************
 //
 ************************************************************************/
 
-LZO_PUBLIC(unsigned)
-__lzo_align_gap(const lzo_voidp ptr, lzo_uint size)
-{
-	lzo_ptr_t p, s, n;
-
-	assert(size > 0);
-
-    p = __lzo_ptr_linear(ptr);
-	s = (lzo_ptr_t) (size - 1);
-#if 0
-	assert((size & (size - 1)) == 0);
-    n = ((p + s) & ~s) - p;
-#else
-	n = (((p + s) / size) * size) - p;
+#ifndef MIN_LOOKAHEAD
+#define MIN_LOOKAHEAD		(M2_MAX_LEN + 1)
 #endif
 
-	assert((long)n >= 0);
-	assert(n <= s);
+#if defined(LZO_NEED_DICT_H)
 
-	return (unsigned)n;
-}
+#ifndef LZO_HASH
+#define LZO_HASH			LZO_HASH_LZO_INCREMENTAL_B
+#endif
+#define DL_MIN_LEN			M2_MIN_LEN
+#include "lzo_dict.h"
+
+#endif
 
 
+
+#endif /* already included */
 
 /*
 vi:ts=4:et
 */
+

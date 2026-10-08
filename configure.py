@@ -316,7 +316,7 @@ def LzoLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
         "lib": lib_name,
         "mw_version": "GC/2.7",
-        "cflags": cflags_runtime,
+        "cflags": [*cflags_runtime, "-i include/LZO"],
         "progress_category": "sdk",
         "objects": objects,
     }

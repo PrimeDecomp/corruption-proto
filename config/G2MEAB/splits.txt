@@ -3415,6 +3415,10 @@ Kyoto/Network/CBBASupport.cpp:
 	.text       start:0x8053EB74 end:0x80543CA8
 	.ctors      start:0x8065BC20 end:0x8065BC24
 
+Kyoto/Basics/CGuid.cpp:
+	.text       start:0x80543CA8 end:0x805446B8
+	.ctors      start:0x8065BC24 end:0x8065BC28
+
 Kyoto/Network/CBBACommon.cpp:
 	.text       start:0x805446B8 end:0x8054498C
 
@@ -3697,6 +3701,9 @@ Kyoto/Input/RevolutionIController.cpp:
 Kyoto/Input/CRevolutionController.cpp:
 	.text       start:0x8056F5B8 end:0x805708F4
 
+Kyoto/CAssetIdList.cpp:
+	.text       start:0x805708F4 end:0x80570B0C
+
 MetaRender/CCubeRenderer.cpp:
 	.text       start:0x80570B0C end:0x805802DC
 	.ctors      start:0x8065BC54 end:0x8065BC58
@@ -3863,6 +3870,12 @@ FMOD/fmod_codec_mpeg.cpp:
 	.text       start:0x805D8160 end:0x805D975C
 	.ctors      start:0x8065BC84 end:0x8065BC88
 
+FMOD/fmod_mpeg_common.cpp:
+	.text       start:0x805D975C end:0x805DA014
+
+FMOD/fmod_mpeg_synthesis.cpp:
+	.text       start:0x805DA014 end:0x805DB060
+
 FMOD/fmod_mpeg_layer2.cpp:
 	.text       start:0x805DB060 end:0x805DBDB8
 
@@ -3896,6 +3909,9 @@ FMOD/fmod_codec_user.cpp:
 FMOD/fmod_codec_wav.cpp:
 	.text       start:0x805E85D4 end:0x805E9924
 	.ctors      start:0x8065BCA0 end:0x8065BCA4
+
+FMOD/fmod_codec_imaadpcm.cpp:
+	.text       start:0x805E9924 end:0x805EAD1C
 
 FMOD/fmod_codec_wav_riff.cpp:
 	.text       start:0x805EAD1C end:0x805EB6EC

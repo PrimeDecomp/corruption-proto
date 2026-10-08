@@ -318,14 +318,14 @@ def ZlibLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 # score worse. Older-TRK differences remain in msghndlr, dispatch, msg, support and notify.
 cflags_trk = [
     *cflags_base,
+    "-char signed",
     "-use_lmw_stmw on",
     "-str reuse,readonly",
     "-common off",
     "-sdata 0",
     "-sdata2 0",
-    "-inline auto,deferred",
-    "-enum min",
     "-sdatathreshold 0",
+    "-inline auto,deferred",
     "-i include/TRK_MINNOW_DOLPHIN",
 ]
 
@@ -1611,9 +1611,9 @@ config.libs = [
         Object(NonMatching, "MetroTRK/target_options.c"),
         Object(NonMatching, "MetroTRK/mslsupp.c"),
         Object(Matching, "MetroTRK/udp_cc.c"),
-        Object(NonMatching, "MetroTRK/ddh_cc.c"),
+        Object(NonMatching, "MetroTRK/ddh_cc.c", extra_cflags=["-sdata 8", "-sdata2 8", "-sdatathreshold 8"]),
         Object(NonMatching, "MetroTRK/circle_buffer.c"),
-        Object(NonMatching, "MetroTRK/gdev_cc.c"),
+        Object(NonMatching, "MetroTRK/gdev_cc.c", extra_cflags=["-sdata 8", "-sdata2 8", "-sdatathreshold 8"]),
         Object(Matching, "MetroTRK/MWTrace.c"),
         Object(NonMatching, "MetroTRK/critical_section.c"),
     ]),

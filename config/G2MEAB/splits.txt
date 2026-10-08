@@ -4515,6 +4515,7 @@ MetroTRK/flush_cache.c:
 	.text       start:0x80653EF8 end:0x80653F30
 
 MetroTRK/mem_TRK.c:
+	.init       start:0x80003590 end:0x800035E4
 	.text       start:0x80653F30 end:0x80653FE8
 
 MetroTRK/targimpl.c:

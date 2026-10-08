@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-DSError TRKDoNotifyStopped(MessageCommandID cmd);
+DSError TRKDoNotifyStopped(int cmd);
 
 #ifdef __cplusplus
 }

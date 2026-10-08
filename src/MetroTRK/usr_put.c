@@ -5,7 +5,7 @@
 BOOL usr_puts_serial(const char* msg)
 {
 	BOOL connect_ = FALSE;
-	char c;
+	int c;
 	char buf[2];
 
 	while (!connect_ && (c = *msg++) != '\0') {

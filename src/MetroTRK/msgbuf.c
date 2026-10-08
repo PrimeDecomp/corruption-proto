@@ -72,7 +72,7 @@ void TRKReleaseBuffer(int idx)
 	}
 }
 
-void TRKResetBuffer(TRKBuffer* msg, u8 keepData)
+void TRKResetBuffer(TRKBuffer* msg, BOOL keepData)
 {
 	msg->length   = 0;
 	msg->position = 0;
@@ -100,7 +100,6 @@ DSError TRKSetBufferPosition(TRKBuffer* msg, u32 pos)
 	return error;
 }
 
-#pragma dont_inline on
 DSError TRKAppendBuffer(TRKBuffer* msg, const void* data, size_t length)
 {
 	DSError error = DS_NoError; // r31
@@ -134,7 +133,6 @@ DSError TRKAppendBuffer(TRKBuffer* msg, const void* data, size_t length)
 
 	return error;
 }
-#pragma dont_inline reset
 
 DSError TRKReadBuffer(TRKBuffer* msg, void* data, size_t length)
 {

@@ -12,7 +12,6 @@ DSError TRKDoStep(TRKBuffer*);
 DSError TRKDoContinue(TRKBuffer*);
 DSError TRKDoWriteRegisters(TRKBuffer*);
 DSError TRKDoReadRegisters(TRKBuffer*);
-DSError TRKDoFlushCache(TRKBuffer*);
 DSError TRKDoWriteMemory(TRKBuffer*);
 DSError TRKDoReadMemory(TRKBuffer*);
 DSError TRKDoSupportMask(TRKBuffer*);

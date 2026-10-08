@@ -2,6 +2,7 @@
 #define OS_DOLPHIN_DOLPHIN_TRK_H
 
 #include "dolphin/types.h"
+#include "stddef.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
 #ifdef __cplusplus

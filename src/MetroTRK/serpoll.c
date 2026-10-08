@@ -5,118 +5,28 @@
 #include "TRK_MINNOW_DOLPHIN/Os/dolphin/dolphin_trk_glue.h"
 #include "PowerPC_EABI_Support/MetroTRK/trk.h"
 
+void MWTRACE(int level, const char* fmt, ...);
+
 static TRKFramingState gTRKFramingState;
 
 void* gTRKInputPendingPtr;
 
-static inline BOOL serpoll_inline_00(TRKBuffer* buffer) {
-    if (buffer->length < 2) {
-        TRKStandardACK(buffer, DSMSG_ReplyNAK, DSREPLY_PacketSizeError);
-        if (gTRKFramingState.msgBufID != -1) {
-            TRKReleaseBuffer(gTRKFramingState.msgBufID);
-            gTRKFramingState.msgBufID = -1;
-        }
-        gTRKFramingState.buffer = NULL;
-        gTRKFramingState.receiveState = DSRECV_Wait;
-        return FALSE;
-    }
-    buffer->position = 0;
-    buffer->length--;
-    return TRUE;
-}
+DSError TRKTerminateSerialHandler(void) { return DS_NoError; }
 
-MessageBufferID TRKTestForPacket(void) {
-    s32 var_r29;
-    s32 var_r3;
-    s8 sp8;
-    s32 temp_r3;
-
-    var_r29 = 0;
-    var_r3 = TRKReadUARTPoll(&sp8);
-    while (var_r3 == 0 && var_r29 == 0) {
-        if (gTRKFramingState.receiveState != DSRECV_InFrame) {
-            gTRKFramingState.isEscape = FALSE;
-        }
-        switch (gTRKFramingState.receiveState) {
-            case DSRECV_Wait:
-                if (sp8 == 0x7E) {
-                    var_r29 = TRKGetFreeBuffer(&gTRKFramingState.msgBufID, &gTRKFramingState.buffer);
-                    gTRKFramingState.fcsType = 0;
-                    gTRKFramingState.receiveState = DSRECV_Found;
-                }
-                break;
-            case DSRECV_Found:
-                if (sp8 == 0x7E) {
-                    break;
-                }
-                gTRKFramingState.receiveState = DSRECV_InFrame;
-                /* fallthrough */
-            case DSRECV_InFrame:
-                if (sp8 == 0x7E) {
-                    if (gTRKFramingState.isEscape) {
-                        TRKStandardACK(gTRKFramingState.buffer, DSMSG_ReplyNAK, DSREPLY_EscapeError);
-                        if (gTRKFramingState.msgBufID != -1) {
-                            TRKReleaseBuffer(gTRKFramingState.msgBufID);
-                            gTRKFramingState.msgBufID = -1;
-                        }
-                        gTRKFramingState.buffer = NULL;
-                        gTRKFramingState.receiveState = DSRECV_Wait;
-                        break;
-                    }
-                    if (serpoll_inline_00(gTRKFramingState.buffer)) {
-                        temp_r3 = gTRKFramingState.msgBufID;
-                        gTRKFramingState.msgBufID = -1;
-                        gTRKFramingState.buffer = NULL;
-                        gTRKFramingState.receiveState = DSRECV_Wait;
-                        return temp_r3;
-                    }
-                    gTRKFramingState.receiveState = DSRECV_Wait;
-                } else {
-                    if (gTRKFramingState.isEscape) {
-                        sp8 ^= 0x20;
-                        gTRKFramingState.isEscape = FALSE;
-                    } else if (sp8 == 0x7D) {
-                        gTRKFramingState.isEscape = TRUE;
-                        break;
-                    }
-                    var_r29 = TRKAppendBuffer1_ui8(gTRKFramingState.buffer, sp8);
-                    gTRKFramingState.fcsType += sp8;
-                }
-                break;
-            case DSRECV_FrameOverflow:
-                if (sp8 == 0x7E) {
-                    if (gTRKFramingState.msgBufID != -1) {
-                        TRKReleaseBuffer(gTRKFramingState.msgBufID);
-                        gTRKFramingState.msgBufID = -1;
-                    }
-                    gTRKFramingState.buffer = NULL;
-                    gTRKFramingState.receiveState = DSRECV_Wait;
-                }
-                break;
-        }
-        var_r3 = TRKReadUARTPoll(&sp8);
-    }
-    return -1;
-}
-
-void TRKGetInput(void)
+DSError TRKInitializeSerialHandler(void)
 {
-    TRKBuffer* msgBuffer;
-    MessageBufferID id;
-    u8 command;
+    gTRKFramingState.msgBufID     = -1;
+    gTRKFramingState.receiveState = DSRECV_Wait;
+    gTRKFramingState.isEscape     = FALSE;
 
-    id = TRKTestForPacket();
-    if (id == -1)
-        return;
+    MWTRACE(1, "TRK_Packet_Header \t    %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_ReadMemory     %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_WriteMemory    %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_Connect \t    %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_ReplyAck\t    %ld bytes\n", 0x40);
+    MWTRACE(1, "TRK_CMD_ReadRegisters\t%ld bytes\n", 0x40);
 
-    msgBuffer = TRKGetBuffer(id);
-    TRKSetBufferPosition(msgBuffer, 0);
-    TRKReadBuffer1_ui8(msgBuffer, &command);
-    if (command < DSMSG_ReplyACK) {
-        TRKProcessInput(id);
-    } else {
-        TRKReleaseBuffer(id);
-    }
+    return DS_NoError;
 }
 
 void TRKProcessInput(int bufferIdx)
@@ -129,13 +39,51 @@ void TRKProcessInput(int bufferIdx)
     TRKPostEvent(&event);
 }
 
-DSError TRKInitializeSerialHandler(void)
+void TRKGetInput(void)
 {
-    gTRKFramingState.msgBufID     = -1;
-    gTRKFramingState.receiveState = DSRECV_Wait;
-    gTRKFramingState.isEscape     = FALSE;
+    MessageBufferID id;
 
-    return DS_NoError;
+    id = TRKTestForPacket();
+    if (id != -1) {
+        TRKGetBuffer(id);
+        TRKProcessInput(id);
+    }
 }
 
-DSError TRKTerminateSerialHandler(void) { return DS_NoError; }
+MessageBufferID TRKTestForPacket(void)
+{
+    int err;
+    int bufferId;
+    TRKBuffer* buffer;
+    u8 header[0x40];
+    u8 payload[0x880];
+
+    if (TRKPollUART() <= 0) {
+        return -1;
+    }
+
+    err = TRKGetFreeBuffer(&bufferId, &buffer);
+    MWTRACE(4, "TestForPacket : FreeBuffer is  %ld\n", err);
+    TRKSetBufferPosition(buffer, 0);
+
+    if (TRKReadUARTN(header, 0x40) == 0) {
+        TRKAppendBuffer_ui8(buffer, header, 0x40);
+        err = bufferId;
+        if (*(int*)header - 0x40 > 0) {
+            MWTRACE(1, "Reading payload %ld bytes\n", *(int*)header - 0x40);
+            if (TRKReadUARTN(payload, *(int*)header - 0x40) == 0) {
+                TRKAppendBuffer_ui8(buffer, payload, *(int*)header);
+            } else {
+                MWTRACE(8, "TestForPacket : Invalid size of packet hdr.size\n");
+                TRKReleaseBuffer(err);
+                err = -1;
+            }
+        }
+    } else {
+        MWTRACE(8, "TestForPacket : Invalid size of packet\n");
+        TRKReleaseBuffer(err);
+        err = -1;
+    }
+    MWTRACE(1, "TestForPacket returning %ld\n", err);
+    return err;
+}

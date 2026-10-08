@@ -52,7 +52,7 @@ void TRK_fill_mem(void *dest, int value, unsigned long length)
 
         cDest = (unsigned char *)(lDest + 1) - 1;
 
-        length &= 3;
+        length = length & 3;
     }
 
     if (length) {

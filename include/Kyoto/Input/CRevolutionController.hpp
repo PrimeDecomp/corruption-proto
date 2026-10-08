@@ -1,17 +1,17 @@
-#ifndef _CDOLPHINCONTROLLER
-#define _CDOLPHINCONTROLLER
+#ifndef _CREVOLUTIONCONTROLLER
+#define _CREVOLUTIONCONTROLLER
 
 #include "Kyoto/Input/IController.hpp"
 
-class CDolphinController : public IController {
+class CRevolutionController : public IController {
   static const uint skTypeUnknown;
   static const uint skTypeStandard;
   static const uint skTypeGBA;
   static const uint skTypeWavebird;
 
 public:
-  CDolphinController();
-  ~CDolphinController() override;
+  CRevolutionController();
+  ~CRevolutionController() override;
   void Poll() override;
   uint GetDeviceCount() const override;
   CControllerGamepadData& GetGamepadData(int controller) override;
@@ -40,4 +40,4 @@ private:
   uint x1cc_;
 };
 
-#endif // _CDOLPHINCONTROLLER
+#endif // _CREVOLUTIONCONTROLLER

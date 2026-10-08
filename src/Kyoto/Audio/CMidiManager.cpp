@@ -1,4 +1,4 @@
-#include "Kyoto/Audio/CSfxHandle.hpp"
+#include "Kyoto/Audio/CAudioHandle.hpp"
 #include "Kyoto/Audio/CMidiManager.hpp"
 
 #include "Kyoto/Audio/CAudioSys.hpp"
@@ -10,7 +10,7 @@ rstl::reserved_vector< CMidiManager::CMidiWrapper, 3 > CMidiManager::mMidiWrappe
 
 CMidiManager::CMidiWrapper::CMidiWrapper() : mSysHandle(0), mAvailable(true) {}
 
-const CSfxHandle& CMidiManager::CMidiWrapper::GetManagerHandle() const { return mMidiHandle; }
+const CAudioHandle& CMidiManager::CMidiWrapper::GetManagerHandle() const { return mMidiHandle; }
 
 const uint CMidiManager::CMidiWrapper::GetAudioSysHandle() const { return mSysHandle; }
 
@@ -22,17 +22,17 @@ void CMidiManager::CMidiWrapper::SetAvailable(const bool v) { mAvailable = v; }
 
 void CMidiManager::CMidiWrapper::SetAudioSysHandle(const uint handle) { mSysHandle = handle; }
 
-void CMidiManager::CMidiWrapper::SetMidiHandle(const CSfxHandle& handle) { mMidiHandle = handle; }
+void CMidiManager::CMidiWrapper::SetMidiHandle(const CAudioHandle& handle) { mMidiHandle = handle; }
 
 void CMidiManager::CMidiWrapper::SetSongId(const short id) { mSongId = id; }
 
-CSfxHandle CMidiManager::Play(const CMidiData& data, unsigned short fadeTime, bool stopExisting,
+CAudioHandle CMidiManager::Play(const CMidiData& data, unsigned short fadeTime, bool stopExisting,
                               short volume) {
   bool foundExisting = false;
   uint sysHandle = 0;
-  CSfxHandle handle = LocateHandle();
+  CAudioHandle handle = LocateHandle();
   if (!handle) {
-    return CSfxHandle();
+    return CAudioHandle();
   }
   CMidiWrapper& wrapper = mMidiWrappers[handle.GetIndex()];
   wrapper.SetAvailable(false);
@@ -69,7 +69,7 @@ CSfxHandle CMidiManager::Play(const CMidiData& data, unsigned short fadeTime, bo
   return handle;
 }
 
-void CMidiManager::Stop(const CSfxHandle& handle, ushort fadeTime) {
+void CMidiManager::Stop(const CAudioHandle& handle, ushort fadeTime) {
   if (!handle) {
     return;
   }
@@ -96,19 +96,19 @@ void CMidiManager::StopAll() {
   }
 }
 
-CSfxHandle CMidiManager::LocateHandle() {
+CAudioHandle CMidiManager::LocateHandle() {
   for (int i = 0; i < mMidiWrappers.size(); ++i) {
     if (mMidiWrappers[i].IsAvailable()) {
-      return CSfxHandle(i);
+      return CAudioHandle(i);
     }
   }
 
   if (mMidiWrappers.size() == mMidiWrappers.capacity()) {
-    return CSfxHandle();
+    return CAudioHandle();
   }
 
   mMidiWrappers.push_back(CMidiWrapper());
-  return CSfxHandle(mMidiWrappers.size() - 1);
+  return CAudioHandle(mMidiWrappers.size() - 1);
 }
 
 CMidiManager::CMidiData::CMidiData(CInputStream& in)

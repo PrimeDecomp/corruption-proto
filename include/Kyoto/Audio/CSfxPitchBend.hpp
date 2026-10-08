@@ -1,20 +1,20 @@
 #ifndef _CSFXPITCHBEND
 #define _CSFXPITCHBEND
 
-#include "Kyoto/Audio/CSfxHandle.hpp"
+#include "Kyoto/Audio/CAudioHandle.hpp"
 
 // Guessed name: a timed pitch transition owned by CSfxManager.
 class CSfxPitchBend {
 public:
-  CSfxPitchBend(const CSfxHandle& handle, ushort start, ushort target, float duration);
+  CSfxPitchBend(const CAudioHandle& handle, ushort start, ushort target, float duration);
   // Guessed method names, supported by the manager's update/apply/retire sequence.
   void Update(float dt);
   bool IsFinished() const;
-  const CSfxHandle& GetHandle() const { return mHandle; }
+  const CAudioHandle& GetHandle() const { return mHandle; }
   ushort GetPitch() const { return mPitch; }
 
 private:
-  CSfxHandle mHandle;
+  CAudioHandle mHandle;
   ushort mPitch;
   ushort mTargetPitch;
   float mTimeRemaining;

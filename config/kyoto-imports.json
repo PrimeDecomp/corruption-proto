@@ -361,8 +361,8 @@
       "mapped": false
     },
     {
-      "path": "Kyoto/Audio/CSfxHandle.cpp",
-      "mapped": false
+      "path": "Kyoto/Audio/CAudioHandle.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Audio/CSfxManager.cpp",
@@ -557,8 +557,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Input/CDolphinController.cpp",
-      "mapped": false
+      "path": "Kyoto/Input/CRevolutionController.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Input/CFinalInput.cpp",
@@ -573,8 +573,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Input/DolphinIController.cpp",
-      "mapped": false
+      "path": "Kyoto/Input/RevolutionIController.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Input/RumbleAdsr.cpp",

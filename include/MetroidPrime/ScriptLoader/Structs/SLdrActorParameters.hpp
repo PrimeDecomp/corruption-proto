@@ -15,10 +15,10 @@ struct SLdrActorParameters {
 
   SLdrLightParameters lighting;      // 0xb028db0e
   SLdrScannableParameters scannable; // 0x375bfd7c
-  CAssetId darkModel;              // 0xc0ba9e18
-  CAssetId darkSkin;               // 0x9f027d91
-  CAssetId echoModel;              // 0x6b1fbc3a
-  CAssetId echoSkin;               // 0xeb1d06be
+  CAssetId darkModel;                // 0xc0ba9e18
+  CAssetId darkSkin;                 // 0x9f027d91
+  CAssetId echoModel;                // 0x6b1fbc3a
+  CAssetId echoSkin;                 // 0xeb1d06be
   bool useGlobalRenderTime;          // 0x1499803c
   float fadeInTime;                  // 0x90aa341f
   float fadeOutTime;                 // 0x7c269ebc

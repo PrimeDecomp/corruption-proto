@@ -45,7 +45,7 @@ struct SLdrTweakGame {
   rstl::string instanceName;                         // 0x7fda1466
   rstl::string pakFile;                              // 0x2bd13ab3
   rstl::string asset;                                // 0xf8be005a
-  CAssetId unknown_0x38d91a6e;                     // 0x38d91a6e
+  CAssetId unknown_0x38d91a6e;                       // 0x38d91a6e
   float fieldofView;                                 // 0xfc93ceb8
   float fieldofView2Player;                          // 0x9fb2faa6
   bool disableDebugMenu;                             // 0xa9096914

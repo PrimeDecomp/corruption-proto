@@ -36,9 +36,9 @@ extern IControllerType* gpController; // Guessed name, 0x80797108
 
 // Guessed names. Controller types in the input code's .sdata2 (0x807A26E4..0x807A26EC),
 // beside 'UNKN' (CRevolutionController.cpp); loaded, not folded, by the comparisons.
-extern const uint kControllerTypeCube;  // 'CUBE'
-extern const uint kControllerTypeRevn;  // 'REVN'
-extern const uint kControllerTypeChak;  // 'CHAK'
+extern const uint kControllerTypeCube; // 'CUBE'
+extern const uint kControllerTypeRevn; // 'REVN'
+extern const uint kControllerTypeChak; // 'CHAK'
 
 // Only the string survives in the pool (lbl_80684260); no pointer is emitted.
 static const char* gkTweakContainer = "Standard.NTWK";

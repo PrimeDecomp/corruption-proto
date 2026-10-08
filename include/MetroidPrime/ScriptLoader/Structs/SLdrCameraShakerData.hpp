@@ -25,7 +25,7 @@ struct SLdrCameraShakerData {
   uint flagsCameraShaker;                    // 0xc3e75c5f
   float attenuationDistance;                 // 0x4d283ac5
   float duration;                            // 0x8b51e23f
-  CAssetId audioEffect;                    // 0xc2acb79e
+  CAssetId audioEffect;                      // 0xc2acb79e
   SLdrCameraShakerEnvelope horizontalMotion; // 0xd9eb71e0
   SLdrCameraShakerEnvelope verticalMotion;   // 0xc5b09632
   SLdrCameraShakerEnvelope forwardMotion;    // 0x21b704e3

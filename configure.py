@@ -1622,7 +1622,7 @@ config.libs = [
         Object(NonMatching, "Runtime/global_destructor_chain.c"),
         Object(NonMatching, "Runtime/CPlusLibPPC.cpp"),
         Object(NonMatching, "Runtime/NMWException.cpp"),
-        Object(NonMatching, "Runtime/ptmf.c"),
+        Object(Matching, "Runtime/ptmf.c"),
         Object(NonMatching, "Runtime/runtime.c"),
         Object(NonMatching, "Runtime/__init_cpp_exceptions.cpp"),
         Object(NonMatching, "Runtime/Gecko_ExceptionPPC.cpp"),

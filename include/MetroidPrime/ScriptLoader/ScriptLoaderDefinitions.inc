@@ -3943,7 +3943,7 @@ SLdrTweakBall_Camera::SLdrTweakBall_Camera()
   ballCameraChaseYawSpeed = 60.0f;
   ballCameraChaseDampenAngle = 90.0f;
   ballCameraChaseAnglePerSecond = 1200.0f;
-  ballCameraChaseLookAtOffset = CVector3f(0.0f, 1e+01f, 1.0f);
+  ballCameraChaseLookAtOffset = CVector3f(0.0f, 10.0f, 1.0f);
   ballCameraChaseSpringConstant = 20.0f;
   ballCameraChaseSpringMax = 5.0f;
   ballCameraChaseSpringTardis = 5.5f;
@@ -6055,9 +6055,9 @@ SLdrTweakGui_LogBook::SLdrTweakGui_LogBook()
   modelRotationSpeed = 120.0f;
   modelRotationClampLowerLimit = -80.0f;
   modelRotationClampUpperLimit = 80.0f;
-  modelLight1Position = CVector3f(1e+01f, 0.0f, 1e+01f);
+  modelLight1Position = CVector3f(10.0f, 0.0f, 10.0f);
   modelLight1Color = CColor(0.5f, 0.5f, 0.5f, 1.0f);
-  modelLight2Position = CVector3f(1e+01f, 0.0f, 1e+01f);
+  modelLight2Position = CVector3f(10.0f, 0.0f, 10.0f);
   modelLight2Color = CColor(0.25f, 0.25f, 0.25f, 1.0f);
   modelAmbientLightColor = CColor(0.25f, 0.25f, 0.25f, 1.0f);
 }
@@ -7502,7 +7502,7 @@ SLdrTweakPlayer_FirstPersonCamera::SLdrTweakPlayer_FirstPersonCamera()
   fallCameraPitchDownFull = 4.0f;
   fallCameraPitchDownAngle = 73.0f;
   darkLightPitch = 10.0f;
-  darkLightScale = CVector3f(2e+01f, 25.0f, 2e+01f);
+  darkLightScale = CVector3f(20.0f, 25.0f, 20.0f);
 }
 
 SLdrTweakPlayer_FirstPersonCamera::~SLdrTweakPlayer_FirstPersonCamera() {}
@@ -8175,9 +8175,9 @@ void LoadTypedefShockWaveInfo(SLdrShockWaveInfo& sldrThis, CInputStream& input) 
 
 SLdrTBeamInfo::SLdrTBeamInfo() : damageInfo() {
   delayBetweenShots = 0.2f;
-  damageInfo.normal.damageAmount = 1e+01f;
+  damageInfo.normal.damageAmount = 10.0f;
   damageInfo.normal.radiusDamageAmount = 5.0f;
-  damageInfo.charged.damageAmount = 1e+01f;
+  damageInfo.charged.damageAmount = 10.0f;
   damageInfo.charged.radiusDamageAmount = 5.0f;
 }
 

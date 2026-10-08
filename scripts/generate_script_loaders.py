@@ -13,9 +13,7 @@ Tweaks overrides.
 
 G2MEAB has no Tweaks REL: TweaksLoader.cpp (config/loader_profiles/TweaksLoader.json)
 reads the MiscTemplates Tweak* records, and their member records live in ScriptLoader.cpp.
-Asset IDs are 64-bit (CAssetId). The MP3Proto tweak templates carry retail or
-placeholder defaults, so constructor defaults extracted from the target constructors are
-patched into the resolved templates from config/G2MEAB/loader_native_defaults.json.
+Asset IDs are 64-bit (CAssetId).
 The property-count spelling (TWEAKS_INT_COUNT_STRUCTS, TWEAKS_USHORT_COUNT_STRUCTS) and
 NATIVE_UNREAD_MEMBERS are chosen per target reader.
 
@@ -254,16 +252,6 @@ NATIVE_UNREAD_MEMBERS: dict[str, tuple[tuple[int, str], ...]] = {
     ),
 }
 
-# Native constructor defaults that differ from the template defaults, keyed by template
-# name and "0xPID[/0xPID]" path. Extracted from the target constructors: the MP3Proto
-# tweak templates carry MP3 retail or placeholder defaults. null removes the default.
-NATIVE_DEFAULTS_PATH = (
-    Path(__file__).resolve().parent.parent / "config" / "G2MEAB" / "loader_native_defaults.json"
-)
-NATIVE_DEFAULTS: dict[str, dict] = (
-    json.loads(NATIVE_DEFAULTS_PATH.read_text()) if NATIVE_DEFAULTS_PATH.exists() else {}
-)
-
 # Every G2MEAB object loader re-stores its editor update flags after the out-of-line
 # SLdrEditorProperties constructor (LoadRelay 0x800BDEA4, LoadTimer, LoadAIHint,
 # LoadTrigger); G2ME01 does so only for some objects.
@@ -491,34 +479,6 @@ class Field:
     owner: str | None = None
 
 
-def apply_native_defaults(name: str, node: ET.Element) -> None:
-    """Replace resolved template defaults with the native constructor defaults."""
-    for path, value in NATIVE_DEFAULTS.get(name, {}).items():
-        prop = node
-        for pid in path.split("/"):
-            children = {
-                property_id(child): child for child in prop.findall("SubProperties/Element")
-            }
-            if integer(pid) not in children:
-                raise TemplateError(f"Missing native default property {path} in {name}")
-            prop = children[integer(pid)]
-        default = prop.find("DefaultValue")
-        index = len(prop)
-        if default is not None:
-            # Keep the element order, so restored instances still equal their archetype.
-            index = list(prop).index(default)
-            prop.remove(default)
-        if value is None:
-            continue
-        default = ET.Element("DefaultValue")
-        prop.insert(index, default)
-        if isinstance(value, dict):
-            for component, text in value.items():
-                ET.SubElement(default, component).text = text
-        else:
-            default.text = value
-
-
 def conditional_lines(chunks: Sequence[tuple[str | None, list[str]]]) -> list[str]:
     """Group adjacent fields under their shared build condition."""
     result: list[str] = []
@@ -633,7 +593,6 @@ class Generator:
             self.raw[name] = raw
         if name not in self.resolved:
             self.resolved[name] = self.resolve(self.raw[name], trail + (name,))
-            apply_native_defaults(name, self.resolved[name])
         return copy.deepcopy(self.resolved[name])
 
     def resolve(
@@ -845,7 +804,6 @@ class Generator:
                 raise TemplateError("Object name collision: " + name)
             used.add(name)
             cpp = "SLdr" + name
-            apply_native_defaults(name, node)
             self.apply_native_instance_defaults(cpp, node, is_object=True)
             self.add_struct(cpp, node, path, is_object=True)
             keys = sorted(key for key, value in self.objects.items() if value == path)

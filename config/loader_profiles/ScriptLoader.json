@@ -1,5 +1,5 @@
 {
-  "template_ref": "99fd35d6e18c604406625d84c7626172f8cde108",
+  "template_ref": "dc527056b0913d6aec6b16871422cfa3044e4e15",
   "sources": [
     "Structs/SLdrDamageInfo.cpp",
     "Structs/SLdrGuiWidgetProperties.cpp",

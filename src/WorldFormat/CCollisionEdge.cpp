@@ -7,3 +7,10 @@
  * and no named linked counterpart. Target parameter-store semantics verified individually despite
  * tiny fingerprint ambiguity. Next59CC34 reads an SAreaSurface bounds and four ushort fields.
  */
+
+#include "WorldFormat/CCollisionEdge.hpp"
+
+CCollisionEdge::CCollisionEdge(CInputStream& in)
+: mIndex1(in.Get< ushort >()), mIndex2(in.Get< ushort >()) {}
+
+CCollisionEdge::CCollisionEdge(ushort index1, ushort index2) : mIndex1(index1), mIndex2(index2) {}

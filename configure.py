@@ -313,6 +313,9 @@ def ZlibLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 
 
 # Provisional MetroTRK profile borrowed from the Mario Party 4 TRK_MINNOW_DOLPHIN build.
+# The src/MetroTRK sources and include/{TRK_MINNOW_DOLPHIN,PowerPC_EABI_Support,OdemuExi2,amcstubs}
+# headers also come from Mario Party 4; Echoes and Prime only carry mslsupp.c/nubinit.c, which
+# score worse. Older-TRK differences remain in msghndlr, dispatch, msg, support and notify.
 cflags_trk = [
     *cflags_base,
     "-use_lmw_stmw on",

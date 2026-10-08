@@ -98,12 +98,6 @@ COBBTree* CCollidableOBBTreeGroup::GetOBBTree(int idx) const {
   return mContainer->mTrees[idx].get();
 }
 
-void CRayCastResult::Transform(const CTransform4f& xf) {
-  mPoint = xf * mPoint;
-  CVector3f normal = xf.Rotate(mPlane.GetNormal());
-  mPlane = CPlane(mPoint, CUnitVector3f(normal.GetX(), normal.GetY(), normal.GetZ()));
-}
-
 CRayCastResult
 CCollidableOBBTreeGroup::CastRayInternal(const CInternalRayCastStructure& rayCast) const {
   CRayCastResult result;

@@ -17,44 +17,61 @@
 #include "rstl/math.hpp"
 
 CLight CWorldLight::GetAsCGraphicsLight() const {
-  CVector3f floatColor = mColor;
-  CColor color(floatColor[kDX], floatColor[kDY], floatColor[kDZ]);
-
   float q = mQ;
   if (mQ < FLT_EPSILON) {
     q = 10.f * FLT_EPSILON;
   }
 
-  if (mType == kWLT_LocalAmbient) {
-    for (int i = 0; i < 3; ++i) {
-      floatColor[i] *= q;
-    }
-    floatColor[kDX] = rstl::min_val(1.f, floatColor[kDX]);
-    floatColor[kDY] = rstl::min_val(1.f, floatColor[kDY]);
-    floatColor[kDZ] = rstl::min_val(1.f, floatColor[kDZ]);
-    CColor ambientColor(floatColor[kDX], floatColor[kDY], floatColor[kDZ]);
-    return CLight::BuildLocalAmbient(mPosition, ambientColor);
+  float r = q * mColor.GetRed();
+  float g = q * mColor.GetGreen();
+  float b = q * mColor.GetBlue();
+  float maxColor = rstl::max_val(r, rstl::max_val(g, b));
+  float intensity = (maxColor * q - mAlphaOffset) * mAlphaScale;
+  float alpha = rstl::min_val(1.f, rstl::max_val(0.f, intensity));
+  CColor color = mColor.WithAlphaOf(alpha);
+
+  if (mType == kWLT_LocalAmbient || mType == kWLT_LocalAmbient2) {
+    CColor ambientColor(rstl::min_val(1.f, r), rstl::min_val(1.f, g), rstl::min_val(1.f, b),
+                        color.GetAlpha());
+    CLight light = CLight::BuildLocalAmbient(mPosition, ambientColor);
+    light.SetColorProcessingMode(true);
+    return light;
   }
 
   if (mType == kWLT_Directional) {
-    return CLight::BuildDirectional(mDirection, color);
+    CLight light = CLight::BuildDirectional(mDirection, color);
+    light.SetColorProcessingMode(true);
+    return light;
   }
 
   if (mType == kWLT_Spot) {
     CLight light =
-        CLight::BuildSpot(mPosition, mDirection.AsNormalized(), color, mCutoffAngle / 2.f);
+        CLight::BuildSpot(mPosition, mDirection.AsNormalized(), color, mCutoffAngle * 0.5f);
     float quadratic = mFalloff == kFT_Quadratic ? 25000.f / q : 0.f;
     float linear = mFalloff == kFT_Linear ? (1.f / 0.004f) / q : 0.f;
     float constant = mFalloff == kFT_Constant ? 2.f / q : 0.f;
     light.SetAttenuation(constant, linear, quadratic);
+    light.SetColorProcessingMode(true);
+    return light;
+  }
+
+  if (mType == kWLT_Spot2) {
+    CLight light = CLight::BuildSpot(mPosition, mDirection.AsNormalized(), color, 180.f);
+    float quadratic = mFalloff == kFT_Quadratic ? 25000.f / q : 0.f;
+    float linear = mFalloff == kFT_Linear ? (1.f / 0.004f) / q : 0.f;
+    float constant = mFalloff == kFT_Constant ? 2.f / q : 0.f;
+    light.SetAttenuation(constant, linear, quadratic);
+    light.SetColorProcessingMode(true);
     return light;
   }
 
   float quadratic = mFalloff == kFT_Quadratic ? 25000.f / q : 0.f;
   float linear = mFalloff == kFT_Linear ? (1.f / 0.004f) / q : 0.f;
   float constant = mFalloff == kFT_Constant ? 2.f / q : 0.f;
-  return CLight::BuildCustom(mPosition, CVector3f(1.f, 0.f, 0.f), color, constant, linear,
-                             quadratic, 1.f, 0.f, 0.f);
+  CLight light = CLight::BuildCustom(mPosition, CVector3f(1.f, 0.f, 0.f), color, constant, linear,
+                                     quadratic, 1.f, 0.f, 0.f);
+  light.SetColorProcessingMode(true);
+  return light;
 }
 
 CWorldLight::CWorldLight(CInputStream& in)
@@ -62,14 +79,20 @@ CWorldLight::CWorldLight(CInputStream& in)
 , mColor(in)
 , mPosition(in)
 , mDirection(in)
+, mUp(in)
 , mQ(in.Get< float >())
 , mCutoffAngle(in.Get< float >())
-, x30_(in.Get< float >())
+, x34_(in.Get< float >())
 , mCastShadows(in.Get< bool >())
-, x38_(in.Get< float >())
+, x3c_(in.Get< float >())
 , mFalloff(static_cast< EFalloffType >(in.Get< uint >()))
-, x40_(in.Get< float >())
-, x44_(in.Get< uint >()) {}
+, x44_(in.Get< float >())
+, mAlphaOffset(in.Get< float >())
+, mAlphaScale(in.Get< float >())
+, x54_(in.Get< float >())
+, x58_(in.Get< float >())
+, x5c_(in.Get< uint >()) {}
 
 const CVector3f CWorldLight::kDefaultPosition(0.f, 0.f, 0.f);
 const CVector3f CWorldLight::kDefaultDirection(0.f, 1.f, 0.f);
+const CVector3f CWorldLight::kDefaultUp(0.f, 1.f, 0.f);

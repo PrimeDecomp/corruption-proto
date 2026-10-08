@@ -45,7 +45,7 @@ COBBTree::SIndexData::SIndexData(CInputStream& in)
 , mSurfaceMaterials(in)
 , mEdges(in)
 , mSurfaceIndices(in)
-, x60_(in)
+, mTriangleAdjacency(in)
 , mVertices(in) {}
 
 void COBBTree::BindIndexData() {
@@ -59,7 +59,7 @@ void COBBTree::BindIndexData() {
   mSurfaceMaterials = mIndexData.mSurfaceMaterials.data();
   mEdges = mIndexData.mEdges.data();
   mSurfaceIndices = mIndexData.mSurfaceIndices.data();
-  x28_ = mIndexData.x60_.data();
+  mTriangleAdjacency = mIndexData.mTriangleAdjacency.data();
   mVertices = mIndexData.mVertices.data();
   mOwnsArrays = false;
 }

@@ -72,7 +72,7 @@ public:
                int triangleCount, const u64* materials, const uchar* vertexMaterials,
                const uchar* edgeMaterials, const uchar* surfaceMaterials,
                const CCollisionEdge* edges, const ushort* surfaceIndices,
-               const ushort* extraIndices, const CVector3f* vertices);
+               const ushort* triangleAdjacency, const CVector3f* vertices);
   static void MakeFromMemory(void* buffer, uint bufferLength, CAreaOctTree** treeOut, bool* valid);
 
   Node GetRootNode() const { return Node(mTreeBuf, mAabb, *this, mTreeType); }

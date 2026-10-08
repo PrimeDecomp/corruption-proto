@@ -3,6 +3,9 @@
 
 #include "types.h"
 
+#include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/Basics/CBasics.hpp"
+
 #include "rstl/allocator_auto_ptr.hpp"
 #include "rstl/iterator.hpp"
 #include "rstl/pointer_iterator.hpp"
@@ -77,13 +80,25 @@ public:
 
   void push_back(const T& in) {
     if (mCount >= mCapacity) {
-      reserve(mCapacity != 0 ? mCapacity * 2 : 4);
+      verify_capacity_failed();
+    }
+    rstl::construct(mItems + mCount++, in);
+  }
+
+  void push_back_unsafe(const T& in) {
+    if (!(mCount < mCapacity)) {
+      verify_capacity_failed();
     }
     rstl::construct(mItems + mCount, in);
     ++mCount;
   }
 
-  void push_back_unsafe(const T& in) { rstl::construct(mItems + mCount++, in); }
+  void push_back_checked(const T& in) {
+    if (mCount >= mCapacity) {
+      verify_capacity_failed();
+    }
+    push_back_unsafe(in);
+  }
 
   void pop_back() {
     destroy(mItems + mCount - 1);
@@ -113,6 +128,17 @@ public:
 protected:
   template < typename In >
   inline void insert_into(iterator at, int n, In in);
+
+  // Dolphin vector.h (line 482): no auto resize, asserts when the capacity is exhausted.
+  void verify_capacity_failed() const {
+    CCallStack stack(0, "vector.h(482) : ", kUnknownType);
+    rs_log_assert_failure(&stack, "vector.h", 482, "Verify", "mSize < mCapacity",
+                          CBasics::Stringize("Auto vector resize is not supported on dolphin, "
+                                             "call reserve() yourself (capacity: %d)",
+                                             mCapacity));
+    rs_debugger_printf("Would have thrown exception: %s\n", "false");
+    RAssert_TriggerIllegalInstruction();
+  }
 };
 
 template < typename T, typename Alloc >

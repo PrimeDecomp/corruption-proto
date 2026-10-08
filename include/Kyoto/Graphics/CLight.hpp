@@ -34,6 +34,7 @@ public:
   void SetDirection(const CVector3f& dir);
   const CVector3f& GetDirection() const { return mDir; }
   void SetColor(const CColor& col);
+  void SetColorProcessingMode(bool enable);
   void SetAttenuation(float constant, float linear, float quadratic);
   void SetSpotCutoff(float cutoff); // Guessed name.
   float GetSpotCutoff() const { return mSpotCutoff; }
@@ -72,6 +73,7 @@ private:
   CVector3f mPos;
   CVector3f mDir;
   CColor mColor;
+  CColor mProcessedColor; // Prototype addition; see CLight_SetColorProcessingMode
   ELightType mType;
   float mSpotCutoff;
   float mDistC;
@@ -84,10 +86,11 @@ private:
   uint mLightId;
   mutable float mCachedRadius;
   mutable float mCachedIntensity;
+  bool mColorProcessing : 1; // Prototype addition
   mutable bool mIntensityDirty : 1;
   mutable bool mRadiusDirty : 1;
 };
-CHECK_SIZEOF(CLight, 0x50)
+CHECK_SIZEOF(CLight, 0x54)
 
 namespace rstl {
 RSTL_DECLARE_TRIVIALLY_DESTRUCTIBLE(CLight)

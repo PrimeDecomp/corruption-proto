@@ -61,5 +61,5 @@ private:
   rstl::auto_ptr< CGuiFrameModelDatabase > mModelDatabase;
   mutable bool mLoaded : 1;
 };
-CHECK_SIZEOF(CGuiFrame, 0x334)
+CHECK_SIZEOF(CGuiFrame, 0x354)
 #endif // _CGUIFRAME

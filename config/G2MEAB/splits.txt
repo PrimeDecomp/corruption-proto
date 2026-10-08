@@ -3132,10 +3132,10 @@ rstl/rstl_strings.cpp:
 	.ctors      start:0x8065BBE8 end:0x8065BBEC
 
 rstl/RstlExtras.cpp:
-	.text       start:0x8050511C end:0x805061F0
+	.text       start:0x8050511C end:0x805061B4
 
 Kyoto/Streams/CMemoryInStream.cpp:
-	.text       start:0x805061F0 end:0x80506234
+	.text       start:0x805061B4 end:0x80506234
 
 Kyoto/Streams/CMemoryStreamOut.cpp:
 	.text       start:0x80506234 end:0x805063A0

@@ -351,6 +351,8 @@ public:
   static float GetFPS();
   static void SetExternalTimeProvider(CTimeProvider* provider);
   static void DisableAllLights();
+  static void SetLightingMode(int mode);
+  static void SetLightingModeAndColor(int mode, CColor color);
 
   static void SetAmbientColor(const CColor&);
   static void SetFog(ERglFogMode mode, float startz, float endz, const CColor& color);

@@ -15,6 +15,7 @@ CLight::CLight(ELightType type, const CVector3f& position, const CVector3f& dire
 : mPos(position)
 , mDir(direction)
 , mColor(color)
+, mProcessedColor(color.GetRedu8(), color.GetGreenu8(), color.GetBlueu8(), 0)
 , mType(type)
 , mSpotCutoff(cutoff)
 , mDistC(0.f)
@@ -27,6 +28,7 @@ CLight::CLight(ELightType type, const CVector3f& position, const CVector3f& dire
 , mLightId(0)
 , mCachedRadius(0.f)
 , mCachedIntensity(0.f)
+, mColorProcessing(false)
 , mIntensityDirty(true)
 , mRadiusDirty(true) {}
 
@@ -36,6 +38,7 @@ CLight::CLight(ELightType type, const CVector3f& position, const CVector3f& dire
 : mPos(position)
 , mDir(direction)
 , mColor(color)
+, mProcessedColor(color.GetRedu8(), color.GetGreenu8(), color.GetBlueu8(), 0)
 , mType(type)
 , mSpotCutoff(0.f)
 , mDistC(distC)
@@ -48,6 +51,7 @@ CLight::CLight(ELightType type, const CVector3f& position, const CVector3f& dire
 , mLightId(0)
 , mCachedRadius(0.f)
 , mCachedIntensity(0.f)
+, mColorProcessing(false)
 , mIntensityDirty(true)
 , mRadiusDirty(true) {}
 
@@ -96,7 +100,29 @@ void CLight::SetAngleAttenuation(float constant, float linear, float quadratic) 
 }
 
 void CLight::SetColor(const CColor& col) {
+  if (col == mColor) {
+    return;
+  }
   mColor = col;
+  CColor processed = mColor;
+  if (!mColorProcessing) {
+    processed = CColor(processed.GetRedu8(), processed.GetGreenu8(), processed.GetBlueu8(), 0);
+  }
+  mProcessedColor = processed;
+  mRadiusDirty = true;
+  mIntensityDirty = true;
+}
+
+void CLight::SetColorProcessingMode(bool enable) {
+  if (enable == mColorProcessing) {
+    return;
+  }
+  mColorProcessing = enable;
+  CColor processed = mColor;
+  if (!mColorProcessing) {
+    processed = CColor(processed.GetRedu8(), processed.GetGreenu8(), processed.GetBlueu8(), 0);
+  }
+  mProcessedColor = processed;
   mRadiusDirty = true;
   mIntensityDirty = true;
 }
@@ -152,8 +178,10 @@ float CLight::GetIntensity() const {
     if (mType == kLT_Custom) {
       coef = mAngleC;
     }
-    mCachedIntensity =
-        coef * rstl::max_val(mColor.GetRed(), rstl::max_val(mColor.GetGreen(), mColor.GetBlue()));
+    mCachedIntensity = coef * (CCast::ToReal32(rstl::max_val(
+                                   rstl::max_val(mProcessedColor.GetRedu8(), mProcessedColor.GetGreenu8()),
+                                   rstl::max_val(mProcessedColor.GetBlueu8(), mProcessedColor.GetAlphau8()))) /
+                               255.f);
   }
   return mCachedIntensity;
 }

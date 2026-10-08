@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+class CSimplePool;
+
 #include "Kyoto/Graphics/CCubeMaterial.hpp"
 #include "Kyoto/Graphics/CCubeSurface.hpp"
 #include "Kyoto/Math/CAABox.hpp"
@@ -64,6 +66,10 @@ public:
              const void* materialData, const void* positions, const void* normals,
              const void* colors, const void* uvs, const void* compressedUvs, const CAABox& bounds,
              uchar visorFlags, bool texturesLoaded, uint idx);
+  // Prototype constructor: textures come from the object store instead of a token vector.
+  CCubeModel(CSimplePool* pool, rstl::vector< void* >* surfaces, const void* materialData,
+             const void* positions, const void* normals, const void* colors, const void* uvs,
+             const CAABox& bounds, uchar visorFlags, bool texturesLoaded, uint idx);
 
   static void SetRenderModelBlack(bool v);
   static void SetModelWireframe(bool v);

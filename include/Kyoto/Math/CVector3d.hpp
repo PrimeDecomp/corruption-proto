@@ -2,6 +2,7 @@
 #define _CVECTOR3D
 
 #include "Kyoto/Math/CVector3f.hpp"
+#include "rstl/construct.hpp"
 
 class CMotionState;
 
@@ -15,6 +16,9 @@ public:
   CVector3d AsNormalized() const;
   CVector3f AsCVector3f() const;
   static const CVector3d& Zero() { return sZeroVector; }
+
+  CVector3d& operator*=(double scale);
+  CVector3d& operator+=(const CVector3d& other);
 
   double GetX() const { return mX; }
   double GetY() const { return mY; }
@@ -43,5 +47,11 @@ CVector3d operator+(const CVector3d& lhs, const CVector3d& rhs);
 CVector3d operator-(const CVector3d& lhs, const CVector3d& rhs);
 CVector3d operator-(const CVector3d& other);
 CVector3d operator*(double lhs, const CVector3d& rhs);
+CVector3d operator*(const CVector3d& lhs, double rhs);
+bool operator==(const CVector3d& lhs, const CVector3d& rhs);
+
+namespace rstl {
+RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(CVector3d)
+} // namespace rstl
 
 #endif // _CVECTOR3D

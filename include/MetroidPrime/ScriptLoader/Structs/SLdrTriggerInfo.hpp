@@ -12,9 +12,9 @@ struct SLdrTriggerInfo {
   ~SLdrTriggerInfo();
 
   uint detectionFlagsTriggerDetection; // 0x97c0611f
-  uint effectFlagsTriggerEffect; // 0x50224907
-  SLdrDamageInfo damage; // 0x337f9524
-  CVector3f forceField; // 0x20927e9b
+  uint effectFlagsTriggerEffect;       // 0x50224907
+  SLdrDamageInfo damage;               // 0x337f9524
+  CVector3f forceField;                // 0x20927e9b
 };
 
 void LoadTypedefTriggerInfo(SLdrTriggerInfo& data, CInputStream& input);

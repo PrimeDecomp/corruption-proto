@@ -28,8 +28,8 @@ struct SLdrMotionInterpolationMethod {
   SLdrMotionInterpolationMethod();
   ~SLdrMotionInterpolationMethod();
 
-  int motionType; // 0x948af571
-  SLdrPathInterpolation path; // 0x79de4ba5
+  int motionType;                        // 0x948af571
+  SLdrPathInterpolation path;            // 0x79de4ba5
   SLdrInterpolationMethod motionControl; // 0x287f9f45
 };
 

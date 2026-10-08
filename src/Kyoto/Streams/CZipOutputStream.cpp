@@ -31,7 +31,7 @@ bool CZipOutputStream::Process(bool finish) {
     rs_log_assert_failure(&stack, "CZipOutputStream.cpp", 40, "Verify", "false",
                           "kException_OutputError");
     rs_debugger_printf("Would have thrown exception: %s\n", "kException_OutputError");
-    fn_80491108();
+    RAssert_TriggerIllegalInstruction();
   }
   const unsigned int remaining = mStream->avail_out;
   if (sizeof(output) - remaining != 0) {

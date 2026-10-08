@@ -12,13 +12,13 @@ struct SLdrPlatformMotionProperties {
   ~SLdrPlatformMotionProperties();
 
   SLdrSplineType motionSplineType; // 0x493d6a2d
-  SLdrSpline motionControlSpline; // 0x27e5f874
-  float motionSplineDuration; // 0xfd1e2f56
-  float initialTime; // 0xa5753d52
-  uint motionFlagsPlatformMotion; // 0xae80628f
-  SLdrSpline rollControlSpline; // 0x628bdf0f
-  SLdrSpline yawControlSpline; // 0x78d03a32
-  SLdrSpline pitchControlSpline; // 0xb4a2e15a
+  SLdrSpline motionControlSpline;  // 0x27e5f874
+  float motionSplineDuration;      // 0xfd1e2f56
+  float initialTime;               // 0xa5753d52
+  uint motionFlagsPlatformMotion;  // 0xae80628f
+  SLdrSpline rollControlSpline;    // 0x628bdf0f
+  SLdrSpline yawControlSpline;     // 0x78d03a32
+  SLdrSpline pitchControlSpline;   // 0xb4a2e15a
 };
 
 void LoadTypedefPlatformMotionProperties(SLdrPlatformMotionProperties& data, CInputStream& input);

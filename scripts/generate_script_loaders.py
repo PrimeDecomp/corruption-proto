@@ -1,13 +1,13 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.11"
-# dependencies = []
+# dependencies = ["clang-format"]
 # ///
 """Generate Corruption prototype SLdr headers and readers from XML templates.
 
 Ported from the Echoes decompilation's scripts/generate_script_loaders.py at
-PrimeDecomp/echoes b90d6c13b3ef082f49bcd5979f310770ef8ea063. G2MEAB changes: reads
-MP3Proto (Game="CorruptionProto"), reports unknown properties through rs_bba_printf,
+PrimeDecomp/echoes 7533b7707e3ca1e5b45bddb3ff2c458c15dfe1d9. G2MEAB changes: reads
+MP3Proto (Game="CorruptionProto"), reports unknown properties through CBBASupport_Printf,
 re-stores the EditorProperties update flags in every object, and drops the G2ME01 and
 Tweaks overrides.
 
@@ -37,6 +37,8 @@ import io
 import json
 import math
 import re
+import shutil
+import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -953,7 +955,7 @@ class Generator:
             lines += [f"case 0x{hash_value:08x}:", f"  {target} = {native};", "  break;"]
         lines += [
             "default:",
-            f'  rs_bba_printf("Unknown enum hash 0x%08x for {label} in {prop.owner} loader.\\n", value);',
+            f'  CBBASupport_Printf("Unknown enum hash 0x%08x for {label} in {prop.owner} loader.\\n", value);',
             "  break;",
             "}",
         ]
@@ -1235,7 +1237,7 @@ class Generator:
         lines.extend(
             [
                 "    default:",
-                '      rs_bba_printf("Unknown property 0x%08x in '
+                '      CBBASupport_Printf("Unknown property 0x%08x in '
                 + self.diagnostic_name(struct)
                 + ' loader.\\n", propertyId);',
                 "      input.ReadBytes(nullptr, propertySize);",
@@ -1486,6 +1488,34 @@ def profile_files(
     return selected
 
 
+def format_files(files: dict[str, str], output: Path) -> dict[str, str]:
+    """Run clang-format so output is compared and written in the repository style.
+
+    The style file is found from where each file will be written; a .inc fragment
+    holds statements and is formatted as C++ source.
+    """
+    executable = shutil.which("clang-format")
+    if executable is None:
+        raise TemplateError("clang-format not found on PATH")
+    result: dict[str, str] = {}
+    for name, content in files.items():
+        target = (output / name).resolve()
+        if target.suffix == ".inc":
+            target = target.with_suffix(".cpp")
+        completed = subprocess.run(
+            [executable, "--assume-filename=" + str(target)],
+            input=content.encode("utf-8"),
+            capture_output=True,
+        )
+        if completed.returncode != 0:
+            raise TemplateError(
+                f"clang-format failed on {name}: "
+                + completed.stderr.decode("utf-8", "replace").strip()
+            )
+        result[name] = completed.stdout.decode("utf-8").replace("\r\n", "\n")
+    return result
+
+
 def output_differences(files: dict[str, str], output: Path) -> list[str]:
     """List missing or stale generated files without modifying the destination."""
     return [
@@ -1609,6 +1639,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                     {n: c for n, c in files.items() if n.endswith(".cpp")},
                 )
             )
+        outputs = [(path, format_files(output, path)) for path, output in outputs]
         if args.check:
             stale = [
                 str(path / name)

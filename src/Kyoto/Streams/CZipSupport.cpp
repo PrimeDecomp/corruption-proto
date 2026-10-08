@@ -28,7 +28,7 @@ bool CZipSupport::Decompress(const void* source, unsigned int sourceLength, void
     rs_log_assert_failure(&stack, "CZipSupport.cpp", 67, "Verify", "err == Z_OK",
                           "Error in inflateInit");
     rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    fn_80491108();
+    RAssert_TriggerIllegalInstruction();
   }
 
   stream.next_out = static_cast< unsigned char* >(output);
@@ -43,7 +43,7 @@ bool CZipSupport::Decompress(const void* source, unsigned int sourceLength, void
                             "err == Z_OK || err == Z_STREAM_END",
                             "CInputStream::kException_StreamError");
       rs_debugger_printf("Would have thrown exception: %s\n", "false");
-      fn_80491108();
+      RAssert_TriggerIllegalInstruction();
     }
   }
   inflateEnd(&stream);

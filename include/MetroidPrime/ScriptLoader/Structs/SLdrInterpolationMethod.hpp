@@ -11,10 +11,10 @@ struct SLdrInterpolationMethod {
   ~SLdrInterpolationMethod();
 
   int interpolationControlType; // 0x09b5957d
-  SLdrSpline controlSpline; // 0x15567fe7
-  float easeIn; // 0xb08d3237
-  float easeOut; // 0x67e3836a
-  float duration; // 0x8b51e23f
+  SLdrSpline controlSpline;     // 0x15567fe7
+  float easeIn;                 // 0xb08d3237
+  float easeOut;                // 0x67e3836a
+  float duration;               // 0x8b51e23f
 };
 
 void LoadTypedefInterpolationMethod(SLdrInterpolationMethod& data, CInputStream& input);

@@ -1569,6 +1569,9 @@ MetroidPrime/Enemies/CPhazonPuddle.cpp:
 	.text       start:0x80330414 end:0x80337498
 	.ctors      start:0x8065BA5C end:0x8065BA60
 
+MetroidPrime/CScalarControllers.cpp:
+	.text       start:0x80337498 end:0x80337918
+
 MetroidPrime/ScriptObjects/CScriptPathControl.cpp:
 	.text       start:0x80337918 end:0x80338160
 	.ctors      start:0x8065BA60 end:0x8065BA64
@@ -1645,9 +1648,15 @@ MetroidPrime/Enemies/CNoseTurret.cpp:
 	.text       start:0x80357900 end:0x803599AC
 	.ctors      start:0x8065BAA8 end:0x8065BAAC
 
+MetroidPrime/CThreeLinkIkChain.cpp:
+	.text       start:0x803599AC end:0x8035AFD8
+
 MetroidPrime/CFootTracking.cpp:
 	.text       start:0x8035AFD8 end:0x8035CB70
 	.ctors      start:0x8065BAAC end:0x8065BAB0
+
+MetroidPrime/CTwoLinkIkChain.cpp:
+	.text       start:0x8035CB70 end:0x8035DABC
 
 MetroidPrime/ScriptObjects/CScriptWeaponGenerator.cpp:
 	.text       start:0x8035DABC end:0x8035E5E8

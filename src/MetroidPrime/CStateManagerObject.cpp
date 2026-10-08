@@ -1,16 +1,15 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
-// .text: 0x80298128..0x8029B708 (77 native functions).
+// .text: 0x80298128..0x8029B708 (77 native functions). Listed below are the ones not yet
+// implemented.
 // Source identity: asserted target basename; inferred root placement.
 // Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x80298128 +0x8: state manager object setter at1130; leading source accessor retained
 // 0x80298130 +0x20: owned native method/helper retained; exact source-level name unresolved
 // 0x80298150 +0x20: owned native method/helper retained; exact source-level name unresolved
-// 0x80298170 +0x8: state manager object player getter at50
+// 0x80298170 +0x8: getter at 0x1130
 // 0x80298178 +0x8: owned native method/helper retained; exact source-level name unresolved
 // 0x80298180 +0x8: owned native method/helper retained; exact source-level name unresolved
 // 0x80298188 +0x8: owned native method/helper retained; exact source-level name unresolved
-// 0x80298190 +0x8: owned native method/helper retained; exact source-level name unresolved
-// 0x80298198 +0x8: owned native method/helper retained; exact source-level name unresolved
 // 0x802981A0 +0x8: owned native method/helper retained; exact source-level name unresolved
 // 0x802981A8 +0x8: owned native method/helper retained; exact source-level name unresolved
 // 0x802981B0 +0xB4: owned native method/helper retained; exact source-level name unresolved
@@ -40,7 +39,6 @@
 // 0x80299824 +0x54: owned native method/helper retained; exact source-level name unresolved
 // 0x80299878 +0x8: owned native method/helper retained; exact source-level name unresolved
 // 0x80299880 +0x14C: owned native method/helper retained; exact source-level name unresolved
-// 0x802999CC +0x13C: allocate unique object ID; original objectlist-full assertion389
 // 0x80299B08 +0x8: owned native method/helper retained; exact source-level name unresolved
 // 0x80299B10 +0x8: owned native method/helper retained; exact source-level name unresolved
 // 0x80299B18 +0x1B0: owned native method/helper retained; exact source-level name unresolved
@@ -55,8 +53,6 @@
 // 0x8029A1F4 +0x40: owned native method/helper retained; exact source-level name unresolved
 // 0x8029A234 +0x64: owned native method/helper retained; exact source-level name unresolved
 // 0x8029A298 +0x88: owned native method/helper retained; exact source-level name unresolved
-// 0x8029A320 +0x30: owned native method/helper retained; exact source-level name unresolved
-// 0x8029A350 +0x30: owned native method/helper retained; exact source-level name unresolved
 // 0x8029A380 +0x10: owned native method/helper retained; exact source-level name unresolved
 // 0x8029A390 +0x10: owned native method/helper retained; exact source-level name unresolved
 // 0x8029A3A0 +0x10: owned native method/helper retained; exact source-level name unresolved
@@ -79,3 +75,39 @@
 // 0x8029B4F4 +0x17C: owned native method/helper retained; exact source-level name unresolved
 // 0x8029B670 +0x68: owned native method/helper retained; exact source-level name unresolved
 // 0x8029B6D8 +0x30: registered static initializer; .ctors8065B964,seven independent SDA constants
+
+#include "MetroidPrime/CStateManagerObject.hpp"
+
+#include "Kyoto/Alloc/Assert.hpp"
+
+const CStringPropertyManager* CStateManagerObject::GetStringPropertyManager() const {
+  return mStringPropertyManager.GetPtr();
+}
+
+CStringPropertyManager* CStateManagerObject::StringPropertyManager() {
+  return mStringPropertyManager.GetPtr();
+}
+
+CEntity* CStateManagerObject::ObjectById(TUniqueId uid) {
+  return mObjectLists[0]->GetObjectById(uid);
+}
+
+const CEntity* CStateManagerObject::GetObjectById(TUniqueId uid) const {
+  return GetAllObjectList().GetObjectById(uid);
+}
+
+// Unlike Echoes, the generation is reset to zero rather than bumped, so a slot's ids repeat.
+TUniqueId CStateManagerObject::AllocateUniqueId() {
+  ushort startId = mLastUniqueId;
+  ushort id;
+  do {
+    id = mLastUniqueId;
+    mLastUniqueId = (id + 1) % 2048;
+    RS_VERIFY_THROW(389, mLastUniqueId != startId, false, "Object list is full");
+  } while (mAllocatedObjectIndices[id]);
+
+  ushort& generation = mObjectIndexArray[id];
+  generation = 0;
+  mAllocatedObjectIndices[id] = true;
+  return TUniqueId(id | (generation << 16));
+}

@@ -77,36 +77,3 @@ void CAuiMeter::UpdateMeterWorkers() {
     }
   }
 }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern "C" int fn_80481768(int obj, int val);
-extern "C" int fn_80481768(int obj, int val) {
-    if (obj) {
-        CMemory::Free((const void*)*(int*)((char*)obj + 0xc));
-        if ((short)val > 0) {
-            CMemory::Free((const void*)obj);
-        }
-    }
-    return obj;
-}
-
-extern "C" int fn_80481DFC();
-extern "C" int fn_80481DFC() {
-    return 0x4d455452;
-}
-
-extern "C" bool fn_80481E08();
-extern "C" bool fn_80481E08() {
-    return false;
-}
-
-extern "C" bool fn_80481E10(int obj);
-extern "C" bool fn_80481E10(int obj) {
-    return (*(unsigned char*)((char*)obj + 0xba)) >> 6 & 1;
-}
-
-extern "C" void fn_80481E1C();
-extern "C" void fn_80481E1C() {
-}
-

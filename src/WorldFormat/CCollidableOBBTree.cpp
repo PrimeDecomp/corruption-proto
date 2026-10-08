@@ -806,20 +806,3 @@ bool CCollidableOBBTree::LineIntersectsLeaf(const COBBTree::CLeafData& leaf,
 }
 
 uint CCollidableOBBTree::GetTableIndex() const { return sTableIndex; }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern unsigned char lbl_806E24A8[40];
-extern "C" void fn_80475DDC(int, int);
-extern "C" int fn_805ABB24(int obj, int val);
-extern "C" int fn_805ABB24(int obj, int val) {
-    if (obj) {
-        *(int*)obj = (int)lbl_806E24A8;
-        fn_80475DDC(obj, 0);
-        if ((short)val > 0) {
-            CMemory::Free((const void*)obj);
-        }
-    }
-    return obj;
-}
-

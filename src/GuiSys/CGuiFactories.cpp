@@ -54,30 +54,3 @@ CGuiWidget* FGuiWidgetFactoryInGame(FourCC type, CGuiFrame* frame, CInputStream&
     return nullptr;
   }
 }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern unsigned char lbl_806B1B80[12];
-extern unsigned char lbl_806B1B8C[12];
-extern unsigned char lbl_806CE2A0[16];
-extern "C" void fn_80483970(int, int);
-extern "C" int fn_8048286C(int obj, int val);
-extern "C" int fn_8048286C(int obj, int val) {
-    if (obj) {
-        *(int*)obj = (int)lbl_806CE2A0;
-        if ((unsigned int)*(int*)((char*)obj + 0x4) != 0) {
-            fn_80483970(*(int*)((char*)obj + 0x4), 1);
-        }
-        if ((unsigned int)obj != 0) {
-            *(int*)obj = (int)lbl_806B1B8C;
-            if ((unsigned int)obj != 0) {
-                *(int*)obj = (int)lbl_806B1B80;
-            }
-        }
-        if ((short)val > 0) {
-            CMemory::Free((const void*)obj);
-        }
-    }
-    return obj;
-}
-

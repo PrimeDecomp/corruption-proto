@@ -199,16 +199,3 @@ CGuiWidget::EWidgetUsageFlags CAuiEnergyBarT01::GetWidgetUsageFlags() const {
 }
 
 FourCC CAuiEnergyBarT01::GetWidgetTypeID() const { return 'ENRG'; }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern "C" int fn_8048D290();
-extern "C" int fn_8048D290() {
-    return 0x454e5247;
-}
-
-extern "C" int fn_8048D29C();
-extern "C" int fn_8048D29C() {
-    return 3;
-}
-

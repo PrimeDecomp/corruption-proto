@@ -116,16 +116,3 @@ void CAreaOctTree::MakeFromMemory(void* buffer, uint bufferLength, CAreaOctTree*
                                  surfaceIndices, extraIndices, vertices);
   *valid = true;
 }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern int lbl_807A2950;
-extern "C" void fn_8059D4B0(int obj, int obj2);
-extern "C" void fn_8059D4B0(int obj, int obj2) {
-    if ((*(int*)((char*)obj2 + 0x20)) != 2) {
-        *(int*)obj = (int)&lbl_807A2950;
-    } else {
-        *(int*)obj = *(int*)((char*)obj2 + 0x18);
-    }
-}
-

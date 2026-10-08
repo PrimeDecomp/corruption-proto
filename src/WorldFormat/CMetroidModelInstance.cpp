@@ -69,12 +69,3 @@ static CAABox BoundingBoxFromData(const void* data) {
 static const CTransform4f& TransformFromData(const void* data) {
   return *static_cast< const CTransform4f* >(data);
 }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern "C" int fn_8059CCE8(int obj, const int val);
-extern "C" int fn_8059CCE8(int obj, const int val) {
-    int val2 = 1;
-    return ((*(unsigned short*)(*(int*)obj) + 1) << val2) + (*((int*)obj)) + (s32((val != 0) ? ((unsigned short*)*(int*)obj)[val] : 0) << 1);
-}
-

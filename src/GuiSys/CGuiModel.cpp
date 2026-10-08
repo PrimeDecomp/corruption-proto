@@ -183,16 +183,3 @@ void CGuiModel::DrawModel(const CModelFlags& flags) const {
 CGuiWidget::EWidgetUsageFlags CGuiModel::GetWidgetUsageFlags() const { return kWUF_PreDraw; }
 
 FourCC CGuiModel::GetWidgetTypeID() const { return 'MODL'; }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern "C" int fn_80485694();
-extern "C" int fn_80485694() {
-    return 0x4d4f444c;
-}
-
-extern "C" int fn_804856A0();
-extern "C" int fn_804856A0() {
-    return 8;
-}
-

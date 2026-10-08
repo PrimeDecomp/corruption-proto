@@ -379,25 +379,3 @@ inline void rstl::locked_cache_allocator::Allocate(void*& out, uint size) {
     }
   }
 }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern "C" void fn_805B2770(int obj, int val);
-extern "C" void fn_805B2770(int obj, int val) {
-    *(int*)obj = val;
-    *(int*)((char*)obj + 0x4) = 0;
-    *(int*)((char*)obj + 0x8) = 0;
-    *(int*)((char*)obj + 0xc) = 0;
-    *(int*)((char*)obj + 0x10) = 0;
-    *(int*)((char*)obj + 0x14) = 0;
-}
-
-extern "C" void fn_805B32A0();
-extern "C" int fn_805B304C(int obj);
-extern "C" int fn_805B304C(int obj) {
-    fn_805B32A0();
-    *(int*)((char*)obj + 0x38) = 0;
-    *(int*)((char*)obj + 0x3c) = 0;
-    return obj;
-}
-

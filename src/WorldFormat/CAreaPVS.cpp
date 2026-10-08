@@ -61,28 +61,3 @@ CPVSVisSet CPVSAreaSet::GetLightSet(int lightIndex) const {
 int CPVSAreaSet::GetEntityIdByIndex(uint index) const {
   return CBasics::SwapBytes(reinterpret_cast< const int* >(mEntityIds)[index]);
 }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern "C" void fn_805AE2A4(int obj, int obj2);
-extern "C" void fn_805AE2A4(int obj, int obj2) {
-    *(float*)obj = *(float*)obj2;
-    *(float*)((char*)obj + 0x4) = *(float*)((char*)obj2 + 0x4);
-    *(float*)((char*)obj + 0x8) = *(float*)((char*)obj2 + 0x8);
-    *(float*)((char*)obj + 0xc) = *(float*)((char*)obj2 + 0xc);
-    *(float*)((char*)obj + 0x10) = *(float*)((char*)obj2 + 0x10);
-    *(float*)((char*)obj + 0x14) = *(float*)((char*)obj2 + 0x14);
-    *(int*)((char*)obj + 0x18) = *(int*)((char*)obj2 + 0x18);
-    *(int*)((char*)obj + 0x1c) = *(int*)((char*)obj2 + 0x1c);
-    *(unsigned char*)((char*)obj + 0x20) = *(unsigned char*)((char*)obj2 + 0x20);
-    *(int*)((char*)obj + 0x24) = *(int*)((char*)obj2 + 0x24);
-    *(unsigned char*)((char*)obj2 + 0x20) = 0;
-    *(int*)((char*)obj + 0x28) = *(int*)((char*)obj2 + 0x28);
-    *(float*)((char*)obj + 0x2c) = *(float*)((char*)obj2 + 0x2c);
-    *(float*)((char*)obj + 0x30) = *(float*)((char*)obj2 + 0x30);
-    *(float*)((char*)obj + 0x34) = *(float*)((char*)obj2 + 0x34);
-    *(float*)((char*)obj + 0x38) = *(float*)((char*)obj2 + 0x38);
-    *(float*)((char*)obj + 0x3c) = *(float*)((char*)obj2 + 0x3c);
-    *(float*)((char*)obj + 0x40) = *(float*)((char*)obj2 + 0x40);
-}
-

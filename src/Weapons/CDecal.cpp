@@ -458,26 +458,3 @@ void CDecal::BuildClippedGeometry(CQuadDecal& quad, const CDecalDescription::SQu
     quad.mPolygons.push_back(CDecalPolygon(projected));
   }
 }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern "C" void fn_8059A348(int obj);
-extern "C" void fn_8059A348(int obj) {
-    *(int*)((char*)obj + 0x4) = 0;
-}
-
-extern "C" void fn_800EBE10();
-extern "C" void fn_8059A5E0(int val);
-extern "C" void fn_8059A5E0(int val) {
-    if ((unsigned int)val != 0) {
-        fn_800EBE10();
-    }
-}
-
-extern "C" void fn_800EBE94();
-extern "C" int fn_8059A608(int val);
-extern "C" int fn_8059A608(int val) {
-    fn_800EBE94();
-    return val;
-}
-

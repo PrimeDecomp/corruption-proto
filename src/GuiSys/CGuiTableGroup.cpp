@@ -243,21 +243,3 @@ CGuiWidget::EWidgetUsageFlags CGuiTableGroup::GetWidgetUsageFlags() const {
 }
 
 FourCC CGuiTableGroup::GetWidgetTypeID() const { return 'TBGP'; }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern "C" int fn_80487E70();
-extern "C" int fn_80487E70() {
-    return 0x54424750;
-}
-
-extern "C" int fn_80487E7C();
-extern "C" int fn_80487E7C() {
-    return 6;
-}
-
-extern "C" bool fn_80487E84();
-extern "C" bool fn_80487E84() {
-    return true;
-}
-

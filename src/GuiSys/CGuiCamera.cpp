@@ -92,3 +92,9 @@ CVector3f CGuiCamera::ConvertToScreenSpace(const CVector3f& point) const {
 
   return CVector3f(-1.f, -1.f, 1.f);
 }
+
+// Native virtual with no reference source (returns false), kept as a raw draft.
+extern "C" bool fn_8048232C();
+extern "C" bool fn_8048232C() {
+    return false;
+}

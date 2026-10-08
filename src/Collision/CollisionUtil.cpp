@@ -1847,3 +1847,83 @@ double TriPointSqrDist(const CVector3f& point, const CVector3f& trivert0, const 
 }
 
 } // namespace CollisionUtil
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" int fn_804762A8(int obj, int obj2, int obj3, int obj4, int obj5);
+extern "C" int fn_8047AA68(int obj, int obj2, int obj3, float f);
+
+extern "C" int fn_804762A8(int obj, int obj2, int obj3, int obj4, int obj5) {
+    float f;
+    float f2;
+    float f3;
+    float f4;
+    f3 = *(float*)obj - *(float*)obj2;
+    f2 = *(float*)((char*)obj + 0x4) - *((float*)((char*)obj2 + 0x4));
+    f = *(float*)((char*)obj + 0x8) - *(float*)((char*)obj2 + 0x8);
+    float f5 = *(float*)((char*)obj + 0xc) + *(float*)((char*)obj2 + 0xc);
+    float f6 = f * f + (f3 * f3 + f2 * f2) - f5 * f5;
+    if (f6 < 0.0f) {
+        *(float*)obj5 = 0.0f;
+        return 1;
+    }
+    f4 = *(float*)obj3 - *(float*)obj4;
+    float f7 = *(float*)((char*)obj3 + 0x4) - (*(float*)((char*)obj4 + 0x4));
+    float f8 = *(float*)((char*)obj3 + 0x8) - *(float*)(0x8 + (char*)obj4);
+    float f9 = f8 * f8 + (f4 * f4 + f7 * f7);
+    float f10 = 2.0f * (f * f8 + (f3 * f4 + f2 * f7));
+    float v = f10 * f10 - 4.0f * f9 * f6;
+    if (v < 0.0f) {
+        return 0;
+    }
+    *(float*)obj5 = (-f10 - CMath::SqrtF(v)) / (2.0f * f9);
+    return 2;
+}
+
+extern "C" int fn_8047AA68(int obj, int obj2, int obj3, float f) {
+    float f2;
+    CMRay ray(*(const CVector3f*)obj, *(const CVector3f*)obj2, f);
+    f2 = 0.0f;
+    float f3 = 0.0f;
+    int result = CollisionUtil::RayAABoxIntersection(ray, *(const CAABox*)obj3, f3, f2);
+    if (result && f3 <= f) {
+        return result;
+    }
+    return result;
+}
+
+// Native functions without reference source, drafted with mwdec (near matches, not exact; see scores).
+// mwdec-near
+extern "C" void fn_80022BB8(int, int);
+extern "C" void fn_800C82D8(int, int);
+extern "C" void fn_8047908C(int arg0, int arg1, int arg2);
+// near match: 95.4%
+extern "C" void fn_8047908C(int arg0, int arg1, int arg2) {
+    float temp_f30;
+    float temp_f29;
+    int temp_r31;
+    int var_r30;
+    int var_r29;
+    float temp_f28;
+    if (((CVector3f*)arg0)->IsMagnitudeSafe()) {
+        CVector3f stack_8 = ((CVector3f*)arg0)->AsNormalized();
+        temp_f30 = stack_8.GetX();
+        var_r30 = (arg1 + 4);
+        temp_f29 = stack_8.GetY();
+        var_r29 = 0;
+        temp_f28 = stack_8.GetZ();
+        temp_r31 = *(int*)arg1;
+        while (var_r29 < (int)temp_r31) {
+            char* temp_0 = (char*)var_r30;
+            if (temp_f28 * *(float*)(temp_0 + 0x48) + (temp_f30 * *(float*)(temp_0 + 0x40) + temp_f29 * *(float*)(temp_0 + 0x44)) < 0.001f && (*(int*)arg2) != 32) {
+                    fn_80022BB8(arg2 + (*(int*)arg2 * 96 + 4), var_r30);
+                    *(int*)arg2 += 1;
+                }
+            var_r30 += 96;
+            var_r29 = var_r29 + 1;
+        }
+    } else {
+        fn_800C82D8(arg2, arg1);
+    }
+}
+

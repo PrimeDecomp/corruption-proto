@@ -379,3 +379,49 @@ inline void rstl::locked_cache_allocator::Allocate(void*& out, uint size) {
     }
   }
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" void fn_805B2770(int obj, int val);
+extern "C" void fn_805B2770(int obj, int val) {
+    *(int*)obj = val;
+    *(int*)((char*)obj + 0x4) = 0;
+    *(int*)((char*)obj + 0x8) = 0;
+    *(int*)((char*)obj + 0xc) = 0;
+    *(int*)((char*)obj + 0x10) = 0;
+    *(int*)((char*)obj + 0x14) = 0;
+}
+
+extern "C" void fn_805B32A0();
+extern "C" int fn_805B304C(int obj);
+extern "C" int fn_805B304C(int obj) {
+    fn_805B32A0();
+    *(int*)((char*)obj + 0x38) = 0;
+    *(int*)((char*)obj + 0x3c) = 0;
+    return obj;
+}
+
+// Native functions without reference source, drafted with mwdec (near matches, not exact; see scores).
+// mwdec-near
+extern "C" int fn_805B2B58();
+extern "C" void fn_805B2D34(int, int);
+extern "C" int fn_805B2880(int arg0, int arg1);
+// near match: 94.1%
+extern "C" int fn_805B2880(int arg0, int arg1) {
+    if ((unsigned int)*(int*)((char*)arg1 + 0x20) == (*(int*)((char*)arg0 + 0x1c))) {
+        return -1;
+    }
+    *(int*)((char*)arg1 + 0x3c) = 0;
+    *(int*)((char*)arg1 + 0x38) = *(int*)((char*)arg1 + 0x20);
+    int temp_r28 = fn_805B2B58();
+    while ((unsigned int)*(int*)((char*)arg1 + 0x28) != 0) {
+        fn_805B2D34(arg0, arg1);
+        int* temp_0 = (int*)((char*)arg1 + 0x24);
+        *(int*)((char*)arg1 + 0x3c) = *(int*)((char*)arg1 + 0x3c) + *temp_0;
+        *(int*)((char*)arg1 + 0x20) = *(int*)((char*)arg1 + 0x20) + *temp_0 * 36;
+        *temp_0 = 0;
+        *(int*)((char*)arg1 + 0x28) = *(int*)((char*)arg1 + 0x28) - 1;
+    }
+    return temp_r28;
+}
+

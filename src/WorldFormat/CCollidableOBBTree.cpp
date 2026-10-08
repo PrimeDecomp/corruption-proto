@@ -806,3 +806,53 @@ bool CCollidableOBBTree::LineIntersectsLeaf(const COBBTree::CLeafData& leaf,
 }
 
 uint CCollidableOBBTree::GetTableIndex() const { return sTableIndex; }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern unsigned char lbl_806E24A8[40];
+extern "C" void fn_80475DDC(int, int);
+extern "C" int fn_805ABB24(int obj, int val);
+extern "C" int fn_805ABB24(int obj, int val) {
+    if (obj) {
+        *(int*)obj = (int)lbl_806E24A8;
+        fn_80475DDC(obj, 0);
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+
+// Native functions without reference source, drafted with mwdec (near matches, not exact; see scores).
+// mwdec-near
+extern "C" unsigned char fn_805AA678(int, int, int, int, int, int, int);
+extern "C" int fn_805AA7EC(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7);
+// near match: 94.7%
+extern "C" int fn_805AA7EC(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7) {
+    int temp_r4_2;
+    short temp_r4;
+    int var_r30 = false;
+    *((int*)((char*)arg0 + 0x14)) += 1;
+    if ((((COBBox*)arg4))->OBBIntersectsBox(*(const COBBox*)arg1)) {
+        char* temp_1 = (char*)arg1;
+        *(unsigned char*)(temp_1 + 0x4c) = 1;
+        if ((*((unsigned char*)(temp_1 + 0x3c))) != 0) {
+            if (fn_805AA678(arg0, *(int*)(temp_1 + 0x48), arg2, arg3, arg5, arg6, arg7) != 0) {
+                var_r30 = true;
+            }
+        } else {
+            temp_r4 = *(int*)(temp_1 + 0x40);
+            if (temp_r4 != 0 && fn_805AA7EC(arg0, temp_r4, arg2, arg3, arg4, arg5, arg6, arg7) != 0) {
+                var_r30 = true;
+            }
+            temp_r4_2 = *(int*)(temp_1 + 0x44);
+            if ((unsigned int)temp_r4_2 > 0 && fn_805AA7EC(arg0, temp_r4_2, arg2, arg3, arg4, arg5, arg6, arg7) != 0) {
+                var_r30 = true;
+            }
+        }
+    } else {
+        *(int*)((char*)arg0 + 0x18) += 1;
+    }
+    return (int)var_r30;
+}
+

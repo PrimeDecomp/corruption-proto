@@ -4521,7 +4521,7 @@ MetroTRK/mem_TRK.c:
 MetroTRK/targimpl.c:
 	.text       start:0x80653FE8 end:0x80655B80
 
-MetroTRK/targsupp.s:
+MetroTRK/targsupp.c:
 	.text       start:0x80655B80 end:0x80655BA0
 
 MetroTRK/mpc_7xx_603e.c:

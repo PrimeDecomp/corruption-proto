@@ -4116,3 +4116,448 @@ void ReleaseRendererWorkspace() { Buckets::Shutdown(); }
 void CCubeRenderer::DrawString(const char* text, int x, int y) {
   mFont.DrawString(text, x, y, CColor::White());
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" void fn_80570B0C(int obj, int val);
+extern "C" void fn_80570B0C(int obj, int val) {
+    *(unsigned char*)((char*)obj + 0x594) = __rlwimi(*(unsigned char*)((char*)obj + 0x594), val, 0, 31, 31);
+}
+
+extern "C" bool fn_80570B1C(int obj);
+extern "C" bool fn_80570B1C(int obj) {
+    return *(unsigned char*)((char*)obj + 0x594) & 1;
+}
+
+extern "C" void fn_805729B8(int obj, int obj2, int obj3);
+extern "C" void fn_805729B8(int obj, int obj2, int obj3) {
+    CVector2f vec = *(const CVector2f*)obj2 - *(const CVector2f*)obj;
+    float x = vec.GetX();
+    float y = vec.GetY();
+    CVector2f vec2 = *(const CVector2f*)obj3 - *(const CVector2f*)obj;
+    float x2 = vec2.GetX();
+    float y2 = vec2.GetY();
+    CGX::Begin((_GXPrimitive)152, (_GXVtxFmt)0, 4);
+    GXParam4f32(x, 0.0f, y, 0.0f);
+    GXParam4f32(1.0f, x2, 0.0f, y);
+    GXParam4f32(1.0f, 1.0f, x, 0.0f);
+    GXParam4f32(y2, 0.0f, 0.0f, x2);
+    GXParam4f32(0.0f, y2, 1.0f, 0.0f);
+    CGX::End();
+}
+
+extern "C" void fn_80574CD8(int obj, int val);
+extern "C" void fn_80574CD8(int obj, int val) {
+    if ((*(int*)((char*)obj + 0x598)) == val) {
+        return;
+    }
+    *(int*)((char*)obj + 0x598) = val;
+}
+
+extern "C" void fn_80575204(int val, int val2, int val3, int val4, int obj, int obj2, int obj3);
+extern "C" void fn_80575204(int val, int val2, int val3, int val4, int obj, int obj2, int obj3) {
+    int mipWidth;
+    int mipHeight;
+    *(int*)&mipWidth = val;
+    *(int*)&mipHeight = val2;
+    CCubeRenderer::GetScreenMipInfo(val, val2, val3, (_GXTexFmt)val4, (int*)obj, &mipWidth, &mipHeight);
+    int val5 = mipWidth >> 1;
+    mipWidth = val5;
+    mipHeight = (mipHeight >> 1);
+    if ((unsigned int)obj2 != 0) {
+        *(int*)obj2 = val5;
+    }
+    if ((unsigned int)obj3 != 0) {
+        *(int*)obj3 = mipHeight;
+    }
+}
+
+extern "C" bool fn_80578998();
+extern "C" bool fn_80578998() {
+    return false;
+}
+
+extern unsigned char lbl_8079B238;
+extern "C" void fn_805789D8(int obj, int val);
+extern "C" void fn_805789D8(int obj, int val) {
+    lbl_8079B238 = val & 1;
+    *(unsigned char*)((char*)obj + 0x594) = __rlwimi(*(unsigned char*)((char*)obj + 0x594), val, 5, 25, 25);
+}
+
+extern "C" void fn_8048F3D8();
+extern "C" void fn_8057BF68();
+extern "C" void fn_8057BF68() {
+    fn_8048F3D8();
+}
+
+extern "C" void fn_8057DFA4(int obj);
+extern "C" void fn_8057DFA4(int obj) {
+    if ((unsigned int)(*(int*)obj) != 0) {
+        ((CModel*)(*(int*)obj))->GetAABB();
+    } else {
+        ((CModel*)*(int*)((char*)*(int*)((char*)obj + 0x4) + 0x8))->GetAABB();
+    }
+}
+
+struct CPoseAsTransforms_Linear;
+struct CPoseAsTransforms_Linear { };
+extern "C" void CSkinnedModel_DrawWorkspace(int, int, int, int);
+extern "C" void fn_8057DFE4(int obj, int obj2, int val, int val2);
+extern "C" void fn_8057DFE4(int obj, int obj2, int val, int val2) {
+    int val3;
+    if ((unsigned char)val || (unsigned char)val2) {
+        unsigned int val4 = *(int*)obj;
+        if (val4 != 0) {
+            if ((unsigned char)val && (unsigned char)val2) {
+                val3 = 2;
+            } else if ((unsigned char)val == 0) {
+                val3 = 1;
+            } else {
+                val3 = 0;
+            }
+            ((CModel*)val4)->PreDrawModel(*(const CModelFlags*)obj2);
+            ((CModel*)*(int*)obj)->DolphinDrawFlat((CModel::EDrawFlatFlags)val3);
+        } else {
+            unsigned int val5 = *(int*)((char*)obj + 0x4);
+            if (val5 != 0) {
+                int val7 = 8;
+                if ((unsigned char)val) {
+                    val7 |= 2;
+                }
+                if ((unsigned char)val2) {
+                    val7 |= 4;
+                }
+                unsigned int val6 = *(int*)((char*)obj + 0xc);
+                if (val6 != 0) {
+                    ((CSkinnedModel*)val5)->DolphinDrawWithFlags((const CPoseAsTransforms_Linear*)val6, val7, *(const CModelFlags*)obj2);
+                } else if ((unsigned int)*(int*)((char*)obj + 0x8) != 0) {
+                    CSkinnedModel_DrawWorkspace(val5, *(int*)((char*)obj + 0x8), val7, obj2);
+                }
+            }
+        }
+    }
+}
+
+extern "C" void fn_8057E0CC(int obj, int obj2, int val, int val2);
+extern "C" void fn_8057E0CC(int obj, int obj2, int val, int val2) {
+    ((CFont*)(obj + 16))->DrawString((const char*)obj2, val, val2, CColor::White());
+}
+
+extern "C" void fn_8057F8A8();
+extern "C" void fn_8057F888();
+extern "C" void fn_8057F888() {
+    fn_8057F8A8();
+}
+
+extern "C" void fn_8057FB00(int obj, int obj2, int obj3);
+extern "C" void fn_8057FB00(int obj, int obj2, int obj3) {
+    unsigned char val;
+    unsigned char val2;
+    unsigned char val3;
+    int val4;
+    int val5 = *(int*)obj;
+    int val6 = *(int*)obj2;
+    float f = *(float*)((char*)val5 + 0x20);
+    if (*(float*)((char*)val6 + 0x20) == f) {
+        val = (unsigned int)(*(unsigned short*)((char*)val5 + 0x2) - *(unsigned short*)((char*)val6 + 0x2)) >> 31;
+    } else {
+        val = *(float*)((char*)val6 + 0x20) > f;
+    }
+    if (val) {
+        *(int*)obj = val6;
+        *(int*)obj2 = val5;
+    }
+    int val7 = *(int*)obj2;
+    val4 = *(int*)obj3;
+    float f2 = *(float*)((char*)val7 + 0x20);
+    if (*(float*)((char*)val4 + 0x20) == f2) {
+        val2 = (unsigned int)(*(unsigned short*)((char*)val7 + 0x2) - *(unsigned short*)((char*)val4 + 0x2)) >> 31;
+    } else {
+        val2 = *(float*)((char*)val4 + 0x20) > f2;
+    }
+    if (!val2) {
+        return;
+    }
+    *(int*)obj3 = val7;
+    int val8 = *(int*)obj;
+    float f3 = *(float*)((char*)val4 + 0x20);
+    __typeof__(*(float*)((char*)val8 + 0x20)) temp_0 = *(float*)((char*)val8 + 0x20);
+    if (f3 == temp_0) {
+        val3 = (unsigned int)(*(unsigned short*)((char*)val8 + 0x2) - *(unsigned short*)((char*)val4 + 0x2)) >> 31;
+    } else {
+        val3 = f3 > temp_0;
+    }
+    if (val3) {
+        *(int*)obj2 = val8;
+        *(int*)obj = val4;
+    } else {
+        *(int*)obj2 = val4;
+    }
+}
+
+// Native functions without reference source, drafted with mwdec (near matches, not exact; see scores).
+// mwdec-near
+extern int lbl_807A1D00;
+extern int lbl_806DF340[24];
+extern "C" void fn_80572AF0(int, int);
+extern "C" void fn_80572640(int arg0, int arg1, int arg2, int arg3);
+// near match: 93.5%
+extern "C" void fn_80572640(int arg0, int arg1, int arg2, int arg3) {
+    CGraphics::LoadDolphinSpareTexture(*(int*)((char*)lbl_806DF340 + 0x8) / 2, *(int*)((char*)lbl_806DF340 + 0xc) / 2, (_GXTexFmt)arg1, (void*)arg0, (_GXTexMapID)lbl_807A1D00);
+    CCubeRenderer::SetupScreenCopyStates();
+    fn_80572AF0(arg2, arg3);
+}
+
+struct __mwdec_vt_0 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(const CTransform4f*, int); };
+struct __mwdec_vt_1 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(); virtual void _44(); virtual void _45(float, float, float, float); };
+struct __mwdec_vt_10 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_11 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_12 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_13 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_14 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_15 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(); virtual void _44(); virtual void _45(); virtual void _46(); virtual void _47(); };
+struct __mwdec_vt_16 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(int); };
+struct __mwdec_vt_17 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_18 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_19 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_2 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(int); };
+struct __mwdec_vt_20 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_21 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_22 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_23 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual int _43(unsigned char*, float, float); };
+struct __mwdec_vt_24 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_25 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(); virtual void _44(); virtual void _45(); virtual void _46(); virtual void _47(); };
+struct __mwdec_vt_3 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_4 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_5 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_6 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_7 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(unsigned char*, float, float); };
+struct __mwdec_vt_8 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(); virtual void _40(); virtual void _41(); virtual void _42(); virtual void _43(); virtual void _44(); virtual void _45(); virtual void _46(); virtual void _47(); };
+struct __mwdec_vt_9 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(); virtual void _9(); virtual void _10(); virtual void _11(); virtual void _12(); virtual void _13(); virtual void _14(); virtual void _15(); virtual void _16(); virtual void _17(); virtual void _18(); virtual void _19(); virtual void _20(); virtual void _21(); virtual void _22(); virtual void _23(); virtual void _24(); virtual void _25(); virtual void _26(); virtual void _27(); virtual void _28(); virtual void _29(); virtual void _30(); virtual void _31(); virtual void _32(); virtual void _33(); virtual void _34(); virtual void _35(); virtual void _36(); virtual void _37(); virtual void _38(); virtual void _39(int); };
+extern "C" void fn_8057AA44(int arg0, int arg1, float arg2, float arg3, float arg4);
+// near match: 96.5%
+extern "C" void fn_8057AA44(int arg0, int arg1, float arg2, float arg3, float arg4) {
+    float temp_f0;
+    float temp_f0_2;
+    float temp_f0_3;
+    float temp_f0_4;
+    float temp_f0_5;
+    float temp_f0_6;
+    float temp_f0_7;
+    float temp_f0_8;
+    float temp_f0_9;
+    float temp_f0_10;
+    float temp_f0_11;
+    float temp_f0_12;
+    float temp_f0_13;
+    float temp_f0_14;
+    float temp_f0_15;
+    float temp_f0_16;
+    float temp_f0_17;
+    float temp_f0_18;
+    float temp_f1;
+    float temp_f1_2;
+    float temp_f1_3;
+    float temp_f1_4;
+    float temp_f1_5;
+    float temp_f1_6;
+    float temp_f1_7;
+    float temp_f1_8;
+    float temp_f1_9;
+    float temp_f1_10;
+    float temp_f1_11;
+    float temp_f1_12;
+    float temp_f1_13;
+    float temp_f1_14;
+    float temp_f1_15;
+    float temp_f1_16;
+    float temp_f1_17;
+    float temp_f1_18;
+    float temp_f2;
+    float temp_f2_2;
+    float temp_f2_3;
+    float temp_f2_4;
+    float temp_f2_5;
+    float temp_f2_6;
+    float temp_f2_7;
+    float temp_f2_8;
+    float temp_f2_9;
+    float temp_f2_10;
+    float temp_f2_11;
+    float temp_f2_12;
+    float temp_f2_13;
+    float temp_f2_14;
+    float temp_f2_15;
+    float temp_f2_16;
+    float temp_f2_17;
+    float temp_f2_18;
+    unsigned char stack_d4[20];
+    unsigned char stack_c8[12];
+    unsigned char stack_bc[12];
+    unsigned char stack_b0[12];
+    unsigned char stack_a4[12];
+    unsigned char stack_98[12];
+    unsigned char stack_8c[12];
+    unsigned char stack_80[12];
+    unsigned char stack_74[12];
+    unsigned char stack_68[12];
+    unsigned char stack_5c[12];
+    unsigned char stack_50[12];
+    unsigned char stack_44[12];
+    unsigned char stack_38[12];
+    unsigned char stack_2c[12];
+    unsigned char stack_20[12];
+    unsigned char stack_14[12];
+    unsigned char stack_8[12];
+    ((__mwdec_vt_0*)arg0)->_13(&CTransform4f::sIdentity, 0 /* ha:sIdentity__12CTransform4f */);
+    ((__mwdec_vt_1*)arg0)->_45(arg2, arg3, arg4, 1.0f);
+    ((__mwdec_vt_2*)arg0)->_39(5);
+    float* temp_1 = (float*)((char*)arg1 + 0x14);
+    temp_f1 = *temp_1;
+    float* temp_0 = (float*)((char*)arg1 + 0x4);
+    temp_f2 = *temp_0;
+    temp_f0 = *((float*)arg1);
+    *(float*)((char*)stack_d4 + 0x4) = temp_f2;
+    *(float*)stack_d4 = temp_f0;
+    *(float*)((char*)stack_d4 + 0x8) = temp_f1;
+    ((__mwdec_vt_3*)arg0)->_43(stack_d4, temp_f1, temp_f2);
+    temp_f1_2 = *temp_1;
+    temp_f2_2 = *(float*)((char*)arg1 + 0x10);
+    temp_f0_2 = *((float*)arg1);
+    *(float*)(0x4 + (char*)(stack_c8)) = temp_f2_2;
+    *(float*)stack_c8 = temp_f0_2;
+    *(float*)((char*)stack_c8 + 0x8) = temp_f1_2;
+    ((__mwdec_vt_4*)arg0)->_43(stack_c8, temp_f1_2, temp_f2_2);
+    temp_f1_3 = *temp_1;
+    temp_f2_3 = *(float*)((char*)arg1 + 0x10);
+    temp_f0_3 = *(float*)((char*)arg1 + 0xc);
+    *(float*)((char*)stack_bc + 0x4) = temp_f2_3;
+    *(float*)stack_bc = temp_f0_3;
+    *(float*)((char*)stack_bc + 0x8) = temp_f1_3;
+    ((__mwdec_vt_5*)arg0)->_43(stack_bc, temp_f1_3, temp_f2_3);
+    temp_f1_4 = *temp_1;
+    temp_f2_4 = *temp_0;
+    temp_f0_4 = *(float*)((char*)arg1 + 0xc);
+    *(float*)((char*)stack_b0 + 0x4) = temp_f2_4;
+    *(float*)stack_b0 = temp_f0_4;
+    *(float*)((char*)stack_b0 + 0x8) = temp_f1_4;
+    ((__mwdec_vt_6*)arg0)->_43(stack_b0, temp_f1_4, temp_f2_4);
+    temp_f1_5 = *temp_1;
+    temp_f2_5 = *temp_0;
+    temp_f0_5 = *((float*)arg1);
+    *(float*)((char*)stack_a4 + 0x4) = temp_f2_5;
+    *(float*)stack_a4 = temp_f0_5;
+    *(float*)(((char*)stack_a4 + 0x8)) = temp_f1_5;
+    ((__mwdec_vt_7*)arg0)->_43(stack_a4, temp_f1_5, temp_f2_5);
+    ((__mwdec_vt_8*)arg0)->_47();
+    ((__mwdec_vt_9*)arg0)->_39(5);
+    float* temp_2 = (float*)((char*)arg1 + 0x8);
+    temp_f1_6 = *temp_2;
+    temp_f2_6 = *temp_0;
+    temp_f0_6 = *((float*)arg1);
+    *(float*)((char*)stack_98 + 0x4) = temp_f2_6;
+    *(float*)stack_98 = temp_f0_6;
+    *(float*)((char*)stack_98 + 0x8) = temp_f1_6;
+    ((__mwdec_vt_10*)arg0)->_43(stack_98, temp_f1_6, temp_f2_6);
+    temp_f1_7 = *temp_2;
+    temp_f2_7 = *(float*)((char*)arg1 + 0x10);
+    temp_f0_7 = *((float*)arg1);
+    *(float*)((char*)stack_8c + 0x4) = temp_f2_7;
+    *(float*)stack_8c = temp_f0_7;
+    *(float*)((char*)stack_8c + 0x8) = temp_f1_7;
+    ((__mwdec_vt_11*)arg0)->_43(stack_8c, temp_f1_7, temp_f2_7);
+    temp_f1_8 = *temp_2;
+    temp_f2_8 = *(float*)((char*)arg1 + 0x10);
+    temp_f0_8 = *(float*)((char*)arg1 + 0xc);
+    *(float*)((char*)stack_80 + 0x4) = temp_f2_8;
+    *(float*)stack_80 = temp_f0_8;
+    *(float*)((char*)stack_80 + 0x8) = temp_f1_8;
+    ((__mwdec_vt_12*)arg0)->_43(stack_80, temp_f1_8, temp_f2_8);
+    temp_f1_9 = *temp_2;
+    temp_f2_9 = *temp_0;
+    temp_f0_9 = *(float*)((char*)arg1 + 0xc);
+    *(float*)((char*)stack_74 + 0x4) = temp_f2_9;
+    *(float*)stack_74 = temp_f0_9;
+    *(float*)((char*)stack_74 + 0x8) = temp_f1_9;
+    ((__mwdec_vt_13*)arg0)->_43(stack_74, temp_f1_9, temp_f2_9);
+    temp_f1_10 = *temp_2;
+    temp_f2_10 = *temp_0;
+    temp_f0_10 = *((float*)arg1);
+    *(float*)((char*)stack_68 + 0x4) = temp_f2_10;
+    *(float*)stack_68 = temp_f0_10;
+    *(float*)((char*)stack_68 + 0x8) = temp_f1_10;
+    ((__mwdec_vt_14*)arg0)->_43(stack_68, temp_f1_10, temp_f2_10);
+    ((__mwdec_vt_15*)arg0)->_47();
+    ((__mwdec_vt_16*)arg0)->_38(8);
+    temp_f1_11 = *temp_1;
+    temp_f2_11 = *temp_0;
+    temp_f0_11 = *((float*)arg1);
+    *(float*)((char*)stack_5c + 0x4) = temp_f2_11;
+    *(float*)stack_5c = temp_f0_11;
+    *(float*)((char*)stack_5c + 0x8) = temp_f1_11;
+    ((__mwdec_vt_17*)arg0)->_43(stack_5c, temp_f1_11, temp_f2_11);
+    temp_f1_12 = *temp_2;
+    temp_f2_12 = *temp_0;
+    temp_f0_12 = *((float*)arg1);
+    *(float*)((char*)stack_50 + 0x4) = temp_f2_12;
+    *(float*)stack_50 = temp_f0_12;
+    *(float*)((char*)stack_50 + 0x8) = temp_f1_12;
+    ((__mwdec_vt_18*)arg0)->_43(stack_50, temp_f1_12, temp_f2_12);
+    temp_f1_13 = *temp_1;
+    temp_f2_13 = *(float*)((char*)arg1 + 0x10);
+    temp_f0_13 = *((float*)arg1);
+    *(float*)((char*)stack_44 + 0x4) = temp_f2_13;
+    *(float*)stack_44 = temp_f0_13;
+    *(float*)((char*)stack_44 + 0x8) = temp_f1_13;
+    ((__mwdec_vt_19*)arg0)->_43(stack_44, temp_f1_13, temp_f2_13);
+    temp_f1_14 = *temp_2;
+    temp_f2_14 = *(float*)((char*)arg1 + 0x10);
+    temp_f0_14 = *((float*)arg1);
+    *(float*)((char*)stack_38 + 0x4) = temp_f2_14;
+    *(float*)stack_38 = temp_f0_14;
+    *(float*)((char*)stack_38 + 0x8) = temp_f1_14;
+    ((__mwdec_vt_20*)arg0)->_43(stack_38, temp_f1_14, temp_f2_14);
+    temp_f1_15 = *temp_1;
+    temp_f2_15 = *(float*)((char*)arg1 + 0x10);
+    temp_f0_15 = *(float*)((char*)arg1 + 0xc);
+    *(float*)((char*)stack_2c + 0x4) = temp_f2_15;
+    *(float*)stack_2c = temp_f0_15;
+    *(float*)((char*)stack_2c + 0x8) = temp_f1_15;
+    ((__mwdec_vt_21*)arg0)->_43(stack_2c, temp_f1_15, temp_f2_15);
+    temp_f1_16 = *temp_2;
+    temp_f2_16 = *(float*)((char*)arg1 + 0x10);
+    temp_f0_16 = *(float*)((char*)arg1 + 0xc);
+    *(float*)((char*)stack_20 + 0x4) = temp_f2_16;
+    *(float*)stack_20 = temp_f0_16;
+    *(float*)((char*)stack_20 + 0x8) = temp_f1_16;
+    ((__mwdec_vt_22*)arg0)->_43(stack_20, temp_f1_16, temp_f2_16);
+    temp_f1_17 = *temp_1;
+    temp_f2_17 = *temp_0;
+    temp_f0_17 = *(float*)((char*)arg1 + 0xc);
+    *(float*)((char*)stack_14 + 0x4) = temp_f2_17;
+    *(float*)stack_14 = temp_f0_17;
+    *(float*)((char*)stack_14 + 0x8) = temp_f1_17;
+    ((__mwdec_vt_23*)arg0)->_43(stack_14, temp_f1_17, temp_f2_17);
+    temp_f1_18 = *temp_2;
+    temp_f2_18 = *temp_0;
+    temp_f0_18 = *(float*)((char*)arg1 + 0xc);
+    *(float*)((char*)stack_8 + 0x4) = temp_f2_18;
+    *(float*)stack_8 = temp_f0_18;
+    *(float*)((char*)stack_8 + 0x8) = temp_f1_18;
+    ((__mwdec_vt_24*)arg0)->_43(stack_8, temp_f1_18, temp_f2_18);
+    ((__mwdec_vt_25*)arg0)->_47();
+}
+
+extern "C" void fn_8057C94C(int arg0);
+// near match: 90.0%
+extern "C" void fn_8057C94C(int arg0) {
+    *(unsigned char*)(0x2e2 + (char*)(arg0)) = __rlwimi(*(unsigned char*)((char*)arg0 + 0x2e2), 1, 7, 24, 24);
+    void* temp_r31 = ((CTexture*)(arg0 + 728))->GetBitMapData(0);
+    memset(temp_r31, 255, (size_t)8);
+    memset((char*)temp_r31 + 0x8, 0, 8);
+    memset((char*)temp_r31 + 0x10, 255, 8);
+    memset((char*)temp_r31 + 0x18, 0, (size_t)8);
+    DCFlushRange(temp_r31, (u32)32);
+    ((CTexture*)(arg0 + 728))->UnLock();
+}
+

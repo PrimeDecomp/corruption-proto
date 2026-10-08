@@ -142,3 +142,85 @@ void CCollidableTranslatedConvexPH::CPolyhedronData::BuildPlanes() {
     }
   }
 }
+
+extern "C" unsigned char CMath_IsWithinTolerance(float, float, float);
+extern "C" bool fn_805B548C(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5);
+// near match: 92.4%
+extern "C" bool fn_805B548C(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+    int temp_r31;
+    int var_r30;
+    int var_r29;
+    float temp_f31;
+    float temp_f30;
+    float temp_f29;
+    float temp_f28;
+    float temp_f27;
+    float temp_f26;
+    float temp_f25;
+    float temp_f24;
+    float temp_f0;
+    float temp_f0_2;
+    float temp_f0_3;
+    float temp_f1;
+    float temp_f1_2;
+    float temp_f1_3;
+    float temp_f1_4;
+    float temp_f5;
+    float temp_f6;
+    *(float*)arg2 = -3.4028235e38f;
+    temp_f26 = *(float*)((char*)arg1 + 0x34);
+    temp_f27 = *(float*)(((char*)arg1) + 0x2c);
+    var_r30 = arg0 + 4;
+    *(float*)arg4 = 3.4028235e38;
+    var_r29 = 0;
+    temp_f28 = *(float*)(((char*)arg1) + 0x30);
+    temp_f30 = *(float*)arg1;
+    temp_f29 = *(float*)(((char*)arg1) + 0x8);
+    temp_f31 = *(float*)((char*)arg1 + 0x4);
+    temp_r31 = *(int*)arg0;
+    while (var_r29 < temp_r31) {
+        float* temp_0 = (float*)((char*)var_r30 + 0x4);
+        temp_f0 = *temp_0;
+        temp_f5 = *(float*)var_r30;
+        temp_f6 = *(float*)((char*)var_r30 + 0x8);
+        temp_f25 = temp_f6 * temp_f26 + (temp_f5 * temp_f27 + temp_f0 * temp_f28);
+        temp_f24 = temp_f6 * temp_f29 + (temp_f5 * temp_f30 + temp_f0 * temp_f31) - *(float*)((char*)var_r30 + 0xc);
+        if (CMath_IsWithinTolerance(temp_f25, 0.0f, 1.1920929e-7f) != 0) {
+            if (temp_f24 > 0.0f) {
+                return 0;
+            }
+        } else {
+            temp_f1_2 = -temp_f24 / temp_f25;
+            if (temp_f25 > 0.0f) {
+                if (temp_f1_2 < *(float*)arg4) {
+                    if (temp_f1_2 < *(float*)arg2) {
+                        return 0;
+                    }
+                    *(float*)arg4 = temp_f1_2;
+                    temp_f1_3 = *temp_0;
+                    *(float*)arg5 = *(float*)var_r30;
+                    temp_f0_2 = *(float*)(0x8 + (char*)(var_r30));
+                    *(float*)((char*)arg5 + 0x4) = temp_f1_3;
+                    *(float*)((char*)arg5 + 0x8) = temp_f0_2;
+                }
+            } else if (temp_f1_2 > *(float*)arg2) {
+                *(float*)arg2 = temp_f1_2;
+                temp_f1_4 = *temp_0;
+                *(float*)arg3 = *(float*)var_r30;
+                temp_f0_3 = *(float*)((char*)var_r30 + 0x8);
+                *(float*)((char*)arg3 + 0x4) = temp_f1_4;
+                *(float*)((char*)arg3 + 0x8) = temp_f0_3;
+            }
+            if (*(float*)arg2 > *(float*)arg4) {
+                return 0;
+            }
+        }
+        var_r30 += 16;
+        var_r29 += 1;
+    }
+    temp_f1 = *(float*)((char*)arg1 + 0x28);
+    *(float*)arg2 *= temp_f1;
+    *(float*)arg4 *= temp_f1;
+    return true;
+}
+

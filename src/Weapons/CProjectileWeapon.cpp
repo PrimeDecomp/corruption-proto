@@ -885,3 +885,46 @@ void CProjectileWeapon::SetParticleTranslationOffset(const CVector3f& offset) {
   mParticleTranslationOffset = offset;
   UpdateChildParticleSystems(GetTickTime(), true);
 }
+
+// Native functions without reference source, drafted with mwdec (near matches, not exact; see scores).
+// mwdec-near
+struct __mwdec_vt_0 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(int, float); };
+struct __mwdec_vt_1 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(int); };
+struct __mwdec_vt_2 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(int); };
+struct __mwdec_vt_3 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(int); };
+struct __mwdec_vt_4 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(int); };
+extern "C" void fn_805908C4(int arg0, int arg1);
+// near match: 96.4%
+extern "C" void fn_805908C4(int arg0, int arg1) {
+    int temp_r3;
+    float temp_f1;
+    int temp_r3_4;
+    int temp_r3_5;
+    int temp_r3_3;
+    temp_f1 = *(float*)(0x4 + (char*)(arg1));
+    char* temp_0 = (char*)arg0;
+    *(float*)(temp_0 + 0xcc) = *(float*)arg1;
+    float temp_f0 = *(float*)((char*)arg1 + 0x8);
+    *(float*)(temp_0 + 0xd0) = temp_f1;
+    *(float*)(temp_0 + 0xd4) = temp_f0;
+    temp_r3 = *(int*)(temp_0 + 0x164);
+    if ((unsigned int)temp_r3 != 0) {
+        ((__mwdec_vt_0*)temp_r3)->_7(arg0 + 204, temp_f1);
+    }
+    int temp_r3_2 = *(int*)(temp_0 + 0x168);
+    if ((unsigned int)temp_r3_2 != 0) {
+        ((__mwdec_vt_1*)temp_r3_2)->_7(arg0 + 204);
+    }
+    temp_r3_3 = *(int*)(temp_0 + 0x180);
+    if ((unsigned int)temp_r3_3 > 0) {
+        ((__mwdec_vt_2*)temp_r3_3)->_7(arg0 + 204);
+    }
+    temp_r3_4 = *(int*)(temp_0 + 0x184);
+    if ((unsigned int)temp_r3_4 != 0) {
+        ((__mwdec_vt_3*)temp_r3_4)->_7(arg0 + 204);
+    }
+    temp_r3_5 = *(int*)(temp_0 + 0x188);
+    if ((unsigned int)temp_r3_5 != 0) {
+        ((__mwdec_vt_4*)temp_r3_5)->_7(arg0 + 204);
+    }
+}

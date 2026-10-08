@@ -1602,7 +1602,7 @@ config.libs = [
         Object(NonMatching, "MetroTRK/flush_cache.c"),
         Object(NonMatching, "MetroTRK/mem_TRK.c"),
         Object(NonMatching, "MetroTRK/targimpl.c"),
-        Object(NonMatching, "MetroTRK/targsupp.s"),
+        Object(Matching, "MetroTRK/targsupp.c"),
         Object(NonMatching, "MetroTRK/mpc_7xx_603e.c"),
         Object(NonMatching, "MetroTRK/dolphin_trk.c"),
         Object(NonMatching, "MetroTRK/main_TRK.c"),

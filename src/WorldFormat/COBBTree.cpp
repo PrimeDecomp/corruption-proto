@@ -184,3 +184,87 @@ uint COBBTree::CLeafData::GetMemoryUsage() const {
   }
   return size;
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" int fn_805A687C(int obj, int val);
+extern "C" int fn_805A687C(int obj, int val) {
+    int val2;
+    int val3 = *(int*)((char*)obj + 0x8);
+    int val4 = *(int*)obj;
+    *(int*)((char*)obj + 0x8) = val3 + val;
+    int result = val4 + val3;
+    val2 = *(int*)((char*)obj + 0x8);
+    unsigned int val5 = val2 & 3;
+    if (val5) {
+        *(int*)((char*)obj + 0x8) = val2 + (4 - val5);
+    }
+    return result;
+}
+
+extern "C" int fn_805A68B0(int obj, int val);
+extern "C" int fn_805A68B0(int obj, int val) {
+    if (obj) {
+        if ((unsigned int)*(int*)obj != 0) {
+            CMemory::Free((const void*)*(int*)obj);
+        }
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+
+extern "C" int fn_805A690C(int obj, int val);
+extern "C" int fn_805A690C(int obj, int val) {
+    *(int*)obj = (int)operator new[](val, "COBBTree.cpp(503) : ", nullptr);
+    *(int*)((char*)obj + 0x4) = val;
+    *(int*)((char*)obj + 0x8) = 0;
+    return obj;
+}
+
+extern "C" void fn_805A7630();
+extern "C" int fn_805A69BC(int val);
+extern "C" int fn_805A69BC(int val) {
+    fn_805A7630();
+    return val;
+}
+
+extern "C" void fn_80038938(int, int);
+extern "C" int fn_805A6B7C(int obj, int val);
+extern "C" int fn_805A6B7C(int obj, int val) {
+    if (obj) {
+        fn_80038938(obj, -1);
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+
+extern "C" void Animation_Vector3f_StreamVectorCtor(int, int, int*);
+extern "C" void CSkinRules_ByteIndices_StreamVector(int, int, int*);
+extern "C" void fn_8004FE08(int, int, int*);
+extern "C" void fn_805A7A68(int, int, int*);
+extern "C" void fn_805A7BA8(int, int, int*);
+extern "C" int fn_805A7580(int val, int val2);
+extern "C" int fn_805A7580(int val, int val2) {
+    int val3;
+    int val4;
+    int val5;
+    int val6;
+    int val7;
+    int val8;
+    int val9;
+    int val10;
+    fn_805A7BA8(val, val2, &val3);
+    CSkinRules_ByteIndices_StreamVector(val + 16, val2, &val4);
+    CSkinRules_ByteIndices_StreamVector(val + 32, val2, &val5);
+    CSkinRules_ByteIndices_StreamVector(val + 48, val2, &val6);
+    fn_805A7A68(val + 64, val2, &val7);
+    fn_8004FE08(val + 80, val2, &val8);
+    fn_8004FE08(val + 96, val2, &val9);
+    Animation_Vector3f_StreamVectorCtor(val + 112, val2, &val10);
+    return val;
+}
+

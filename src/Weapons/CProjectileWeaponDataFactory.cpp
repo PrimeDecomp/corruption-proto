@@ -280,3 +280,31 @@ bool CProjectileWeaponDataFactory::CreateWPSM(CWeaponDescription* desc, CInputSt
 
   return true;
 }
+
+// Native functions without reference source, drafted with mwdec (near matches, not exact; see scores).
+// mwdec-near
+extern unsigned char lbl_806B1B80[12];
+extern unsigned char lbl_806B1B8C[12];
+extern int lbl_806B6D90[16];
+extern "C" void fn_805953E4(int arg0, int arg1);
+// near match: 91.1%
+extern "C" void fn_805953E4(int arg0, int arg1) {
+    s32 var_r0;
+    int* temp_r3;
+    temp_r3 = (int*)operator new(8, "TToken.H(70) : ", nullptr);
+    if (temp_r3) {
+        *temp_r3 = (int)lbl_806B1B80;
+        *temp_r3 = (int)lbl_806B1B8C;
+        if ((*(unsigned char*)arg1) != 0) {
+            *(unsigned char*)arg1 = 0;
+            var_r0 = *(int*)(0x4 + (char*)(arg1));
+        } else {
+            var_r0 = 0;
+        }
+        *(int*)((char*)temp_r3 + 0x4) = var_r0;
+        *temp_r3 = (int)lbl_806B6D90;
+    }
+    *(unsigned char*)arg0 = temp_r3 != nullptr;
+    *(int*)((char*)arg0 + 0x4) = (int)temp_r3;
+}
+

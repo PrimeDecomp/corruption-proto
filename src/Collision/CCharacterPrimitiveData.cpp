@@ -11,3 +11,72 @@
  * checked). Next7F4A0 is separately inspected 2D triangulation/edge processing, not character
  * primitive data.
  */
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" void fn_8047ED24(int, int, int*);
+extern "C" void fn_8047EF50(int, int, unsigned char*);
+extern "C" void fn_8047EED4();
+extern "C" void fn_8047F10C();
+extern "C" void fn_8047F178();
+extern "C" void fn_8047F214();
+
+extern "C" int fn_8047ECD4(int val, int val2);
+extern "C" void fn_8047EEB4();
+extern "C" void fn_8047F0EC();
+extern "C" void fn_8047F158();
+extern "C" void fn_8047F1F4();
+
+extern "C" int fn_8047ECD4(int val, int val2) {
+    unsigned char val3[12];
+    int val4;
+    fn_8047EF50(val, val2, val3);
+    fn_8047ED24(val + 16, val2, &val4);
+    return val;
+}
+
+extern "C" void fn_8047EEB4() {
+    fn_8047EED4();
+}
+
+extern "C" void fn_8047F0EC() {
+    fn_8047F10C();
+}
+
+extern "C" void fn_8047F158() {
+    fn_8047F178();
+}
+
+extern "C" void fn_8047F1F4() {
+    fn_8047F214();
+}
+
+// Native functions without reference source, drafted with mwdec (near matches, not exact; see scores).
+// mwdec-near
+struct CMemory;
+struct CMemory { void Free(const void*); };
+extern int lbl_806B1B80[12];
+extern signed char lbl_806B1B8C[12];
+extern unsigned int lbl_806CE1A8[16];
+extern "C" void fn_8047EA28(int, int);
+extern "C" int fn_8047E998(int arg0, int arg1);
+// near match: 92.0%
+extern "C" int fn_8047E998(int arg0, int arg1) {
+    if (arg0 != 0) {
+        *(int*)arg0 = (int)lbl_806CE1A8;
+        if ((unsigned int)*(int*)((char*)arg0 + 0x4) != 0) {
+            fn_8047EA28(*(int*)(0x4 + (char*)(arg0)), 1);
+        }
+        if ((unsigned int)arg0 > 0) {
+            *(int*)arg0 = (int)lbl_806B1B8C;
+            if ((unsigned int)arg0 != 0) {
+                *(int*)arg0 = (int)lbl_806B1B80;
+            }
+        }
+        if ((short)arg1 > 0) {
+            ((CMemory*)arg0)->Free((const void*)arg1);
+        }
+    }
+    return arg0;
+}
+

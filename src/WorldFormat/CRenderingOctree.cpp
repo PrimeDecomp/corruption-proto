@@ -150,3 +150,18 @@ void CAreaRenderOctTree::Node::RecursiveBuildOverlaps(uint* bitmap, const CAreaR
 bool CAreaRenderOctTree::TestBit(const uint* bitmap, int bitIndex) {
   return (bitmap[bitIndex >> 5] & (1 << (bitIndex & 31))) != 0;
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" bool fn_805AE338(int obj, int val);
+extern "C" bool fn_805AE338(int obj, int val) {
+    return (1 << (val & 31) & ((int*)obj)[val >> 5]) != 0;
+}
+
+extern "C" void fn_8004F08C(int, int, int);
+extern "C" void fn_805AE4F4(int obj, int obj2, int obj3);
+extern "C" void fn_805AE4F4(int obj, int obj2, int obj3) {
+    fn_8004F08C(obj2, *(int*)((char*)obj + 0x14), 0);
+    ((CAreaRenderOctTree::Node*)(*(int*)((char*)obj + 0x38) + *(int*)*(int*)((char*)obj + 0x34)))->RecursiveBuildOverlaps((unsigned int*)*(int*)((char*)obj2 + 0xc), *(const CAreaRenderOctTree*)obj, *(const CAABox*)(obj + 24), *(const CAABox*)obj3);
+}
+

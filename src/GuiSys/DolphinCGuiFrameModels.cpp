@@ -81,3 +81,46 @@ void CGuiFrameModelDatabase::Draw(int index, const CModelFlags& flags) const {
 const CCubeModel* CGuiFrameModelDatabase::GetModel(int index) const {
   return mModels[index].get();
 }
+
+// Remaining native helpers (CCubeModel member destruction and stream-cursor reads) kept as raw
+// drafts until the prototype CCubeModel layout is reconstructed.
+// mwdec-drafted
+extern "C" void fn_8048F3D8();
+extern "C" void fn_8048F3B8();
+extern "C" void fn_8048F3B8() {
+    fn_8048F3D8();
+}
+
+extern "C" void fn_8048F770();
+extern "C" void fn_8048F750();
+extern "C" void fn_8048F750() {
+    fn_8048F770();
+}
+
+extern "C" void fn_8048F460(int, int);
+extern "C" int fn_8048FCDC(int obj, int obj2);
+extern "C" int fn_8048FCDC(int obj, int obj2) {
+    if (obj2 != (unsigned int)obj) {
+        if (*(unsigned char*)obj) {
+            fn_8048F460(*(int*)((char*)obj + 0x4), 1);
+        }
+        *(unsigned char*)obj = *(unsigned char*)obj2;
+        *(int*)((char*)obj + 0x4) = *(int*)((char*)obj2 + 0x4);
+        *(unsigned char*)obj2 = 0;
+    }
+    return obj;
+}
+
+extern "C" int fn_8048FF00(int obj, int obj2);
+extern "C" int fn_8048FF00(int obj, int obj2) {
+    int result;
+    int val = *(int*)*(int*)obj2;
+    if (val) {
+        result = *(int*)obj;
+        *(int*)obj = result + val;
+    } else {
+        result = 0;
+    }
+    *(int*)obj2 = *(int*)obj2 + 4;
+    return result;
+}

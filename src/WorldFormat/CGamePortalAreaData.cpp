@@ -131,3 +131,241 @@ void CPortalAreaData::FindOverlappingVolumes(const CAABox& bounds,
     }
   }
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern unsigned char lbl_806B1B80[12];
+extern unsigned char lbl_806B1B8C[12];
+extern unsigned char lbl_806E2520[16];
+extern "C" void fn_805AF0E4(int, int);
+extern "C" int fn_805AFA44(int obj, int val);
+extern "C" int fn_805AFA44(int obj, int val) {
+    if (obj) {
+        *(int*)obj = (int)lbl_806E2520;
+        if ((unsigned int)*(int*)((char*)obj + 0x4) != 0) {
+            fn_805AF0E4(*(int*)((char*)obj + 0x4), 1);
+        }
+        if ((unsigned int)obj != 0) {
+            *(int*)obj = (int)lbl_806B1B8C;
+            if ((unsigned int)obj != 0) {
+                *(int*)obj = (int)lbl_806B1B80;
+            }
+        }
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+
+extern "C" void fn_805AFD90(int, int);
+extern "C" int fn_805AFD3C(int obj, int val);
+extern "C" int fn_805AFD3C(int obj, int val) {
+    if (obj) {
+        fn_805AFD90(obj, -1);
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+
+extern "C" void fn_805AF3D0(unsigned char*, int);
+extern "C" void fn_805B0228(int, unsigned char*);
+extern "C" void fn_805B05EC(int, int);
+extern "C" int fn_805B018C(int obj, int obj2);
+extern "C" int fn_805B018C(int obj, int obj2) {
+    unsigned char val2[24];
+    *(int*)((char*)obj + 0x4) = 0;
+    *(int*)((char*)obj + 0x8) = 0;
+    *(int*)((char*)obj + 0xc) = 0;
+    int val3 = *(int*)((char*)obj2 + 0x8);
+    *(int*)((char*)obj2 + 0x8) = val3 + 4;
+    int val = *(int*)val3;
+    fn_805B05EC(obj, val);
+    for (int i = 0; i < val; i++) {
+        fn_805AF3D0(val2, obj2);
+        fn_805B0228(obj, val2);
+    }
+    return obj;
+}
+
+extern "C" void fn_805AF890(unsigned char*, int);
+extern "C" void fn_805B0458(int, unsigned char*);
+extern "C" void fn_805B0534(int, int);
+extern "C" int fn_805B03BC(int obj, int obj2);
+extern "C" int fn_805B03BC(int obj, int obj2) {
+    unsigned char val2[40];
+    *(int*)((char*)obj + 0x4) = 0;
+    *(int*)((char*)obj + 0x8) = 0;
+    *(int*)((char*)obj + 0xc) = 0;
+    int val3 = *(int*)((char*)obj2 + 0x8);
+    *(int*)((char*)obj2 + 0x8) = val3 + 4;
+    int val = *(int*)val3;
+    fn_805B0534(obj, val);
+    for (int i = 0; i < val; i++) {
+        fn_805AF890(val2, obj2);
+        fn_805B0458(obj, val2);
+    }
+    return obj;
+}
+
+extern "C" void fn_805B08B0();
+extern "C" void fn_805B0890();
+extern "C" void fn_805B0890() {
+    fn_805B08B0();
+}
+
+extern "C" void fn_805AFC34(int, int);
+extern "C" int fn_805B08D4(int obj, int val);
+extern "C" int fn_805B08D4(int obj, int val) {
+    if (obj) {
+        fn_805AFC34(obj, -1);
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+
+extern "C" void fn_805B0960(int obj, int obj2);
+extern "C" void fn_805B0960(int obj, int obj2) {
+    int i = *(int*)obj;
+    while (i != (unsigned int)(*(int*)obj2)) {
+        i += 72;
+    }
+}
+
+extern "C" void fn_805B099C();
+extern "C" void fn_805B097C();
+extern "C" void fn_805B097C() {
+    fn_805B099C();
+}
+
+extern "C" void fn_805B0A70();
+extern "C" void fn_805B0A48(int val);
+extern "C" void fn_805B0A48(int val) {
+    if ((unsigned int)val != 0) {
+        fn_805B0A70();
+    }
+}
+
+extern "C" int fn_805B0AE4(int obj, int val, int obj2);
+extern "C" int fn_805B0AE4(int obj, int val, int obj2) {
+    for (int i = 0; i != val; i++) {
+        if ((unsigned int)obj2 > 0) {
+            *(float*)obj2 = *(float*)obj;
+            char* ptr = (char*)obj;
+            char* ptr2 = (char*)obj2;
+            *(float*)(ptr2 + 0x4) = *(float*)(ptr + 0x4);
+            *(float*)(ptr2 + 0x8) = *(float*)(ptr + 0x8);
+            *(float*)(ptr2 + 0xc) = *(float*)(ptr + 0xc);
+            *(unsigned short*)(ptr2 + 0x10) = *(short*)(ptr + 0x10);
+            *(unsigned short*)(ptr2 + 0x12) = *(short*)(ptr + 0x12);
+        }
+        obj += 20;
+        obj2 += 20;
+    }
+    return obj2;
+}
+
+extern "C" void fn_805B0BA4(int, int);
+extern "C" int fn_805B0B3C(int val, int val2, int val3);
+extern "C" int fn_805B0B3C(int val, int val2, int val3) {
+    int val4 = val;
+    int result = val3;
+    while (val2) {
+        fn_805B0BA4(result, val4);
+        val2--;
+        val4 += 32;
+        result += 32;
+    }
+    return result;
+}
+
+extern "C" void fn_805B0BEC();
+extern "C" void fn_805B0BC4(int val);
+extern "C" void fn_805B0BC4(int val) {
+    if ((unsigned int)val != 0) {
+        fn_805B0BEC();
+    }
+}
+
+extern "C" void fn_805B0E38();
+extern "C" void fn_805B0E18();
+extern "C" void fn_805B0E18() {
+    fn_805B0E38();
+}
+
+extern "C" void fn_805B0EE8();
+extern "C" void fn_805B0EC8();
+extern "C" void fn_805B0EC8() {
+    fn_805B0EE8();
+}
+
+extern "C" void fn_805AF684();
+extern "C" void fn_805B0F10();
+extern "C" void fn_805B0F10() {
+    fn_805AF684();
+}
+
+extern "C" void fn_805AF370();
+extern "C" void fn_805B0F30();
+extern "C" void fn_805B0F30() {
+    fn_805AF370();
+}
+
+// Native functions without reference source, drafted with mwdec (near matches, not exact; see scores).
+// mwdec-near
+extern "C" unsigned char fn_805AF1E8(int, int, int);
+extern "C" void fn_805AF80C(int);
+extern "C" int fn_805AF908(int, int);
+extern "C" void fn_805AEF30(int arg0, int arg1, int arg2);
+// near match: 97.8%
+extern "C" void fn_805AEF30(int arg0, int arg1, int arg2) {
+    int temp_r31;
+    int var_r30;
+    fn_805AF80C(arg0 + 64);
+    if ((int)*(int*)arg2 > 1) {
+        temp_r31 = *(int*)(0xc + (char*)(arg0));
+        var_r30 = arg2 + 4;
+        while (var_r30 != (unsigned int)(arg2 + ((*(int*)arg2 << 1) + 4))) {
+            if (fn_805AF1E8(temp_r31 + *(short*)var_r30 * 44, arg1, 0) != 0) {
+                var_r30 = var_r30 + 2;
+            } else {
+                var_r30 = fn_805AF908(arg2, var_r30);
+            }
+        }
+    }
+}
+
+extern "C" void fn_805AF5C8(int arg0, int arg1);
+// near match: 97.9%
+extern "C" void fn_805AF5C8(int arg0, int arg1) {
+    float temp_f1;
+    int temp_r31 = *(int*)arg0 - 2;
+    float var_f31 = 3.4028235e38;
+    int var_r30 = 0;
+    while (var_r30 < temp_r31) {
+        temp_f1 = CollisionUtil::TriPointSqrDist_Float(*(const CVector3f*)arg1, *(const CVector3f*)(arg0 + 4), *(const CVector3f*)(((var_r30 + 1) * 12) + (arg0 + 4)), *(const CVector3f*)(arg0 + ((var_r30 + 2) * 12 + 4)), nullptr, nullptr);
+        if (temp_f1 < var_f31) {
+            var_f31 = temp_f1;
+        }
+        var_r30 = var_r30 + 1;
+    }
+    CMath::SqrtF(var_f31);
+}
+
+extern "C" void fn_805B0BA4(int, int);
+extern "C" int fn_805B0C80(int arg0, int arg1, int arg2);
+// near match: 96.2%
+extern "C" int fn_805B0C80(int arg0, int arg1, int arg2) {
+    int var_r31 = (*(int*)arg0);
+    while ((unsigned int)var_r31 != (*(int*)arg1)) {
+        fn_805B0BA4(arg2, var_r31);
+        var_r31 += 32;
+        arg2 += 32;
+    }
+    return arg2;
+}
+

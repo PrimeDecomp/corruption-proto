@@ -2,8 +2,8 @@
 #ifndef _SLDRACTORPARAMETERS_HPP
 #define _SLDRACTORPARAMETERS_HPP
 
+#include "Kyoto/CAssetId.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
-#include "Kyoto/SObjectTag.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
 #include "MetroidPrime/ScriptLoader/Structs/SLdrLightParameters.hpp"
 #include "MetroidPrime/ScriptLoader/Structs/SLdrScannableParameters.hpp"

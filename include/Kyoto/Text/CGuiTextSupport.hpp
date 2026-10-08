@@ -105,6 +105,6 @@ private:
 };
 
 CHECK_SIZEOF(CGuiTextProperties, 0x10)
-CHECK_SIZEOF(CGuiTextSupport, 0xd08)
+CHECK_SIZEOF(CGuiTextSupport, 0xd10)
 
 #endif // _CGUITEXTSUPPORT

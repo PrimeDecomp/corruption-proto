@@ -17,7 +17,7 @@ CObjectReference::CObjectReference(const rstl::auto_ptr< IObj >& obj)
 : mRefCount(0)
 , mLockCount(0)
 , mLoading(false)
-, mObjTag(kInvalidAssetId, kInvalidAssetId)
+, mObjTag(0xFFFFFFFF, kInvalidAssetId)
 , mObjectStore(nullptr)
 , mObject(obj.release())
 , mParams(CVParamTransfer::Null()) {}

@@ -25,6 +25,6 @@ private:
   CParticleData::EParentedMode mParentedMode;
   uint mFlags;
 };
-CHECK_SIZEOF(CEffectComponent, 0x1c)
+CHECK_SIZEOF(CEffectComponent, 0x28)
 
 #endif // _CEFFECTCOMPONENT

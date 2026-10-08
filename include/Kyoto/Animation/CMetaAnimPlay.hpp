@@ -22,6 +22,6 @@ private:
   CPrimitive mPrimitive;
   CCharAnimTime mStartTime;
 };
-CHECK_SIZEOF(CMetaAnimPlay, 0x24)
+CHECK_SIZEOF(CMetaAnimPlay, 0x30)
 
 #endif // _CMETAANIMPLAY

@@ -120,6 +120,14 @@ inline void coutput_stream_helper(const bool& t, COutputStream& out) {
   out.WriteChar(static_cast< u8 >(t));
 }
 
+class CAssetId;
+extern "C" void CAssetId_WriteToStream(const CAssetId& id, COutputStream& output);
+
+template <>
+inline void coutput_stream_helper(const CAssetId& t, COutputStream& out) {
+  CAssetId_WriteToStream(t, out);
+}
+
 #include "rstl/pair.hpp"
 #include "rstl/reserved_vector.hpp"
 #include "rstl/vector.hpp"

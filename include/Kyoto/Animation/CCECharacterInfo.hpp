@@ -74,7 +74,7 @@ private:
   bool mAnimatedScale;          // Guessed name.
   rstl::vector< rstl::pair< uint, CAABox > > mAnimBoundsById;
 };
-CHECK_SIZEOF(CCECharacterInfo, 0xf8)
+CHECK_SIZEOF(CCECharacterInfo, 0x118)
 NESTED_CHECK_SIZEOF(CCECharacterInfo, CParticleResData, 0x60)
 
 #endif // _CCECHARACTERINFO

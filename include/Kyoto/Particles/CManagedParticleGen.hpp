@@ -36,5 +36,5 @@ private:
   bool mCreatePending : 1;
   bool x40_26_ : 1;
 };
-CHECK_SIZEOF(CManagedParticleGen, 0x44)
+CHECK_SIZEOF(CManagedParticleGen, 0x50)
 #endif // _CMANAGEDPARTICLEGEN

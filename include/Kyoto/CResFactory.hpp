@@ -85,7 +85,7 @@ private:
   rstl::map< SObjectTag, LoadList::iterator > mLoadMap;
   LoadList mCancelledList;
 };
-CHECK_SIZEOF(CResFactory, 0xe0)
+CHECK_SIZEOF(CResFactory, 0xf0)
 
 extern CResFactory* gpResourceFactory;
 

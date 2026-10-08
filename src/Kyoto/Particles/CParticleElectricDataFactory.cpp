@@ -85,8 +85,8 @@ bool CParticleElectricDataFactory::CreateELSM(CElectricDescription* desc, CInput
     case 'SSWH': {
       const FourCC childId = CParticleDataFactory::GetClassID(in);
       if (childId != 'NONE') {
-        const CAssetId id = in.ReadInt32();
-        if (id != 0) {
+        const CAssetId id = CAssetId_ReadFromStream(in);
+        if (id != kInvalidAssetId) {
           desc->mSSWH = TCachedToken< CSwooshDescription >(pool->GetObj(SObjectTag('SWHC', id)));
         }
       }

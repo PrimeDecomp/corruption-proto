@@ -172,6 +172,6 @@ private:
   static rstl::vector< char, rstl::aligned_allocator > mWorkAreaB;
 };
 
-NESTED_CHECK_SIZEOF(CMemoryCardSys, CCardFileInfo, 0x16C)
+NESTED_CHECK_SIZEOF(CMemoryCardSys, CCardFileInfo, 0x190)
 
 #endif // _CMEMORYCARDSYS

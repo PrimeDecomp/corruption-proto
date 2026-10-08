@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 
-CPakFile::CResInfo::CResInfo(uint id, uint fourCC, uint offset, uint size, uint flags,
+CPakFile::CResInfo::CResInfo(CAssetId id, uint fourCC, uint offset, uint size, uint flags,
                             uint groupedSize)
 : mId(id) {
   const uint typeIdx = CFactoryMgr::FourCCToTypeIdx(fourCC);
@@ -116,7 +116,7 @@ void CPakFile::InitialHeaderLoad() {
   mNameList.reserve(nameCount);
   for (int i = 0; i < nameCount; ++i) {
     const FourCC type = in.ReadInt32();
-    const CAssetId id = in.ReadInt32();
+    const CAssetId id = CAssetId_ReadFromStream(in);
     const rstl::string name = CStringExtras::ReadString(in);
     mNameList.push_back_unsafe(
         rstl::pair< rstl::string, SObjectTag >(name, SObjectTag(type, id)));
@@ -167,7 +167,7 @@ void CPakFile::LoadResourceTable(CMemoryInStream& in) {
   for (int i = 0; i < static_cast< int >(mResTableCount); ++i) {
     const uint flags = in.ReadInt32();
     const uint type = in.ReadInt32();
-    const uint id = in.ReadInt32();
+    const CAssetId id = CAssetId_ReadFromStream(in);
     const uint size = in.ReadInt32();
     const uint offset = in.ReadInt32();
     sortedResources.push_back_unsafe(CResInfo(id, type, offset, size, flags, 0));
@@ -207,12 +207,12 @@ const SObjectTag* CPakFile::GetResIdByName(const char* name) const {
   return nullptr;
 }
 
-const CPakFile::CResInfo* CPakFile::GetResInfo(uint id) const {
+const CPakFile::CResInfo* CPakFile::GetResInfo(const CAssetId& id) const {
   if (!IsCompletelyLoaded())
     return nullptr;
   if (mStashedInARAM)
     return nullptr;
-  const uint bucket = id & 0xff;
+  const uint bucket = static_cast< uint >(id.Value()) & 0xff;
   rstl::vector< CResInfo >::const_iterator first =
       mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
@@ -225,10 +225,10 @@ const CPakFile::CResInfo* CPakFile::GetResInfo(uint id) const {
   return &*it;
 }
 
-const CPakFile::CResInfo* CPakFile::GetResInfoForLoadDirectionless(uint id) {
+const CPakFile::CResInfo* CPakFile::GetResInfoForLoadDirectionless(const CAssetId& id) {
   if (mStashedInARAM)
     return nullptr;
-  const uint bucket = id & 0xff;
+  const uint bucket = static_cast< uint >(id.Value()) & 0xff;
   rstl::vector< CResInfo >::const_iterator first =
       mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
@@ -256,10 +256,10 @@ const CPakFile::CResInfo* CPakFile::GetResInfoForLoadDirectionless(uint id) {
   return best;
 }
 
-const CPakFile::CResInfo* CPakFile::GetResInfoForLoadPreferForward(uint id) {
+const CPakFile::CResInfo* CPakFile::GetResInfoForLoadPreferForward(const CAssetId& id) {
   if (mStashedInARAM)
     return nullptr;
-  const uint bucket = id & 0xff;
+  const uint bucket = static_cast< uint >(id.Value()) & 0xff;
   rstl::vector< CResInfo >::const_iterator first =
       mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
@@ -291,14 +291,14 @@ const CPakFile::CResInfo* CPakFile::GetResInfoForLoadPreferForward(uint id) {
 void CPakFile::RebuildResourceLists(const rstl::vector< CResInfo >& sortedResources) {
   rstl::reserved_vector< uint, 256 > bucketCounts(0);
 
-  const CResInfo emptyInfo(0, 'TXTR', 0, 0, 0, 0);
+  const CResInfo emptyInfo(kInvalidAssetId, 'TXTR', 0, 0, 0, 0);
   mResInfoBuckets.clear();
   mResInfoBuckets.resize(mResTableCount, emptyInfo);
   mBucketOffsets.clear();
   mBucketOffsets.reserve(257);
   for (rstl::vector< CResInfo >::const_iterator it = sortedResources.begin();
        it != sortedResources.end(); ++it)
-    ++bucketCounts[it->GetId() & 0xff];
+    ++bucketCounts[static_cast< uint >(it->GetId().Value()) & 0xff];
   mBucketOffsets.push_back_unsafe(0);
   uint offset = 0;
   for (uint i = 0; i < 256; ++i) {
@@ -309,7 +309,7 @@ void CPakFile::RebuildResourceLists(const rstl::vector< CResInfo >& sortedResour
 
   for (int i = 0; i < sortedResources.size(); ++i) {
     const CResInfo& info = sortedResources[i];
-    const uint bucket = info.GetId() & 0xff;
+    const uint bucket = static_cast< uint >(info.GetId().Value()) & 0xff;
     mResInfoBuckets[mBucketOffsets[bucket] + bucketCounts[bucket]] = info;
     ++bucketCounts[bucket];
   }

@@ -83,7 +83,7 @@ private:
   CVector3f x88_;
   SObjectTag mTag;
 };
-CHECK_SIZEOF(CAllFormatsAnimSource, 0x9c)
+CHECK_SIZEOF(CAllFormatsAnimSource, 0xa8)
 
 template < typename T >
 inline TSubAnimTypeToken< T >::TSubAnimTypeToken(const TLockedToken< CAllFormatsAnimSource >& token)

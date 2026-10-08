@@ -25,7 +25,7 @@ private:
   rstl::string mAnimName;
 };
 
-CHECK_SIZEOF(CPrimitive, 0x18)
+CHECK_SIZEOF(CPrimitive, 0x20)
 
 inline bool operator<(const CPrimitive& a, const CPrimitive& b) { return a.Compare(b) < 0; }
 

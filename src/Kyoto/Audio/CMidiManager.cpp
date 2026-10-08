@@ -112,11 +112,11 @@ CAudioHandle CMidiManager::LocateHandle() {
 }
 
 CMidiManager::CMidiData::CMidiData(CInputStream& in)
-: mSongId(-1), mGroupId(-1), mAgscId(-1) {
+: mSongId(-1), mGroupId(-1), mAgscId(kInvalidAssetId) {
   in.ReadInt32();
   mSongId = in.ReadInt32();
   mGroupId = in.ReadInt32();
-  mAgscId = in.ReadInt32();
+  mAgscId = CAssetId_ReadFromStream(in);
   int len = in.ReadInt32();
   mData = rs_new uchar[len];
   in.Get(mData.get(), len);

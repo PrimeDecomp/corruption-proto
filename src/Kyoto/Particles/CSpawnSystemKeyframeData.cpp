@@ -21,10 +21,10 @@ void CSpawnSystemKeyframeData::LoadAllSpawnedSystemTokens(CSimplePool* pool) {
 }
 
 CSpawnSystemKeyframeData::CSpawnSystemKeyframeInfo::CSpawnSystemKeyframeInfo(CInputStream& in)
-: mId(in.Get< uint >())
+: mId(in.Get< CAssetId >())
 , mType(in.Get< uint >())
-, x8_(in.Get< uint >())
 , xc_(in.Get< uint >())
+, x10_(in.Get< uint >())
 , mToken() {
   if (mType == 0) {
     mType = 'PART';

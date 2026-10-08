@@ -184,7 +184,7 @@ void CTexture::LoadMipLevel(int mip, GXTexMapID tex, EClampMode clamp) const {
   mFrameAllocated = sCurrentFrameCount;
 }
 
-void CTexture::UnloadBitmapData(CAssetId textureId) const {
+void CTexture::UnloadBitmapData(const CAssetId& textureId) const {
   if (!mBitmapReloader.null()) {
     bool loadToARAM = mBitmapReloader->GetShouldBeInARAM();
     mBitmapReloader = rs_new CDumpedBitmapDataReloader(textureId, mMemoryAllocated, loadToARAM);

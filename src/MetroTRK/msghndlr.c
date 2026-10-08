@@ -722,3 +722,73 @@ DSError TRKDoSetOption(TRKBuffer* buffer) {
     }
     return TRKSendACK(buffer);
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+void __TRK_copy_vectors();
+void fn_80656718();
+void fn_80005518();
+extern int lbl_8077BC60;
+
+int fn_806534D4();
+int fn_806534DC();
+int fn_806534E4();
+int fn_8065353C();
+int fn_80653594();
+int fn_8065360C();
+
+int fn_806534D4() {
+    return 0;
+}
+
+int fn_806534DC() {
+    return 0;
+}
+
+int fn_806534E4() {
+    unsigned char dst[72];
+    memset(dst, 0, 64);
+    *(unsigned char*)((char*)dst + 0x4) = 128;
+    *(int*)dst = 64;
+    *(unsigned char*)((char*)dst + 0x8) = 0;
+    fn_80656718(dst, 64);
+    __TRK_copy_vectors();
+    return 0;
+}
+
+int fn_8065353C() {
+    unsigned char dst[72];
+    memset(dst, 0, 64);
+    *(unsigned char*)((char*)dst + 0x4) = 128;
+    *(int*)dst = 64;
+    *(unsigned char*)((char*)dst + 0x8) = 0;
+    fn_80656718(dst, 64);
+    fn_80005518();
+    return 0;
+}
+
+int fn_80653594() {
+    unsigned char dst[76];
+    struct TRKEvent stack_8;
+    lbl_8077BC60 = 0;
+    memset(dst, 0, 64);
+    *(unsigned char*)((char*)dst + 0x4) = 128;
+    *(int*)dst = 64;
+    *(unsigned char*)((char*)dst + 0x8) = 0;
+    fn_80656718(dst, 64);
+    TRKConstructEvent(&stack_8, 1);
+    TRKPostEvent(&stack_8);
+    return 0;
+}
+
+int fn_8065360C() {
+    unsigned char dst[72];
+    lbl_8077BC60 = 1;
+    memset(dst, 0, 64);
+    *(unsigned char*)((char*)dst + 0x4) = 128;
+    *(int*)dst = 64;
+    *(unsigned char*)((char*)dst + 0x8) = 0;
+    fn_80656718(dst, 64);
+    return 0;
+}
+

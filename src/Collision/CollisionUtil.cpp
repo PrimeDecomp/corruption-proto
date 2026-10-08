@@ -1773,3 +1773,55 @@ double TriPointSqrDist(const CVector3f& point, const CVector3f& trivert0, const 
 }
 
 } // namespace CollisionUtil
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" float fn_804763CC();
+
+extern "C" int fn_804762A8(int obj, int obj2, int obj3, int obj4, int obj5);
+extern "C" void fn_8047651C();
+extern "C" int fn_8047AA68(int obj, int obj2, int obj3, float f);
+
+extern "C" int fn_804762A8(int obj, int obj2, int obj3, int obj4, int obj5) {
+    float f;
+    float f2;
+    float f3;
+    float f4;
+    f3 = *(float*)obj - *(float*)obj2;
+    f2 = *(float*)((char*)obj + 0x4) - *((float*)((char*)obj2 + 0x4));
+    f = *(float*)((char*)obj + 0x8) - *(float*)((char*)obj2 + 0x8);
+    float f5 = *(float*)((char*)obj + 0xc) + *(float*)((char*)obj2 + 0xc);
+    float f6 = f * f + (f3 * f3 + f2 * f2) - f5 * f5;
+    if (f6 < 0.0f) {
+        *(float*)obj5 = 0.0f;
+        return 1;
+    }
+    f4 = *(float*)obj3 - *(float*)obj4;
+    float f7 = *(float*)((char*)obj3 + 0x4) - (*(float*)((char*)obj4 + 0x4));
+    float f8 = *(float*)((char*)obj3 + 0x8) - *(float*)(0x8 + (char*)obj4);
+    float f9 = f8 * f8 + (f4 * f4 + f7 * f7);
+    float f10 = 2.0f * (f * f8 + (f3 * f4 + f2 * f7));
+    float v = f10 * f10 - 4.0f * f9 * f6;
+    if (v < 0.0f) {
+        return 0;
+    }
+    *(float*)obj5 = (-f10 - CMath::SqrtF(v)) / (2.0f * f9);
+    return 2;
+}
+
+extern "C" void fn_8047651C() {
+    CMath::SqrtF(fn_804763CC());
+}
+
+extern "C" int fn_8047AA68(int obj, int obj2, int obj3, float f) {
+    float f2;
+    CMRay ray(*(const CVector3f*)obj, *(const CVector3f*)obj2, f);
+    f2 = 0.0f;
+    float f3 = 0.0f;
+    int result = CollisionUtil::RayAABoxIntersection(ray, *(const CAABox*)obj3, f3, f2);
+    if (result && f3 <= f) {
+        return result;
+    }
+    return result;
+}
+

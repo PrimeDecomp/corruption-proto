@@ -16,3 +16,24 @@
  * CDelaunayTriangulation is an inferred descriptive original-TU filename, not recovered debug
  * provenance.
  */
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+
+extern "C" void fn_8047FAA0(int obj, int val, int val2, int val3, int val4);
+
+extern "C" void fn_8047FAA0(int obj, int val, int val2, int val3, int val4) {
+    int val5 = *(int*)((char*)obj + 0x2c) + (val << 4);
+    if (val2 == (*(int*)val5) && (*(int*)((char*)val5 + 0x8)) == -1) {
+        *(int*)((char*)val5 + 0x8) = val4;
+    } else {
+        if (val2 != (*(int*)((char*)val5 + 0x4))) {
+            return;
+        }
+        if ((*(int*)((char*)val5 + 0xc)) != -1) {
+            return;
+        }
+        *(int*)((char*)val5 + 0xc) = val4;
+    }
+}
+

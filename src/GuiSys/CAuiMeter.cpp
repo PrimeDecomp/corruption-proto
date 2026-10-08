@@ -32,7 +32,7 @@ bool CAuiMeter::AddWorkerWidget(CGuiWidget* worker) {
   short id = worker->GetWorkerId();
   if (id >= mWorkers.size()) {
     for (int i = mWorkers.size(); i <= id; ++i) {
-      mWorkers.push_back_unsafe(nullptr);
+      mWorkers.push_back(nullptr);
     }
   }
   mWorkers[id] = worker;

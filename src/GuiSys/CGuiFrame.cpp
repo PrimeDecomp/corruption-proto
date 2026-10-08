@@ -13,6 +13,8 @@
 #include "GuiSys/CGuiLight.hpp"
 #include "GuiSys/CGuiModel.hpp"
 #include "GuiSys/CGuiWidget.hpp"
+#include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/Basics/CBasics.hpp"
 #include "Kyoto/CResFactory.hpp"
 #include "Kyoto/CSimplePool.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
@@ -20,16 +22,33 @@
 #include "rstl/algorithm.hpp"
 #include "rstl/list.hpp"
 
+// Prototype CGraphics lighting entry points (class membership not yet established).
+
 namespace rstl {
 class CWidgetFartherFromCamera {
 public:
   bool operator()(const CGuiWidget* a, const CGuiWidget* b) const {
-    return a->GetWorldPosition().GetY() > b->GetWorldPosition().GetY();
+    CVector3f posA;
+    CVector3f posB;
+    posA = a->GetWorldPosition();
+    posB = b->GetWorldPosition();
+    return posA.GetY() > posB.GetY();
   }
 };
 } // namespace rstl
 
-uint CGuiFrame::ReadVersion(CInputStream& in) { return in.Get< uint >(); }
+uint CGuiFrame::ReadVersion(CInputStream& in) {
+  const uint version = in.Get< uint >();
+  if (version < 4) {
+    CCallStack stack(0, "CGuiFrame.cpp(90) : ", kUnknownType);
+    rs_log_assert_failure(&stack, "CGuiFrame.cpp", 90, "Verify",
+                          "version >= skLastSupportedFrameVersion",
+                          CBasics::Stringize("Bad version on frame: expected %d, got %d", 5, version));
+    rs_debugger_printf("Would have thrown exception: %s\n", "false");
+    RAssert_TriggerIllegalInstruction();
+  }
+  return version;
+}
 
 rstl::vector< CToken > CGuiFrame::LoadAssets(CInputStream& in, CSimplePool* pool, uint version) {
   rstl::vector< CToken > assets;
@@ -234,12 +253,11 @@ void CGuiFrame::EnableLights(uint mask) const {
       }
     }
   }
+  CGraphics::SetLightState(enabled);
   if (enabled == 0) {
-    CGraphics::DisableAllLights();
-    CGraphics::SetAmbientColor(CColor::White());
+    CGraphics::SetLightingMode(0);
   } else {
-    CGraphics::SetLightState(enabled);
-    CGraphics::SetAmbientColor(mAmbientColor);
+    CGraphics::SetLightingModeAndColor(1, mAmbientColor);
   }
 }
 

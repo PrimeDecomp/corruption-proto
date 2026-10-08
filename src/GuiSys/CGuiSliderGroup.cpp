@@ -51,23 +51,7 @@ bool CGuiSliderGroup::AddWorkerWidget(CGuiWidget* worker) {
   return true;
 }
 
-void CGuiSliderGroup::ProcessUserInput(const CFinalInput& input) {
-  if (input.DLALeft()) {
-    Decrement();
-    return;
-  }
-  if (input.DLARight()) {
-    Increment();
-    return;
-  }
-  if (input.PDPLeft()) {
-    Decrement();
-    return;
-  }
-  if (input.PDPRight()) {
-    Increment();
-  }
-}
+void CGuiSliderGroup::ProcessUserInput(const CFinalInput& input) {}
 
 void CGuiSliderGroup::Update(float dt) {
   float delta = dt * (mMaxVal - mMinVal);
@@ -109,16 +93,6 @@ void CGuiSliderGroup::Update(float dt) {
   CVector3f position = CVector3f::Lerp(a, b, factor);
   first->SetLocalPosition(position);
   mInputPending = false;
-}
-
-void CGuiSliderGroup::Increment() {
-  mState = kS_Increasing;
-  mInputPending = true;
-}
-
-void CGuiSliderGroup::Decrement() {
-  mState = kS_Decreasing;
-  mInputPending = true;
 }
 
 CGuiWidget::EWidgetUsageFlags CGuiSliderGroup::GetWidgetUsageFlags() const {

@@ -52,7 +52,10 @@ private:
   bool mDrawShadow;
   bool mScaleToViewport; // Guessed name
 };
-// NESTED_CHECK_SIZEOF(CGuiTextPane, SFontInfo, 0x14) // Echoes layout; Corruption CAssetId is
-// 64-bit CHECK_SIZEOF(CGuiTextPane, 0xe08) // Echoes layout; Corruption CAssetId is 64-bit
+// Retail layout: mTextSupport at 0xd8 (0x90 bytes), mFontInfo at 0x168, mAlternateFontInfo at 0x180,
+// flags at 0x198/0x199, sizeof 0x1a0. Cannot be checked until CGuiTextSupport (currently 0xd10,
+// Echoes layout) is corrected.
+// NESTED_CHECK_SIZEOF(CGuiTextPane, SFontInfo, 0x18)
+// CHECK_SIZEOF(CGuiTextPane, 0x1a0)
 
 #endif // _CGUITEXTPANE

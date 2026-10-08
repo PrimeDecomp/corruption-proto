@@ -26,7 +26,7 @@ CGuiTextPane::SFontInfo::SFontInfo(CInputStream& in)
 , mExtentY(in.ReadInt32())
 , mFontColor(in)
 , mOutlineColor(in)
-, mFontId(in.ReadInt32()) {}
+, mFontId(in) {}
 
 CGuiWidget* CGuiTextPane::Create(CGuiFrame* frame, CInputStream& in, CSimplePool* pool,
                                  uint version) {

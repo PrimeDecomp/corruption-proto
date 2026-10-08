@@ -24,10 +24,9 @@ public:
 private:
   uint mBufferSize;
   rstl::single_ptr< uchar > mBuffer;
-  rstl::vector< TCachedToken< CTexture > > mTextures;
   rstl::vector< rstl::auto_ptr< CCubeModel > > mModels;
   rstl::vector< rstl::vector< void* > > mSurfaces;
 };
-CHECK_SIZEOF(CGuiFrameModelDatabase, 0x38)
+CHECK_SIZEOF(CGuiFrameModelDatabase, 0x28)
 
 #endif // _CGUIFRAMEMODELDATABASE

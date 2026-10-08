@@ -1798,6 +1798,9 @@ MetroidPrime/ScriptObjects/CFishCloudModifier.cpp:
 	.text       start:0x803E5418 end:0x803E5A48
 	.ctors      start:0x8065BB34 end:0x8065BB38
 
+MetroidPrime/BodyState/CBodyTypeInfo.cpp:
+	.text       start:0x803E5A48 end:0x803E5A70
+
 MetroidPrime/Enemies/CSteamLord.cpp:
 	.text       start:0x803E5A70 end:0x803E7850
 	.ctors      start:0x8065BB38 end:0x8065BB3C
@@ -3133,6 +3136,10 @@ Kyoto/Streams/CZipSupport.cpp:
 	.text       start:0x80506978 end:0x80506B74
 	.rodata     start:0x806A2F68 end:0x806A3088
 
+rstl/locked_cache_allocator.cpp:
+	.text       start:0x80506B74 end:0x80506BB8
+	.ctors      start:0x8065BBEC end:0x8065BBF0
+
 Kyoto/CFactoryStore.cpp:
 	.text       start:0x80506BB8 end:0x80506C24
 	.data       start:0x806E0350 end:0x806E035C align:4
@@ -3687,6 +3694,9 @@ Kyoto/Audio/CAudioSoundEffect.cpp:
 Kyoto/Audio/CAudioVoice.cpp:
 	.text       start:0x8056C884 end:0x8056E2A8
 
+Kyoto/Audio/CFMODSampleSupport.cpp:
+	.text       start:0x8056E2A8 end:0x8056E334
+
 Kyoto/Animation/CAssetSoundPOINode.cpp:
 	.text       start:0x8056E334 end:0x8056E67C
 
@@ -3811,6 +3821,9 @@ WorldFormat/CTriangleCollisionCache.cpp:
 
 WorldFormat/CCollidableTranslatedConvexPH.cpp:
 	.text       start:0x805B36EC end:0x805B5D10
+
+FMOD/fmod_codec_callbacks.cpp:
+	.text       start:0x805B5D10 end:0x805B5DA4
 
 FMOD/fmod.cpp:
 	.text       start:0x805B5DA4 end:0x805B60A0
@@ -4529,3 +4542,6 @@ Revolution/WPAD.c:
 
 Revolution/KPAD.c:
 	.text       start:0x80658800 end:0x8065B4A0
+
+Dolphin/pad/PadFallback.c:
+	.text       start:0x8065B4A0 end:0x8065B4B0

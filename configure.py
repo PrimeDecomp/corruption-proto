@@ -467,6 +467,7 @@ config.libs = [
         Object(NonMatching, "Dolphin/os/OSThread.c"),
         Object(NonMatching, "Dolphin/os/OSTime.c"),
         Object(NonMatching, "Dolphin/os/__ppc_eabi_init.cpp", extra_cflags=["-lang=c"]),
+        Object(NonMatching, "Dolphin/pad/PadFallback.c"),
     ]),
     DolphinLib("ETH", [
         Object(NonMatching, "Dolphin/eth/eth.c"),
@@ -605,6 +606,7 @@ config.libs = [
         Object(NonMatching, "Dolphin/vi/vi.c"),
     ]),
     FmodLib("FMOD", [
+        Object(NonMatching, "FMOD/fmod_codec_callbacks.cpp"),
         Object(NonMatching, "FMOD/fmod.cpp"),
         Object(NonMatching, "FMOD/fmod_async.cpp"),
         Object(NonMatching, "FMOD/fmod_channel.cpp"),
@@ -1003,6 +1005,7 @@ config.libs = [
         Object(NonMatching, "Kyoto/Audio/CAudioChannel.cpp"),
         Object(NonMatching, "Kyoto/Audio/CAudioSoundEffect.cpp"),
         Object(NonMatching, "Kyoto/Audio/CAudioVoice.cpp"),
+        Object(NonMatching, "Kyoto/Audio/CFMODSampleSupport.cpp"),
         Object(NonMatching, "Kyoto/Animation/CAssetSoundPOINode.cpp"),
         Object(NonMatching, "Kyoto/Audio/CSoundEvaluator.cpp"),
         Object(NonMatching, "Kyoto/Math/CAngularPIDController.cpp"),
@@ -1517,6 +1520,7 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/Weapons/CBeamProjectileManager.cpp"),
         Object(NonMatching, "MetroidPrime/Enemies/CFlyingPirate.cpp"),
         Object(NonMatching, "MetroidPrime/ScriptObjects/CFishCloudModifier.cpp"),
+        Object(NonMatching, "MetroidPrime/BodyState/CBodyTypeInfo.cpp"),
         Object(NonMatching, "MetroidPrime/Enemies/CSteamLord.cpp"),
         Object(NonMatching, "MetroidPrime/ScriptObjects/CScriptPositionRelay.cpp"),
         Object(NonMatching, "MetroidPrime/AudioDebug.cpp"),
@@ -1534,6 +1538,9 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/CAnimData.cpp"),
         Object(NonMatching, "MetroidPrime/CParticleDatabase.cpp"),
         Object(NonMatching, "MetroidPrime/CParticleGenInfoGeneric.cpp"),
+    ]),
+    RetroLib("rstl", [
+        Object(NonMatching, "rstl/locked_cache_allocator.cpp"),
     ]),
     RuntimeLib("MetroTRK", [
         Object(NonMatching, "MetroTRK/mainloop.c"),

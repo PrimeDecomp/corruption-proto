@@ -2771,11 +2771,18 @@ Kyoto/Graphics/CGX.cpp:
 Kyoto/Graphics/CTevCombiners.cpp:
 	.text       start:0x804BE6C4 end:0x804BEB44
 	.ctors      start:0x8065BB90 end:0x8065BB94
+	.bss        start:0x80782380 end:0x807823CC align:4 common
+	.sdata      start:0x80796CA8 end:0x80796CB0 align:4
+	.sbss       start:0x8079B264 end:0x8079B270 align:4
 
 Kyoto/Graphics/DolphinCGraphics.cpp:
 	.text       start:0x804BEB44 end:0x804C4D6C
 	.ctors      start:0x8065BB94 end:0x8065BB98
 	.rodata     start:0x8069E9F8 end:0x8069ED28
+	.data       start:0x806DF340 end:0x806DF358 align:4
+	.bss        start:0x807826DC end:0x80782B14 align:4 common
+	.sdata      start:0x80796CC0 end:0x80796CD0 align:4
+	.sbss       start:0x8079B2A4 end:0x8079B2E8 align:4
 	.sdata2     start:0x807A1D04 end:0x807A1DA0 align:4
 
 Kyoto/Graphics/DolphinCPalette.cpp:
@@ -3120,7 +3127,7 @@ Kyoto/Input/CFinalInput.cpp:
 Kyoto/Graphics/CColor.cpp:
 	.text       start:0x8051A93C end:0x8051A9EC
 	.ctors      start:0x8065BC00 end:0x8065BC04
-	.sbss       start:0x8079B4B0 end:0x8079B4D0
+	.sbss       start:0x8079B4B0 end:0x8079B4D8
 
 Kyoto/DolphinCMemoryCardSys.cpp:
 	.text       start:0x8051A9EC end:0x8051DD9C

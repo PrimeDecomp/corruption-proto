@@ -2805,7 +2805,7 @@ Kyoto/Text/CWordInstruction.cpp:
 
 Kyoto/Text/CBlockInstruction.cpp:
 	.text       start:0x804BA5B0 end:0x804BA770
-	.data       start:0x806CF2E0 end:0x806CF300 align:4
+	.data       start:0x806CF2E0 end:0x806CF328 align:4
 
 Kyoto/Text/CFont.cpp:
 	.text       start:0x804BA770 end:0x804BAFE4
@@ -2825,7 +2825,7 @@ Kyoto/Graphics/CCubeModel.cpp:
 Kyoto/Graphics/CGX.cpp:
 	.text       start:0x804BCA64 end:0x804BE6C4
 	.ctors      start:0x8065BB8C end:0x8065BB90
-	.rodata     start:0x8069E968 end:0x8069E9D8
+	.rodata     start:0x8069E940 end:0x8069E9D8
 	.bss        start:0x80781DA8 end:0x80782380 align:4 common
 	.sbss       start:0x8079B258 end:0x8079B260 align:4
 
@@ -2841,9 +2841,10 @@ Kyoto/Graphics/DolphinCGraphics.cpp:
 	.ctors      start:0x8065BB94 end:0x8065BB98
 	.rodata     start:0x8069E9F8 end:0x8069ED28
 	.data       start:0x806DF340 end:0x806DF358 align:4
+	.bss        start:0x807159EC end:0x80715A1C align:4
 	.bss        start:0x807826DC end:0x80782B14 align:4 common
 	.sdata      start:0x80796CC0 end:0x80796CD0 align:4
-	.sbss       start:0x8079B288 end:0x8079B358 align:4
+	.sbss       start:0x8079B270 end:0x8079B358 align:4
 	.sdata2     start:0x807A1D04 end:0x807A1DA0 align:4
 
 Kyoto/Graphics/DolphinCPalette.cpp:
@@ -2854,6 +2855,7 @@ Kyoto/Graphics/DolphinCPalette.cpp:
 Kyoto/Graphics/DolphinCTexture.cpp:
 	.text       start:0x804C50EC end:0x804C74C8
 	.rodata     start:0x8069EDA0 end:0x8069F078
+	.data       start:0x806DF3C4 end:0x806DF3F0 align:4
 	.bss        start:0x80715A70 end:0x80715A90 align:4
 	.sdata      start:0x80796CD8 end:0x80796CE0 align:4
 
@@ -3197,6 +3199,8 @@ Kyoto/Math/CFrustumPlanes.cpp:
 Kyoto/Graphics/CCubeMaterial.cpp:
 	.text       start:0x80511B0C end:0x805196F0
 	.ctors      start:0x8065BBF8 end:0x8065BBFC
+	.rodata     start:0x806A44D0 end:0x806A4590
+	.data       start:0x806E15F8 end:0x806E1628
 	.sdata      start:0x80796DAC end:0x80796DB4 align:4
 	.sbss       start:0x8079B490 end:0x8079B494 align:4
 	.sdata2     start:0x807A21D0 end:0x807A21F8 align:4
@@ -3313,6 +3317,8 @@ Kyoto/Text/CTextRenderBuffer.cpp:
 Kyoto/Graphics/CCubeMoviePlayer.cpp:
 	.text       start:0x8052C2D4 end:0x8052FAA4
 	.rodata     start:0x806A6F78 end:0x806A7628
+	.bss        start:0x80715E60 end:0x80716360 align:32
+	.sbss       start:0x8079B548 end:0x8079B558
 	.sdata2     start:0x807A2288 end:0x807A22D0 align:4
 
 Kyoto/Animation/CAdditiveAnimPlayback.cpp:
@@ -3382,6 +3388,7 @@ Kyoto/Input/CRumbleGenerator.cpp:
 
 Kyoto/Audio/g721.cpp:
 	.text       start:0x8053B680 end:0x8053BFFC
+	.data       start:0x806E19D8 end:0x806E1A58
 
 Kyoto/Audio/DolphinCRSFAudio.cpp:
 	.text       start:0x8053BFFC end:0x8053CE48
@@ -3701,6 +3708,7 @@ Kyoto/Animation/CAssetPOINode.cpp:
 
 Kyoto/Input/RevolutionIController.cpp:
 	.text       start:0x8056F51C end:0x8056F5B8
+	.data       start:0x806E1FF8 end:0x806E2028 align:4
 
 Kyoto/Input/CRevolutionController.cpp:
 	.text       start:0x8056F5B8 end:0x805708F4

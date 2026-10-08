@@ -2,6 +2,8 @@
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/Assert.hpp"
 
+#include <stddef.h>
+
 CRandom16* CRandom16::gRandomNumber = 0;
 CGlobalRandom* CGlobalRandom::gCurrentGlobalRandom = 0;
 
@@ -27,13 +29,7 @@ CGlobalRandom::~CGlobalRandom() {
 }
 
 CRandom16* CRandom16::GetRandomNumber() {
-  if (gRandomNumber == 0) {
-    CCallStack stack(0, "CRandom16.cpp(60) : ", kUnknownType);
-    rs_log_assert_failure(&stack, "CRandom16.cpp", 60, "Verify", "gRandomNumber != NULL",
-                          "CRandom16::gRandomNumber was set to NULL");
-    rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    RAssert_TriggerIllegalInstruction();
-  }
+  RS_VERIFY_THROW(60, gRandomNumber != NULL, false, "CRandom16::gRandomNumber was set to NULL");
   return gRandomNumber;
 }
 

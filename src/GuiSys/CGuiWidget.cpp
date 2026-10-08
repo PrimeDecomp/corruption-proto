@@ -114,13 +114,8 @@ void CGuiWidget::ParseBaseInfo(CGuiFrame* frame, CInputStream& in, const CGuiWid
 
 void CGuiWidget::ReadUnusedThing(CInputStream& in) {
   const uint unusedTriggersAndFunctions = in.ReadInt32();
-  if (unusedTriggersAndFunctions != 0) {
-    CCallStack stack(0, "CGuiWidget.cpp(243) : ", kUnknownType);
-    rs_log_assert_failure(&stack, "CGuiWidget.cpp", 243, "Verify", "unusedTriggersAndFunctions == 0",
-                          "Way old version of a CGuiFrameResource!  Recook!");
-    rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    RAssert_TriggerIllegalInstruction();
-  }
+  RS_VERIFY_THROW(243, unusedTriggersAndFunctions == 0, false,
+                  "Way old version of a CGuiFrameResource!  Recook!");
 }
 
 void CGuiWidget::Draw(const CGuiWidgetDrawParms& parms) const {}

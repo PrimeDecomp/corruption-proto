@@ -27,11 +27,7 @@ bool CZipOutputStream::Process(bool finish) {
   mStream->next_out = output;
   const int result = deflate(mStream.get(), finish ? 4 : 0);
   if (result != 0 && result != 1) {
-    CCallStack stack(0, "CZipOutputStream.cpp(40) : ", kUnknownType);
-    rs_log_assert_failure(&stack, "CZipOutputStream.cpp", 40, "Verify", "false",
-                          "kException_OutputError");
-    rs_debugger_printf("Would have thrown exception: %s\n", "kException_OutputError");
-    RAssert_TriggerIllegalInstruction();
+    RS_VERIFY_THROW(40, false, kException_OutputError, "kException_OutputError");
   }
   const unsigned int remaining = mStream->avail_out;
   if (sizeof(output) - remaining != 0) {

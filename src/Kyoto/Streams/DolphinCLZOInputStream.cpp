@@ -17,15 +17,9 @@ get_buffer_and_size(CInputStream& in, unsigned long compressedLen, unsigned long
     uint compressedBlockLen = in.ReadUint16();
     const uchar* source = static_cast< const uchar* >(in.Get(compressedBlockLen));
     int decompressResult = CLZOSupport::Inflate(source, compressedBlockLen, dest, blockLen);
-    if (decompressResult < 0) {
-      CCallStack stack(0, "DolphinCLZOInputStream.cpp(28) : ", kUnknownType);
-      rs_log_assert_failure(&stack, "DolphinCLZOInputStream.cpp", 28, "Verify",
-                            "decompressResult >= 0",
-                            "CLZOSupport::Inflate failed in CInputStream::SBufferAndSize const "
-                            "get_buffer_and_size.");
-      rs_debugger_printf("Would have thrown exception: %s\n", "false");
-      RAssert_TriggerIllegalInstruction();
-    }
+    RS_VERIFY_THROW(28, decompressResult >= 0, false,
+                    "CLZOSupport::Inflate failed in CInputStream::SBufferAndSize const "
+                    "get_buffer_and_size.");
     dest += blockLen;
     written += blockLen;
   }

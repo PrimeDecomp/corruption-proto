@@ -16,6 +16,8 @@ extern "C" {
 typedef unsigned int uint;
 typedef unsigned short ushort;
 typedef unsigned char uchar;
+// Retro assert conditions spell 32-bit casts as uint32 (CAssetTypesList.cpp(419)).
+typedef unsigned int uint32;
 
 // Pointer to unknown, to be determined at a later date.
 typedef void* unkptr;

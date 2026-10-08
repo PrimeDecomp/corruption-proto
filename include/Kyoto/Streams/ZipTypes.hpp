@@ -1,6 +1,9 @@
 #ifndef KYOTO_STREAMS_ZIPTYPES_HPP
 #define KYOTO_STREAMS_ZIPTYPES_HPP
 
+#define Z_OK 0
+#define Z_STREAM_END 1
+
 struct z_stream {
   unsigned char* next_in;
   unsigned int avail_in;

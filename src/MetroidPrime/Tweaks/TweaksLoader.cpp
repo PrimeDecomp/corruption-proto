@@ -165,12 +165,9 @@ void CreateTweakGlobals() {
         CTweakPlayerControls(gpTweakLdrs->mPlayerControls.gamecubeControls);
     rs_debugger_printf("Using GAMECUBE control tweaks\n");
   } else {
-    CCallStack stack(0, "TweaksLoader.cpp(3791) : ", kUnknownType);
-    rs_log_assert_failure(&stack, "TweaksLoader.cpp", 3791, "Verify", "false",
-                          "Fatal error... unknown controller (check to make sure controller is "
-                          "plugged in), can't determine player control tweaks!");
-    rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    RAssert_TriggerIllegalInstruction();
+    RS_VERIFY_THROW(3791, false, false,
+                    "Fatal error... unknown controller (check to make sure controller is "
+                    "plugged in), can't determine player control tweaks!");
   }
 
   CPlayerCameraBob::BindTweaks(gpTweakLdrs->mCameraBob);

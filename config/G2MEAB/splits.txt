@@ -2463,9 +2463,6 @@ Kyoto/Basics/RAssertDolphin.cpp:
 	.text       start:0x804907F0 end:0x804912D0
 	.sbss       start:0x8079B1C8 end:0x8079B1D0 align:4
 
-Kyoto/CDvdRequestManager.cpp:
-	.sbss       start:0x8079B228 end:0x8079B230
-
 Kyoto/Animation/CAnimation.cpp:
 	.text       start:0x804912D0 end:0x804913A8
 
@@ -2567,6 +2564,7 @@ Kyoto/Animation/CTreeUtils.cpp:
 Kyoto/Animation/IMetaAnim.cpp:
 	.text       start:0x8049DE74 end:0x8049E220
 	.data       start:0x806CE858 end:0x806CE878 align:4
+	.sdata      start:0x80796C30 end:0x80796C38 align:4
 
 Kyoto/Animation/CAdvancementDeltas.cpp:
 	.text       start:0x8049E220 end:0x8049E5E0
@@ -2592,6 +2590,7 @@ Kyoto/Animation/CAnimSourceReader.cpp:
 
 Kyoto/Animation/CAnimSourceReaderBase.cpp:
 	.text       start:0x804A2E8C end:0x804A497C
+	.sdata      start:0x80796C50 end:0x80796C58 align:4
 
 Kyoto/Animation/CAnimTreeAnimReaderContainer.cpp:
 	.text       start:0x804A497C end:0x804A50D0
@@ -2606,6 +2605,7 @@ Kyoto/Animation/CAnimTreeBlend.cpp:
 Kyoto/Animation/CAnimTreeDoubleChild.cpp:
 	.text       start:0x804A5904 end:0x804A6A74
 	.data       start:0x806CEAA8 end:0x806CEB38 align:4
+	.sdata      start:0x80796C58 end:0x80796C68 align:4
 	.sdata2     start:0x807A1B98 end:0x807A1BA8 align:4
 
 Kyoto/Animation/CAnimTreeNode.cpp:
@@ -2620,33 +2620,42 @@ Kyoto/Animation/CAnimTreeTimeScale.cpp:
 	.text       start:0x804A70C8 end:0x804A87CC
 	.rodata     start:0x8069D8F8 end:0x8069D968
 	.data       start:0x806CEC48 end:0x806CECD0 align:4
+	.sdata      start:0x80796C68 end:0x80796C78 align:4
 
 Kyoto/Animation/CAnimTreeTransition.cpp:
 	.text       start:0x804A87CC end:0x804A9B0C
 	.rodata     start:0x8069D968 end:0x8069D990
 	.data       start:0x806CECD0 end:0x806CED68 align:4
+	.sdata      start:0x80796C78 end:0x80796C80 align:4
 	.sdata2     start:0x807A1BB0 end:0x807A1BC8 align:4
 
 Kyoto/Animation/CAnimTreeTweenBase.cpp:
 	.text       start:0x804A9B0C end:0x804AADCC
 	.data       start:0x806CED68 end:0x806CEE00 align:4
+	.sbss       start:0x8079B1F8 end:0x8079B1FC align:4
 
 Kyoto/Animation/CBoolPOINode.cpp:
 	.text       start:0x804AADCC end:0x804AAEDC
 
 Kyoto/Animation/CCharAnimMemoryMetrics.cpp:
 	.text       start:0x804AAEDC end:0x804AAF10
+	.sbss       start:0x8079B210 end:0x8079B218 align:4
+
+Kyoto/CDvdRequestManager.cpp:
+	.sbss       start:0x8079B228 end:0x8079B230
 
 Kyoto/Animation/CCharLayoutInfo.cpp:
 	.text       start:0x804AAF10 end:0x804AC608
 	.rodata     start:0x8069D9A0 end:0x8069DB30
 	.data       start:0x806CEE00 end:0x806CEE10 align:4
+	.sdata      start:0x80796C80 end:0x80796C88 align:4
 
 Kyoto/Animation/CFBStreamedAnimReader.cpp:
 	.text       start:0x804AC608 end:0x804AFED4
 	.ctors      start:0x8065BB80 end:0x8065BB84
 	.rodata     start:0x8069DB30 end:0x8069DD10
 	.data       start:0x806CEE10 end:0x806CEE98 align:4
+	.sdata      start:0x80796C88 end:0x80796C90 align:4
 
 Kyoto/Animation/CFBStreamedCompression.cpp:
 	.text       start:0x804AFED4 end:0x804B0BAC
@@ -2665,6 +2674,8 @@ Kyoto/Animation/CPOINode.cpp:
 Kyoto/Animation/CSegId.cpp:
 	.text       start:0x804B1060 end:0x804B1110
 	.ctors      start:0x8065BB84 end:0x8065BB88
+	.rodata     start:0x8069DF48 end:0x8069DF60 align:4
+	.bss        start:0x80781D70 end:0x80781D90 align:4 common
 
 Kyoto/Animation/CSegStatementSet.cpp:
 	.text       start:0x804B1110 end:0x804B13DC
@@ -2782,13 +2793,15 @@ Kyoto/Graphics/CGX.cpp:
 	.text       start:0x804BCA64 end:0x804BE6C4
 	.ctors      start:0x8065BB8C end:0x8065BB90
 	.rodata     start:0x8069E968 end:0x8069E9D8
+	.bss        start:0x80781DA8 end:0x80782380 align:4 common
+	.sbss       start:0x8079B258 end:0x8079B260 align:4
 
 Kyoto/Graphics/CTevCombiners.cpp:
 	.text       start:0x804BE6C4 end:0x804BEB44
 	.ctors      start:0x8065BB90 end:0x8065BB94
 	.bss        start:0x80782380 end:0x807823CC align:4 common
 	.sdata      start:0x80796CA8 end:0x80796CB0 align:4
-	.sbss       start:0x8079B264 end:0x8079B270 align:4
+	.sbss       start:0x8079B260 end:0x8079B270 align:4
 
 Kyoto/Graphics/DolphinCGraphics.cpp:
 	.text       start:0x804BEB44 end:0x804C4D6C
@@ -2803,10 +2816,13 @@ Kyoto/Graphics/DolphinCGraphics.cpp:
 Kyoto/Graphics/DolphinCPalette.cpp:
 	.text       start:0x804C4D6C end:0x804C50EC
 	.rodata     start:0x8069ED28 end:0x8069ED90
+	.sbss       start:0x8079B358 end:0x8079B360 align:4
 
 Kyoto/Graphics/DolphinCTexture.cpp:
 	.text       start:0x804C50EC end:0x804C74C8
 	.rodata     start:0x8069EDA0 end:0x8069F078
+	.bss        start:0x80715A70 end:0x80715A90 align:4
+	.sdata      start:0x80796CD8 end:0x80796CE0 align:4
 
 Kyoto/Math/CloseEnough.cpp:
 	.text       start:0x804C74C8 end:0x804C7650
@@ -2915,6 +2931,7 @@ Kyoto/Particles/CColorElement.cpp:
 	.text       start:0x804D15A0 end:0x804D358C
 	.ctors      start:0x8065BBC4 end:0x8065BBC8
 	.data       start:0x806DF630 end:0x806DF768 align:4
+	.bss        start:0x80715B60 end:0x80715B70
 	.sdata2     start:0x807A1FB8 end:0x807A1FD0 align:4
 
 Kyoto/Particles/CElementGen.cpp:
@@ -2922,12 +2939,16 @@ Kyoto/Particles/CElementGen.cpp:
 	.ctors      start:0x8065BBC8 end:0x8065BBCC
 	.rodata     start:0x8069F9B0 end:0x8069FBE8
 	.data       start:0x806DF768 end:0x806DF7F8 align:4
+	.bss        start:0x80715B70 end:0x80715C60
+	.sdata      start:0x80796CF0 end:0x80796CF8
+	.sbss       start:0x8079B3D0 end:0x8079B3F0
 	.sdata2     start:0x807A1FD0 end:0x807A2058 align:4
 
 Kyoto/Particles/CIntElement.cpp:
 	.text       start:0x804DFB6C end:0x804E20A0
 	.ctors      start:0x8065BBCC end:0x8065BBD0
 	.data       start:0x806DF7F8 end:0x806DF988 align:4
+	.bss        start:0x80715C60 end:0x80715C70
 	.sdata2     start:0x807A2058 end:0x807A2070 align:4
 
 Kyoto/Particles/CModVectorElement.cpp:
@@ -2939,6 +2960,9 @@ Kyoto/Particles/CParticleDataFactory.cpp:
 	.text       start:0x804E4760 end:0x804EBFC8
 	.ctors      start:0x8065BBD0 end:0x8065BBD4
 	.rodata     start:0x8069FBE8 end:0x806A13D8
+	.bss        start:0x80715C70 end:0x80715C80
+	.bss        start:0x80782D20 end:0x80782D38 align:4 common
+	.sbss       start:0x8079B3F0 end:0x8079B3F8
 
 Kyoto/Particles/CParticleGen.cpp:
 	.text       start:0x804EBFC8 end:0x804EC0A0
@@ -2946,6 +2970,7 @@ Kyoto/Particles/CParticleGen.cpp:
 
 Kyoto/Particles/CParticleGlobals.cpp:
 	.text       start:0x804EC1F4 end:0x804EC320
+	.sbss       start:0x8079B400 end:0x8079B428
 	.sdata2     start:0x807A2080 end:0x807A2098 align:4
 
 Kyoto/Particles/CParticleSwoosh.cpp:
@@ -2953,6 +2978,8 @@ Kyoto/Particles/CParticleSwoosh.cpp:
 	.ctors      start:0x8065BBD8 end:0x8065BBDC
 	.rodata     start:0x806A1418 end:0x806A1520
 	.data       start:0x806DFA98 end:0x806DFB28 align:4
+	.bss        start:0x80715C90 end:0x80715CA0
+	.sbss       start:0x8079B428 end:0x8079B430
 	.sdata2     start:0x807A2098 end:0x807A2120 align:4
 
 Kyoto/Particles/CParticleSwooshDataFactory.cpp:
@@ -2963,10 +2990,13 @@ Kyoto/Particles/CRealElement.cpp:
 	.text       start:0x804F1FAC end:0x804F6E70
 	.ctors      start:0x8065BBDC end:0x8065BBE0
 	.data       start:0x806DFB38 end:0x806DFF60 align:4
+	.bss        start:0x80715CA0 end:0x80715CB0
 	.sdata2     start:0x807A2120 end:0x807A2148 align:4
 
 Kyoto/Particles/CSpawnSystemKeyframeData.cpp:
 	.text       start:0x804F6E70 end:0x804F7E54
+	.bss        start:0x80715CB0 end:0x80715CD0
+	.sbss       start:0x8079B430 end:0x8079B440
 
 Kyoto/Particles/CUVElement.cpp:
 	.text       start:0x804F7E54 end:0x804F8D30
@@ -2977,6 +3007,7 @@ Kyoto/Particles/CVectorElement.cpp:
 	.text       start:0x804F8D30 end:0x804FC3D4
 	.ctors      start:0x8065BBE0 end:0x8065BBE4
 	.data       start:0x806DFFD0 end:0x806E028C align:4
+	.bss        start:0x80715CD0 end:0x80715CE0
 	.sdata2     start:0x807A2160 end:0x807A2190 align:4
 
 Kyoto/Math/CCylinder.cpp:
@@ -3132,6 +3163,7 @@ Kyoto/Graphics/CCubeSurface.cpp:
 
 Kyoto/Animation/CCharAnimTime.cpp:
 	.text       start:0x805197AC end:0x8051A2D0
+	.sdata      start:0x80796DB8 end:0x80796DD0 align:4
 
 Kyoto/Animation/CSegIdList.cpp:
 	.text       start:0x8051A2D0 end:0x8051A374
@@ -3155,6 +3187,7 @@ Kyoto/DolphinCMemoryCardSys.cpp:
 Kyoto/DolphinCDvdFile.cpp:
 	.text       start:0x8051DD9C end:0x8051EF9C
 	.rodata     start:0x806A53C0 end:0x806A5670
+	.sbss       start:0x8079B4E0 end:0x8079B4E8 align:4
 
 Kyoto/Alloc/CMediumAllocPool.cpp:
 	.text       start:0x8051EF9C end:0x8051F998
@@ -3170,6 +3203,7 @@ Kyoto/Alloc/CGameAllocator.cpp:
 Kyoto/Animation/DolphinCSkinnedModel.cpp:
 	.text       start:0x80521908 end:0x80522CDC
 	.rodata     start:0x806A5F20 end:0x806A5F40
+	.sbss       start:0x8079B500 end:0x8079B508 align:4
 
 Kyoto/Animation/DolphinCSkinRules.cpp:
 	.text       start:0x80522CDC end:0x80523D04
@@ -3193,6 +3227,7 @@ Kyoto/Particles/CEmitterElement.cpp:
 	.text       start:0x80525EB0 end:0x805275D4
 	.ctors      start:0x8065BC0C end:0x8065BC10
 	.data       start:0x806E18B8 end:0x806E1918
+	.bss        start:0x80715E50 end:0x80715E60
 	.sdata2     start:0x807A2228 end:0x807A2248 align:4
 
 Kyoto/Animation/CNamedAnimPOIData.cpp:
@@ -3265,6 +3300,10 @@ Kyoto/Streams/CTextInStream.cpp:
 Kyoto/Audio/CStreamAudioManager.cpp:
 	.text       start:0x8053664C end:0x805375C8
 	.ctors      start:0x8065BC14 end:0x8065BC18
+	.bss        start:0x80716370 end:0x80716460 align:4
+	.bss        start:0x80782DFC end:0x80782E40 align:4 common
+	.sdata      start:0x80796DF0 end:0x80796E08 align:4
+	.sbss       start:0x8079B560 end:0x8079B570 align:4
 	.sdata2     start:0x807A2358 end:0x807A2370 align:4
 
 Kyoto/Particles/CElectricDescription.cpp:
@@ -3352,6 +3391,7 @@ Kyoto/Particles/CParticleSpawnSystem.cpp:
 	.text       start:0x80548D54 end:0x8054B27C
 	.ctors      start:0x8065BC28 end:0x8065BC2C
 	.data       start:0x806E1B90 end:0x806E1C20 align:4
+	.bss        start:0x80716700 end:0x80716710
 	.sdata2     start:0x807A2428 end:0x807A2460 align:4
 
 Kyoto/Particles/CSpawnSystemDescription.cpp:
@@ -3361,6 +3401,8 @@ Kyoto/Particles/CSortedParticleSystem.cpp:
 	.text       start:0x8054B520 end:0x8054C52C
 	.ctors      start:0x8065BC2C end:0x8065BC30
 	.data       start:0x806E1C20 end:0x806E1CB0 align:4
+	.bss        start:0x80716710 end:0x80716720
+	.sdata      start:0x80796E30 end:0x80796E38
 	.sdata2     start:0x807A2460 end:0x807A2488 align:4
 
 Kyoto/Particles/CParticleSortedSystemDataFactory.cpp:

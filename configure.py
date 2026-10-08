@@ -1610,11 +1610,11 @@ config.libs = [
         Object(NonMatching, "MetroTRK/targcont.c"),
         Object(NonMatching, "MetroTRK/target_options.c"),
         Object(NonMatching, "MetroTRK/mslsupp.c"),
-        Object(NonMatching, "MetroTRK/udp_cc.c"),
+        Object(Matching, "MetroTRK/udp_cc.c"),
         Object(NonMatching, "MetroTRK/ddh_cc.c"),
         Object(NonMatching, "MetroTRK/circle_buffer.c"),
         Object(NonMatching, "MetroTRK/gdev_cc.c"),
-        Object(NonMatching, "MetroTRK/MWTrace.c"),
+        Object(Matching, "MetroTRK/MWTrace.c"),
         Object(NonMatching, "MetroTRK/critical_section.c"),
     ]),
     RuntimeLib("Runtime", [

@@ -110,3 +110,16 @@ CLight CGuiLight::BuildLight() const {
 CGuiWidget::EWidgetUsageFlags CGuiLight::GetWidgetUsageFlags() const { return kWUF_None; }
 
 FourCC CGuiLight::GetWidgetTypeID() const { return 'LITE'; }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" int fn_80484BE8();
+extern "C" int fn_80484BE8() {
+    return 0x4c495445;
+}
+
+extern "C" bool fn_80484BF4();
+extern "C" bool fn_80484BF4() {
+    return false;
+}
+

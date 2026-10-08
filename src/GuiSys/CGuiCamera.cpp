@@ -92,3 +92,21 @@ CVector3f CGuiCamera::ConvertToScreenSpace(const CVector3f& point) const {
 
   return CVector3f(-1.f, -1.f, 1.f);
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" int fn_80482318();
+extern "C" int fn_80482318() {
+    return 0x43414d52;
+}
+
+extern "C" bool fn_80482324();
+extern "C" bool fn_80482324() {
+    return false;
+}
+
+extern "C" bool fn_8048232C();
+extern "C" bool fn_8048232C() {
+    return false;
+}
+

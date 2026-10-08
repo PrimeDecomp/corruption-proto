@@ -17,3 +17,11 @@ CGuiWidget* CGuiHeadWidget::Create(CGuiFrame* frame, CInputStream& in, CSimplePo
 }
 
 CGuiHeadWidget::CGuiHeadWidget(const CGuiWidgetParms& parms) : CGuiWidget(parms) {}
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" bool fn_8048454C();
+extern "C" bool fn_8048454C() {
+    return false;
+}
+

@@ -97,3 +97,21 @@ CVector2f CGuiPane::GetDimensions() const { return CVector2f(mWidth, mHeight); }
 CGuiWidget::EWidgetUsageFlags CGuiPane::GetWidgetUsageFlags() const { return kWUF_Draw; }
 
 FourCC CGuiPane::GetWidgetTypeID() const { return 'PANE'; }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" int fn_804868F4();
+extern "C" int fn_804868F4() {
+    return 0x50414e45;
+}
+
+extern "C" bool fn_80486900();
+extern "C" bool fn_80486900() {
+    return true;
+}
+
+extern "C" CVector2f fn_80486908(int obj, int val);
+extern "C" CVector2f fn_80486908(int obj, int val) {
+    return CVector2f(*(float*)((char*)obj + 0xbc), *(float*)((char*)obj + 0xc0));
+}
+

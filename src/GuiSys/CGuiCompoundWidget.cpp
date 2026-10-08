@@ -26,3 +26,11 @@ void CGuiCompoundWidget::OnVisible() {
 
   CGuiWidget::OnVisible();
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" int fn_80482460();
+extern "C" int fn_80482460() {
+    return -1;
+}
+

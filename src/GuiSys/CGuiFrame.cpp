@@ -284,3 +284,36 @@ CGuiFrame* CGuiFrameLoader::CreateFrame() {
   CMemoryInStream in(mBuffer.get(), mBufferLength);
   return rs_new CGuiFrame(in, mPool);
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+struct __mwdec_vt_0 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual int _4(); };
+struct __mwdec_vt_1 { virtual void _0(); virtual void _1(); virtual void _2(); virtual void _3(); virtual void _4(); virtual void _5(); virtual void _6(); virtual void _7(); virtual void _8(int); };
+extern "C" void fn_80483064(unsigned char*, int);
+extern "C" void fn_80482F78(int obj, int val);
+extern "C" void fn_80482F78(int obj, int val) {
+    unsigned int val2;
+    unsigned char val4[12];
+    unsigned char val5[12];
+    *(int*)((char*)val5 + 0x4) = (int)val4;
+    *(int*)((char*)val5 + 0x8) = (int)val4;
+    *(int*)val4 = (int)val4;
+    *(int*)((char*)val4 + 0x4) = (int)val4;
+    *(int*)((char*)val4 + 0x8) = 0;
+    for (int i = *(int*)((char*)obj + 0x8c); (unsigned int)i != (*(int*)((char*)obj + 0x8c) + (*(int*)((char*)obj + 0x84) << 2)); i += 4) {
+        int val3 = *(int*)i;
+        if ((unsigned char)((__mwdec_vt_0*)val3)->_4()) {
+            fn_80483064(val5, val3);
+        }
+    }
+    for (val2 = *(int*)((char*)val5 + 0x4); val2 != (*(int*)((char*)val5 + 0x8)); val2 = *(int*)((char*)val2 + 0x4)) {
+        ((__mwdec_vt_1*)*(int*)((char*)val2 + 0x8))->_8(val);
+    }
+    ((rstl::list<CGuiWidget*, rstl::rmemory_allocator>*)val5)->~list();
+}
+
+extern "C" int fn_80483FC0();
+extern "C" int fn_80483FC0() {
+    return 0x42574947;
+}
+

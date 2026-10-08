@@ -264,3 +264,66 @@ CFactoryFnReturn FCollisionResponseDataFactory(const SObjectTag& tag, CInputStre
   CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
   return rs_new CCollisionResponseData(in, pool);
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" bool fn_8059566C(int val);
+extern "C" bool fn_8059566C(int val) {
+    if (val >= 19 && val <= 19) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+extern "C" bool fn_80595688(int val);
+extern "C" bool fn_80595688(int val) {
+    if (val >= 18 && val <= 18) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+struct CGenDescription;
+struct CGenDescription { };
+extern "C" void fn_8059645C(int, int);
+extern "C" void fn_80596B00(int, int);
+extern "C" void fn_805963E4(int obj, int val, int val2);
+extern "C" void fn_805963E4(int obj, int val, int val2) {
+    ((rstl::vector<rstl::optional_object<TLockedToken<CGenDescription> >, rstl::rmemory_allocator>*)obj)->clear();
+    fn_80596B00(obj, val);
+    for (int i = 0; i < val; i++) {
+        fn_8059645C(obj, val2);
+    }
+}
+
+extern "C" void fn_80596648(int, int);
+extern "C" void fn_80596A54(int, int);
+extern "C" void fn_805965D0(int obj, int val, int val2);
+extern "C" void fn_805965D0(int obj, int val, int val2) {
+    ((rstl::vector<rstl::optional_object<TLockedToken<CDecalDescription> >, rstl::rmemory_allocator>*)obj)->clear();
+    fn_80596A54(obj, val);
+    for (int i = 0; i < val; i++) {
+        fn_80596648(obj, val2);
+    }
+}
+
+extern "C" void fn_80596834(int, int);
+extern "C" void fn_80596948();
+extern "C" void fn_805969A8(int, int);
+extern "C" void fn_805967BC(int val, int val2, int val3);
+extern "C" void fn_805967BC(int val, int val2, int val3) {
+    fn_80596948();
+    fn_805969A8(val, val2);
+    for (int i = 0; i < val2; i++) {
+        fn_80596834(val, val3);
+    }
+}
+
+extern "C" void fn_80596DD0();
+extern "C" void fn_80596DB0();
+extern "C" void fn_80596DB0() {
+    fn_80596DD0();
+}
+

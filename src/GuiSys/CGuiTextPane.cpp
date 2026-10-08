@@ -192,3 +192,16 @@ CGuiWidget::EWidgetUsageFlags CGuiTextPane::GetWidgetUsageFlags() const {
 }
 
 FourCC CGuiTextPane::GetWidgetTypeID() const { return 'TXPN'; }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" int fn_80488C10();
+extern "C" int fn_80488C10() {
+    return 0x5458504e;
+}
+
+extern "C" int fn_80488C1C();
+extern "C" int fn_80488C1C() {
+    return 3;
+}
+

@@ -128,3 +128,20 @@ CGuiWidget::EWidgetUsageFlags CGuiSliderGroup::GetWidgetUsageFlags() const {
 FourCC CGuiSliderGroup::GetWidgetTypeID() const { return 'SLGP'; }
 
 CGuiSliderGroup::~CGuiSliderGroup() {}
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" void fn_80486CE0();
+extern "C" void fn_80486CE0() {
+}
+
+extern "C" int fn_80486EBC();
+extern "C" int fn_80486EBC() {
+    return 0x534c4750;
+}
+
+extern "C" int fn_80486EC8();
+extern "C" int fn_80486EC8() {
+    return 6;
+}
+

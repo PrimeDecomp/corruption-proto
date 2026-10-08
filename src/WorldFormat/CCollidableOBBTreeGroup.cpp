@@ -353,3 +353,78 @@ CAABox CCollidableOBBTreeGroup::CalculateLocalAABox() const { return mContainer-
 FourCC CCollidableOBBTreeGroup::GetPrimType() const { return 'OBTG'; }
 
 uint CCollidableOBBTreeGroup::GetTableIndex() const { return sTableIndex; }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" void fn_805AC3E4(int, unsigned char*);
+extern "C" void fn_805AC3B8(int val);
+extern "C" void fn_805AC3B8(int val) {
+    unsigned char val2[3080];
+    *(int*)val2 = 0;
+    fn_805AC3E4(val, val2);
+}
+
+extern unsigned char lbl_806E24D0[36];
+extern "C" void fn_80475DDC(int, int);
+extern "C" void fn_805AD0A4(int, int);
+extern "C" int fn_805AD020(int obj, int val);
+extern "C" int fn_805AD020(int obj, int val) {
+    if (obj) {
+        *(int*)obj = (int)lbl_806E24D0;
+        if (obj + 16 && (*(unsigned char*)((char*)obj + 0x10))) {
+            fn_805AD0A4(*(int*)((char*)obj + 0x14), 1);
+        }
+        fn_80475DDC(obj, 0);
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+
+extern int lbl_80796EE0;
+extern "C" int fn_805ADAD4();
+extern "C" int fn_805ADAD4() {
+    return lbl_80796EE0;
+}
+
+
+extern "C" void fn_805ADADC(int val);
+extern "C" void fn_805ADADC(int val) {
+    lbl_80796EE0 = val;
+}
+
+extern "C" int fn_805ADB68(int obj, int val);
+extern "C" int fn_805ADB68(int obj, int val) {
+    if (obj) {
+        CMemory::Free((const void*)*(int*)((char*)obj + 0xc));
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+
+extern unsigned char lbl_806B1B80[12];
+extern unsigned char lbl_806B1B8C[12];
+extern unsigned char lbl_806E24F4[12];
+extern "C" int fn_805ADEC4(int obj, int val);
+extern "C" int fn_805ADEC4(int obj, int val) {
+    if (obj) {
+        *(int*)obj = (int)lbl_806E24F4;
+        if ((unsigned int)*(int*)((char*)obj + 0x4) != 0) {
+            fn_805AD0A4(*(int*)((char*)obj + 0x4), 1);
+        }
+        if ((unsigned int)obj != 0) {
+            *(int*)obj = (int)lbl_806B1B8C;
+            if ((unsigned int)obj != 0) {
+                *(int*)obj = (int)lbl_806B1B80;
+            }
+        }
+        if ((short)val > 0) {
+            CMemory::Free((const void*)obj);
+        }
+    }
+    return obj;
+}
+

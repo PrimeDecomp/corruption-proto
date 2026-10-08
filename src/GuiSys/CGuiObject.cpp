@@ -129,3 +129,16 @@ void CGuiObject::RecalculateTransforms() {
     child->RecalculateTransforms();
   }
 }
+
+// Native functions without reference source, drafted with mwdec (exact objdiff matches).
+// mwdec-drafted
+extern "C" void fn_80485F2C(int obj, int obj2, int obj3);
+extern "C" void fn_80485F2C(int obj, int obj2, int obj3) {
+    CVector3f vec = ((CGuiObject*)obj2)->GetWorldTransform().TransposeRotate(*(const CVector3f*)obj3);
+    float y = vec.GetY();
+    float z = vec.GetZ();
+    *(float*)obj = vec.GetX();
+    *(float*)((char*)obj + 0x4) = y;
+    *(float*)((char*)obj + 0x8) = z;
+}
+

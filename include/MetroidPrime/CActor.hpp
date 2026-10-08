@@ -1,48 +1,134 @@
 #ifndef _CACTOR
 #define _CACTOR
 
+#include "MetroidPrime/ActorCommon.hpp"
 #include "MetroidPrime/CEntity.hpp"
+#include "MetroidPrime/CVisorParameters.hpp"
 
+#include "Collision/CMaterialFilter.hpp"
 #include "Collision/CMaterialList.hpp"
+#include "Kyoto/Graphics/CColor.hpp"
+#include "Kyoto/Math/CAABox.hpp"
 #include "Kyoto/Math/CTransform4f.hpp"
 #include "Kyoto/Math/CVector3f.hpp"
 
-class CVisorParameters;
+#include "rstl/auto_ptr.hpp"
+#include "rstl/optional_object.hpp"
+#include "rstl/reserved_vector.hpp"
 
-// Layout from the constructor (0x80036BAC) and destructor (0x80036AE0). The vtable
-// (lbl_806B22A8) adds 24 virtuals after CEntity's; they are not declared yet.
+class CDamageInfo;
+class CDamageVulnerability;
+class CHealthInfo;
+class CWeaponMode;
+
+// Guessed name. The objects owned at 0xE8 and 0xF0 are signal connections built from a member
+// delegate (AcceptScriptMsg fills 0xE8 on 'XCRT'); both are deleted through their vtables.
+class CActorSignalConnection {
+public:
+  virtual ~CActorSignalConnection();
+};
+
+// Layout from the constructor (0x80036BAC) and destructor (0x80036AE0); vtable lbl_806B22A8.
+// Compared with Echoes, the prototype's CActor has no model data, actor lights, shadow, scan
+// info, sounds or render bounds: it keeps only the transform, materials, visor parameters, the
+// fluid lists and a handful of flags (0xF8 bytes against Echoes' 0x158).
 class CActor : public CEntity {
 public:
   CActor(TUniqueId uid, const rstl::string& name, const CEntityInfo& info, uint castFlags,
          const CTransform4f& xf, const CMaterialList& materialList,
          const CVisorParameters& visorParams);
 
+  // CEntity
   ~CActor();
-  CEntity* TypesMatch(int typeId) const;
+  CEntity* TypesMatch(int typeId) const; // Emitted in TypesMatch.cpp.
   void Think(float dt, CStateManager& mgr);
   void AcceptScriptMsg(CStateManager& mgr, const CScriptMsg& msg);
   void SetActive(bool active);
 
+  // CActor. Slot offsets are from lbl_806B22A8. Echoes names are used where the behavior matches;
+  // VirtualNN are placeholders (NN = slot offset) for slots without an identified name.
+  virtual void SetTransformDirty();                 // 0x20, a plain method in Echoes
+  virtual void ClearFluidList(CStateManager& mgr);  // 0x24
+  virtual void Virtual28(CStateManager& mgr);       // 0x28, empty
+  virtual CHealthInfo* HealthInfo();                // 0x2C
+  virtual const CHealthInfo* GetHealthInfo() const; // 0x30, emitted weak elsewhere
+  virtual const CDamageVulnerability* GetDamageVulnerability() const; // 0x34
+  virtual const CDamageVulnerability* GetDamageVulnerability(const CVector3f&, const CVector3f&,
+                                                             const CDamageInfo&) const; // 0x38
+  // 0x3C: sends 'DAMG'/'XDMG' or 'RESD'/'XRDG' depending on its last argument.
+  virtual void Virtual3C(CStateManager& mgr, TUniqueId sender, int, const CDamageInfo& info,
+                         bool damaged);
+  virtual rstl::optional_object< CAABox > GetTouchBounds() const;                   // 0x40
+  virtual void Touch(CActor& other, CStateManager& mgr);                            // 0x44
+  virtual CVector3f GetOrbitPosition(const CStateManager& mgr) const;               // 0x48
+  virtual CVector3f GetAimPosition(const CStateManager& mgr, float dt) const;       // 0x4C
+  virtual CVector3f GetHomingPosition(const CStateManager& mgr, float dt) const;    // 0x50
+  virtual CVector3f GetScanObjectIndicatorPosition(const CStateManager& mgr) const; // 0x54
+  virtual EWeaponCollisionResponseTypes GetCollisionResponseType(const CVector3f&, const CVector3f&,
+                                                                 const CWeaponMode&,
+                                                                 int) const; // 0x58
+  virtual void Virtual5C();                                    // 0x5C, draws the touch bounds
+  virtual void Virtual60();                                    // 0x60, empty
+  virtual void Virtual64();                                    // 0x64, weak, returns 0
+  virtual void Virtual68();                                    // 0x68, weak, empty
+  virtual void Virtual6C();                                    // 0x6C, weak, empty
+  virtual CVector3f Virtual70(const CStateManager& mgr) const; // 0x70, weak, GetAimPosition(mgr, 0)
+  virtual void Virtual74(CStateManager& mgr);                  // 0x74, called after 'XCRT'
+  virtual CColor Virtual78() const;                            // 0x78, pulsing debug color
+  virtual void Virtual7C(); // 0x7C, empty; called after material changes
+
   const CTransform4f& GetTransform() const { return mTransform; }
+  void SetTransform(const CTransform4f& xf);
+  const CVector3f& GetTranslation() const { return mPosition; }
+  void SetTranslation(const CVector3f& vec);
+
+  const CMaterialList& GetMaterialList() const { return mMaterial; }
+  void AddMaterial(EMaterialTypes mat1, CStateManager& mgr);
+  void AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, CStateManager& mgr);
+  void AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
+                   CStateManager& mgr);
+  void AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
+                   EMaterialTypes mat4, CStateManager& mgr);
+  void AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
+                   EMaterialTypes mat4, EMaterialTypes mat5, CStateManager& mgr);
+  void RemoveMaterial(EMaterialTypes mat1, CStateManager& mgr);
+  void RemoveMaterial(EMaterialTypes mat1, EMaterialTypes mat2, CStateManager& mgr);
+  void RemoveMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
+                      CStateManager& mgr);
+  void RemoveMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
+                      EMaterialTypes mat4, CStateManager& mgr);
+
+  const CMaterialFilter& GetMaterialFilter() const;
+  void SetMaterialFilter(const CMaterialFilter& filter);
+
+  bool GetUseInSortedLists() const;
+  void SetUseInSortedLists(bool use);
+  bool GetCallTouch() const;
+  void SetCallTouch(bool value);
+  void SetE4Flag6(bool value); // Guessed name; sets the flag the constructor seeds with 0xF.
+
+  TUniqueId InFluidId() const;
+  const rstl::reserved_vector< TUniqueId, 4 >& GetFluidList() const;
+  void SetFluidList(const rstl::reserved_vector< TUniqueId, 4 >& fluids);
 
 private:
-  CTransform4f mTransform;
-  CVector3f x8c_; // Copy of the transform's translation.
-  CMaterialList mMaterialList;
-  u64 xa0_;
-  int xa8_;
-  int xac_;
-  int xb0_;
-  int xb4_;
-  uint xb8_; // First word of the visor parameters.
-  int xbc_;
-  uchar xc0_[0x10];
-  int xd0_;
-  uchar xd4_[0x10];
-  uint xe4_;
-  // Two owned polymorphic objects (bool + pointer), deleted through their vtables.
-  uchar xe8_[0x8];
-  uchar xf0_[0x8];
+  CTransform4f mTransform;                         // 0x5C
+  CVector3f mPosition;                             // 0x8C, copy of the transform's translation
+  CMaterialList mMaterial;                         // 0x98
+  CMaterialFilter mMaterialFilter;                 // 0xA0
+  CVisorParameters mVisorParameters;               // 0xB8
+  rstl::reserved_vector< TUniqueId, 4 > mFluidIds; // 0xBC
+  rstl::reserved_vector< TUniqueId, 4 > mPreviousFluidIds; // 0xD0
+  bool mFluidIdsChanged : 1;                               // 0xE4
+  // Set together by SetTransformDirty; Echoes sets four such flags there.
+  uint xe4_1_ : 1;
+  uint xe4_2_ : 1;
+  uint mUseInSortedLists : 1;
+  uint mCallTouch : 1;
+  uint xe4_5_ : 1;
+  uint xe4_6_ : 1;
+  rstl::auto_ptr< CActorSignalConnection > xe8_;
+  rstl::auto_ptr< CActorSignalConnection > xf0_;
 };
 CHECK_SIZEOF(CActor, 0xF8)
 

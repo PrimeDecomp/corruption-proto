@@ -48,6 +48,8 @@ public:
   typedef rstl::pair< TIdList::const_iterator, TIdList::const_iterator > TIdListResult;
 
   TUniqueId AllocateUniqueId();
+  // Echoes' CStateManager name (0x80299880); CActor's material setters call it.
+  void UpdateObjectInLists(CEntity& entity);
 
   // Names from Echoes' CStateManager, whose ObjectById is also emitted first. ObjectById reads the
   // first list directly; GetObjectById goes through the const overload.

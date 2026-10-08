@@ -79,7 +79,7 @@ public:
   void GetSegStatementSet(const CSegIdList& list, CSegStatementSet& set,
                           const CCharAnimTime& time) const;
   // Guessed name.
-  void GetSegData(const CCharLayoutInfo& layout, CJointData_LinearStorage& data,
+  void GetJointData_Linear(const CCharLayoutInfo& layout, CJointData_LinearStorage& data,
                   const CCharAnimTime& time) const;
 
   const CCharAnimTime& GetAnimationDuration() const { return mDuration; }

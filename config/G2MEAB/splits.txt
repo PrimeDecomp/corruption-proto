@@ -1986,6 +1986,9 @@ Lua/lstate.c:
 	.sdata      start:0x80796B70 end:0x80796B80
 	.sbss       start:0x8079B170 end:0x8079B178
 
+Kyoto/CDvdRequestManager.cpp:
+	.sbss       start:0x8079B228 end:0x8079B230
+
 Lua/lstring.c:
 	.text       start:0x8045E874 end:0x8045EFF4
 

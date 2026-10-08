@@ -23,7 +23,7 @@ public:
   void RemoveRef();
   CToken& operator=(const CToken&);
   bool HasReference() const { return mReference != nullptr; }
-  const SObjectTag& GetTag() const { return mReference->GetTag(); }
+  const SObjectTag& GetTag() const { return mReference->GetObjectTag(); }
   FourCC GetReferenceType() { return GetTag().type; }
 
   bool HasLock() { return mLockHeld; }

@@ -3707,6 +3707,12 @@ FMOD/fmod_codec_mpeg.cpp:
 	.text       start:0x805D8160 end:0x805D975C
 	.ctors      start:0x8065BC84 end:0x8065BC88
 
+FMOD/fmod_mpeg_layer2.cpp:
+	.text       start:0x805DB060 end:0x805DBDB8
+
+FMOD/fmod_mpeg_layer3.cpp:
+	.text       start:0x805DBDB8 end:0x805E113C
+
 FMOD/fmod_codec_oggvorbis.cpp:
 	.text       start:0x805E113C end:0x805E1C88
 	.ctors      start:0x8065BC88 end:0x8065BC8C

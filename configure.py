@@ -623,6 +623,8 @@ config.libs = [
         Object(NonMatching, "FMOD/fmod_codec_midi.cpp"),
         Object(NonMatching, "FMOD/fmod_codec_mod.cpp"),
         Object(NonMatching, "FMOD/fmod_codec_mpeg.cpp"),
+        Object(NonMatching, "FMOD/fmod_mpeg_layer2.cpp"),
+        Object(NonMatching, "FMOD/fmod_mpeg_layer3.cpp"),
         Object(NonMatching, "FMOD/fmod_codec_oggvorbis.cpp"),
         Object(NonMatching, "FMOD/fmod_codec_playlist.cpp"),
         Object(NonMatching, "FMOD/fmod_codec_raw.cpp"),

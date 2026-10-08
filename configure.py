@@ -1076,6 +1076,7 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/main.cpp"),
         Object(NonMatching, "MetroidPrime/CControlMapper.cpp"),
         Object(NonMatching, "MetroidPrime/CArchMsgParmUserInput.cpp"),
+        Object(NonMatching, "MetroidPrime/CFrontEndUI.cpp"),
         Object(NonMatching, "MetroidPrime/CInputGenerator.cpp"),
         Object(NonMatching, "MetroidPrime/CMainFlow.cpp"),
         Object(NonMatching, "MetroidPrime/CMFGame.cpp"),

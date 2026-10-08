@@ -29,6 +29,6 @@ private:
   int mModelIndex;
   uint mLightMask;
 };
-CHECK_SIZEOF(CGuiModel, 0xc8)
+// CHECK_SIZEOF(CGuiModel, 0xc8) // Echoes layout; Corruption CAssetId is 64-bit
 
 #endif // _CGUIMODEL

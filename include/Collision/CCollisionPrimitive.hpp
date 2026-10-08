@@ -5,8 +5,8 @@
 
 #include "Collision/CInternalCollisionStructure.hpp"
 #include "Collision/CInternalRayCastStructure.hpp"
-#include "Collision/CRayCastResult.hpp"
 #include "Collision/CMaterialList.hpp"
+#include "Collision/CRayCastResult.hpp"
 
 #include "Kyoto/IObjectStore.hpp"
 #include "Kyoto/Math/CAABox.hpp"

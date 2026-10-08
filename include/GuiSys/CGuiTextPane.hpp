@@ -52,7 +52,7 @@ private:
   bool mDrawShadow;
   bool mScaleToViewport; // Guessed name
 };
-NESTED_CHECK_SIZEOF(CGuiTextPane, SFontInfo, 0x14)
-CHECK_SIZEOF(CGuiTextPane, 0xe08)
+// NESTED_CHECK_SIZEOF(CGuiTextPane, SFontInfo, 0x14) // Echoes layout; Corruption CAssetId is
+// 64-bit CHECK_SIZEOF(CGuiTextPane, 0xe08) // Echoes layout; Corruption CAssetId is 64-bit
 
 #endif // _CGUITEXTPANE

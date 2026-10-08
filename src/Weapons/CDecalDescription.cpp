@@ -4,3 +4,9 @@
  * Complete source/native inventories compared in both reference games.
  * NonMatching: implementation and declarations remain to be reconstructed.
  */
+
+#include "Weapons/CDecalDescription.hpp"
+
+CDecalDescription::CDecalDescription() : mDMAB(false), mDMOO(false) {}
+
+CDecalDescription::SQuadDescr::SQuadDescr() : mADD(false) {}

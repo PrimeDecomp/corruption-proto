@@ -49,6 +49,6 @@ private:
   float mDecreaseSpeed;
   float mShadowDrainSpeed;
 };
-CHECK_SIZEOF(CAuiBitmapMeter, 0x144)
+// CHECK_SIZEOF(CAuiBitmapMeter, 0x144) // Echoes layout; Corruption CAssetId is 64-bit
 
 #endif // _CAUIBITMAPMETER

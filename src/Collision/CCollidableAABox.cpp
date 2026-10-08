@@ -152,22 +152,3 @@ CAABox CCollidableAABox::Transform(const CTransform4f& xf) const {
 
 FourCC CCollidableAABox::GetPrimType() const { return 'AABX'; }
 uint CCollidableAABox::GetTableIndex() const { return sTableIndex; }
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern unsigned char lbl_806CE088[40];
-extern "C" void fn_80475DDC(int, int);
-
-extern "C" int fn_80474284(int obj, int val);
-
-extern "C" int fn_80474284(int obj, int val) {
-    if (obj) {
-        *(int*)obj = (int)lbl_806CE088;
-        fn_80475DDC(obj, 0);
-        if ((short)val > 0) {
-            CMemory::Free((const void*)obj);
-        }
-    }
-    return obj;
-}
-

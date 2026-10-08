@@ -32,7 +32,7 @@ CRandom16* CRandom16::GetRandomNumber() {
     rs_log_assert_failure(&stack, "CRandom16.cpp", 60, "Verify", "gRandomNumber != NULL",
                           "CRandom16::gRandomNumber was set to NULL");
     rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    fn_80491108();
+    RAssert_TriggerIllegalInstruction();
   }
   return gRandomNumber;
 }

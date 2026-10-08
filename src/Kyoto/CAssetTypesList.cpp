@@ -17,7 +17,7 @@ unsigned int CAssetTypesList::GetFourCCForIndex(unsigned int index) {
                           "((uint32)index) < kNumAssetTypes",
                           "Invalid index into asset types list in CAssetTypesList::GetFourCCForIndex.");
     rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    fn_80491108();
+    RAssert_TriggerIllegalInstruction();
   }
   return kAssetTypes[index];
 }

@@ -1,6 +1,6 @@
 #include "Kyoto/CMemoryCardSys.hpp"
 
-#include "Kyoto/CCRC32.hpp"
+#include "Kyoto/CCrc32.hpp"
 #include "Kyoto/Graphics/CGraphicsPalette.hpp"
 #include "Kyoto/Graphics/CTexture.hpp"
 

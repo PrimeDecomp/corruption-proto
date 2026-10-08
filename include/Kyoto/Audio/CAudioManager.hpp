@@ -1,5 +1,5 @@
-#ifndef _CSFXMANAGER
-#define _CSFXMANAGER
+#ifndef _CAUDIOMANAGER
+#define _CAUDIOMANAGER
 
 #include "Kyoto/Audio/CAuxEffectManager.hpp"
 #include "Kyoto/Audio/CSfxPitchBend.hpp"
@@ -22,7 +22,7 @@ struct SFlangerAuxParameters;
 struct SBitcrusherAuxParameters;
 struct SPhaserAuxParameters;
 
-class CSfxManager {
+class CAudioManager {
 public:
   enum ESfxChannels {
     kSC_Invalid = -1,
@@ -111,7 +111,7 @@ public:
     bool IsSilent() const; // Guessed name
 
   private:
-    friend class CSfxManager;
+    friend class CAudioManager;
     SND_PARAMETER mParameters[3];
     SND_PARAMETER_INFO mParameterInfo;
     CAudioSys::C3DEmitterParmData mEmitterData;
@@ -308,14 +308,14 @@ private:
   static int mCurrentArea;
 };
 
-inline CSfxManager::CBaseSfxWrapper::~CBaseSfxWrapper() {}
+inline CAudioManager::CBaseSfxWrapper::~CBaseSfxWrapper() {}
 
-NESTED_CHECK_SIZEOF(CSfxManager, CBaseSfxWrapper, 0x1c)
-NESTED_CHECK_SIZEOF(CSfxManager, CSfxWrapper, 0x2c)
-NESTED_CHECK_SIZEOF(CSfxManager, CSfxEmitterWrapper, 0x64)
-NESTED_CHECK_SIZEOF(CSfxManager, CSfxListener, 0x44)
-NESTED_CHECK_SIZEOF(CSfxManager, SListener, 0x48)
-NESTED_CHECK_SIZEOF(CSfxManager, CSfxChannel, 0x248)
-NESTED_CHECK_SIZEOF(CSfxManager, SLowPassFilter, 0x10)
+NESTED_CHECK_SIZEOF(CAudioManager, CBaseSfxWrapper, 0x1c)
+NESTED_CHECK_SIZEOF(CAudioManager, CSfxWrapper, 0x2c)
+NESTED_CHECK_SIZEOF(CAudioManager, CSfxEmitterWrapper, 0x64)
+NESTED_CHECK_SIZEOF(CAudioManager, CSfxListener, 0x44)
+NESTED_CHECK_SIZEOF(CAudioManager, SListener, 0x48)
+NESTED_CHECK_SIZEOF(CAudioManager, CSfxChannel, 0x248)
+NESTED_CHECK_SIZEOF(CAudioManager, SLowPassFilter, 0x10)
 
-#endif // _CSFXMANAGER
+#endif // _CAUDIOMANAGER

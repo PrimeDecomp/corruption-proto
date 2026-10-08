@@ -365,8 +365,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Audio/CSfxManager.cpp",
-      "mapped": false
+      "path": "Kyoto/Audio/CAudioManager.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Audio/CSfxPitchBend.cpp",

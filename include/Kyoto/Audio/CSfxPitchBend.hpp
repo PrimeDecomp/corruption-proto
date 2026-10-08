@@ -3,7 +3,7 @@
 
 #include "Kyoto/Audio/CAudioHandle.hpp"
 
-// Guessed name: a timed pitch transition owned by CSfxManager.
+// Guessed name: a timed pitch transition owned by CAudioManager.
 class CSfxPitchBend {
 public:
   CSfxPitchBend(const CAudioHandle& handle, ushort start, ushort target, float duration);

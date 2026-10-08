@@ -121,8 +121,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Animation/CAnimationSet.cpp",
-      "mapped": false
+      "path": "Kyoto/Animation/CCEAnimationSet.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Animation/CBoolPOINode.cpp",
@@ -141,8 +141,8 @@
       "mapped": true
     },
     {
-      "path": "Kyoto/Animation/CCharacterInfo.cpp",
-      "mapped": false
+      "path": "Kyoto/Animation/CCECharacterInfo.cpp",
+      "mapped": true
     },
     {
       "path": "Kyoto/Animation/CCharacterSet.cpp",
@@ -922,6 +922,10 @@
     },
     {
       "path": "Kyoto/Text/CWordInstruction.cpp",
+      "mapped": true
+    },
+    {
+      "path": "Kyoto/Animation/CParticleResData.cpp",
       "mapped": true
     }
   ]

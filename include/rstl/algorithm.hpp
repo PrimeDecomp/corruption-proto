@@ -35,14 +35,14 @@ inline It find_if(It first, It last, Pred pred) {
 }
 
 template < typename T >
-inline void swap(T& a, T& b) {
+void swap(T& a, T& b) {
   T tmp(a);
   a = b;
   b = tmp;
 }
 
 template < typename I1, typename I2 >
-inline void iter_swap(I1 a, I2 b) {
+void iter_swap(I1 a, I2 b) {
   typename iterator_traits< I1 >::value_type tmp = *a;
   *a = *b;
   *b = tmp;
@@ -221,10 +221,9 @@ void sort(It first, It last) {
 template < typename It, typename T >
 It lower_bound(It start, It end, const T& value) {
   int dist = distance(start, end);
-  It it = start;
   while (dist > 0) {
     int halfDist = dist / 2;
-    it = start;
+    It it = start;
     advance(it, halfDist);
     if (*it < value) {
       start = it;

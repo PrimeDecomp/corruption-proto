@@ -1692,6 +1692,9 @@ MetroidPrime/ScriptObjects/CScriptCrossAreaRelay.cpp:
 MetroidPrime/ScriptLoaderRegistry.cpp:
 	.text       start:0x80364614 end:0x80365C48
 	.ctors      start:0x8065BAC0 end:0x8065BAC4
+	.bss        start:0x80703448 end:0x80703918
+	.sdata      start:0x807965B0 end:0x807965B8
+	.sbss       start:0x8079A5A0 end:0x8079A5C0
 
 MetroidPrime/Enemies/CReptilicusHunter.cpp:
 	.text       start:0x80365C48 end:0x8036E530

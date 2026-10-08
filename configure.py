@@ -1668,6 +1668,7 @@ config.libs = [
                  Object(NonMatching, "Kyoto/CFactoryMgr.cpp"),
                  Object(NonMatching, "Kyoto/CResFactory.cpp"),
                  Object(NonMatching, "Kyoto/CResLoader.cpp"),
+                 Object(NonMatching, "Kyoto/CFactoryStore.cpp"),
                  Object(NonMatching, "Kyoto/CObjectReference.cpp"),
                  Object(NonMatching, "Kyoto/CSimplePool.cpp"),
                  Object(Matching, "rstl/rstl_map.cpp"),

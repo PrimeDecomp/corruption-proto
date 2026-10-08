@@ -4,7 +4,7 @@
 
 #include "rstl/math.hpp"
 
-CSfxPitchBend::CSfxPitchBend(const CSfxHandle& handle, ushort start, ushort target, float duration)
+CSfxPitchBend::CSfxPitchBend(const CAudioHandle& handle, ushort start, ushort target, float duration)
 : mHandle(handle), mPitch(start), mTargetPitch(target), mTimeRemaining(duration) {}
 
 void CSfxPitchBend::Update(float dt) {

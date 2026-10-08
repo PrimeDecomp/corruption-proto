@@ -7,7 +7,7 @@
 #include "types.h"
 
 #include "Kyoto/Audio/CAudioSys.hpp"
-#include "Kyoto/Audio/CSfxHandle.hpp"
+#include "Kyoto/Audio/CAudioHandle.hpp"
 #include "rstl/auto_ptr.hpp"
 #include "rstl/pair.hpp"
 #include "rstl/reserved_vector.hpp"
@@ -35,7 +35,7 @@ public:
 
   class CBaseSfxWrapper {
   public:
-    CBaseSfxWrapper(bool looped, short priority, CSfxHandle handle, bool useAcoustics, int area);
+    CBaseSfxWrapper(bool looped, short priority, CAudioHandle handle, bool useAcoustics, int area);
     virtual ~CBaseSfxWrapper() = 0;
     virtual void SetActive(bool active);
     virtual void SetPlaying(bool playing);
@@ -49,7 +49,7 @@ public:
     virtual int GetRank() const;
     virtual int GetPriority() const;
     virtual int GetArea() const;
-    virtual CSfxHandle GetSfxHandle() const;
+    virtual CAudioHandle GetSfxHandle() const;
     virtual bool IsEmitter() const = 0; // Guessed name
     virtual void Play() = 0;
     virtual void Stop() = 0;
@@ -75,7 +75,7 @@ public:
     short mRank;
     short mPriority;
     ushort mPitchBend;
-    CSfxHandle mHandle;
+    CAudioHandle mHandle;
     int mArea;
     bool mActive : 1;
     bool mPlaying : 1;
@@ -89,7 +89,7 @@ public:
   class CSfxEmitterWrapper : public CBaseSfxWrapper {
   public:
     CSfxEmitterWrapper(bool looped, short priority, CAudioSys::C3DEmitterParmData& emitter,
-                       CSfxHandle handle, bool useAcoustics, int area);
+                       CAudioHandle handle, bool useAcoustics, int area);
 
     // CBaseSfxWrapper
     ~CSfxEmitterWrapper();
@@ -124,7 +124,7 @@ public:
   class CSfxWrapper : public CBaseSfxWrapper {
   public:
     CSfxWrapper(bool looped, short priority, ushort sfxId, short volume, short pan,
-                CSfxHandle handle, bool useAcoustics, int area);
+                CAudioHandle handle, bool useAcoustics, int area);
 
     // CBaseSfxWrapper
     ~CSfxWrapper();
@@ -205,31 +205,31 @@ public:
   static void Shutdown();
   static void StopAndRemoveAllEmitters();
   static void Update(float dt);
-  static CSfxHandle SfxStart(ushort id, short volume, short pan, int area = kAllAreas,
+  static CAudioHandle SfxStart(ushort id, short volume, short pan, int area = kAllAreas,
                              bool useAcoustics = false, bool looped = false,
                              const short priority = kMedPriority);
-  static CSfxHandle AddEmitter(ushort id, const CVector3f& position, int area = kAllAreas,
+  static CAudioHandle AddEmitter(ushort id, const CVector3f& position, int area = kAllAreas,
                                bool useAcoustics = false, bool looped = false,
                                short priority = kMedPriority);
-  static CSfxHandle AddEmitter(ushort id, const CVector3f& position, uchar volume, int area,
+  static CAudioHandle AddEmitter(ushort id, const CVector3f& position, uchar volume, int area,
                                bool useAcoustics, bool looped, short priority);
-  static CSfxHandle AddEmitter(CAudioSys::C3DEmitterParmData& params, int area = kAllAreas,
+  static CAudioHandle AddEmitter(CAudioSys::C3DEmitterParmData& params, int area = kAllAreas,
                                bool useAcoustics = false, bool looped = false,
                                short priority = kMedPriority);
-  static void RemoveEmitter(CSfxHandle handle);
-  static void UpdateEmitter(CSfxHandle handle, const CVector3f& position,
+  static void RemoveEmitter(CAudioHandle handle);
+  static void UpdateEmitter(CAudioHandle handle, const CVector3f& position,
                             const CVector3f& direction, uchar maxVolume);
-  static void SfxStop(CSfxHandle handle);
-  static void SfxStop(ESfxChannels channel, CSfxHandle handle);
-  static void StopSound(ESfxChannels channel, CSfxHandle handle);
-  static void SfxVolume(CSfxHandle handle, uchar volume);
-  static void SfxPan(CSfxHandle handle, uchar pan);
-  static void SfxSpan(CSfxHandle handle, uchar span);
-  static void PitchBend(CSfxHandle handle, int pitch);
+  static void SfxStop(CAudioHandle handle);
+  static void SfxStop(ESfxChannels channel, CAudioHandle handle);
+  static void StopSound(ESfxChannels channel, CAudioHandle handle);
+  static void SfxVolume(CAudioHandle handle, uchar volume);
+  static void SfxPan(CAudioHandle handle, uchar pan);
+  static void SfxSpan(CAudioHandle handle, uchar span);
+  static void PitchBend(CAudioHandle handle, int pitch);
   static void AddPitchBend(const CSfxPitchBend& pitchBend); // Guessed name
-  static void SetDuration(CSfxHandle handle, float duration);
-  static bool IsPlaying(CSfxHandle handle);
-  static bool IsQueued(CSfxHandle handle);
+  static void SetDuration(CAudioHandle handle, float duration);
+  static bool IsPlaying(CAudioHandle handle);
+  static bool IsQueued(CAudioHandle handle);
   static void SetMuted(bool muted);
   static void SetChannel(ESfxChannels channel);
   static ESfxChannels GetChannel();
@@ -246,7 +246,7 @@ public:
   static void SetActiveAreas(const rstl::reserved_vector< int, 10 >& areas, int currentArea);
   static ushort TranslateSFXID(ushort id);
   static bool LoadTranslationTable(CSimplePool* pool, const SObjectTag* tag);
-  static CSfxHandle LocateHandle();
+  static CAudioHandle LocateHandle();
   static int GetRank(CBaseSfxWrapper* sound);
   static CSfxWrapper* AllocateCSfxWrapper(const CSfxWrapper& sound);
   static CSfxEmitterWrapper* AllocateCSfxEmitterWrapper(const CSfxEmitterWrapper& sound);
@@ -254,7 +254,7 @@ public:
   static uchar GetStudio(int area);                                 // Guessed name
   static void SetAreaVolume(int area, uchar volume);                // Guessed name
   static uchar GetAreaVolume(int area);                             // Guessed name
-  static void SetIgnoreAreaLowPass(CSfxHandle handle, bool ignore); // Guessed name
+  static void SetIgnoreAreaLowPass(CAudioHandle handle, bool ignore); // Guessed name
   static int AddLowPassAreaFilter(int frequency, float duration);
   static void RemoveLowPassAreaFilter(int id);
   static void UpdateLowPassAreaFilters(float dt);             // Guessed name

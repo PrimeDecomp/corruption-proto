@@ -1,7 +1,7 @@
 #ifndef _CMIDIMANAGER
 #define _CMIDIMANAGER
 
-#include "Kyoto/Audio/CSfxHandle.hpp"
+#include "Kyoto/Audio/CAudioHandle.hpp"
 #include "Kyoto/SObjectTag.hpp"
 
 #include "rstl/auto_ptr.hpp"
@@ -13,19 +13,19 @@ public:
   class CMidiWrapper {
   public:
     CMidiWrapper();
-    const CSfxHandle& GetManagerHandle() const;
+    const CAudioHandle& GetManagerHandle() const;
     const uint GetAudioSysHandle() const;
     const bool IsAvailable() const;
 
     void SetAvailable(const bool v);
     void SetAudioSysHandle(const uint handle);
     const short GetSongId() const;
-    void SetMidiHandle(const CSfxHandle& handle);
+    void SetMidiHandle(const CAudioHandle& handle);
     void SetSongId(const short id);
 
   private:
     uint mSysHandle;
-    CSfxHandle mMidiHandle;
+    CAudioHandle mMidiHandle;
     short mSongId;
     bool mAvailable;
   };
@@ -46,12 +46,12 @@ public:
     rstl::auto_ptr< uchar > mData;
   };
 
-  static CSfxHandle Play(const CMidiData&, unsigned short fadeTime, bool stopExisting,
+  static CAudioHandle Play(const CMidiData&, unsigned short fadeTime, bool stopExisting,
                          short volume);
-  static void Stop(const CSfxHandle&, unsigned short);
+  static void Stop(const CAudioHandle&, unsigned short);
   static void StopAll();
 
-  static CSfxHandle LocateHandle();
+  static CAudioHandle LocateHandle();
 
   static rstl::reserved_vector< CMidiWrapper, 3 > mMidiWrappers;
 };

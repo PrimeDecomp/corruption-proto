@@ -9,14 +9,10 @@ static const unsigned int kAssetTypes[] = {
     'CSMP', 'APRJ', 'RAUD', 'CAUD', 'CTWK', 'FRME', 'HINT', 'MAPU', 'DUMB', 'CSMP',
 };
 
+static const uint32 kNumAssetTypes = sizeof(kAssetTypes) / sizeof(kAssetTypes[0]);
+
 unsigned int CAssetTypesList::GetFourCCForIndex(unsigned int index) {
-  if (index >= sizeof(kAssetTypes) / sizeof(kAssetTypes[0])) {
-    CCallStack stack(0, "CAssetTypesList.cpp(419) : ", kUnknownType);
-    rs_log_assert_failure(
-        &stack, "CAssetTypesList.cpp", 419, "Verify", "((uint32)index) < kNumAssetTypes",
-        "Invalid index into asset types list in CAssetTypesList::GetFourCCForIndex.");
-    rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    RAssert_TriggerIllegalInstruction();
-  }
+  RS_VERIFY_THROW(419, ((uint32)index) < kNumAssetTypes, false,
+                  "Invalid index into asset types list in CAssetTypesList::GetFourCCForIndex.");
   return kAssetTypes[index];
 }

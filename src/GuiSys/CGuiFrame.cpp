@@ -37,16 +37,12 @@ public:
 };
 } // namespace rstl
 
+static const uint skLastSupportedFrameVersion = 4;
+
 uint CGuiFrame::ReadVersion(CInputStream& in) {
   const uint version = in.Get< uint >();
-  if (version < 4) {
-    CCallStack stack(0, "CGuiFrame.cpp(90) : ", kUnknownType);
-    rs_log_assert_failure(&stack, "CGuiFrame.cpp", 90, "Verify",
-                          "version >= skLastSupportedFrameVersion",
-                          CBasics::Stringize("Bad version on frame: expected %d, got %d", 5, version));
-    rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    RAssert_TriggerIllegalInstruction();
-  }
+  RS_VERIFY_THROW(90, version >= skLastSupportedFrameVersion, false,
+                  CBasics::Stringize("Bad version on frame: expected %d, got %d", 5, version));
   return version;
 }
 

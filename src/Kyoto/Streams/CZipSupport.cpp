@@ -22,29 +22,16 @@ bool CZipSupport::Decompress(const void* source, unsigned int sourceLength, void
   stream.next_in = static_cast< unsigned char* >(const_cast< void* >(source));
   stream.avail_in = sourceLength;
 
-  int result = inflateInit_(&stream, "1.1.3", sizeof(z_stream));
-  if (result != 0) {
-    CCallStack stack(0, "CZipSupport.cpp(67) : ", kUnknownType);
-    rs_log_assert_failure(&stack, "CZipSupport.cpp", 67, "Verify", "err == Z_OK",
-                          "Error in inflateInit");
-    rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    RAssert_TriggerIllegalInstruction();
-  }
+  int err = inflateInit_(&stream, "1.1.3", sizeof(z_stream));
+  RS_VERIFY_THROW(67, err == Z_OK, false, "Error in inflateInit");
 
   stream.next_out = static_cast< unsigned char* >(output);
   stream.avail_out = outputLength;
 
-  while (result != 1) {
-    result = inflate(&stream, 0);
-    const bool good = result == 0 || result == 1;
-    if (!good) {
-      CCallStack stack(0, "CZipSupport.cpp(76) : ", kUnknownType);
-      rs_log_assert_failure(&stack, "CZipSupport.cpp", 76, "Verify",
-                            "err == Z_OK || err == Z_STREAM_END",
-                            "CInputStream::kException_StreamError");
-      rs_debugger_printf("Would have thrown exception: %s\n", "false");
-      RAssert_TriggerIllegalInstruction();
-    }
+  while (err != Z_STREAM_END) {
+    err = inflate(&stream, 0);
+    RS_VERIFY_THROW(76, err == Z_OK || err == Z_STREAM_END, false,
+                    "CInputStream::kException_StreamError");
   }
   inflateEnd(&stream);
   return true;

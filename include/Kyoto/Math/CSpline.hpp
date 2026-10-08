@@ -1,13 +1,13 @@
-#ifndef _CGAMESPLINE
-#define _CGAMESPLINE
+#ifndef _CSPLINE
+#define _CSPLINE
 
 #include "Kyoto/Math/CMayaSpline.hpp"
 #include "Kyoto/Math/CMotionSpline.hpp"
 #include "Kyoto/Math/CQuaternion.hpp"
 #include "rstl/vector.hpp"
 
-// Guessed name. Runtime spline, distinct from the serialized CGameSplineDesc.
-class CGameSpline {
+// Native name confirmed by the CSpline::Initialise diagnostic in Corruption.
+class CSpline {
 public:
   // Guessed flag names, based on native construction and sampling controls.
   enum EFlags {
@@ -17,12 +17,12 @@ public:
     kF_UsePositionForLookAt = 0x8,
   };
 
-  CGameSpline(float duration, uint flags, const CMayaSpline& positionTimeSpline,
+  CSpline(float duration, uint flags, const CMayaSpline& positionTimeSpline,
               const CMayaSpline& lookAtTimeSpline, CMotionSpline::ESplineType positionType,
               CMotionSpline::ESplineType lookAtType);
-  virtual ~CGameSpline();
+  virtual ~CSpline();
 
-  // Guessed name; replaces both motion paths and their position-key orientations.
+  // Replaces both motion paths and their position-key orientations.
   void Initialise(const rstl::vector< CVector3f >& positions,
                   const rstl::vector< CQuaternion >& orientations,
                   const rstl::vector< CVector3f >& lookAtPoints);
@@ -58,6 +58,6 @@ protected:
   float mDuration;
   uint mFlags;
 };
-CHECK_SIZEOF(CGameSpline, 0x12c)
+CHECK_SIZEOF(CSpline, 0x12c)
 
-#endif // _CGAMESPLINE
+#endif // _CSPLINE

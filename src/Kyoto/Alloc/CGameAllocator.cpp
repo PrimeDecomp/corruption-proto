@@ -252,8 +252,8 @@ CGameAllocator::SGameMemInfo* CGameAllocator::FindFreeBlock(uint len) {
     SGameMemInfo* candidate = mBins[binIndex];
     SGameMemInfo* last = nullptr;
     for (; candidate; last = candidate, candidate = candidate->GetNextFree()) {
-      if (!candidate->IsAllocated() && candidate->mLen >= len) {
-        delta = candidate->mLen - len;
+      if (!candidate->IsAllocated() && candidate->mSize >= len) {
+        delta = candidate->mSize - len;
         if (delta < bestDelta && candidate->GetNext()) {
           ret = candidate;
           previous = last;
@@ -298,7 +298,7 @@ uint CGameAllocator::FixupAllocPtrs(SGameMemInfo* info, const uint len, uint rou
 
   const bool topOfHeap = (hint & kHI_TopOfHeap) != 0;
   uint ret = 0;
-  const size_t blockLength = info->mLen;
+  const size_t blockLength = info->mSize;
   if (blockLength == roundedLen + sizeof(SGameMemInfo)) {
     ret = sizeof(SGameMemInfo);
     roundedLen += sizeof(SGameMemInfo);
@@ -314,7 +314,7 @@ uint CGameAllocator::FixupAllocPtrs(SGameMemInfo* info, const uint len, uint rou
           reinterpret_cast< SGameMemInfo* >(reinterpret_cast< char* >(infoNext) - roundedLen) - 1;
       const SGameMemInfo& block = SGameMemInfo(info, infoNext, nullptr, len, "", "");
       *newInfo = block;
-      info->mLen -= roundedLen + sizeof(SGameMemInfo);
+      info->mSize -= roundedLen + sizeof(SGameMemInfo);
       AddFreeEntryToFreeList(info);
       newPtr = newInfo;
     } else {
@@ -322,7 +322,7 @@ uint CGameAllocator::FixupAllocPtrs(SGameMemInfo* info, const uint len, uint rou
       newInfo = reinterpret_cast< SGameMemInfo* >(reinterpret_cast< char* >(info) + offset);
       const SGameMemInfo& block =
           SGameMemInfo(info, infoNext, info->GetNextFree(),
-                       info->mLen - roundedLen - sizeof(SGameMemInfo), "", "");
+                       info->mSize - roundedLen - sizeof(SGameMemInfo), "", "");
       *newInfo = block;
       AddFreeEntryToFreeList(newInfo);
     }
@@ -339,7 +339,7 @@ uint CGameAllocator::FixupAllocPtrs(SGameMemInfo* info, const uint len, uint rou
 
   newPtr->SetTopOfHeapAllocated(topOfHeap);
   newPtr->SetAllocated(true);
-  newPtr->mLen = len;
+  newPtr->mSize = len;
   return ret;
 }
 
@@ -398,7 +398,7 @@ bool CGameAllocator::Free(const void* ptr) {
 bool CGameAllocator::FreeNormalAllocation(const void* ptr) {
   SGameMemInfo* info = GetMemInfoFromBlockPtr(ptr);
   size_t newLen = 0;
-  const size_t infoLen = info->mLen;
+  const size_t infoLen = info->mSize;
   SGameMemInfo* k = info->GetNext();
   size_t len = 0;
   if (k) {
@@ -416,7 +416,7 @@ bool CGameAllocator::FreeNormalAllocation(const void* ptr) {
       next->SetPrev(prev);
     }
     newLen = sizeof(SGameMemInfo);
-    prev->mLen += info->mLen + sizeof(SGameMemInfo);
+    prev->mSize += info->mSize + sizeof(SGameMemInfo);
     info = prev;
   }
 
@@ -427,7 +427,7 @@ bool CGameAllocator::FreeNormalAllocation(const void* ptr) {
       info->GetNext()->SetPrev(info);
     }
     newLen += sizeof(SGameMemInfo);
-    info->mLen += next->mLen + sizeof(SGameMemInfo);
+    info->mSize += next->mSize + sizeof(SGameMemInfo);
     info->SetAllocated(false);
   } else {
     info->SetAllocated(false);
@@ -519,11 +519,11 @@ int CGameAllocator::EnumAllocations(FEnumAllocationsCb func, const void* ptr, bo
   const SGameMemInfo* iter = mFirst;
 
   while (iter != nullptr) {
-    if (!iter->IsPostGuardIntact()) {
+    if (!iter->IsPostGuardBlockIntact()) {
       return -1;
     }
 
-    if (!iter->IsPriorGuardIntact()) {
+    if (!iter->IsPriorGuardBlockIntact()) {
       return -1;
     }
 

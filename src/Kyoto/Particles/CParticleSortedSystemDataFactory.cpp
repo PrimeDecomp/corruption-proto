@@ -1,4 +1,4 @@
-#include "Kyoto/Particles/CSortedParticleSystemDataFactory.hpp"
+#include "Kyoto/Particles/CParticleSortedSystemDataFactory.hpp"
 
 #include "Kyoto/CRandom16.hpp"
 #include "Kyoto/CVParamTransfer.hpp"
@@ -10,17 +10,17 @@ CFactoryFnReturn FSortedParticleSystemDataFactory(const SObjectTag& tag, CInputS
                                                  const CVParamTransfer& transfer) {
   rstl::rc_ptr< IVParamObj > obj = transfer.GetObj();
   CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
-  CSortedParticleSystemDescription* desc = CSortedParticleSystemDataFactory::GetGeneratorDesc(in, pool);
+  CSortedParticleSystemDescription* desc = CParticleSortedSystemDataFactory::GetGeneratorDesc(in, pool);
   return desc;
 }
 
-CSortedParticleSystemDescription* CSortedParticleSystemDataFactory::GetGeneratorDesc(
+CSortedParticleSystemDescription* CParticleSortedSystemDataFactory::GetGeneratorDesc(
     CInputStream& in, CSimplePool* pool) {
   rstl::vector< CAssetId > resources;
   return CreateGeneratorDescription(in, pool);
 }
 
-CSortedParticleSystemDescription* CSortedParticleSystemDataFactory::CreateGeneratorDescription(
+CSortedParticleSystemDescription* CParticleSortedSystemDataFactory::CreateGeneratorDescription(
     CInputStream& in, CSimplePool* pool) {
   const FourCC classId = CParticleDataFactory::GetClassID(in);
   if (classId != 'SRSM') {
@@ -31,7 +31,7 @@ CSortedParticleSystemDescription* CSortedParticleSystemDataFactory::CreateGenera
   return desc;
 }
 
-bool CSortedParticleSystemDataFactory::CreateSRSM(CSortedParticleSystemDescription* desc,
+bool CParticleSortedSystemDataFactory::CreateSRSM(CSortedParticleSystemDescription* desc,
                                                 CInputStream& in, CSimplePool* pool) {
   bool done = false;
   CRandom16 random(99);

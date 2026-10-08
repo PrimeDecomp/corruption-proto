@@ -1,4 +1,4 @@
-#include "Kyoto/Graphics/CThreeSegmentModel.hpp"
+#include "Kyoto/Graphics/CFoldySurface.hpp"
 
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
@@ -33,7 +33,7 @@ inline ushort ReadDisplayListShort(const uchar* data) {
 }
 } // namespace
 
-CThreeSegmentModel::CThreeSegmentModel(const TToken< CModel >& model, float lowerX, float upperX,
+CFoldySurface::CFoldySurface(const TToken< CModel >& model, float lowerX, float upperX,
                                        const CVector3f& lowerOffset, const CVector3f& middleOffset,
                                        const CVector3f& upperOffset)
 : mModel(model, true), mPositions(nullptr), mVertexCount(0), mDisplayListSize(0) {
@@ -114,7 +114,7 @@ CThreeSegmentModel::CThreeSegmentModel(const TToken< CModel >& model, float lowe
   }
 }
 
-CThreeSegmentModel::~CThreeSegmentModel() {
+CFoldySurface::~CFoldySurface() {
   CFrameDelayedKiller::ScheduleDeletion(CFrameDelayedKiller::kWhichFrame_NextFrame,
                                         mPositions.release());
   for (int i = 0; i < kS_Count; ++i) {
@@ -123,7 +123,7 @@ CThreeSegmentModel::~CThreeSegmentModel() {
   }
 }
 
-void CThreeSegmentModel::SetSegmentTransforms(int matrixGroup, const CTransform4f& lower,
+void CFoldySurface::SetSegmentTransforms(int matrixGroup, const CTransform4f& lower,
                                               const CTransform4f& middle,
                                               const CTransform4f& upper) const {
   Mtx lowerModelView;
@@ -138,11 +138,11 @@ void CThreeSegmentModel::SetSegmentTransforms(int matrixGroup, const CTransform4
   GXLoadPosMtxImm(upperModelView, firstMatrix + GX_PNMTX3);
 }
 
-void CThreeSegmentModel::DrawDisplayList(int index) const {
+void CFoldySurface::DrawDisplayList(int index) const {
   CGX::CallDisplayList(mDisplayLists[index].get(), mDisplayListSize);
 }
 
-void CThreeSegmentModel::SetMaterialCurrent(const CModelFlags& flags) const {
+void CFoldySurface::SetMaterialCurrent(const CModelFlags& flags) const {
   const CModel& model = *mModel.GetObject();
   model.PreDrawModel(flags);
   model.Touch(0);
@@ -156,7 +156,7 @@ void CThreeSegmentModel::SetMaterialCurrent(const CModelFlags& flags) const {
   CGX::SetVtxDesc(GX_VA_PNMTXIDX, GX_DIRECT);
 }
 
-void CThreeSegmentModel::ResetRenderState() const {
+void CFoldySurface::ResetRenderState() const {
   CGX::SetVtxDesc(GX_VA_PNMTXIDX, GX_NONE);
   GXSetCurrentMtx(GX_PNMTX0);
 }

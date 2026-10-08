@@ -106,7 +106,7 @@ uint CARAMManager::CAramPool::FindFreeBlocks(uint start, uint end, uint count) {
 }
 
 bool CARAMManager::CAramPool::Free(const void* ptr) {
-  if (!IsAllocValid(ptr)) {
+  if (!IsValidAlloc(ptr)) {
     return false;
   }
 
@@ -243,7 +243,7 @@ void CARAMManager::RefreshActiveDMAList() {
 
 void CARAMManager::CollectGarbage() { RefreshActiveDMAList(); }
 
-bool CARAMManager::IsAllocValid(const void* ptr) {
+bool CARAMManager::IsValidAlloc(const void* ptr) {
   return reinterpret_cast< const void* >(-1) != ptr;
 }
 

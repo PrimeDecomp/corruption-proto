@@ -19,7 +19,7 @@ public:
 
 private:
   rstl::auto_ptr<char> mPtr;
-  int mBufferLen;
+  int mMemorySize;
   int xc_;
   int mNextFreeAddr;
   int x14_;

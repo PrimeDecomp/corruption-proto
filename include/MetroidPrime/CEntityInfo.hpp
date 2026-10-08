@@ -258,7 +258,4 @@ private:
 };
 CHECK_SIZEOF(CScriptMsg, 0x20)
 
-struct SLdrEditorProperties;
-CEntityInfo& LdrToEntityInfo(CEntityInfo& info, const SLdrEditorProperties& properties);
-
 #endif // _CENTITYINFO

@@ -7,6 +7,8 @@ class CEntity;
 class CEntityInfo;
 class CInputStream;
 class CStateManager;
+class CTransform4f;
+struct SLdrEditorProperties;
 
 // Guessed name. G2MEAB passes script object types as a 4-byte class by value: the
 // registry initializer stores each literal twice (temporary and parameter copy) and the
@@ -26,6 +28,9 @@ private:
 typedef CEntity* (*FScriptLoader)(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 
 FScriptLoader GetScriptLoaderForType(CFourCC type);
+
+CTransform4f LdrToTransform4f(const SLdrEditorProperties& properties);
+CEntityInfo& LdrToEntityInfo(CEntityInfo& info, const SLdrEditorProperties& properties);
 
 // Every G2MEAB loader is linked into the DOL; there are no REL forwarding stubs.
 // Names follow each loader's "Unknown property ... in X loader." diagnostic.

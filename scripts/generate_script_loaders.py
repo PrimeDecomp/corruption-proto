@@ -71,13 +71,33 @@ TWEAKS_INT_COUNT_STRUCTS = {
     "TweakBall_PhazonBall",
     "TweakGame_TimeLimitChoices",
     "TweakGui_ScannableObjectDownloadTimes",
+    "TweakParticle",
     "TweakPlayerGun_Arm_Position",
     "TweakPlayerGun_Beam_Misc",
     "TweakPlayerGun_RicochetDamage_Factor",
     "TweakPlayer_Collision",
 }
 # Tweak member records outside the Tweak* names that read the count like the tweaks.
-TWEAKS_USHORT_COUNT_STRUCTS = {"CameraShakerData", "TIcon_Configurations"}
+TWEAKS_USHORT_COUNT_STRUCTS = {
+    "ActorParameters",
+    "BallMiscControls",
+    "BallMovementControls",
+    "CameraShakerData",
+    "DamageVulnerability",
+    "DebugControls",
+    "LightParameters",
+    "MapControls",
+    "MiscControls",
+    "PlasmaBeamInfo",
+    "PlayerControls",
+    "PlayerMiscControls",
+    "RevolutionControl",
+    "ShockWaveInfo",
+    "SpringConvergence",
+    "TIcon_Configurations",
+    "TextProperties",
+    "VelocityConvergence",
+}
 GAME_DIRECTORY = "MP3Proto"
 
 PROFILE_DIRECTORY = Path(__file__).resolve().parent.parent / "config" / "loader_profiles"

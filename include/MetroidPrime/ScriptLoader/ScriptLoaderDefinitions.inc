@@ -2810,7 +2810,7 @@ SLdrDamageVulnerability::SLdrDamageVulnerability()
 SLdrDamageVulnerability::~SLdrDamageVulnerability() {}
 
 void LoadTypedefDamageVulnerability(SLdrDamageVulnerability& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2920,7 +2920,7 @@ SLdrLightParameters::SLdrLightParameters()
 SLdrLightParameters::~SLdrLightParameters() {}
 
 void LoadTypedefLightParameters(SLdrLightParameters& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -3168,7 +3168,7 @@ SLdrTextProperties::SLdrTextProperties()
 SLdrTextProperties::~SLdrTextProperties() {}
 
 void LoadTypedefTextProperties(SLdrTextProperties& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -7990,7 +7990,7 @@ SLdrActorParameters::SLdrActorParameters()
 SLdrActorParameters::~SLdrActorParameters() {}
 
 void LoadTypedefActorParameters(SLdrActorParameters& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -8124,7 +8124,7 @@ SLdrShockWaveInfo::SLdrShockWaveInfo()
 SLdrShockWaveInfo::~SLdrShockWaveInfo() {}
 
 void LoadTypedefShockWaveInfo(SLdrShockWaveInfo& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -8308,7 +8308,7 @@ SLdrSpringConvergence::SLdrSpringConvergence() {
 SLdrSpringConvergence::~SLdrSpringConvergence() {}
 
 void LoadTypedefSpringConvergence(SLdrSpringConvergence& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -8405,7 +8405,7 @@ SLdrVelocityConvergence::SLdrVelocityConvergence() {
 SLdrVelocityConvergence::~SLdrVelocityConvergence() {}
 
 void LoadTypedefVelocityConvergence(SLdrVelocityConvergence& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -8544,7 +8544,7 @@ SLdrPlasmaBeamInfo::SLdrPlasmaBeamInfo()
 SLdrPlasmaBeamInfo::~SLdrPlasmaBeamInfo() {}
 
 void LoadTypedefPlasmaBeamInfo(SLdrPlasmaBeamInfo& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();

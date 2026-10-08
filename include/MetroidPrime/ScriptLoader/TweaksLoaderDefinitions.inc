@@ -524,7 +524,7 @@ SLdrTweakParticle::SLdrTweakParticle()
 SLdrTweakParticle::~SLdrTweakParticle() {}
 
 void LoadTypedefTweakParticle(SLdrTweakParticle& data, CInputStream& input) {
-  const ushort propertyCount = input.ReadInt16();
+  const int propertyCount = input.ReadUint16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2069,7 +2069,7 @@ SLdrRevolutionControl::SLdrRevolutionControl()
 SLdrRevolutionControl::~SLdrRevolutionControl() {}
 
 void LoadTypedefRevolutionControl(SLdrRevolutionControl& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2271,7 +2271,7 @@ SLdrMapControls::SLdrMapControls()
 SLdrMapControls::~SLdrMapControls() {}
 
 void LoadTypedefMapControls(SLdrMapControls& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2357,7 +2357,7 @@ SLdrDebugControls::SLdrDebugControls()
 SLdrDebugControls::~SLdrDebugControls() {}
 
 void LoadTypedefDebugControls(SLdrDebugControls& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2471,7 +2471,7 @@ SLdrMiscControls::SLdrMiscControls() : map(), inventory(), optionsScreen(), logS
 SLdrMiscControls::~SLdrMiscControls() {}
 
 void LoadTypedefMiscControls(SLdrMiscControls& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2563,7 +2563,7 @@ SLdrBallMiscControls::SLdrBallMiscControls() : bomb(), morphIntoBall(), morphOut
 SLdrBallMiscControls::~SLdrBallMiscControls() {}
 
 void LoadTypedefBallMiscControls(SLdrBallMiscControls& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2600,7 +2600,7 @@ SLdrBallMovementControls::SLdrBallMovementControls()
 SLdrBallMovementControls::~SLdrBallMovementControls() {}
 
 void LoadTypedefBallMovementControls(SLdrBallMovementControls& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2665,7 +2665,7 @@ SLdrPlayerMiscControls::SLdrPlayerMiscControls()
 SLdrPlayerMiscControls::~SLdrPlayerMiscControls() {}
 
 void LoadTypedefPlayerMiscControls(SLdrPlayerMiscControls& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();
@@ -2916,7 +2916,7 @@ SLdrPlayerControls::SLdrPlayerControls()
 SLdrPlayerControls::~SLdrPlayerControls() {}
 
 void LoadTypedefPlayerControls(SLdrPlayerControls& sldrThis, CInputStream& input) {
-  const int propertyCount = input.ReadUint16();
+  const ushort propertyCount = input.ReadInt16();
   for (int i = 0; i < propertyCount; ++i) {
     const uint propertyId = input.Get< uint >();
     const u16 propertySize = input.ReadUint16();

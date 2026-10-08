@@ -20,7 +20,8 @@ rstl::reserved_vector< CAudioManager::CSfxEmitterWrapper, 64 > CAudioManager::mE
 rstl::reserved_vector< CAudioManager::CSfxWrapper, 64 > CAudioManager::mWrapperPool;
 rstl::reserved_vector< CSfxPitchBend, 8 > CAudioManager::mPitchBends;
 rstl::reserved_vector< CAuxEffect, 10 > CAudioManager::mAuxEffects;
-rstl::reserved_vector< CAudioManager::SAreaVolume, 10 > CAudioManager::mAreaVolumes(10, SAreaVolume());
+rstl::reserved_vector< CAudioManager::SAreaVolume, 10 > CAudioManager::mAreaVolumes(10,
+                                                                                    SAreaVolume());
 CAuxEffectManager CAudioManager::mAuxEffectManager;
 rstl::pair< int, bool > CAudioManager::mStudioState(-1, false);
 
@@ -47,7 +48,7 @@ CAudioManager::SListener::SListener() : mActive(false) {}
 bool CAudioManager::CSfxEmitterWrapper::IsEmitter() const { return true; }
 
 CAudioManager::CBaseSfxWrapper::CBaseSfxWrapper(bool looped, short priority, CAudioHandle handle,
-                                              bool useAcoustics, int area)
+                                                bool useAcoustics, int area)
 : mTimeRemaining(15.f)
 , mRank(0)
 , mPriority(priority)
@@ -110,8 +111,9 @@ void CAudioManager::CBaseSfxWrapper::SetIgnoreAreaLowPass(bool ignore) {
 }
 
 CAudioManager::CSfxEmitterWrapper::CSfxEmitterWrapper(bool looped, short priority,
-                                                    CAudioSys::C3DEmitterParmData& emitter,
-                                                    CAudioHandle handle, bool useAcoustics, int area)
+                                                      CAudioSys::C3DEmitterParmData& emitter,
+                                                      CAudioHandle handle, bool useAcoustics,
+                                                      int area)
 : CBaseSfxWrapper(looped, priority, handle, useAcoustics, area)
 , mEmitterData(emitter)
 , mEmitterHandle(SND_ID_ERROR)
@@ -198,7 +200,7 @@ void CAudioManager::CSfxEmitterWrapper::UpdateEmitterSilent() {
 void CAudioManager::CSfxEmitterWrapper::UpdateEmitter() { mUpdatePending = true; }
 
 CAudioManager::CSfxWrapper::CSfxWrapper(bool looped, short priority, ushort sfxId, short volume,
-                                      short pan, CAudioHandle handle, bool useAcoustics, int area)
+                                        short pan, CAudioHandle handle, bool useAcoustics, int area)
 : CBaseSfxWrapper(looped, priority, handle, useAcoustics, area)
 , mSfxId(sfxId)
 , mVoiceHandle(SND_ID_ERROR)
@@ -287,9 +289,10 @@ void CAudioManager::StopAndRemoveAllEmitters() {
   }
 }
 
-CAudioManager::CSfxListener::CSfxListener(CVector3f position, CVector3f direction, CVector3f heading,
-                                        CVector3f up, float frontSur, float backSur,
-                                        float soundSpeed, uint flags, uchar maxVolume)
+CAudioManager::CSfxListener::CSfxListener(CVector3f position, CVector3f direction,
+                                          CVector3f heading, CVector3f up, float frontSur,
+                                          float backSur, float soundSpeed, uint flags,
+                                          uchar maxVolume)
 : mPosition(position)
 , mDirection(direction)
 , mHeading(heading)
@@ -301,9 +304,9 @@ CAudioManager::CSfxListener::CSfxListener(CVector3f position, CVector3f directio
 , mMaxVolume(maxVolume) {}
 
 void CAudioManager::AddListener(ESfxChannels channel, const CVector3f& position,
-                              const CVector3f& direction, const CVector3f& heading,
-                              const CVector3f& up, float frontSur, float backSur, float soundSpeed,
-                              uint flags, uchar maxVolume, int listener) {
+                                const CVector3f& direction, const CVector3f& heading,
+                                const CVector3f& up, float frontSur, float backSur,
+                                float soundSpeed, uint flags, uchar maxVolume, int listener) {
   SListener& entry = mChannels[channel].mListeners[listener];
   entry.mListener = CSfxListener(position, direction, heading, up, frontSur, backSur, soundSpeed,
                                  flags, maxVolume);
@@ -313,8 +316,8 @@ void CAudioManager::AddListener(ESfxChannels channel, const CVector3f& position,
 }
 
 void CAudioManager::UpdateListener(const CVector3f& position, const CVector3f& direction,
-                                 const CVector3f& heading, const CVector3f& up, uchar maxVolume,
-                                 int listener) {
+                                   const CVector3f& heading, const CVector3f& up, uchar maxVolume,
+                                   int listener) {
   SListener& entry = mChannels[mCurrentChannel].mListeners[listener];
   entry.mListener.mPosition = position;
   entry.mListener.mDirection = direction;
@@ -325,7 +328,7 @@ void CAudioManager::UpdateListener(const CVector3f& position, const CVector3f& d
 }
 
 CAudioHandle CAudioManager::AddEmitter(ushort id, const CVector3f& position, int area,
-                                   bool useAcoustics, bool looped, short priority) {
+                                       bool useAcoustics, bool looped, short priority) {
   CAudioSys::C3DEmitterParmData params(150.f, 0.1f, 1, 127, 20);
   params.mPos = position;
   params.mDir = CVector3f::Zero();
@@ -334,7 +337,7 @@ CAudioHandle CAudioManager::AddEmitter(ushort id, const CVector3f& position, int
 }
 
 CAudioHandle CAudioManager::AddEmitter(ushort id, const CVector3f& position, uchar volume, int area,
-                                   bool useAcoustics, bool looped, short priority) {
+                                       bool useAcoustics, bool looped, short priority) {
   CAudioSys::C3DEmitterParmData params(150.f, 0.1f, 1, rstl::max_val(int(volume), 21), 20);
   params.mPos = position;
   params.mDir = CVector3f::Zero();
@@ -345,7 +348,7 @@ CAudioHandle CAudioManager::AddEmitter(ushort id, const CVector3f& position, uch
 CAudioManager::CSfxEmitterWrapper::~CSfxEmitterWrapper() {}
 
 CAudioHandle CAudioManager::AddEmitter(CAudioSys::C3DEmitterParmData& params, int area,
-                                   bool useAcoustics, bool looped, short priority) {
+                                       bool useAcoustics, bool looped, short priority) {
   if ((mMuted && !looped) || params.mSfxId == kInternalInvalidSfxId) {
     return CAudioHandle::NullHandle();
   }
@@ -376,7 +379,7 @@ CAudioHandle CAudioManager::AddEmitter(CAudioSys::C3DEmitterParmData& params, in
 }
 
 void CAudioManager::UpdateEmitter(CAudioHandle handle, const CVector3f& position,
-                                const CVector3f& direction, uchar maxVolume) {
+                                  const CVector3f& direction, uchar maxVolume) {
   CSfxChannel& channel = mChannels[mCurrentChannel];
   const int index = handle.GetIndex();
   if (index < 0 || index >= channel.mSounds.size()) {
@@ -401,8 +404,8 @@ void CAudioManager::UpdateEmitter(CAudioHandle handle, const CVector3f& position
 
 void CAudioManager::RemoveEmitter(CAudioHandle handle) { StopSound(mCurrentChannel, handle); }
 
-CAudioHandle CAudioManager::SfxStart(ushort id, short volume, short pan, int area, bool useAcoustics,
-                                 bool looped, short priority) {
+CAudioHandle CAudioManager::SfxStart(ushort id, short volume, short pan, int area,
+                                     bool useAcoustics, bool looped, short priority) {
   if ((mMuted && !looped) || id == kInternalInvalidSfxId) {
     return CAudioHandle::NullHandle();
   }
@@ -425,7 +428,9 @@ CAudioHandle CAudioManager::SfxStart(ushort id, short volume, short pan, int are
 
 void CAudioManager::SfxStop(CAudioHandle handle) { StopSound(mCurrentChannel, handle); }
 
-void CAudioManager::SfxStop(ESfxChannels channel, CAudioHandle handle) { StopSound(channel, handle); }
+void CAudioManager::SfxStop(ESfxChannels channel, CAudioHandle handle) {
+  StopSound(channel, handle);
+}
 
 void CAudioManager::SfxVolume(CAudioHandle handle, uchar volume) {
   CSfxChannel& channel = mChannels[mCurrentChannel];
@@ -439,9 +444,8 @@ void CAudioManager::SfxVolume(CAudioHandle handle, uchar volume) {
   }
   CSfxWrapper* sound = static_cast< CSfxWrapper* >(base);
   const uchar areaVolume = GetAreaVolume(sound->GetArea());
-  const uchar scaled = areaVolume == 127
-                           ? volume
-                           : uchar(areaVolume * rstl::min_val(volume, uchar(127)) / 127);
+  const uchar scaled =
+      areaVolume == 127 ? volume : uchar(areaVolume * rstl::min_val(volume, uchar(127)) / 127);
   const uchar clamped = scaled < 1 ? 1 : (scaled > 127 ? 127 : scaled);
   sound->SetVolume(clamped);
   if (!mMuted && sound->IsPlaying()) {
@@ -1111,16 +1115,17 @@ int CAudioManager::RegisterAuxEffect(const CAuxEffect& effect) {
 }
 
 int CAudioManager::AddAuxEffect(int area, const SND_AUX_REVERBHI& params, uchar volume,
-                              int priority) {
+                                int priority) {
   return RegisterAuxEffect(CAuxEffect(params, area, volume, priority));
 }
 
-int CAudioManager::AddAuxEffect(int area, const SND_AUX_CHORUS& params, uchar volume, int priority) {
+int CAudioManager::AddAuxEffect(int area, const SND_AUX_CHORUS& params, uchar volume,
+                                int priority) {
   return RegisterAuxEffect(CAuxEffect(params, area, volume, priority));
 }
 
 int CAudioManager::AddAuxEffect(int area, const SND_AUX_REVERBSTD& params, uchar volume,
-                              int priority) {
+                                int priority) {
   return RegisterAuxEffect(CAuxEffect(params, area, volume, priority));
 }
 
@@ -1129,22 +1134,22 @@ int CAudioManager::AddAuxEffect(int area, const SND_AUX_DELAY& params, uchar vol
 }
 
 int CAudioManager::AddAuxEffect(int area, const SFlangerAuxParameters& params, uchar volume,
-                              int priority) {
+                                int priority) {
   return RegisterAuxEffect(CAuxEffect(params, area, volume, priority));
 }
 
 int CAudioManager::AddAuxEffect(int area, const SBitcrusherAuxParameters& params, uchar volume,
-                              int priority) {
+                                int priority) {
   return RegisterAuxEffect(CAuxEffect(params, area, volume, priority));
 }
 
 int CAudioManager::AddAuxEffect(int area, const SPhaserAuxParameters& params, uchar volume,
-                              int priority) {
+                                int priority) {
   return RegisterAuxEffect(CAuxEffect(params, area, volume, priority));
 }
 
 int CAudioManager::AddAuxEffect(int area, const SFilteredDelayAuxParameters& params, uchar volume,
-                              int priority) {
+                                int priority) {
   return RegisterAuxEffect(CAuxEffect(params, area, volume, priority));
 }
 

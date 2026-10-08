@@ -6,8 +6,7 @@
 
 #include <math.h>
 
-static CUnitVector3f CreateNormal(const CVector3f& a, const CVector3f& b,
-                                  const CVector3f& c) {
+static CUnitVector3f CreateNormal(const CVector3f& a, const CVector3f& b, const CVector3f& c) {
   return CVector3f::Cross(b - a, c - a);
 }
 
@@ -33,14 +32,10 @@ CFrustumPlanes::CFrustumPlanes(const CTransform4f& xf, float fov, float aspect, 
 
   mPlanes.push_back(
       CPlane(nearPos, CreateNormal(worldCorners[0], worldCorners[2], worldCorners[1])));
-  mPlanes.push_back(
-      CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[1], worldCorners[0])));
-  mPlanes.push_back(
-      CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[3], worldCorners[2])));
-  mPlanes.push_back(
-      CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[0], worldCorners[3])));
-  mPlanes.push_back(
-      CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[2], worldCorners[1])));
+  mPlanes.push_back(CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[1], worldCorners[0])));
+  mPlanes.push_back(CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[3], worldCorners[2])));
+  mPlanes.push_back(CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[0], worldCorners[3])));
+  mPlanes.push_back(CPlane(pos, CreateNormal(CVector3f::Zero(), worldCorners[2], worldCorners[1])));
   if (useFarPlane) {
     mPlanes.push_back(CPlane(farZ - mPlanes[0].GetConstant(), -mPlanes[0].GetNormal()));
   }

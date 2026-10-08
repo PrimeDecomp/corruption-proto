@@ -46,7 +46,7 @@ CHECK_SIZEOF(CBufferedDvdRequest, 0x1c)
 class CLookaheadRes {
 public:
   CLookaheadRes(uchar* buffer, CDvdFile* file, uint offset, uint size,
-                  const rstl::auto_ptr< CDvdRequest >& request, CResLoader* owner);
+                const rstl::auto_ptr< CDvdRequest >& request, CResLoader* owner);
   ~CLookaheadRes();
 
   bool IsInvalid() const { return mInvalid; }

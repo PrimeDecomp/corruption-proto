@@ -7,16 +7,16 @@
 extern "C" {
 #endif
 
-typedef struct  {
-    Ptr Prev;
-    Ptr Next;
-    Ptr Parent;
-    Ptr Children;
+typedef struct {
+  Ptr Prev;
+  Ptr Next;
+  Ptr Parent;
+  Ptr Children;
 } DSBranch, *DSBranchPtr;
 
-typedef struct  {
-    u32 Offset;
-    Ptr Root;
+typedef struct {
+  u32 Offset;
+  Ptr Root;
 } DSTree, *DSTreePtr;
 
 void DSExtractBranch(DSTreePtr tree, Ptr obj);

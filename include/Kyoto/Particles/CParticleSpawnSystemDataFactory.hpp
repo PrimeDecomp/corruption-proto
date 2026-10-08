@@ -9,7 +9,8 @@ class CInputStream;
 class CSimplePool;
 class CVParamTransfer;
 
-// Reconstructed class/method names follow the sibling particle factories; no original export is known.
+// Reconstructed class/method names follow the sibling particle factories; no original export is
+// known.
 class CParticleSpawnSystemDataFactory {
 public:
   static CSpawnSystemDescription* GetGeneratorDesc(CInputStream& in, CSimplePool* pool);
@@ -21,6 +22,6 @@ private:
 
 // Guessed free-factory name, supported by the SPSC registration and parsed descriptor type.
 CFactoryFnReturn FSpawnParticleSystemDataFactory(const SObjectTag& tag, CInputStream& in,
-                                                const CVParamTransfer& transfer);
+                                                 const CVParamTransfer& transfer);
 
 #endif // _CPARTICLESPAWNSYSTEMDATAFACTORY

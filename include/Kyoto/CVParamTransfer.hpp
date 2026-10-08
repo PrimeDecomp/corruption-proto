@@ -11,7 +11,7 @@ class TObjOwnerParam : public IVParamObj {
 public:
   ~TObjOwnerParam() {}
   TObjOwnerParam(T data) : mData(data) {}
-  T GetData() const { return static_cast<T>(mData); }
+  T GetData() const { return static_cast< T >(mData); }
 
 private:
   T mData;

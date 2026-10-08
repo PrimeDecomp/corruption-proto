@@ -31,9 +31,7 @@ CHECK_SIZEOF(SRSFHeader, 0x60)
 struct SDSPStreamVoice {
   SDSPStreamVoice();
 
-  uchar* GetCurrentBuffer() const {
-    return mBuffer.get() + (mUpperHalf ? mBufferSize / 2 : 0);
-  }
+  uchar* GetCurrentBuffer() const { return mBuffer.get() + (mUpperHalf ? mBufferSize / 2 : 0); }
 
   rstl::auto_ptr< uchar > mBuffer;
   uint mBufferSize;

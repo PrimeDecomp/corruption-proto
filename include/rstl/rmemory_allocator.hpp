@@ -21,7 +21,9 @@ struct rmemory_allocator {
     return size == 0 ? 0 : reinterpret_cast< T* >(new uchar[size]);
   }
   template < typename T >
-  static void deallocate(T* ptr) { delete[] reinterpret_cast< uchar* >(ptr); }
+  static void deallocate(T* ptr) {
+    delete[] reinterpret_cast< uchar* >(ptr);
+  }
 };
 
 struct aligned_allocator {
@@ -33,7 +35,9 @@ struct aligned_allocator {
     output = size == 0 ? 0 : static_cast< T* >(CMemory::Alloc(size, IAllocator::kHI_RoundUpLen));
   }
   template < typename T >
-  static void deallocate(T* ptr) { delete[] reinterpret_cast< uchar* >(ptr); }
+  static void deallocate(T* ptr) {
+    delete[] reinterpret_cast< uchar* >(ptr);
+  }
 };
 
 } // namespace rstl

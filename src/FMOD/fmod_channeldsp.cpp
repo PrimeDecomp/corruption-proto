@@ -1,5 +1,12 @@
 // NonMatching translation-unit scaffold; no implementation is supplied.
 // G2MEAB .text: 0x805B8A3C..0x805BAB64 (21 retained native functions).
 // Inferred basename; original source filename is unproven.
-// Evidence: Ctor805B8A3C installs DSP voice table806E28D4 after shared/intermediate base tables, and initializes+78..+8C DSP handles. Init805B8A9C creates FMOD Channel DSPHead, SubChannel DSPHead and WaveTable units;805B9440 creates Resampler and graph connections. All following overrides operate on those graph nodes, volume/frequency/mix/position/status/spectrum/waveform state. Final805BAB5C is an8-byte -0x5C adjustor branch to descriptor/list-node destructor805B8DC4 and remains with its emitting family. Next805BAB64 installs distinct aggregate table806E2A4C and intrusive child-list state. Basename inferred from this closed DSP-specific voice implementation.
-// Preserve every retained stub, emitted helper and adjustor thunk; full inventory and inlining uncertainty are recorded externally.
+// Evidence: Ctor805B8A3C installs DSP voice table806E28D4 after shared/intermediate base tables,
+// and initializes+78..+8C DSP handles. Init805B8A9C creates FMOD Channel DSPHead, SubChannel
+// DSPHead and WaveTable units;805B9440 creates Resampler and graph connections. All following
+// overrides operate on those graph nodes, volume/frequency/mix/position/status/spectrum/waveform
+// state. Final805BAB5C is an8-byte -0x5C adjustor branch to descriptor/list-node destructor805B8DC4
+// and remains with its emitting family. Next805BAB64 installs distinct aggregate table806E2A4C and
+// intrusive child-list state. Basename inferred from this closed DSP-specific voice implementation.
+// Preserve every retained stub, emitted helper and adjustor thunk; full inventory and inlining
+// uncertainty are recorded externally.

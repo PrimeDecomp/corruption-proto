@@ -24,8 +24,8 @@ private:
 
 template < typename T >
 uint& TOneStatic< T >::ReferenceCount() {
-    static uint sReferenceCount = 0;
-    return sReferenceCount;
+  static uint sReferenceCount = 0;
+  return sReferenceCount;
 }
 
 template < typename T >

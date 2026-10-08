@@ -14,11 +14,7 @@ static bool sDeferCallbacks;
 static int sDeferredCallbacks;
 
 CDSPStreamManager::CDSPStreamManager()
-: mDataOffset(0)
-, mFileCur(0)
-, mReadsPending(0)
-, mType(1)
-, mState(kSS_Idle) {}
+: mDataOffset(0), mFileCur(0), mReadsPending(0), mType(1), mState(kSS_Idle) {}
 
 SDSPStreamVoice::SDSPStreamVoice()
 : mBufferSize(0), mNumSamples(0), mType(1), mStreamId(-1), mUpperHalf(false), mFree(true) {}
@@ -87,8 +83,7 @@ int CDSPStreamManager::StartStreaming(const rstl::string& fileName, int volume, 
         stream.mPreload->Read(&stream.mHeader, 0, sizeof(SRSFHeader));
         DVDCallback(0, &stream.mFiles[0]);
       } else {
-        DVDReadAsyncPrio(&stream.mFiles[0], &stream.mHeader, sizeof(SRSFHeader), 0, DVDCallback,
-                         1);
+        DVDReadAsyncPrio(&stream.mFiles[0], &stream.mHeader, sizeof(SRSFHeader), 0, DVDCallback, 1);
       }
       break;
     }
@@ -365,8 +360,7 @@ u32 CDSPStreamManager::UpdateStream(void* buf1, u32 len1, void* buf2, u32 len2, 
   return half;
 }
 
-u32 CDSPStreamManager::UpdateSecondaryStream(void* buf1, u32 len1, void* buf2, u32 len2,
-                                             u32 user) {
+u32 CDSPStreamManager::UpdateSecondaryStream(void* buf1, u32 len1, void* buf2, u32 len2, u32 user) {
   return 0;
 }
 

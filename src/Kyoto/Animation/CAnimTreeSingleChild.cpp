@@ -29,13 +29,13 @@ void CAnimTreeSingleChild::VGetSegStatementSet(const CSegIdList& list, CSegState
 }
 
 void CAnimTreeSingleChild::VGetJointData_Linear(const CCharLayoutInfo& layout,
-                                       CJointData_LinearStorage& data,
-                                       const CCharAnimTime& time) const {
+                                                CJointData_LinearStorage& data,
+                                                const CCharAnimTime& time) const {
   mChild->VGetJointData_Linear(layout, data, time);
 }
 
 void CAnimTreeSingleChild::VGetJointData_Linear(const CCharLayoutInfo& layout,
-                                       CJointData_LinearStorage& data) const {
+                                                CJointData_LinearStorage& data) const {
   mChild->VGetJointData_Linear(layout, data);
 }
 

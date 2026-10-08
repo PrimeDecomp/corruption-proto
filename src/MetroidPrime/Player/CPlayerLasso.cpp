@@ -1,7 +1,7 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x802BE844..0x802C3488 (46 native functions).
-// Source identity: asserted original basename CPlayerLasso.cpp; prototype grapple/lasso simulation and effects.
-// Complete emitted native/helper inventory retained; no speculative declarations.
+// Source identity: asserted original basename CPlayerLasso.cpp; prototype grapple/lasso simulation
+// and effects. Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x802BE844 +0x324: owned native method/helper retained; exact source-level name unresolved
 // 0x802BEB68 +0x878: lasso discharge effect allocation; original source1270/1277
 // 0x802BF3E0 +0x230: lasso method; original source1184
@@ -47,4 +47,5 @@
 // 0x802C3214 +0x24: owned native method/helper retained; exact source-level name unresolved
 // 0x802C3238 +0xC: raw emitted lasso owned-pointer zero constructor
 // 0x802C3244 +0x8: owned native method/helper retained; exact source-level name unresolved
-// 0x802C324C +0x23C: registered23C-byte initializer; six grapple strings/global destructors and64-bit materialfilter; .ctors8065B9B0
+// 0x802C324C +0x23C: registered23C-byte initializer; six grapple strings/global destructors
+// and64-bit materialfilter; .ctors8065B9B0

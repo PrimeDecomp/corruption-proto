@@ -14,28 +14,28 @@
 #endif // _WIN32_WCE
 
 #ifdef _MSC_VER
-	#ifndef LUAPLUS_LIB
-		#ifdef LUAPLUS_BUILDDLL
-			#define LUA_API __declspec(dllexport)
-		#else
-			#define LUA_API __declspec(dllimport)
-			#ifdef _DEBUG
-				#pragma comment(lib, "LuaPlusD_1081.lib")
-			#else // _DEBUG
-				#pragma comment(lib, "LuaPlus_1081.lib")
-			#endif // _DEBUG
-		#endif
-	#else //!LUASTATEDLL
-		#define LUA_API
-	#endif
-	#define LUAPLUS_CLASS LUA_API
+#ifndef LUAPLUS_LIB
+#ifdef LUAPLUS_BUILDDLL
+#define LUA_API __declspec(dllexport)
+#else
+#define LUA_API __declspec(dllimport)
+#ifdef _DEBUG
+#pragma comment(lib, "LuaPlusD_1081.lib")
+#else // _DEBUG
+#pragma comment(lib, "LuaPlus_1081.lib")
+#endif // _DEBUG
+#endif
+#else //! LUASTATEDLL
+#define LUA_API
+#endif
+#define LUAPLUS_CLASS LUA_API
 #else // !_MSC_VER
-    #ifndef LUA_API
-        #define LUA_API extern
-    #endif
-    #ifndef LUAPLUS_CLASS
-        #define LUAPLUS_CLASS
-    #endif
+#ifndef LUA_API
+#define LUA_API extern
+#endif
+#ifndef LUAPLUS_CLASS
+#define LUAPLUS_CLASS
+#endif
 #endif // _MSC_VER
 
 #define LUALIB_API LUA_API

@@ -44,8 +44,8 @@ inline float CRumbleVoice::EnvelopeLerp(float t, float start, float end) {
 }
 
 inline void CRumbleVoice::UpdateStage(SAdsrDelta::EPhase& phase, float& intensity, float& time,
-                                     float start, float end, float duration,
-                                     SAdsrDelta::EPhase nextPhase, float dt) {
+                                      float start, float end, float duration,
+                                      SAdsrDelta::EPhase nextPhase, float dt) {
   if (time < duration) {
     const float t = time / duration;
     intensity = EnvelopeLerp(t, start, end);
@@ -68,16 +68,16 @@ bool CRumbleVoice::UpdateChannel(SAdsrDelta& delta, const SAdsrData& data, float
     }
     break;
   case SAdsrDelta::kP_Attack:
-    UpdateStage(delta.mPhase, delta.mCurIntensity, delta.mAttackTime, 0.f,
-                delta.mAttackIntensity, data.mAttackDur, SAdsrDelta::kP_Decay, dt);
+    UpdateStage(delta.mPhase, delta.mCurIntensity, delta.mAttackTime, 0.f, delta.mAttackIntensity,
+                data.mAttackDur, SAdsrDelta::kP_Decay, dt);
     break;
   case SAdsrDelta::kP_Decay:
     if (data.mHasSustain) {
       UpdateStage(delta.mPhase, delta.mCurIntensity, delta.mDecayTime, delta.mAttackIntensity,
                   delta.mSustainIntensity, data.mDecayDur, SAdsrDelta::kP_Sustain, dt);
     } else {
-      UpdateStage(delta.mPhase, delta.mCurIntensity, delta.mDecayTime,
-                  delta.mAttackIntensity, 0.f, data.mDecayDur, SAdsrDelta::kP_Stop, dt);
+      UpdateStage(delta.mPhase, delta.mCurIntensity, delta.mDecayTime, delta.mAttackIntensity, 0.f,
+                  data.mDecayDur, SAdsrDelta::kP_Stop, dt);
       if (delta.mPhase != SAdsrDelta::kP_Decay) {
         delta.mPhase = SAdsrDelta::kP_Stop;
         return true;
@@ -86,8 +86,8 @@ bool CRumbleVoice::UpdateChannel(SAdsrDelta& delta, const SAdsrData& data, float
     break;
   case SAdsrDelta::kP_Release: {
     float a = data.mHasSustain ? delta.mSustainIntensity : 0.f;
-    UpdateStage(delta.mPhase, delta.mCurIntensity, delta.mReleaseTime, a, 0.f,
-                data.mReleaseDur, SAdsrDelta::kP_Stop, dt);
+    UpdateStage(delta.mPhase, delta.mCurIntensity, delta.mReleaseTime, a, 0.f, data.mReleaseDur,
+                SAdsrDelta::kP_Stop, dt);
     if (delta.mPhase != SAdsrDelta::kP_Release) {
       delta.mPhase = SAdsrDelta::kP_Stop;
       return true;

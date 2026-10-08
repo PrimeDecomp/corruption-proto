@@ -184,7 +184,7 @@ void CRevolutionController::ProcessButtons(int controller) {
 }
 
 void CRevolutionController::ProcessDigitalButton(int controller, CControllerButton& button,
-                                              ushort mapping) {
+                                                 ushort mapping) {
   bool btnPressed = (mStatus[controller].button & mapping);
   button.SetPressEvent(PADButtonDown(button.GetIsPressed(), btnPressed));
   button.SetReleaseEvent(PADButtonUp(button.GetIsPressed(), btnPressed));

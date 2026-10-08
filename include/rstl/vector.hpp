@@ -255,8 +255,7 @@ typename vector< T, Alloc >::iterator vector< T, Alloc >::erase(iterator first, 
 
   int newCount = tmp;
 
-  for (iterator it = last, moved = iterator(mItems + tmp); it != end();
-       ++moved, ++newCount, ++it) {
+  for (iterator it = last, moved = iterator(mItems + tmp); it != end(); ++moved, ++newCount, ++it) {
     construct(&*moved, *it);
     destroy(&*it);
   }

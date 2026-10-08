@@ -27,7 +27,7 @@ inline char ToInt8(register float in) {
   return *ptr;
 }
 
-inline uchar ToUint8(int c) { return static_cast<uchar>(c); }
+inline uchar ToUint8(int c) { return static_cast< uchar >(c); }
 
 inline float ToReal32(register const uchar& in) {
   register float r;
@@ -71,7 +71,7 @@ inline float LtoF(int in) { return static_cast< float >(in); }
 #else
 inline uchar ToUint8(float in) { return static_cast< uchar >(in); }
 inline char ToInt8(float in) { return static_cast< char >(in); }
-inline uchar ToUint8(int c) { return static_cast<uchar>(c); }
+inline uchar ToUint8(int c) { return static_cast< uchar >(c); }
 inline float ToReal32(uchar in) { return static_cast< float >(in); }
 inline short FtoS(float in) { return static_cast< short >(in); }
 inline ushort FtoUS(float in) { return static_cast< ushort >(in); }
@@ -82,7 +82,7 @@ inline float LtoF(int in) { return static_cast< float >(in); }
 
 inline uint ToUint32(float in) { return static_cast< uint >(in); }
 inline int ToInt32(float in) { return static_cast< int >(in); }
-inline char ToChar(int c) { return ToUint8(c)  ; }
+inline char ToChar(int c) { return ToUint8(c); }
 inline short ToInt16(const s64 v) { return v % 4096; }
 inline short ToInt16(int in) { return in; }
 } // namespace CCast

@@ -8,14 +8,14 @@ extern "C" {
 #endif
 
 typedef struct {
-    Ptr Prev;
-    Ptr Next;
+  Ptr Prev;
+  Ptr Next;
 } DSLink, *DSLinkPtr;
 
 typedef struct {
-    u32 Offset;
-    Ptr Head;
-    Ptr Tail;
+  u32 Offset;
+  Ptr Head;
+  Ptr Tail;
 } DSList, *DSListPtr;
 
 void DSInitList(DSListPtr list, Ptr obj, DSLinkPtr link);

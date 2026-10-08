@@ -436,7 +436,7 @@ void CTexture::UnLock() {
 }
 
 CFactoryFnReturn FTextureFactory(const SObjectTag& tag, CInputStream& in,
-                                       const CVParamTransfer& xfer) {
+                                 const CVParamTransfer& xfer) {
   return rs_new CTexture(in, CTexture::kAM_Zero, CTexture::kBK_Zero);
 }
 

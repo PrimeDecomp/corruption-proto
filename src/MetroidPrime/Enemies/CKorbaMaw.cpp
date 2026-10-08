@@ -32,4 +32,5 @@
 // 0x802E4DA4 +0x34: owned native method/helper retained; exact source-level name unresolved
 // 0x802E4DD8 +0x70: maw destructor;806BC71C
 // 0x802E4E48 +0x170: maw constructor;806BC71C andball_LCTR locator
-// 0x802E4FB8 +0x1C4: registered1C4-byte initializer; SDA pluscomplete maw state/trigger callback table copies; .ctors8065B9F8
+// 0x802E4FB8 +0x1C4: registered1C4-byte initializer; SDA pluscomplete maw state/trigger callback
+// table copies; .ctors8065B9F8

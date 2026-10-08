@@ -119,7 +119,6 @@ bool CARAMManager::CAramPool::Free(const void* ptr) {
   return true;
 }
 
-
 bool CARAMManager::Initialize(uint chunkSize, uint size, uint secondChunkSize) {
   uint aramSize = ARGetSize() - mPreInitializeAlloc;
   uint numChunks = size / chunkSize;

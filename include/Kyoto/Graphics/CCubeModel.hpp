@@ -29,7 +29,8 @@ public:
   class ModelInstance {
   public:
     ModelInstance(rstl::vector< void* >& surfaces, const void* materialData, const void* positions,
-                  const void* normals, const void* colors, const void* uvs, const void* packedTexCoords)
+                  const void* normals, const void* colors, const void* uvs,
+                  const void* packedTexCoords)
     : mSurfacePtrs(surfaces)
     , mMaterialData(materialData)
     , mPositions(positions)

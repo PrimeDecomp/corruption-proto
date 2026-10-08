@@ -343,7 +343,8 @@ void CElementGen::SetGlobalScale(const CVector3f& scale) {
   if (close_enough(mGlobalScale.GetZ(), 0.f, 0.0001f)) {
     mGlobalScale.SetZ(0.0001f * CMath::Sign(mGlobalScale.GetZ()));
   }
-  mGlobalScaleTransform = CTransform4f::Scale(mGlobalScale.GetX(), mGlobalScale.GetY(), mGlobalScale.GetZ());
+  mGlobalScaleTransform =
+      CTransform4f::Scale(mGlobalScale.GetX(), mGlobalScale.GetY(), mGlobalScale.GetZ());
   mGlobalScaleTransformInverse = CTransform4f::Scale(
       1.f / mGlobalScale.GetX(), 1.f / mGlobalScale.GetY(), 1.f / mGlobalScale.GetZ());
   for (rstl::vector< CParticleGen* >::iterator it = mActivePartChildren.begin();
@@ -363,7 +364,8 @@ void CElementGen::SetLocalScale(const CVector3f& scale) {
   if (close_enough(mLocalScale.GetZ(), 0.f, 0.0001f)) {
     mLocalScale.SetZ(0.0001f * CMath::Sign(mLocalScale.GetZ()));
   }
-  mLocalScaleTransform = CTransform4f::Scale(mLocalScale.GetX(), mLocalScale.GetY(), mLocalScale.GetZ());
+  mLocalScaleTransform =
+      CTransform4f::Scale(mLocalScale.GetX(), mLocalScale.GetY(), mLocalScale.GetZ());
   mLocalScaleTransformInverse = CTransform4f::Scale(
       1.f / mLocalScale.GetX(), 1.f / mLocalScale.GetY(), 1.f / mLocalScale.GetZ());
   for (rstl::vector< CParticleGen* >::iterator it = mActivePartChildren.begin();
@@ -2932,8 +2934,9 @@ int CElementGen::GetParticleCountAllInternal() const {
   for (rstl::vector< CParticleGen* >::const_iterator it = mActivePartChildren.begin();
        it != mActivePartChildren.end(); ++it) {
     CParticleGen* child = (*it);
-    count += child->Get4CharId() == 'PART' ? static_cast< CElementGen* >(child)->GetParticleCountAll()
-                                           : child->GetParticleCount();
+    count += child->Get4CharId() == 'PART'
+                 ? static_cast< CElementGen* >(child)->GetParticleCountAll()
+                 : child->GetParticleCount();
   }
   return count;
 }

@@ -45,7 +45,8 @@ void GPUMemory::SetBuffer(void* buffer, uint size) {
 void* GPUMemory::EnsureAllocation(int size) {
   if (!sInitialized) {
     GXSetDrawSync(0xffff);
-    while (GXReadDrawSync() != 0xffff) {}
+    while (GXReadDrawSync() != 0xffff) {
+    }
     sCurrentToken = 1;
     sInitialized = true;
   }
@@ -67,7 +68,8 @@ void* GPUMemory::EnsureAllocation(int size) {
       if (OSTicksToMilliseconds(static_cast< uint >(currentTick - startTick)) > 60) {
         ushort token = GXReadDrawSync();
         for (rstl::list< SAllocation >::iterator it = sAllocations.begin();
-             it != sAllocations.end(); ++it) {}
+             it != sAllocations.end(); ++it) {
+        }
         sCurrentToken = token;
         startTick = currentTick;
         GXSetDrawSync(sCurrentToken);

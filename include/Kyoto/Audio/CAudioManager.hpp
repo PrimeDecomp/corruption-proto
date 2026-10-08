@@ -206,16 +206,16 @@ public:
   static void StopAndRemoveAllEmitters();
   static void Update(float dt);
   static CAudioHandle SfxStart(ushort id, short volume, short pan, int area = kAllAreas,
-                             bool useAcoustics = false, bool looped = false,
-                             const short priority = kMedPriority);
+                               bool useAcoustics = false, bool looped = false,
+                               const short priority = kMedPriority);
   static CAudioHandle AddEmitter(ushort id, const CVector3f& position, int area = kAllAreas,
-                               bool useAcoustics = false, bool looped = false,
-                               short priority = kMedPriority);
+                                 bool useAcoustics = false, bool looped = false,
+                                 short priority = kMedPriority);
   static CAudioHandle AddEmitter(ushort id, const CVector3f& position, uchar volume, int area,
-                               bool useAcoustics, bool looped, short priority);
+                                 bool useAcoustics, bool looped, short priority);
   static CAudioHandle AddEmitter(CAudioSys::C3DEmitterParmData& params, int area = kAllAreas,
-                               bool useAcoustics = false, bool looped = false,
-                               short priority = kMedPriority);
+                                 bool useAcoustics = false, bool looped = false,
+                                 short priority = kMedPriority);
   static void RemoveEmitter(CAudioHandle handle);
   static void UpdateEmitter(CAudioHandle handle, const CVector3f& position,
                             const CVector3f& direction, uchar maxVolume);
@@ -251,9 +251,9 @@ public:
   static CSfxWrapper* AllocateCSfxWrapper(const CSfxWrapper& sound);
   static CSfxEmitterWrapper* AllocateCSfxEmitterWrapper(const CSfxEmitterWrapper& sound);
   static short GetReverbAmount();
-  static uchar GetStudio(int area);                                 // Guessed name
-  static void SetAreaVolume(int area, uchar volume);                // Guessed name
-  static uchar GetAreaVolume(int area);                             // Guessed name
+  static uchar GetStudio(int area);                                   // Guessed name
+  static void SetAreaVolume(int area, uchar volume);                  // Guessed name
+  static uchar GetAreaVolume(int area);                               // Guessed name
   static void SetIgnoreAreaLowPass(CAudioHandle handle, bool ignore); // Guessed name
   static int AddLowPassAreaFilter(int frequency, float duration);
   static void RemoveLowPassAreaFilter(int id);

@@ -40,7 +40,6 @@ void ErrorHandler(OSError code, OSContext* context, int dsisr, uint dar) {
   uint i;
   u32* gpr;
 
-
   if (code == 15 && ((dsisr & 0x10) != 0 || ((uint)dar > 0x1800000))) {
     return;
   }

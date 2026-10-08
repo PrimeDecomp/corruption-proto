@@ -18,8 +18,8 @@ public:
   };
 
   CSpline(float duration, uint flags, const CMayaSpline& positionTimeSpline,
-              const CMayaSpline& lookAtTimeSpline, CMotionSpline::ESplineType positionType,
-              CMotionSpline::ESplineType lookAtType);
+          const CMayaSpline& lookAtTimeSpline, CMotionSpline::ESplineType positionType,
+          CMotionSpline::ESplineType lookAtType);
   virtual ~CSpline();
 
   // Replaces both motion paths and their position-key orientations.

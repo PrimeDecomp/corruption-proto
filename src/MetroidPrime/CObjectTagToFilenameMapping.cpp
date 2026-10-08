@@ -7,5 +7,5 @@
 // 0x80281D80 +0x94: emitted32-byte mapping-record vector fill constructor
 // 0x80281E14 +0x98: mapping build wrapper; vector constructor andPAKlist loader
 // 0x80281EAC +0x1DC: construct32 numbered world PAKcontents filenames andfixedasset PAKnames
-// 0x80282088 +0x2FC: parse PAKcontents text viaDVD/memorystream; direct original source47 allocation
-// 0x80282384 +0x9C: emitted mapping lower-bound over16-byte records with64-bit asset key
+// 0x80282088 +0x2FC: parse PAKcontents text viaDVD/memorystream; direct original source47
+// allocation 0x80282384 +0x9C: emitted mapping lower-bound over16-byte records with64-bit asset key

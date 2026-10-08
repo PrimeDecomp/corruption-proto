@@ -1,7 +1,7 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x802BDC6C..0x802BE48C (10 native functions).
-// Source identity: asserted original basename CPlayerBombController.cpp; independent bomb controller.
-// Complete emitted native/helper inventory retained; no speculative declarations.
+// Source identity: asserted original basename CPlayerBombController.cpp; independent bomb
+// controller. Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x802BDC6C +0x50: bomb controller remaining-bomb count
 // 0x802BDCBC +0xA4: owned native method/helper retained; exact source-level name unresolved
 // 0x802BDD60 +0x318: bomb creation; original source153

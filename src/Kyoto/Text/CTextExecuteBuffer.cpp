@@ -100,7 +100,7 @@ void CTextExecuteBuffer::AddImage(const CFontImageDef& image) {
       StartNewLine();
     }
     mCurrentLine->TestLargestImage(image.GetMonoWidth(), image.GetHeight(),
-                                  image.CalculateBaseline());
+                                   image.CalculateBaseline());
     if (mCurrentBlock->GetTextDirection() == kTD_Horizontal) {
       mCurrentLine->AddWidth(image.GetWidth());
       if (mCurrentLine->GetWidth() > image.GetWidth()) {
@@ -238,9 +238,9 @@ int CTextExecuteBuffer::WrapOneLTR(const wchar_t* str, int len) {
         MoveWordLTR();
       }
       if (width + mCurrentLine->GetWidth() > mCurrentBlock->GetOutputWidth() && len > 1) {
-        rem = rstl::max_val(
-            1, rstl::min_val(len, 2 * ((mCurrentBlock->GetOutputWidth() - mCurrentLine->GetWidth()) /
-                                       mState.GetFont()->GetMonoWidth())));
+        rem = rstl::max_val(1, rstl::min_val(len, 2 * ((mCurrentBlock->GetOutputWidth() -
+                                                        mCurrentLine->GetWidth()) /
+                                                       mState.GetFont()->GetMonoWidth())));
         int rank = 5;
         do {
           --rem;
@@ -389,7 +389,8 @@ CTextExecuteBuffer::BuildRenderBufferPages(const CVector2i& extent) const {
     CTextRenderBuffer buffer(CTextRenderBuffer::kM_AllocTally);
     {
       CFontRenderState state;
-      for (InstList::const_iterator it2 = mInstructions.begin(); it2 != mInstructions.end(); ++it2) {
+      for (InstList::const_iterator it2 = mInstructions.begin(); it2 != mInstructions.end();
+           ++it2) {
         (*it2)->Invoke(state, &buffer);
       }
     }

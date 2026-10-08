@@ -65,7 +65,8 @@ CEntity* LoadCoverPoint(CStateManager& mgr, CInputStream& input, CEntityInfo& in
 CEntity* LoadCrossAreaRelay(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 CEntity* LoadDamageActor(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 CEntity* LoadDamageableTrigger(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
-CEntity* LoadDamageableTriggerOrientated(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
+CEntity* LoadDamageableTriggerOrientated(CStateManager& mgr, CInputStream& input,
+                                         CEntityInfo& info);
 CEntity* LoadDarkSamus(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 CEntity* LoadDebris(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 CEntity* LoadDefenseMechanoid(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
@@ -158,7 +159,8 @@ CEntity* LoadSoundModifier(CStateManager& mgr, CInputStream& input, CEntityInfo&
 CEntity* LoadSpacePirate(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 CEntity* LoadSpawnPoint(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 CEntity* LoadSpecialFunction(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
-CEntity* LoadSpiderBallAttractionSurface(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
+CEntity* LoadSpiderBallAttractionSurface(CStateManager& mgr, CInputStream& input,
+                                         CEntityInfo& info);
 CEntity* LoadSpiderBallWaypoint(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 CEntity* LoadSpinner(CStateManager& mgr, CInputStream& input, CEntityInfo& info);
 CEntity* LoadSteam(CStateManager& mgr, CInputStream& input, CEntityInfo& info);

@@ -55,11 +55,11 @@ bool CCEConstant::GetValue(int frame, CColor& colorOut) const {
 }
 
 CCEFastConstant::CCEFastConstant(const float r, const float g, const float b, const float a) {
-   float cr = CMath::Clamp(0.f, r, 1.f);
-   float cg = CMath::Clamp(0.f, g, 1.f);
-   float cb = CMath::Clamp(0.f, b, 1.f);
-   float ca = CMath::Clamp(0.f, a, 1.f);
-   mVal.Set(cr, cg, cb, ca);
+  float cr = CMath::Clamp(0.f, r, 1.f);
+  float cg = CMath::Clamp(0.f, g, 1.f);
+  float cb = CMath::Clamp(0.f, b, 1.f);
+  float ca = CMath::Clamp(0.f, a, 1.f);
+  mVal.Set(cr, cg, cb, ca);
 }
 
 CCEFastConstant::~CCEFastConstant() {}
@@ -246,7 +246,8 @@ bool CCEKeyframeInput::GetValue(int frame, CColor& valOut) const {
   if (mPercent == 2) {
     float in = 0.0f;
     x30_->GetValue(frame, in);
-    int idx = GetKeyframeIndex(GetKeyframeTime(in, x18_, x1c_), mLoop, GetLoopStart(), GetLoopEnd());
+    int idx =
+        GetKeyframeIndex(GetKeyframeTime(in, x18_, x1c_), mLoop, GetLoopStart(), GetLoopEnd());
     bool lerp = idx > 0 && idx < mLoopEnd - 1;
     if (lerp) {
       float t = CMath::Clamp(0.0f, (in - x18_) - static_cast< float >(idx) / x1c_, 1.0f);
@@ -279,7 +280,8 @@ bool CCEMultiply::GetValue(int frame, CColor& valOut) const {
   return false;
 }
 
-CCEVectorAndRealToColor::CCEVectorAndRealToColor(CVectorElement* a, CRealElement* b) : x4_(a), x8_(b) {}
+CCEVectorAndRealToColor::CCEVectorAndRealToColor(CVectorElement* a, CRealElement* b)
+: x4_(a), x8_(b) {}
 
 CCEVectorAndRealToColor::~CCEVectorAndRealToColor() {
   delete x4_;

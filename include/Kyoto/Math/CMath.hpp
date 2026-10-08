@@ -114,8 +114,8 @@ public:
                                          const CVector3f& tangentA, const CVector3f& tangentB,
                                          float t);
   static CVector3f GetHermiteSplineTangent(const CVector3f& a, const CVector3f& b,
-                                         const CVector3f& tangentA, const CVector3f& tangentB,
-                                         float t);
+                                           const CVector3f& tangentA, const CVector3f& tangentB,
+                                           float t);
   static CVector3f GetCatmullRomSplineTangent(const CVector3f& a, const CVector3f& b,
                                               const CVector3f& c, const CVector3f& d, float t);
   static CVector3f GetBSplinePoint(const CVector3f& a, const CVector3f& b, const CVector3f& c,

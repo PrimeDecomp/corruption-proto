@@ -10,21 +10,21 @@
 // toward MWCC's inline size limit, which decides where uninitialized_copy is outlined.
 #define RSTL_PRECONDITION(cond) ((void)0)
 
-#define RSTL_DECLARE_TRIVIALLY_DESTRUCTIBLE(T) \
-  template <> \
-  struct is_trivially_destructible< T > { \
-    enum { value = true }; \
+#define RSTL_DECLARE_TRIVIALLY_DESTRUCTIBLE(T)                                                     \
+  template <>                                                                                      \
+  struct is_trivially_destructible< T > {                                                          \
+    enum { value = true };                                                                         \
   };
 
-#define RSTL_DECLARE_ASSIGNMENT_CONSTRUCTION(T) \
-  template <> \
-  struct use_assignment_for_construction< T > { \
-    enum { value = true }; \
+#define RSTL_DECLARE_ASSIGNMENT_CONSTRUCTION(T)                                                    \
+  template <>                                                                                      \
+  struct use_assignment_for_construction< T > {                                                    \
+    enum { value = true };                                                                         \
   };
 
 // This describes rstl's copy policy, not trivial default construction.
-#define RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(T) \
-  RSTL_DECLARE_TRIVIALLY_DESTRUCTIBLE(T) \
+#define RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(T)                                                    \
+  RSTL_DECLARE_TRIVIALLY_DESTRUCTIBLE(T)                                                           \
   RSTL_DECLARE_ASSIGNMENT_CONSTRUCTION(T)
 
 namespace rstl {

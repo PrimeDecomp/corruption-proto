@@ -8,4 +8,5 @@
 // 0x80285170 +0x5C: SwarmDisplayList Draw; GX position/normalarray setup anddisplaylistcall
 // 0x802851CC +0x20: skinned-model support forwarding wrapper retained
 // 0x802851EC +0xB4: SwarmDisplayList SetMaterialCurrent; materialflags/vertexdescriptor/arrays
-// 0x802852A0 +0x268: SwarmDisplayList constructor; direct source65 allocation anddisplaylist repacking
+// 0x802852A0 +0x268: SwarmDisplayList constructor; direct source65 allocation anddisplaylist
+// repacking

@@ -7,8 +7,7 @@
 #include "Kyoto/Particles/CParticleSwoosh.hpp"
 #include "Kyoto/Particles/CSortedParticleSystem.hpp"
 
-CManagedParticleGen::CManagedParticleGen(const CToken& effect,
-                                                 const CDependencyGroupToken& group)
+CManagedParticleGen::CManagedParticleGen(const CToken& effect, const CDependencyGroupToken& group)
 : mEffect(effect)
 , mTag(mEffect.GetTag())
 , mDependencies(group)

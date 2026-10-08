@@ -112,8 +112,8 @@ bool CSmallAllocPool::Free(const void* ptr) {
     x10_ = -1;
   }
 
-  for (uchar* bookkeepingPtr = static_cast< uchar* >(mBookKeeping) + entryIndex;
-       blocksToClear != 0; ++bookkeepingPtr) {
+  for (uchar* bookkeepingPtr = static_cast< uchar* >(mBookKeeping) + entryIndex; blocksToClear != 0;
+       ++bookkeepingPtr) {
     *bookkeepingPtr = 0;
     blocksToClear -= 2;
   }

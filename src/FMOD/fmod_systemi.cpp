@@ -50,8 +50,8 @@
 // 0x80620FFC +0x3C: retained native; no unsupported symbol identity assigned
 // 0x80621038 +0x90: retained native; no unsupported symbol identity assigned
 // 0x806210C8 +0xCC: retained native; no unsupported symbol identity assigned
-// 0x80621194 +0x74: registered system static initializer; calls shared thread/profiling constructors
-// 0x80621208 +0xAC: thread entry callback loop with semaphore wait and optional yield
+// 0x80621194 +0x74: registered system static initializer; calls shared thread/profiling
+// constructors 0x80621208 +0xAC: thread entry callback loop with semaphore wait and optional yield
 // 0x806212B4 +0x8: retained native; no unsupported symbol identity assigned
 // 0x806212BC +0x34: thread object constructor; externally reused, retain emitted definition
 // 0x806212F0 +0x134: retained native; no unsupported symbol identity assigned

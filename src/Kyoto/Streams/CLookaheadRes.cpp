@@ -5,7 +5,7 @@
 // CBufferedDvdRequest remains a descriptive name for requests backed by CLookaheadRes.
 
 CLookaheadRes::CLookaheadRes(uchar* buffer, CDvdFile* file, uint offset, uint size,
-                                 const rstl::auto_ptr< CDvdRequest >& request, CResLoader* owner)
+                             const rstl::auto_ptr< CDvdRequest >& request, CResLoader* owner)
 : mBuffer(buffer)
 , mFile(file)
 , mOffset(offset)
@@ -49,8 +49,7 @@ bool CLookaheadRes::Cancel() {
   return mRequest->IsComplete();
 }
 
-CBufferedDvdRequest::CBufferedDvdRequest(CLookaheadRes* cache, CDvdRequest* request,
-                                         uchar* buffer)
+CBufferedDvdRequest::CBufferedDvdRequest(CLookaheadRes* cache, CDvdRequest* request, uchar* buffer)
 : mCache(cache), mRequest(request), mBuffer(buffer), mMediaType(request->GetMediaType()) {
   if (mCache != nullptr) {
     mRequest.release();

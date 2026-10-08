@@ -13,12 +13,10 @@ public:
   void* Alloc(int len);
   void Free(void* ptr, int len);
   int GetAllocatedAmount() const;
-  void* GetOffsettedMemory(const int offset) {
-    return mPtr.get() + offset;
-  }
+  void* GetOffsettedMemory(const int offset) { return mPtr.get() + offset; }
 
 private:
-  rstl::auto_ptr<char> mPtr;
+  rstl::auto_ptr< char > mPtr;
   int mMemorySize;
   int xc_;
   int mNextFreeAddr;

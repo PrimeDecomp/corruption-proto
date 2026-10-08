@@ -20,8 +20,8 @@ void CDependencyGroup::ReadFromStream(CInputStream& in) {
 
 int CDependencyGroup::GetCountForResType(FourCC type) const {
   int ret = 0;
-  for (rstl::vector< SObjectTag >::const_iterator it = mObjectTags.begin();
-       it != mObjectTags.end(); ++it) {
+  for (rstl::vector< SObjectTag >::const_iterator it = mObjectTags.begin(); it != mObjectTags.end();
+       ++it) {
     if (it->type == type) {
       ++ret;
     }

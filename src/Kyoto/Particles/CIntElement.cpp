@@ -31,7 +31,6 @@ static inline int GetKeyframeTime(float value, float start, float rate) {
   return rstl::max_val(0, CCast::ToInt32(rate * (value - start)));
 }
 
-
 CIEParticleCreationTime::~CIEParticleCreationTime() {}
 CIEConstant::CIEConstant(int val) : mVal(val) {}
 
@@ -228,8 +227,7 @@ bool CIETimeChain::GetValue(int frame, int& valOut) const {
   }
 }
 
-CIEClamp::CIEClamp(CIntElement* a, CIntElement* b, CIntElement* c)
-: mMin(a), mMax(b), mVal(c) {}
+CIEClamp::CIEClamp(CIntElement* a, CIntElement* b, CIntElement* c) : mMin(a), mMax(b), mVal(c) {}
 
 CIEClamp::~CIEClamp() {
   delete mMin;
@@ -309,7 +307,8 @@ CIEKeyframeEmitter::~CIEKeyframeEmitter() {}
 
 bool CIEKeyframeEmitter::GetValue(int frame, int& valOut) const {
   if (mPercent == 0) {
-    int emitterTime = GetKeyframeIndex(CParticleGlobals::GetEmitterTime(), mLoop, mLoopStart, mLoopEnd);
+    int emitterTime =
+        GetKeyframeIndex(CParticleGlobals::GetEmitterTime(), mLoop, mLoopStart, mLoopEnd);
     valOut = mKeys[emitterTime];
     return false;
   } else {
@@ -343,7 +342,8 @@ bool CIEKeyframeInput::GetValue(int frame, int& valOut) const {
   if (mPercent == 2) {
     float in = 0.0f;
     x30_->GetValue(frame, in);
-    int idx = GetKeyframeIndex(GetKeyframeTime(in, x18_, x1c_), mLoop, GetLoopStart(), GetLoopEnd());
+    int idx =
+        GetKeyframeIndex(GetKeyframeTime(in, x18_, x1c_), mLoop, GetLoopStart(), GetLoopEnd());
     bool lerp = idx > 0 && idx < mLoopEnd - 1;
     if (lerp) {
       float t = CMath::Clamp(0.0f, (in - x18_) - static_cast< float >(idx) / x1c_, 1.0f);

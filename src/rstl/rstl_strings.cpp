@@ -53,8 +53,8 @@ static pair< const char*, int > compute_case_insensitive_length(const char* data
 }
 
 template <>
-basic_string< char, case_insensitive_char_traits >::basic_string(
-    const char* data, int count, const rmemory_allocator& alloc)
+basic_string< char, case_insensitive_char_traits >::basic_string(const char* data, int count,
+                                                                 const rmemory_allocator& alloc)
 : mAllocator(alloc) {
   if (count <= 0 && !*data) {
     mPtr = &mNull;
@@ -111,10 +111,7 @@ basic_string< char >::basic_string(const char* data, int count, const rmemory_al
 
 template <>
 basic_string< char >::basic_string(const basic_string& other)
-: mPtr(other.mPtr)
-, mCow(other.mCow)
-, mSize(other.mSize)
-, mAllocator(other.mAllocator) {
+: mPtr(other.mPtr), mCow(other.mCow), mSize(other.mSize), mAllocator(other.mAllocator) {
   internal_reference();
 }
 
@@ -302,16 +299,12 @@ basic_string< wchar_t >::basic_string(const wchar_t* data, int count,
   internal_allocate(len + 1);
   mSize = len;
   char_traits< wchar_t >::copy(const_cast< wchar_t* >(mPtr), data, len);
-  char_traits< wchar_t >::assign(const_cast< wchar_t& >(mPtr[len]),
-                                 char_traits< wchar_t >::eos());
+  char_traits< wchar_t >::assign(const_cast< wchar_t& >(mPtr[len]), char_traits< wchar_t >::eos());
 }
 
 template <>
 basic_string< wchar_t >::basic_string(const basic_string& other)
-: mPtr(other.mPtr)
-, mCow(other.mCow)
-, mSize(other.mSize)
-, mAllocator(other.mAllocator) {
+: mPtr(other.mPtr), mCow(other.mCow), mSize(other.mSize), mAllocator(other.mAllocator) {
   internal_reference();
 }
 
@@ -420,12 +413,8 @@ void basic_string< wchar_t >::internal_prepare_to_write(int len, bool preserve) 
   }
 }
 
-wstring wstring_l(const wchar_t* data) {
-  return wstring(wstring::literal_t(), data);
-}
+wstring wstring_l(const wchar_t* data) { return wstring(wstring::literal_t(), data); }
 
-string string_l(const char* data) {
-  return string(string::literal_t(), data);
-}
+string string_l(const char* data) { return string(string::literal_t(), data); }
 
 } // namespace rstl

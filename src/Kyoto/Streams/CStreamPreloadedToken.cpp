@@ -54,8 +54,8 @@ CStreamPreloadedData::CStreamPreloadedData(const rstl::string& path)
       length = remaining;
     }
     const uint alignedLength = (length + 31) & ~31;
-    rstl::auto_ptr< uchar > buffer(static_cast< uchar* >(
-        CMemory::Alloc(alignedLength, IAllocator::kHI_RoundUpLen)));
+    rstl::auto_ptr< uchar > buffer(
+        static_cast< uchar* >(CMemory::Alloc(alignedLength, IAllocator::kHI_RoundUpLen)));
     rstl::auto_ptr< CDvdRequest > request(
         file.AsyncSeekRead(buffer.get(), alignedLength, kSO_Set, offset));
     mBuffers.push_back_unsafe(buffer);
@@ -105,8 +105,8 @@ void CStreamPreloadedData::Read(void* dest, int offset, int length) {
   }
 }
 
-static rstl::list< rstl::auto_ptr< CStreamPreloadedData > >::iterator FindFile(
-    const rstl::string& path) {
+static rstl::list< rstl::auto_ptr< CStreamPreloadedData > >::iterator
+FindFile(const rstl::string& path) {
   for (rstl::list< rstl::auto_ptr< CStreamPreloadedData > >::iterator it = mPreloadedDatas.begin();
        it != mPreloadedDatas.end(); ++it) {
     const int comparison = CStringExtras::CompareCaseInsensitive((*it)->GetFilename(), path);
@@ -140,7 +140,8 @@ static void ReleaseFile(const rstl::string& path) {
 
 CStreamPreloadedToken::CStreamPreloadedToken(const rstl::string& path) : mData(AcquireFile(path)) {}
 
-CStreamPreloadedToken::CStreamPreloadedToken(const CStreamPreloadedToken& other) : mData(other.mData) {
+CStreamPreloadedToken::CStreamPreloadedToken(const CStreamPreloadedToken& other)
+: mData(other.mData) {
   ++mData->mRefCount;
 }
 

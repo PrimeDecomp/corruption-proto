@@ -1,7 +1,6 @@
 #include "Kyoto/Input/CRumbleGenerator.hpp"
 
-CRumbleGenerator::CRumbleGenerator(EIOPort inputIndex)
-: mInputIndex(inputIndex), mDisabled(false) {
+CRumbleGenerator::CRumbleGenerator(EIOPort inputIndex) : mInputIndex(inputIndex), mDisabled(false) {
   HardStopAll();
 }
 

@@ -142,8 +142,7 @@ bool CRERandom::GetValue(int frame, float& valOut) const {
   return false;
 }
 
-CREInitialRandom::CREInitialRandom(CRealElement* min, CRealElement* max)
-: mMin(min), mMax(max) {}
+CREInitialRandom::CREInitialRandom(CRealElement* min, CRealElement* max) : mMin(min), mMax(max) {}
 
 CREInitialRandom::~CREInitialRandom() {
   delete mMin;
@@ -179,8 +178,7 @@ bool CRETimeChain::GetValue(int frame, float& valOut) const {
   }
 }
 
-CREClamp::CREClamp(CRealElement* a, CRealElement* b, CRealElement* c)
-: mMin(a), mMax(b), mVal(c) {}
+CREClamp::CREClamp(CRealElement* a, CRealElement* b, CRealElement* c) : mMin(a), mMax(b), mVal(c) {}
 
 CREClamp::~CREClamp() {
   delete mMin;
@@ -316,7 +314,8 @@ bool CREKeyframeInput::GetValue(int frame, float& valOut) const {
   if (mPercent == 2) {
     float in = 0.0f;
     x30_->GetValue(frame, in);
-    int idx = GetKeyframeIndex(GetKeyframeTime(in, x18_, x1c_), mLoop, GetLoopStart(), GetLoopEnd());
+    int idx =
+        GetKeyframeIndex(GetKeyframeTime(in, x18_, x1c_), mLoop, GetLoopStart(), GetLoopEnd());
     bool lerp = idx > 0 && idx < mLoopEnd - 1;
     if (lerp) {
       float t = CMath::Clamp(0.0f, (in - x18_) - static_cast< float >(idx) / x1c_, 1.0f);
@@ -648,7 +647,8 @@ bool CREOscillatingSweep::GetValue(int frame, float& valOut) const {
   return false;
 }
 
-CRETimeOscillatingSweep::CRETimeOscillatingSweep(const bool a, CIntElement* b, CIntElement* c, CIntElement* d)
+CRETimeOscillatingSweep::CRETimeOscillatingSweep(const bool a, CIntElement* b, CIntElement* c,
+                                                 CIntElement* d)
 : x4_(b), x8_(c), xc_(d), x10_(a), x14_(0), x18_(0), x1c_(0), x20_(0), x24_(0), x28_(-1) {
   if (x4_) {
     x4_->GetValue(0, x14_);
@@ -752,7 +752,8 @@ bool CREPerlinNoise4d::GetValue(int frame, float& valOut) const {
   return false;
 }
 
-CREPerlinNoiseOctave1d::CREPerlinNoiseOctave1d(CRealElement* a, CRealElement* b, CRealElement* c, CIntElement* d)
+CREPerlinNoiseOctave1d::CREPerlinNoiseOctave1d(CRealElement* a, CRealElement* b, CRealElement* c,
+                                               CIntElement* d)
 : x4_(a), x8_(b), xc_(c), x10_(d) {}
 
 CREPerlinNoiseOctave1d::~CREPerlinNoiseOctave1d() {
@@ -782,8 +783,8 @@ bool CREPerlinNoiseOctave1d::GetValue(int frame, float& valOut) const {
   return false;
 }
 
-CREPerlinNoiseOctave2d::CREPerlinNoiseOctave2d(CRealElement* a, CRealElement* b, CRealElement* c, CRealElement* d,
-                 CIntElement* e)
+CREPerlinNoiseOctave2d::CREPerlinNoiseOctave2d(CRealElement* a, CRealElement* b, CRealElement* c,
+                                               CRealElement* d, CIntElement* e)
 : x4_(a), x8_(b), xc_(c), x10_(d), x14_(e) {}
 
 CREPerlinNoiseOctave2d::~CREPerlinNoiseOctave2d() {
@@ -816,7 +817,8 @@ bool CREPerlinNoiseOctave2d::GetValue(int frame, float& valOut) const {
   return false;
 }
 
-CREPerlinNoiseOctave3d::CREPerlinNoiseOctave3d(CVectorElement* a, CRealElement* b, CRealElement* c, CIntElement* d)
+CREPerlinNoiseOctave3d::CREPerlinNoiseOctave3d(CVectorElement* a, CRealElement* b, CRealElement* c,
+                                               CIntElement* d)
 : x4_(a), x8_(b), xc_(c), x10_(d) {}
 
 CREPerlinNoiseOctave3d::~CREPerlinNoiseOctave3d() {
@@ -846,8 +848,8 @@ bool CREPerlinNoiseOctave3d::GetValue(int frame, float& valOut) const {
   return false;
 }
 
-CREPerlinNoiseOctave4d::CREPerlinNoiseOctave4d(CVectorElement* a, CRealElement* b, CRealElement* c, CRealElement* d,
-                 CIntElement* e)
+CREPerlinNoiseOctave4d::CREPerlinNoiseOctave4d(CVectorElement* a, CRealElement* b, CRealElement* c,
+                                               CRealElement* d, CIntElement* e)
 : x4_(a), x8_(b), xc_(c), x10_(d), x14_(e) {}
 
 CREPerlinNoiseOctave4d::~CREPerlinNoiseOctave4d() {

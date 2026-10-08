@@ -13,6 +13,7 @@
 class CPoseAsTransforms {
 public:
   const CMatrix3f& GetRotation(const CSegId& id) const;
+
 private:
   CSegId mNextId;
   CSegId mCount;

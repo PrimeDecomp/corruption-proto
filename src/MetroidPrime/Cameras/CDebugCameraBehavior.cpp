@@ -1,8 +1,8 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x802DFA74..0x802DFB44 (9 native functions).
-// Source identity: inferred descriptive CDebugCameraBehavior.cpp; small debug-camera behavior base, original basename unasserted.
-// Complete emitted native/helper inventory retained; no speculative declarations.
-// 0x802DFA74 +0x4: empty camera-behavior callback retained; laterderived references
+// Source identity: inferred descriptive CDebugCameraBehavior.cpp; small debug-camera behavior base,
+// original basename unasserted. Complete emitted native/helper inventory retained; no speculative
+// declarations. 0x802DFA74 +0x4: empty camera-behavior callback retained; laterderived references
 // 0x802DFA78 +0x30: camera-behavior name getter; Debug Camera Behavior literal
 // 0x802DFAA8 +0x4: raw empty camera-behavior callback
 // 0x802DFAAC +0x4: raw empty camera-behavior callback; laterderived vtable references

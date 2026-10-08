@@ -9,7 +9,6 @@
 
 class CInputStream;
 
-
 class CIEConstant : public CIntElement {
   int mVal;
 
@@ -264,7 +263,5 @@ public:
   ~CIEKeepInitial() override;
   bool GetValue(int frame, int& valOut) const override;
 };
-
-
 
 #endif // _CINTELEMENT

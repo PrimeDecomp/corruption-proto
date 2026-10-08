@@ -49,7 +49,8 @@ void IElement::CElementAllocator::Free(void* ptr, size_t) {
 
   if (sFreeChunk == nullptr || !sFreeChunk->Contains(ptr)) {
     sFreeChunk = nullptr;
-    for (rstl::list< CElementAllocationChunk >::iterator it = sElementAllocationChunks.begin(); it != sElementAllocationChunks.end(); ++it) {
+    for (rstl::list< CElementAllocationChunk >::iterator it = sElementAllocationChunks.begin();
+         it != sElementAllocationChunks.end(); ++it) {
       if (it->Contains(ptr)) {
         sFreeChunk = &*it;
         break;
@@ -59,7 +60,8 @@ void IElement::CElementAllocator::Free(void* ptr, size_t) {
 
   sFreeChunk->Free(ptr);
   if (sFreeChunk->GetAllocationCount() == 0) {
-    for (rstl::list< CElementAllocationChunk >::iterator it = sElementAllocationChunks.begin(); it != sElementAllocationChunks.end(); ++it) {
+    for (rstl::list< CElementAllocationChunk >::iterator it = sElementAllocationChunks.begin();
+         it != sElementAllocationChunks.end(); ++it) {
       if (&*it == sFreeChunk) {
         sElementAllocationChunks.erase(it);
         if (sCurrentChunk == sFreeChunk) {

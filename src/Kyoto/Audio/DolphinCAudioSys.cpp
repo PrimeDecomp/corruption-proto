@@ -200,7 +200,7 @@ CAudioSys::CAudioSys(const uchar numVoices, const uchar numMusic, const uchar nu
 
   mpDVDTrackDB = rs_new rstl::map< rstl::string, rstl::ncrc_ptr< CTrkData > >();
   mpEmitterDB = rs_new rstl::vector< CEmitterData >(maxNumEmitters, CEmitterData(),
-                                                 rstl::rmemory_allocator());
+                                                    rstl::rmemory_allocator());
   mpListener = rs_new SND_LISTENER;
   mIsListenerActive = false;
   mMaxNumEmitters = maxNumEmitters;
@@ -413,18 +413,17 @@ uint CAudioSys::S3dAddEmitterParaEx(const C3DEmitterParmData& params, ushort gro
   _dir.y = params.mDir.GetY();
   _dir.z = params.mDir.GetZ();
 
-  const char maxVol = static_cast< uchar >(
-      (mVolumeScale * (params.mMaxVol > 0x7f ? 0x7f : params.mMaxVol)) / 0x7f);
-  const char minVol = static_cast< uchar >(
-      (mVolumeScale * (params.mMinVol > 0x7f ? 0x7f : params.mMinVol)) / 0x7f);
+  const char maxVol =
+      static_cast< uchar >((mVolumeScale * (params.mMaxVol > 0x7f ? 0x7f : params.mMaxVol)) / 0x7f);
+  const char minVol =
+      static_cast< uchar >((mVolumeScale * (params.mMinVol > 0x7f ? 0x7f : params.mMinVol)) / 0x7f);
   if (params.mStudio == 0) {
     sndAddEmitterParaEx(&data.mEmitter, &_pos, &_dir, params.mMaxDist, params.mDistComp,
-                        params.mFlags, params.mSfxId, groupId, maxVol, minVol, nullptr,
-                        paraInfo);
+                        params.mFlags, params.mSfxId, groupId, maxVol, minVol, nullptr, paraInfo);
   } else {
-    sndAddEmitter2StudioParaEx(&data.mEmitter, &_pos, &_dir, params.mMaxDist,
-                               params.mDistComp, params.mFlags, params.mSfxId, groupId,
-                               maxVol, minVol, params.mStudio, paraInfo);
+    sndAddEmitter2StudioParaEx(&data.mEmitter, &_pos, &_dir, params.mMaxDist, params.mDistComp,
+                               params.mFlags, params.mSfxId, groupId, maxVol, minVol,
+                               params.mStudio, paraInfo);
   }
   data.mUsed = true;
   data.mImportant = params.mImportant;

@@ -1,5 +1,12 @@
 // NonMatching translation-unit scaffold; no implementation is supplied.
 // G2MEAB .text: 0x805BC8B8..0x805BCCA8 (4 retained native functions).
 // Original basename directly named by target allocation/free evidence.
-// Evidence: Release805BC8F0 and child/DSP reassignment805BCA28 directly name fmod_channelgroupi.cpp lines127/132/875 through memory pool free/alloc. Leading805BC8B8 rejects releasing SystemI master group+CC8, then calls805BC8F0. Release reparents ChannelI objects through805BFE88, destroys DSP relationships and frees group/list storage; helper805BCA28 creates0x150-byte group with vtable806E2AF0 and links DSP group relationships. Final805BCC28 deleting destructor restores group/base list tables through805BCCA8. Next805BCCA8 decodes packed channel handles against SystemI channel array and0x13C stride, beginning the separate asserted channeli family.
-// Preserve every retained stub, emitted helper and adjustor thunk; full inventory and inlining uncertainty are recorded externally.
+// Evidence: Release805BC8F0 and child/DSP reassignment805BCA28 directly name fmod_channelgroupi.cpp
+// lines127/132/875 through memory pool free/alloc. Leading805BC8B8 rejects releasing SystemI master
+// group+CC8, then calls805BC8F0. Release reparents ChannelI objects through805BFE88, destroys DSP
+// relationships and frees group/list storage; helper805BCA28 creates0x150-byte group with
+// vtable806E2AF0 and links DSP group relationships. Final805BCC28 deleting destructor restores
+// group/base list tables through805BCCA8. Next805BCCA8 decodes packed channel handles against
+// SystemI channel array and0x13C stride, beginning the separate asserted channeli family. Preserve
+// every retained stub, emitted helper and adjustor thunk; full inventory and inlining uncertainty
+// are recorded externally.

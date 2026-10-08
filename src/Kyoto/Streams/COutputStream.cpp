@@ -24,12 +24,12 @@ void COutputStream::DoPut(const void* data, unsigned long length) {
   if (remaining != 0) {
     mWrittenBytes += remaining;
     if (remaining + mUnwrittenLength <= mBufferLength) {
-      memcpy(static_cast<unsigned char*>(mBuffer) + mUnwrittenLength, data, remaining);
+      memcpy(static_cast< unsigned char* >(mBuffer) + mUnwrittenLength, data, remaining);
       mUnwrittenLength += remaining;
       return;
     }
 
-    end = static_cast<const unsigned char*>(data) + remaining;
+    end = static_cast< const unsigned char* >(data) + remaining;
     while (remaining != 0) {
       const unsigned int count = mBufferLength - mUnwrittenLength;
       offset = count;
@@ -37,7 +37,7 @@ void COutputStream::DoPut(const void* data, unsigned long length) {
         offset = remaining;
       }
       if (offset != 0) {
-        memcpy(static_cast<unsigned char*>(mBuffer) + mUnwrittenLength, end - remaining, offset);
+        memcpy(static_cast< unsigned char* >(mBuffer) + mUnwrittenLength, end - remaining, offset);
         remaining -= offset;
         mUnwrittenLength += offset;
       } else {

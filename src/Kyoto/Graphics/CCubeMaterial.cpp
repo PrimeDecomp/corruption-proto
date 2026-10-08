@@ -293,8 +293,8 @@ static void HandleAlphaMask(uint vtxDesc, uint& tevCount, uint& texCount, uint& 
   CGX::SetTevAlphaIn(stage, GX_CA_ZERO, GX_CA_APREV, GX_CA_TEXA, GX_CA_ZERO);
   CGX::SetTevOrder(stage, static_cast< GXTexCoordID >(sAlphaMaskTexCoord), texMap, GX_COLOR_NULL);
   CGraphics::SetAlphaCompare(kAF_Greater, 0, kAO_And, kAF_Always, 0);
-  CGX::LoadTexMtxImm(PortalPlane::GetTextureTransform().GetCStyleMatrix(),
-                     sAlphaMaskPostTexMtx, GX_MTX3x4);
+  CGX::LoadTexMtxImm(PortalPlane::GetTextureTransform().GetCStyleMatrix(), sAlphaMaskPostTexMtx,
+                     GX_MTX3x4);
   CGX::SetTexCoordGen(static_cast< GXTexCoordID >(sAlphaMaskTexCoord), GX_TG_MTX3x4, GX_TG_POS,
                       static_cast< GXTexMtx >(GX_PNMTX0), GX_FALSE,
                       static_cast< GXPTTexMtx >(sAlphaMaskPostTexMtx));
@@ -314,10 +314,10 @@ static void SetupAlphaMaskVtxDesc(uint vtxDesc) {
 }
 
 static void ModulateKColor(const CModelFlags& flags) {
-  CGX::SetTevKColor(GX_KCOLOR0,
-                    CColor::Modulate(flags.GetColor(), reinterpret_cast< const CColor& >(
-                                                           CGX::GetTevKColor(GX_KCOLOR0)))
-                        .GetGXColor());
+  CGX::SetTevKColor(
+      GX_KCOLOR0, CColor::Modulate(flags.GetColor(),
+                                   reinterpret_cast< const CColor& >(CGX::GetTevKColor(GX_KCOLOR0)))
+                      .GetGXColor());
 }
 
 static bool TryModulateKColor(uint tevCount, uint& kColorCount, const CModelFlags& flags) {
@@ -452,8 +452,8 @@ static void DoModelShadow(uint texCount, uint tcgCount) {
 }
 
 uint CCubeMaterial::HandleReflection(const GXTexMapID indTexSlot, const int indMtxScaleExp,
-                                     const uint tevCount, const uint texCount,
-                                     const uint tcgCount, const uint kColorCount) {
+                                     const uint tevCount, const uint texCount, const uint tcgCount,
+                                     const uint kColorCount) {
   bool usesTevReg2 = false;
   for (uint i = 0; i < tevCount; ++i) {
     if ((CGX::GetTevState(static_cast< GXTevStageID >(i)).mColorOps >> 9 & 3) == GX_TEVREG2) {
@@ -694,8 +694,7 @@ static void HandleThermalTevs(const uint*& materialData, uint firstTev, uint& te
     materialDataCur.words += 5;
     texMapTexCoordFlags.words += 1;
   }
-  const int texCoord =
-      HandleThermalTev(firstTev, materialDataCur.words, texMapTexCoordFlags.words);
+  const int texCoord = HandleThermalTev(firstTev, materialDataCur.words, texMapTexCoordFlags.words);
 
   scanner_t uvAnim;
   uvAnim.words = savedTexMapTexCoordFlags.words + matTevCount;
@@ -861,8 +860,7 @@ void CCubeMaterial::SetCurrent(const CModelFlags& flags, const CCubeSurface& sur
       texCount += 1;
       finalKColorCount += 1;
     } else if (finalTevCount != 0 &&
-               (CGX::GetTevState(static_cast< GXTevStageID >(finalTevCount - 1)).mColorOps >>
-                    9 &
+               (CGX::GetTevState(static_cast< GXTevStageID >(finalTevCount - 1)).mColorOps >> 9 &
                 3) != 0) {
       DoPassthru(finalTevCount);
       finalTevCount += 1;

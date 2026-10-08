@@ -2,9 +2,9 @@
 // .text: 0x80049FE8..0x8004BE78 (46 native functions).
 // Source identity: asserted target basename and both reference source/class correspondence.
 // Complete native/helper/callback inventory retained; no speculative declarations.
-// 0x80049FE8 +0x130: explosion collision-response notification method; three callers pass newly constructed CExplosion directly, exact original name unresolved
-// 0x8004A118 +0x30: explosion particle-generator method forwarder
-// 0x8004A148 +0x54: explosion generator scaling method
+// 0x80049FE8 +0x130: explosion collision-response notification method; three callers pass newly
+// constructed CExplosion directly, exact original name unresolved 0x8004A118 +0x30: explosion
+// particle-generator method forwarder 0x8004A148 +0x54: explosion generator scaling method
 // 0x8004A19C +0x198: explosion render-bounds update from generator optional bounds
 // 0x8004A334 +0x2A4: explosion script-message handling; CExplosion.cpp allocations440/454
 // 0x8004A5D8 +0x260: explosion Think; generator tick, signal lifetime, light update and termination

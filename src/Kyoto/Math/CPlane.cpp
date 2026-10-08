@@ -5,8 +5,7 @@
 CPlane::CPlane(const CVector3f& a, const CVector3f& b, const CVector3f& c)
 : mNormal(CVector3f::Cross(b - a, c - a)), mConstant(CVector3f::Dot(mNormal, a)) {}
 
-CPlane::CPlane(CInputStream& in)
-: mNormal(in), mConstant(in.ReadFloat()) {}
+CPlane::CPlane(CInputStream& in) : mNormal(in), mConstant(in.ReadFloat()) {}
 
 float CPlane::ClipLineSegment(const CVector3f& start, const CVector3f& end) const {
   float dist = -(CVector3f::Dot(start, GetNormal()) - GetConstant()) /

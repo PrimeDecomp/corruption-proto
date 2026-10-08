@@ -16,4 +16,5 @@
 // 0x80315228 +0xA0: emitted main-family native method/helper; exact source-level name unresolved
 // 0x803152C8 +0x164: Nova beam deleting destructor; optional token cleanup and gun-weapon base
 // 0x8031542C +0x94: Nova beam constructor; weapon type 2, vtable 806BEB58
-// 0x803154C0 +0x30: registered 0x30-byte initializer; seven independent SDA constants; .ctors 0x8065BA30
+// 0x803154C0 +0x30: registered 0x30-byte initializer; seven independent SDA constants; .ctors
+// 0x8065BA30

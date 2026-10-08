@@ -16,7 +16,7 @@ public:
   static rstl::string ConvertToANSI(const rstl::wstring& str);
   static rstl::wstring ConvertToUNICODE(const rstl::string& str);
   static rstl::string ReadString(CInputStream& in);
-  static rstl::vector<rstl::string> TokenizeString(const rstl::string&, const char*, int);
+  static rstl::vector< rstl::string > TokenizeString(const rstl::string&, const char*, int);
 };
 
 #endif // _RSTL_STRINGEXTRAS

@@ -16,8 +16,8 @@ class CTransform4f;
 class CFoldySurface {
 public:
   CFoldySurface(const TToken< CModel >& model, float lowerX, float upperX,
-                     const CVector3f& lowerOffset, const CVector3f& middleOffset,
-                     const CVector3f& upperOffset);
+                const CVector3f& lowerOffset, const CVector3f& middleOffset,
+                const CVector3f& upperOffset);
   ~CFoldySurface();
 
   void ResetRenderState() const;

@@ -41,6 +41,6 @@ private:
 typedef set< char, char > unk_set;
 CHECK_SIZEOF(unk_set, 0x14)
 
-}
+} // namespace rstl
 
 #endif // _RSTL_SET

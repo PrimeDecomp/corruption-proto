@@ -2,4 +2,5 @@
 // G2MEAB .text: 0x805DBDB8..0x805E113C (13 retained native functions).
 // Basename inferred; the prototype does not assert this original filename.
 // Complete historical MPEG source order and exact private constants support this emitter.
-// Preserve every retained helper; full target/reference evidence and remaining emission uncertainty are recorded externally.
+// Preserve every retained helper; full target/reference evidence and remaining emission uncertainty
+// are recorded externally.

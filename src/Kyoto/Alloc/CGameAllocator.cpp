@@ -74,8 +74,7 @@ bool CGameAllocator::Initialize(COsContext& ctx) {
       reinterpret_cast< intptr_t >(mFirst) -
       (reinterpret_cast< uintptr_t >(mFirst) & kAllocatorPointerTopNybbleMask));
   OSGetArenaLo();
-  mLast =
-      reinterpret_cast< SGameMemInfo* >(reinterpret_cast< char* >(mFirst - 1) + mHeapSize);
+  mLast = reinterpret_cast< SGameMemInfo* >(reinterpret_cast< char* >(mFirst - 1) + mHeapSize);
 
   const SGameMemInfo& head = SGameMemInfo(
       nullptr, mLast, mLast, mHeapSize - sizeof(SGameMemInfo) * 2, "MemHead", "MemHead");
@@ -101,13 +100,13 @@ bool CGameAllocator::Initialize(COsContext& ctx) {
   x4_ = 1;
 
   mSmallAllocMainData = Alloc(0xb0000, kHI_None, kSC_Unk1, kTP_Heap,
-                                 CCallStack(0xffffffff, "SmallAllocMainData   ", " - Ignore"));
+                              CCallStack(0xffffffff, "SmallAllocMainData   ", " - Ignore"));
 
   mSmallAllocBookKeeping = Alloc(0x16000, kHI_None, kSC_Unk1, kTP_Heap,
-                                    CCallStack(0xffffffff, "SmallAllocBookKeeping", " - Ignore"));
+                                 CCallStack(0xffffffff, "SmallAllocBookKeeping", " - Ignore"));
 
   mSmallAllocPool = new (Alloc(0x20, kHI_None, kSC_Unk1, kTP_Heap,
-                                  CCallStack(0xffffffff, "SmallAllocClass      ", " - Ignore")))
+                               CCallStack(0xffffffff, "SmallAllocClass      ", " - Ignore")))
       CSmallAllocPool(0x2c000, mSmallAllocMainData, mSmallAllocBookKeeping);
 
   mMediumPool =
@@ -487,14 +486,12 @@ IAllocator::SAllocInfo CGameAllocator::GetAllocInfo(const void* ptr) const {
 };
 
 IAllocator::SMetrics CGameAllocator::GetMetrics(bool unk1, bool unk2) const {
-  uint mediumAllocTotalAllocated =
-      mMediumPool != nullptr ? mMediumPool->GetTotalEntries() * 32 : 0;
+  uint mediumAllocTotalAllocated = mMediumPool != nullptr ? mMediumPool->GetTotalEntries() * 32 : 0;
   uint mediumAllocBlocksAvailable =
       mMediumPool != nullptr ? mMediumPool->GetNumBlocksAvailable() : 0;
   uint mediumAllocAllocatedSize =
-      mMediumPool != nullptr
-          ? mMediumPool->GetTotalEntries() - mMediumPool->GetNumBlocksAvailable()
-          : 0;
+      mMediumPool != nullptr ? mMediumPool->GetTotalEntries() - mMediumPool->GetNumBlocksAvailable()
+                             : 0;
   const uint mediumAllocNumAllocs = mMediumPool != nullptr ? mMediumPool->GetNumAllocs() : 0;
   SMetrics ret(mHeapSize, x80_, x84_, x88_, x8c_, mHeapSize2, x94_, x98_, x9c_, xa0_, xa4_, xa8_,
                mSmallAllocPool != nullptr ? mSmallAllocPool->GetNumAllocs() : 0,

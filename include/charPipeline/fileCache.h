@@ -7,20 +7,20 @@
 extern "C" {
 #endif
 
-#define	DS_AUTO_PURGE 0
-#define	DS_NO_PURGE 1
+#define DS_AUTO_PURGE 0
+#define DS_NO_PURGE 1
 
 typedef struct {
-    DSLink Link;
-    void (*Free)(Ptr* data);
-    char* Name;
-    Ptr Data;
-    u16 ReferenceCount;
+  DSLink Link;
+  void (*Free)(Ptr* data);
+  char* Name;
+  Ptr Data;
+  u16 ReferenceCount;
 } DSCacheNode, *DSCacheNodePtr;
 
 typedef struct {
-    u8 PurgeFlag;
-    DSList CacheNodeList;
+  u8 PurgeFlag;
+  DSList CacheNodeList;
 } DSCache, *DSCachePtr;
 
 extern u8 DOCacheInitialized;

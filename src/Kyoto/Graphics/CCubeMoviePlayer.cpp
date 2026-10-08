@@ -38,9 +38,7 @@ static rstl::string SelectMoviePath(const char* path) {
   return name;
 }
 
-static bool ShouldEnableLockedCache() {
-  return LCGetBase() != GetLockedCacheAllocationBase();
-}
+static bool ShouldEnableLockedCache() { return LCGetBase() != GetLockedCacheAllocationBase(); }
 
 static int sNumReferences = 0;
 static CMoviePlayer* sAudioPlayer;
@@ -60,8 +58,7 @@ struct CMoviePlayer::SIndexLoad {
   ~SIndexLoad();
 
   SIndexLoad()
-  : mBuffer(static_cast< uchar* >(CMemory::Alloc(64, IAllocator::kHI_RoundUpLen)))
-  , mState(0) {}
+  : mBuffer(static_cast< uchar* >(CMemory::Alloc(64, IAllocator::kHI_RoundUpLen))), mState(0) {}
 };
 CMoviePlayer::SIndexLoad::~SIndexLoad() {}
 
@@ -121,7 +118,8 @@ static void MyTHPGXYuv2RgbSetup(bool field, bool deinterlace) {
     float mtx[8] = {0.125f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.25f, n};
     GXLoadTexMtxImm(reinterpret_cast< MtxPtr >(mtx), GX_TEXMTX0, GX_MTX2x4);
     GXTexObj obj;
-    GXInitTexObj(&obj, const_cast< uchar* >(skInterlacePattern), 8, 4, GX_TF_I8, GX_REPEAT, GX_REPEAT, FALSE);
+    GXInitTexObj(&obj, const_cast< uchar* >(skInterlacePattern), 8, 4, GX_TF_I8, GX_REPEAT,
+                 GX_REPEAT, FALSE);
     GXInitTexObjLOD(&obj, GX_NEAR, GX_NEAR, 0.f, 0.f, 0.f, FALSE, FALSE, GX_ANISO_1);
     GXLoadTexObj(&obj, GX_TEXMAP3);
     CTexture::InvalidateTexmap(GX_TEXMAP3);
@@ -255,14 +253,11 @@ bool CMoviePlayer::ContinueLoading() {
       memcpy(&mHeader, buffer, sizeof(THPHeader));
       mHeader.mVersion = CBasics::SwapBytes(static_cast< uint >(mHeader.mVersion));
       mHeader.mBufferSize = CBasics::SwapBytes(static_cast< uint >(mHeader.mBufferSize));
-      mHeader.mAudioMaxSamples =
-          CBasics::SwapBytes(static_cast< uint >(mHeader.mAudioMaxSamples));
+      mHeader.mAudioMaxSamples = CBasics::SwapBytes(static_cast< uint >(mHeader.mAudioMaxSamples));
       mHeader.mFrameRate = CBasics::SwapBytes(mHeader.mFrameRate);
       mHeader.mNumFrames = CBasics::SwapBytes(static_cast< uint >(mHeader.mNumFrames));
-      mHeader.mFirstFrameSize =
-          CBasics::SwapBytes(static_cast< uint >(mHeader.mFirstFrameSize));
-      mHeader.mMovieDataSize =
-          CBasics::SwapBytes(static_cast< uint >(mHeader.mMovieDataSize));
+      mHeader.mFirstFrameSize = CBasics::SwapBytes(static_cast< uint >(mHeader.mFirstFrameSize));
+      mHeader.mMovieDataSize = CBasics::SwapBytes(static_cast< uint >(mHeader.mMovieDataSize));
       mHeader.mCompInfoDataOffsets =
           CBasics::SwapBytes(static_cast< uint >(mHeader.mCompInfoDataOffsets));
       mHeader.mOffsetDataOffsets =
@@ -301,8 +296,7 @@ bool CMoviePlayer::ContinueLoading() {
           offset += sizeof(THPVideoInfo);
           break;
         case 1:
-          mIndexLoad->mAudioRequest =
-              mDvdFile.AsyncSeekRead(audioBuffer, 32, kSO_Set, offset);
+          mIndexLoad->mAudioRequest = mDvdFile.AsyncSeekRead(audioBuffer, 32, kSO_Set, offset);
           offset += sizeof(THPAudioInfo);
           mHasAudio = true;
           break;
@@ -333,10 +327,8 @@ bool CMoviePlayer::ContinueLoading() {
     }
     if (hasAudio) {
       memcpy(&mAudioInfo, buffer + 32, sizeof(THPAudioInfo));
-      mAudioInfo.mSndChannels =
-          CBasics::SwapBytes(static_cast< uint >(mAudioInfo.mSndChannels));
-      mAudioInfo.mSndFrequency =
-          CBasics::SwapBytes(static_cast< uint >(mAudioInfo.mSndFrequency));
+      mAudioInfo.mSndChannels = CBasics::SwapBytes(static_cast< uint >(mAudioInfo.mSndChannels));
+      mAudioInfo.mSndFrequency = CBasics::SwapBytes(static_cast< uint >(mAudioInfo.mSndFrequency));
       mAudioInfo.mSndNumSamples =
           CBasics::SwapBytes(static_cast< uint >(mAudioInfo.mSndNumSamples));
     }
@@ -354,9 +346,8 @@ bool CMoviePlayer::ContinueLoading() {
     mPreLoadSeconds = mTotalSeconds;
     mPreLoadFrames = mHeader.mNumFrames;
   } else if (mPreLoadSeconds > 0.f) {
-    mPreLoadFrames =
-        rstl::min_val(static_cast< uint >(mHeader.mNumFrames),
-                      static_cast< uint >(mPreLoadSeconds * mHeader.mFrameRate));
+    mPreLoadFrames = rstl::min_val(static_cast< uint >(mHeader.mNumFrames),
+                                   static_cast< uint >(mPreLoadSeconds * mHeader.mFrameRate));
     mPreLoadSeconds = rstl::min_val(mPreLoadSeconds, mTotalSeconds);
   }
   if (mPreLoadFrames > 0) {
@@ -425,8 +416,8 @@ void CMoviePlayer::PostDVDReadRequestIfNeeded() {
       rstl::single_ptr< CRealDvdRequest > request(rs_new CRealDvdRequest);
       DVDOpen(const_cast< char* >(mDvdFile.GetFilename().data()), &request->FileInfo());
       request->FileInfo().cb.userData = this;
-      DVDReadAsyncPrio(&request->FileInfo(), mRequestBuffer.get(), mNextReadSize,
-                       mNextReadOff, DVDCallback, 2);
+      DVDReadAsyncPrio(&request->FileInfo(), mRequestBuffer.get(), mNextReadSize, mNextReadOff,
+                       DVDCallback, 2);
       mRequest = request;
     }
   }
@@ -458,8 +449,8 @@ void CMoviePlayer::PrefetchNextFrame() {
     rstl::single_ptr< CRealDvdRequest > request(rs_new CRealDvdRequest);
     DVDOpen(const_cast< char* >(mDvdFile.GetFilename().data()), &request->FileInfo());
     request->FileInfo().cb.userData = this;
-    DVDReadAsyncPrio(&request->FileInfo(), mPrefetchBuffer.get(), mPrefetchSize,
-                     mPrefetchOff, DVDCallback, 2);
+    DVDReadAsyncPrio(&request->FileInfo(), mPrefetchBuffer.get(), mPrefetchSize, mPrefetchOff,
+                     DVDCallback, 2);
     mPrefetchRequest = request;
   }
 }
@@ -531,8 +522,8 @@ void CMoviePlayer::Update(float dt) {
       }
     }
   } else if (!mRequest.null()) {
-    const bool canDecode = mRequestFrameWrapped >= mRequestQueue.size() &&
-                           mCurLoadFrame >= mRequestQueue.size();
+    const bool canDecode =
+        mRequestFrameWrapped >= mRequestQueue.size() && mCurLoadFrame >= mRequestQueue.size();
     if (mDecodedTexCount < 2 && canDecode && mRequest->IsComplete()) {
       ReadCompleted();
       rstl::auto_ptr< uchar > buffer;
@@ -551,12 +542,10 @@ void CMoviePlayer::Update(float dt) {
       }
     }
   }
-  if (mRequest.null() && mPlayMode == kPM_Playing &&
-      mRequestQueue.size() < mHeader.mNumFrames) {
+  if (mRequest.null() && mPlayMode == kPM_Playing && mRequestQueue.size() < mHeader.mNumFrames) {
     PostDVDReadRequestIfNeeded();
   }
-  if (mDecodedTexCount < 2 && mPlayMode == kPM_Playing &&
-      mRequestFrameWrapped < mPreLoadFrames) {
+  if (mDecodedTexCount < 2 && mPlayMode == kPM_Playing && mRequestFrameWrapped < mPreLoadFrames) {
     const int frame = rstl::min_val(mRequestFrameWrapped, mRequestQueue.size() - 1);
     if (frame == -1) {
       return;
@@ -640,9 +629,7 @@ float CMoviePlayer::GetTotalSeconds() const { return mTotalSeconds; }
 
 float CMoviePlayer::GetPlayedSeconds() const { return mCurSeconds + mFrameRem; }
 
-bool CMoviePlayer::GetIsFullyCached() const {
-  return mRequestQueue.size() >= mPreLoadFrames;
-}
+bool CMoviePlayer::GetIsFullyCached() const { return mRequestQueue.size() >= mPreLoadFrames; }
 
 bool CMoviePlayer::GetIsMovieFinishedPlaying() const {
   return !mLoop && mCurFrame == mHeader.mNumFrames;

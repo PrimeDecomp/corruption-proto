@@ -20,7 +20,9 @@ public:
   const TToken< CTransitionDatabase >& GetTransitionDatabase() const { return mTransDb; }
   CRandom16& GetRandomNumberGenerator() const { return *mRandom; }
   CSimplePool& GetSimplePool() const { return mStore; }
-  const CAnimPOIData* GetEventData(int animIdx) const { return &mEventSets[animIdx]; } // Guessed name.
+  const CAnimPOIData* GetEventData(int animIdx) const {
+    return &mEventSets[animIdx];
+  } // Guessed name.
 
 private:
   TToken< CTransitionDatabase > mTransDb;

@@ -7,13 +7,11 @@
 #ifndef lapi_h
 #define lapi_h
 
-
 #include "lobject.h"
 
-
-void luaA_pushobject (lua_State *L, const TObject *o);
-TObject *negindex (lua_State *L, int idx);
-TObject *luaA_index (lua_State *L, int idx);
-TObject *luaA_indexAcceptable (lua_State *L, int idx);
+void luaA_pushobject(lua_State* L, const TObject* o);
+TObject* negindex(lua_State* L, int idx);
+TObject* luaA_index(lua_State* L, int idx);
+TObject* luaA_indexAcceptable(lua_State* L, int idx);
 
 #endif

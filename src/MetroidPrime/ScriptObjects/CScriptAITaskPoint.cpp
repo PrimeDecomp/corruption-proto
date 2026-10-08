@@ -12,4 +12,5 @@
 // 0x802FE5FC +0x70: task-point deleting destructor; vtable 806BD9F0
 // 0x802FE66C +0x70: task-point entity-derived constructor
 // 0x802FE6DC +0xF4: task-point settings copy helper
-// 0x802FE7D0 +0x30: registered 0x30-byte initializer; seven independent SDA constants; .ctors 0x8065BA08
+// 0x802FE7D0 +0x30: registered 0x30-byte initializer; seven independent SDA constants; .ctors
+// 0x8065BA08

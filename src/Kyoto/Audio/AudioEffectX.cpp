@@ -94,7 +94,8 @@ void AudioEffectX::wantEvents(long filter) {
 
 VstTimeInfo* AudioEffectX::getTimeInfo(long filter) {
   if (mAudioMaster != nullptr)
-    return reinterpret_cast< VstTimeInfo* >(mAudioMaster(&mEffect, kAM_GetTime, 0, filter, nullptr, 0.f));
+    return reinterpret_cast< VstTimeInfo* >(
+        mAudioMaster(&mEffect, kAM_GetTime, 0, filter, nullptr, 0.f));
   return nullptr;
 }
 
@@ -160,13 +161,15 @@ long AudioEffectX::getOutputLatency() {
 
 AEffect* AudioEffectX::getPreviousPlug(long input) {
   if (mAudioMaster != nullptr)
-    return reinterpret_cast< AEffect* >(mAudioMaster(&mEffect, kAM_GetPreviousPlug, 0, 0, nullptr, 0.f));
+    return reinterpret_cast< AEffect* >(
+        mAudioMaster(&mEffect, kAM_GetPreviousPlug, 0, 0, nullptr, 0.f));
   return nullptr;
 }
 
 AEffect* AudioEffectX::getNextPlug(long output) {
   if (mAudioMaster != nullptr)
-    return reinterpret_cast< AEffect* >(mAudioMaster(&mEffect, kAM_GetNextPlug, 0, 0, nullptr, 0.f));
+    return reinterpret_cast< AEffect* >(
+        mAudioMaster(&mEffect, kAM_GetNextPlug, 0, 0, nullptr, 0.f));
   return nullptr;
 }
 
@@ -241,7 +244,7 @@ bool AudioEffectX::getSpeakerArrangement(VstSpeakerArrangement* input,
                                          VstSpeakerArrangement* output) {
   if (mAudioMaster != nullptr)
     return mAudioMaster(&mEffect, kAM_GetSpeakerArrangement, 0, reinterpret_cast< long >(input),
-                          output, 0.f) != 0;
+                        output, 0.f) != 0;
   return false;
 }
 

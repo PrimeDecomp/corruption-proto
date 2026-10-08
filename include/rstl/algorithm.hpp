@@ -21,7 +21,7 @@ template < class It, class T >
 #ifndef RSTL_DONT_INLINE_ALGORITHM
 inline
 #endif
-It find(It first, It last, const T& val) {
+    It find(It first, It last, const T& val) {
   while (first != last && !(*first == val))
     ++first;
   return first;

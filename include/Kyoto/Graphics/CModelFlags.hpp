@@ -54,10 +54,7 @@ public:
 
   // ?
   CModelFlags(const CModelFlags& flags, ETrans trans, CColor color)
-  : mBlendMode(trans)
-  , mMatSetIdx(flags.mMatSetIdx)
-  , mFlags(flags.mFlags)
-  , mColor(color) {}
+  : mBlendMode(trans), mMatSetIdx(flags.mMatSetIdx), mFlags(flags.mFlags), mColor(color) {}
 
   // CModelFlags(const CModelFlags& other)
   // : x4_blendMode(other.x4_blendMode)

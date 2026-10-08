@@ -27,7 +27,7 @@ SAdvancementResults CAnimTreeTimeScale::VAdvanceView(const CCharAnimTime& dt) {
   } else {
     CCharAnimTime newDt = mTimeScale->TimeScaleIntegral(origAccelTime, mTargetAccelTime);
     SAdvancementResults res(CCharAnimTime(0.f),
-                           SAdvancementDeltas(CVector3f::Zero(), CQuaternion::NoRotation()));
+                            SAdvancementDeltas(CVector3f::Zero(), CQuaternion::NoRotation()));
     if (newDt.GreaterThanZero()) {
       res = mChild->AdvanceView(newDt);
     }
@@ -54,9 +54,10 @@ CSteadyStateAnimInfo CAnimTreeTimeScale::VGetSteadyStateAnimInfo() const {
         mTimeScale->FindUpperLimit(CCharAnimTime::ZeroFlat(), originalDuration);
     return CSteadyStateAnimInfo(info.IsLooping(), duration, info.GetOffset());
   } else {
-    CCharAnimTime time = mCurAccelTime.GreaterThanZero()
-                            ? mTimeScale->TimeScaleIntegral(CCharAnimTime::ZeroFlat(), mCurAccelTime)
-                            : CCharAnimTime::ZeroFlat();
+    CCharAnimTime time =
+        mCurAccelTime.GreaterThanZero()
+            ? mTimeScale->TimeScaleIntegral(CCharAnimTime::ZeroFlat(), mCurAccelTime)
+            : CCharAnimTime::ZeroFlat();
     CCharAnimTime remaining = GetTimeRemaining();
     CCharAnimTime duration = mInitialTime + time + remaining;
     return CSteadyStateAnimInfo(info.IsLooping(), duration, info.GetOffset());
@@ -158,9 +159,8 @@ CParticleData::EParentedMode CAnimTreeTimeScale::VGetParticlePOIState(uint nameH
 rstl::optional_object< rstl::ownership_transfer< IAnimReader > > CAnimTreeTimeScale::VSimplified() {
   rstl::optional_object< rstl::ownership_transfer< IAnimReader > > simp = mChild->Simplified();
   if (simp) {
-    return rstl::ownership_transfer< IAnimReader >(
-        rs_new CAnimTreeTimeScale(Cast(*simp), mTimeScale->Clone(), mCurAccelTime,
-                                  mTargetAccelTime, mInitialTime, mName));
+    return rstl::ownership_transfer< IAnimReader >(rs_new CAnimTreeTimeScale(
+        Cast(*simp), mTimeScale->Clone(), mCurAccelTime, mTargetAccelTime, mInitialTime, mName));
   }
   if (mCurAccelTime == mTargetAccelTime) {
     return mChild->Clone();

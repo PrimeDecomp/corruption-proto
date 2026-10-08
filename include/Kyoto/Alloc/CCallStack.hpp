@@ -5,6 +5,7 @@
 
 class CCallStack {
   static const char kUnknownType[];
+
 public:
   CCallStack(uint lineNum, const char* lineStr, const char* type = kUnknownType);
   // Prototype assertions retain the signed-depth constructor ABI.

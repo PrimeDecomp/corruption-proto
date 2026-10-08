@@ -8,8 +8,7 @@ CToken::CToken(CObjectReference* reference) : mReference(reference), mLockHeld(f
 }
 
 CToken::CToken(IObj* object) {
-  mReference = new ("CToken.cpp(36) : ", 0)
-      CObjectReference(rstl::auto_ptr<IObj>(object));
+  mReference = new ("CToken.cpp(36) : ", 0) CObjectReference(rstl::auto_ptr< IObj >(object));
   mLockHeld = false;
   mReference->AddReference();
   Lock();
@@ -31,7 +30,7 @@ CToken::~CToken() {
 
 CObjOwnerDerivedFromIObjUntyped* CToken::GetObj() {
   Lock();
-  return reinterpret_cast<CObjOwnerDerivedFromIObjUntyped*>(mReference->GetObject());
+  return reinterpret_cast< CObjOwnerDerivedFromIObjUntyped* >(mReference->GetObject());
 }
 
 void CToken::RemoveRef() {

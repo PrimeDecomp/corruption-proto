@@ -14,8 +14,7 @@
 
 static CRSFAudio* sPlayingAudio = nullptr;
 
-CRSFAudio::CRSFAudio(const rstl::string& filepath, const int loopStart,
-                                       const int loopEnd)
+CRSFAudio::CRSFAudio(const rstl::string& filepath, const int loopStart, const int loopEnd)
 : mFilepath(filepath)
 , mRsfRem(-1)
 , mCurSamp(0)
@@ -112,8 +111,7 @@ void CRSFAudio::Decode(ushort* out, const ushort* in, int numSamples) {
   int curSamp = mCurSamp / 2;
   int loopEndSamp = mLoopEndSamp / 2;
   int loopStartSamp = mLoopStartSamp / 2;
-  DecodeMonoAndMix(out, in, numSamples, curSamp, loopEndSamp, loopStartSamp, mVolume,
-                   mLeftState);
+  DecodeMonoAndMix(out, in, numSamples, curSamp, loopEndSamp, loopStartSamp, mVolume, mLeftState);
 
   int halfLen = mRsfLength / 2;
   DecodeMonoAndMix(out + 1, in + 1, numSamples, curSamp + halfLen, loopEndSamp + halfLen,
@@ -136,9 +134,8 @@ void CRSFAudio::Decode(ushort* out, const ushort* in, int numSamples) {
   }
 }
 
-void CRSFAudio::DecodeMonoAndMix(ushort* out, const ushort* in, int numSamples,
-                                          int startSample, int sampleEnd, int sampleStart, int vol,
-                                          g72x_state& state) {
+void CRSFAudio::DecodeMonoAndMix(ushort* out, const ushort* in, int numSamples, int startSample,
+                                 int sampleEnd, int sampleStart, int vol, g72x_state& state) {
   ushort* outCursor = out;
   const ushort* inCursor = in;
   int curSample = startSample;

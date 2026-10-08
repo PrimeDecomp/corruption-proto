@@ -1,7 +1,7 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x802D8C2C..0x802DEE10 (71 native functions).
-// Source identity: asserted original basename CShip.cpp; prototype patterned ship actor, directory inferred.
-// Complete emitted native/helper inventory retained; no speculative declarations.
+// Source identity: asserted original basename CShip.cpp; prototype patterned ship actor, directory
+// inferred. Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x802D8C2C +0x32C: Ship tagged loader; source2903 andD18-byte allocation
 // 0x802D8F58 +0x2AC: ShipData tagged loader
 // 0x802D9204 +0x58: ShipData destructor
@@ -72,4 +72,5 @@
 // 0x802DE7A8 +0xCC: ship motion/physics helper constructor
 // 0x802DE874 +0xE0: ship actor-facing predicate
 // 0x802DE954 +0xAC: emitted ship eight-byte vector reserve
-// 0x802DEA00 +0x410: registered410-byte initializer; SDA pluscomplete ship state/trigger callback table copies; .ctors8065B9E4
+// 0x802DEA00 +0x410: registered410-byte initializer; SDA pluscomplete ship state/trigger callback
+// table copies; .ctors8065B9E4

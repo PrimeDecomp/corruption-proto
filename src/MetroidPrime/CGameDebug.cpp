@@ -2,13 +2,12 @@
 // .text: 0x8003B898..0x800492C8 (93 native functions).
 // Source identity: asserted target basename; absent from both retail source inventories.
 // Complete native/helper/callback inventory retained; no speculative declarations.
-// 0x8003B898 +0x24: emitted debug TSignal1 disconnect thunk; member-pointer806B2464..246C targets this exact native
-// 0x8003B8BC +0xC8: debug signal-tree dispatch/clear over object+9F54 and 0x18-stride signal array
-// 0x8003B984 +0x6C: emitted debug signal callback dispatch
-// 0x8003B9F0 +0x3C: debug option-change callback inserts changed index in local tree
-// 0x8003BA2C +0x6C: debug signal callback connection wrapper
-// 0x8003BA98 +0x130: emitted TSignal1 connector; original TSignal1.h allocation assertion line56
-// 0x8003BBC8 +0x40: emitted signal-list insertion wrapper
+// 0x8003B898 +0x24: emitted debug TSignal1 disconnect thunk; member-pointer806B2464..246C targets
+// this exact native 0x8003B8BC +0xC8: debug signal-tree dispatch/clear over object+9F54 and
+// 0x18-stride signal array 0x8003B984 +0x6C: emitted debug signal callback dispatch 0x8003B9F0
+// +0x3C: debug option-change callback inserts changed index in local tree 0x8003BA2C +0x6C: debug
+// signal callback connection wrapper 0x8003BA98 +0x130: emitted TSignal1 connector; original
+// TSignal1.h allocation assertion line56 0x8003BBC8 +0x40: emitted signal-list insertion wrapper
 // 0x8003BC08 +0x70: emitted signal-list link helper
 // 0x8003BC78 +0x90: emitted 0x24-byte callback-list node allocator
 // 0x8003BD08 +0x230: debug category-name switch, Debug/Cheats/Powerups/Hyper Mode/Renderer etc
@@ -75,23 +74,20 @@
 // 0x8004861C +0x20: retained native/emitted helper; exact historical name/type unresolved
 // 0x8004863C +0x28: retained native/emitted helper; exact historical name/type unresolved
 // 0x80048664 +0xB8: retained native/emitted helper; exact historical name/type unresolved
-// 0x8004871C +0x1D0: CGameDebug constructor; 0x16C options and target 0xA198-scale state initialization
-// 0x800488EC +0x40: emitted fixed debug signal-array construction helper
-// 0x8004892C +0x3C: retained native/emitted helper; exact historical name/type unresolved
-// 0x80048968 +0x38: emitted fixed optional-debug-option-array construction helper
-// 0x800489A0 +0x6C: retained native/emitted helper; exact historical name/type unresolved
-// 0x80048A0C +0x20: retained native/emitted helper; exact historical name/type unresolved
-// 0x80048A2C +0x28: retained native/emitted helper; exact historical name/type unresolved
-// 0x80048A54 +0x40: retained native/emitted helper; exact historical name/type unresolved
-// 0x80048A94 +0x18C: debug unlock-music/map rewards operation
-// 0x80048C20 +0x11C: debug option-to-player-item translation switch
-// 0x80048D3C +0xC: tiny signal-state pointer reset; raw native retained despite missing Ghidra entry
-// 0x80048D48 +0x94: debug TSignal1 connection destructor; invokes registered local disconnect thunk
-// 0x80048DDC +0x50: emitted signal-list rc_ptr release
-// 0x80048E2C +0x8C: emitted signal callback-list destructor
-// 0x80048EB8 +0xB8: emitted 12-byte-entry vector reserve
-// 0x80048F70 +0x44: emitted 12-byte-entry vector uninitialized copy
-// 0x80048FB4 +0x74: emitted callback-list node erase, called by leading debug disconnect thunk
-// 0x80049028 +0x1FC: emitted changed-option integer red-black-tree insertion
-// 0x80049224 +0x74: emitted signal-list node destructor
-// 0x80049298 +0x30: registered CGameDebug static initializer; raw native and .ctors8065B508
+// 0x8004871C +0x1D0: CGameDebug constructor; 0x16C options and target 0xA198-scale state
+// initialization 0x800488EC +0x40: emitted fixed debug signal-array construction helper 0x8004892C
+// +0x3C: retained native/emitted helper; exact historical name/type unresolved 0x80048968 +0x38:
+// emitted fixed optional-debug-option-array construction helper 0x800489A0 +0x6C: retained
+// native/emitted helper; exact historical name/type unresolved 0x80048A0C +0x20: retained
+// native/emitted helper; exact historical name/type unresolved 0x80048A2C +0x28: retained
+// native/emitted helper; exact historical name/type unresolved 0x80048A54 +0x40: retained
+// native/emitted helper; exact historical name/type unresolved 0x80048A94 +0x18C: debug
+// unlock-music/map rewards operation 0x80048C20 +0x11C: debug option-to-player-item translation
+// switch 0x80048D3C +0xC: tiny signal-state pointer reset; raw native retained despite missing
+// Ghidra entry 0x80048D48 +0x94: debug TSignal1 connection destructor; invokes registered local
+// disconnect thunk 0x80048DDC +0x50: emitted signal-list rc_ptr release 0x80048E2C +0x8C: emitted
+// signal callback-list destructor 0x80048EB8 +0xB8: emitted 12-byte-entry vector reserve 0x80048F70
+// +0x44: emitted 12-byte-entry vector uninitialized copy 0x80048FB4 +0x74: emitted callback-list
+// node erase, called by leading debug disconnect thunk 0x80049028 +0x1FC: emitted changed-option
+// integer red-black-tree insertion 0x80049224 +0x74: emitted signal-list node destructor 0x80049298
+// +0x30: registered CGameDebug static initializer; raw native and .ctors8065B508

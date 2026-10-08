@@ -34,8 +34,8 @@ inline ushort ReadDisplayListShort(const uchar* data) {
 } // namespace
 
 CFoldySurface::CFoldySurface(const TToken< CModel >& model, float lowerX, float upperX,
-                                       const CVector3f& lowerOffset, const CVector3f& middleOffset,
-                                       const CVector3f& upperOffset)
+                             const CVector3f& lowerOffset, const CVector3f& middleOffset,
+                             const CVector3f& upperOffset)
 : mModel(model, true), mPositions(nullptr), mVertexCount(0), mDisplayListSize(0) {
   const CCubeModel& cubeModel = *mModel.GetObject()->GetModelInstance();
   const rstl::vector< void* >& surfaces = cubeModel.GetModelInstance().Surfaces();
@@ -124,8 +124,8 @@ CFoldySurface::~CFoldySurface() {
 }
 
 void CFoldySurface::SetSegmentTransforms(int matrixGroup, const CTransform4f& lower,
-                                              const CTransform4f& middle,
-                                              const CTransform4f& upper) const {
+                                         const CTransform4f& middle,
+                                         const CTransform4f& upper) const {
   Mtx lowerModelView;
   Mtx middleModelView;
   Mtx upperModelView;

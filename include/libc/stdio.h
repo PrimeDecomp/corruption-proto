@@ -110,7 +110,7 @@ typedef struct {
   int NullCharDetected;
 } __InStrCtrl;
 
-#define EOF	-1L
+#define EOF -1L
 
 enum __ReadProcActions { __GetChar, __UngetChar, __CheckForError };
 
@@ -135,8 +135,9 @@ char* fgets(char* str, int count, FILE* stream);
 int fputc(int ch, FILE* stream);
 int fwide(FILE* stream, int mode);
 int __getc(FILE* stream);
-#define getc(stream) (fwide((stream), -1) >= 0 ? -1 \
-    : ((stream)->buffer_len-- ? *(stream)->buffer_ptr++ : __getc(stream)))
+#define getc(stream)                                                                               \
+  (fwide((stream), -1) >= 0 ? -1                                                                   \
+                            : ((stream)->buffer_len-- ? *(stream)->buffer_ptr++ : __getc(stream)))
 int ungetc(int ch, FILE* stream);
 #define feof(stream) ((stream)->state.eof)
 #define ferror(stream) ((stream)->state.error)

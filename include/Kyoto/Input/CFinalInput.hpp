@@ -142,25 +142,45 @@ public:
 
   bool DStart() const { return mB31_Start; }
 
-  bool PLAUp() const { return kInput_AnalogOnThreshhold < mAnaLeftY && mB25_enableAnaLeftYP ? true : false; }
+  bool PLAUp() const {
+    return kInput_AnalogOnThreshhold < mAnaLeftY && mB25_enableAnaLeftYP ? true : false;
+  }
 
-  bool PLADown() const { return -kInput_AnalogOnThreshhold > mAnaLeftY && mB25_enableAnaLeftYP ? true : false; }
+  bool PLADown() const {
+    return -kInput_AnalogOnThreshhold > mAnaLeftY && mB25_enableAnaLeftYP ? true : false;
+  }
 
-  bool PLALeft() const { return -kInput_AnalogOnThreshhold > mAnaLeftX && mB24_enableAnaLeftXP ? true : false; }
+  bool PLALeft() const {
+    return -kInput_AnalogOnThreshhold > mAnaLeftX && mB24_enableAnaLeftXP ? true : false;
+  }
 
-  bool PLARight() const { return kInput_AnalogOnThreshhold < mAnaLeftX && mB24_enableAnaLeftXP ? true : false; }
+  bool PLARight() const {
+    return kInput_AnalogOnThreshhold < mAnaLeftX && mB24_enableAnaLeftXP ? true : false;
+  }
 
-  bool PRAUp() const { return kInput_AnalogOnThreshhold < mAnaRightY && mB27_enableAnaRightYP ? true : false; }
+  bool PRAUp() const {
+    return kInput_AnalogOnThreshhold < mAnaRightY && mB27_enableAnaRightYP ? true : false;
+  }
 
-  bool PRADown() const { return -kInput_AnalogOnThreshhold > mAnaRightY && mB27_enableAnaRightYP ? true : false; }
+  bool PRADown() const {
+    return -kInput_AnalogOnThreshhold > mAnaRightY && mB27_enableAnaRightYP ? true : false;
+  }
 
-  bool PRALeft() const { return -kInput_AnalogOnThreshhold > mAnaRightX && mB26_enableAnaRightXP ? true : false; }
+  bool PRALeft() const {
+    return -kInput_AnalogOnThreshhold > mAnaRightX && mB26_enableAnaRightXP ? true : false;
+  }
 
-  bool PRARight() const { return kInput_AnalogOnThreshhold < mAnaRightX && mB26_enableAnaRightXP ? true : false; }
+  bool PRARight() const {
+    return kInput_AnalogOnThreshhold < mAnaRightX && mB26_enableAnaRightXP ? true : false;
+  }
 
-  bool PLTrigger() const { return kInput_AnalogTriggerOnThreshhold < mAnaLeftTriggerP ? true : false; }
+  bool PLTrigger() const {
+    return kInput_AnalogTriggerOnThreshhold < mAnaLeftTriggerP ? true : false;
+  }
 
-  bool PRTrigger() const { return kInput_AnalogTriggerOnThreshhold < mAnaRightTriggerP ? true : false; }
+  bool PRTrigger() const {
+    return kInput_AnalogTriggerOnThreshhold < mAnaRightTriggerP ? true : false;
+  }
 
   bool PDPUp() const { return mB31_PDPUp; }
 

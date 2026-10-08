@@ -130,13 +130,14 @@ void CAnimTreeTweenBase::BlendSegData(const CCharLayoutInfo& layout, CJointData_
   --sStack;
 }
 
-void CAnimTreeTweenBase::VGetJointData_Linear(const CCharLayoutInfo& layout, CJointData_LinearStorage& data,
-                                     const CCharAnimTime& time) const {
+void CAnimTreeTweenBase::VGetJointData_Linear(const CCharLayoutInfo& layout,
+                                              CJointData_LinearStorage& data,
+                                              const CCharAnimTime& time) const {
   BlendSegData(layout, data, time);
 }
 
 void CAnimTreeTweenBase::VGetJointData_Linear(const CCharLayoutInfo& layout,
-                                     CJointData_LinearStorage& data) const {
+                                              CJointData_LinearStorage& data) const {
   BlendSegData(layout, data, rstl::optional_object_null());
 }
 

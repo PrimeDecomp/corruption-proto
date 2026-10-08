@@ -1,9 +1,9 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x8035CB70..0x8035DABC (16 native functions).
-// Source identity: inferred descriptive filename for three-segment, two-link polymorphic IK implementation; original spelling unproven.
-// Provisional emitter: complete native/private-method group with distinct literal/table evidence.
-// Historical standalone source/header arrangement and declaration-level inlining remain unproven.
-// 0x8035CB70 +0xC: two-link solver active flag getter
+// Source identity: inferred descriptive filename for three-segment, two-link polymorphic IK
+// implementation; original spelling unproven. Provisional emitter: complete native/private-method
+// group with distinct literal/table evidence. Historical standalone source/header arrangement and
+// declaration-level inlining remain unproven. 0x8035CB70 +0xC: two-link solver active flag getter
 // 0x8035CB7C +0x8: two-link solver end segment getter
 // 0x8035CB84 +0x8: two-link solver base segment getter
 // 0x8035CB8C +0x10: two-link length aggregate getter

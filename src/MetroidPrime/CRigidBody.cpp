@@ -1,27 +1,23 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x802E56BC..0x802E7750 (40 native functions).
-// Source identity: asserted original basename CRigidBody.cpp; physics-actor rigid-body resource, collision update andregistered manager helpers.
-// Complete emitted native/helper inventory retained; no speculative declarations.
-// 0x802E56BC +0x4: empty rigid-body hook; called bylocal802E5B8C
-// 0x802E56C0 +0x1B4: rigid-body collision debug rendering
-// 0x802E5874 +0x90: owned native method/helper retained; exact source-level name unresolved
-// 0x802E5904 +0x60: owned native method/helper retained; exact source-level name unresolved
-// 0x802E5964 +0xAC: owned native method/helper retained; exact source-level name unresolved
-// 0x802E5A10 +0x148: owned native method/helper retained; exact source-level name unresolved
-// 0x802E5B58 +0x34: owned native method/helper retained; exact source-level name unresolved
-// 0x802E5B8C +0x20: rigid-body empty hook forwarding wrapper
-// 0x802E5BAC +0x68: rigid-body RDBY resource factory; source512
-// 0x802E5C14 +0xB8: emitted rigid-body resource token ownership wrapper
-// 0x802E5CCC +0x90: emitted rigid-body resource object-owner destructor;806BC9D4
-// 0x802E5D5C +0x8C: emitted rigid-body resource record destructor
-// 0x802E5DE8 +0x54: emitted rigid-body resource vector destructor
-// 0x802E5E3C +0x2C: emitted rigid-body resource token construction forwarding
-// 0x802E5E68 +0xB0: emitted rigid-body resource object-owner construction; TToken.h70
-// 0x802E5F18 +0x64: emitted rigid-body resource auto_ptr destructor
-// 0x802E5F7C +0x160: rigid-body resource constructor andsignal callback subscription
-// 0x802E60DC +0x130: emitted signal subscription allocation; TSignal2.h55
-// 0x802E620C +0x40: emitted signal-list insertion wrapper
-// 0x802E624C +0x70: emitted signal-list insertion
+// Source identity: asserted original basename CRigidBody.cpp; physics-actor rigid-body resource,
+// collision update andregistered manager helpers. Complete emitted native/helper inventory
+// retained; no speculative declarations. 0x802E56BC +0x4: empty rigid-body hook; called
+// bylocal802E5B8C 0x802E56C0 +0x1B4: rigid-body collision debug rendering 0x802E5874 +0x90: owned
+// native method/helper retained; exact source-level name unresolved 0x802E5904 +0x60: owned native
+// method/helper retained; exact source-level name unresolved 0x802E5964 +0xAC: owned native
+// method/helper retained; exact source-level name unresolved 0x802E5A10 +0x148: owned native
+// method/helper retained; exact source-level name unresolved 0x802E5B58 +0x34: owned native
+// method/helper retained; exact source-level name unresolved 0x802E5B8C +0x20: rigid-body empty
+// hook forwarding wrapper 0x802E5BAC +0x68: rigid-body RDBY resource factory; source512 0x802E5C14
+// +0xB8: emitted rigid-body resource token ownership wrapper 0x802E5CCC +0x90: emitted rigid-body
+// resource object-owner destructor;806BC9D4 0x802E5D5C +0x8C: emitted rigid-body resource record
+// destructor 0x802E5DE8 +0x54: emitted rigid-body resource vector destructor 0x802E5E3C +0x2C:
+// emitted rigid-body resource token construction forwarding 0x802E5E68 +0xB0: emitted rigid-body
+// resource object-owner construction; TToken.h70 0x802E5F18 +0x64: emitted rigid-body resource
+// auto_ptr destructor 0x802E5F7C +0x160: rigid-body resource constructor andsignal callback
+// subscription 0x802E60DC +0x130: emitted signal subscription allocation; TSignal2.h55 0x802E620C
+// +0x40: emitted signal-list insertion wrapper 0x802E624C +0x70: emitted signal-list insertion
 // 0x802E62BC +0x90: emitted signal-list node allocation/copy
 // 0x802E634C +0x64: emitted nonstatic two-argument signal callback trampoline
 // 0x802E63B0 +0x3C: rigid-body manager queued-body subscription handler

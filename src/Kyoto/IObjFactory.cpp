@@ -3,4 +3,5 @@
 // Source identity: inferred IObjFactory.cpp for the sole ordinary abstract factory-base method.
 // Provisional standalone emitter; historical basename/source-header arrangement unproven.
 // The constructor remains emitted in CCECharacterFactory; no helper migration or inline claim.
-// 0x805802DC +0x48: abstract IObjFactory deleting destructor; install base table and optionally free
+// 0x805802DC +0x48: abstract IObjFactory deleting destructor; install base table and optionally
+// free

@@ -16,52 +16,33 @@
 ///////////////////////////////////////////////////////////////////////////////
 // namespace LuaPlus
 ///////////////////////////////////////////////////////////////////////////////
-namespace LuaPlus
-{
+namespace LuaPlus {
 
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 /**
-	A helper class for automatically setting the stack state back to point of
-	LuaAutoBlock creation.
+        A helper class for automatically setting the stack state back to point of
+        LuaAutoBlock creation.
 **/
-class LuaAutoBlock
-{
+class LuaAutoBlock {
 public:
-	LuaAutoBlock(LuaState* state) :
-		m_state(*state),
-		m_stackTop(lua_gettop(m_state))
-	{
-	}
+  LuaAutoBlock(LuaState* state) : m_state(*state), m_stackTop(lua_gettop(m_state)) {}
 
-	LuaAutoBlock(lua_State* state) :
-		m_state(state),
-		m_stackTop(lua_gettop(m_state))
-	{
-	}
+  LuaAutoBlock(lua_State* state) : m_state(state), m_stackTop(lua_gettop(m_state)) {}
 
-	LuaAutoBlock(LuaStackObject& object) :
-		m_state(object),
-		m_stackTop(lua_gettop(m_state))
-	{
-	}
+  LuaAutoBlock(LuaStackObject& object) : m_state(object), m_stackTop(lua_gettop(m_state)) {}
 
-	~LuaAutoBlock()
-	{
-		lua_settop(m_state, m_stackTop);
-	}
+  ~LuaAutoBlock() { lua_settop(m_state, m_stackTop); }
 
 private:
-	LuaAutoBlock(const LuaAutoBlock& src);					// Not implemented
-	const LuaAutoBlock& operator=(const LuaAutoBlock& src);	// Not implemented
+  LuaAutoBlock(const LuaAutoBlock& src);                  // Not implemented
+  const LuaAutoBlock& operator=(const LuaAutoBlock& src); // Not implemented
 
-	lua_State* m_state;
-	int m_stackTop;
+  lua_State* m_state;
+  int m_stackTop;
 };
 
-
 } // namespace LuaPlus
-
 
 #endif // LUAAUTOBLOCK_H

@@ -16,7 +16,7 @@
 namespace LuaPlus {
 class LuaState;
 
-void ScriptFunctionsRegister( LuaPlus::LuaState* state );
+void ScriptFunctionsRegister(LuaPlus::LuaState* state);
 } // namespace LuaPlus
 
 #endif // LUAPLUSFUNCTIONS_H

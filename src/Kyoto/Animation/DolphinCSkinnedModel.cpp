@@ -87,8 +87,7 @@ void CSkinnedModel::DolphinDrawInternal(const SSkinningWorkspace& workspace, uin
   SSkinningMatrices* matrices = workspace.mMatrices;
   if (matrices == nullptr) {
     matrices = static_cast< SSkinningMatrices* >(
-        GPUMemory::EnsureAllocation(mSkinRules->GetNumVirtualBones() *
-                                            sizeof(SSkinningMatrices)));
+        GPUMemory::EnsureAllocation(mSkinRules->GetNumVirtualBones() * sizeof(SSkinningMatrices)));
     BuildSkinningMatrices(workspace.mTransforms, matrices, workspace.mUniformScale);
   }
   CGX::SetArray(GX_POS_MTX_ARRAY, matrices, sizeof(SSkinningMatrices));

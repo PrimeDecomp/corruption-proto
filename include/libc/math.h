@@ -116,7 +116,7 @@ _MATH_INLINE float powf(float __x, float __y) { return pow(__x, __y); }
 #define __UHI(x) (*(_UINT32*)&x)
 #endif
 
-#define signbit(x)((int)(__HI(x)&0x80000000))
+#define signbit(x) ((int)(__HI(x) & 0x80000000))
 
 /* The pre-2.4.7 runtime headers use different floating-point classification values.
    Echoes' prebuilt MSL_C (built with a newer compiler) still uses them: MSL_OLD_FP_CLASSIFY. */
@@ -247,11 +247,10 @@ double sqrt(double x);
 #endif
 
 static inline float ldexpf(float x, int exp) { return (float)ldexp((double)x, exp); }
-double frexp(double, int *exp);
+double frexp(double, int* exp);
 static inline double scalbn(double x, int n) { return ldexp(x, n); }
 static inline float scalbnf(float x, int n) { return (float)ldexpf(x, n); }
 double nextafter(double, double);
-
 
 #ifdef __cplusplus
 }

@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 CPakFile::CResInfo::CResInfo(CAssetId id, uint fourCC, uint offset, uint size, uint flags,
-                            uint groupedSize)
+                             uint groupedSize)
 : mId(id) {
   const uint typeIdx = CFactoryMgr::FourCCToTypeIdx(fourCC);
   mData[0] = static_cast< uchar >(typeIdx | (flags != 0 ? 0x80 : 0));
@@ -37,7 +37,9 @@ uint CPakFile::CResInfo::GetSize() const {
 
 bool CPakFile::CResInfo::IsCompressed() const { return (mData[0] & ~0x7f) != 0; }
 
-void CPakFile::CResInfo::SetLookaheadAfterResourceSize(uint size) { mData[6] = static_cast< uchar >(size >> 5); }
+void CPakFile::CResInfo::SetLookaheadAfterResourceSize(uint size) {
+  mData[6] = static_cast< uchar >(size >> 5);
+}
 
 uint CPakFile::CResInfo::GetLookaheadAfterResourceSize() const { return mData[6] << 5; }
 
@@ -118,8 +120,7 @@ void CPakFile::InitialHeaderLoad() {
     const FourCC type = in.ReadInt32();
     const CAssetId id = CAssetId(in);
     const rstl::string name = CStringExtras::ReadString(in);
-    mNameList.push_back_unsafe(
-        rstl::pair< rstl::string, SObjectTag >(name, SObjectTag(type, id)));
+    mNameList.push_back_unsafe(rstl::pair< rstl::string, SObjectTag >(name, SObjectTag(type, id)));
   }
 
   mResTableCount = in.ReadInt32();
@@ -140,17 +141,16 @@ void CPakFile::InitialHeaderLoad() {
 
 void CPakFile::DataLoad() {
   mDvdReq = rstl::auto_ptr< CDvdRequest >();
-  CMemoryInStream in(&mHeaderData[mResTableOffset],
-                     mHeaderData.size() - mResTableOffset);
+  CMemoryInStream in(&mHeaderData[mResTableOffset], mHeaderData.size() - mResTableOffset);
   LoadResourceTable(in);
   mAsyncLoadPhase = kAP_Loaded;
 
   if (mWorldPak) {
     const uint size = (mResTableCount * sizeof(CResInfo) + 31) & ~31;
     mpARAMHeader = CARAMManager::Alloc(size);
-    const uint handle = CARAMManager::DMAToARAM(mResInfoBuckets.data(),
-                                                 const_cast< void* >(mpARAMHeader), size,
-                                                 CARAMManager::kDMAPrio_One);
+    const uint handle =
+        CARAMManager::DMAToARAM(mResInfoBuckets.data(), const_cast< void* >(mpARAMHeader), size,
+                                CARAMManager::kDMAPrio_One);
     CARAMManager::WaitForDMACompletion(handle);
   }
 
@@ -213,8 +213,7 @@ const CPakFile::CResInfo* CPakFile::GetResInfo(const CAssetId& id) const {
   if (mStashedInARAM)
     return nullptr;
   const uint bucket = static_cast< uint >(id.Value()) & 0xff;
-  rstl::vector< CResInfo >::const_iterator first =
-      mResInfoBuckets.begin() + mBucketOffsets[bucket];
+  rstl::vector< CResInfo >::const_iterator first = mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
       mResInfoBuckets.begin() + mBucketOffsets[bucket + 1];
   static rstl::less< CResInfo > compare;
@@ -229,8 +228,7 @@ const CPakFile::CResInfo* CPakFile::GetResInfoForLoadDirectionless(const CAssetI
   if (mStashedInARAM)
     return nullptr;
   const uint bucket = static_cast< uint >(id.Value()) & 0xff;
-  rstl::vector< CResInfo >::const_iterator first =
-      mResInfoBuckets.begin() + mBucketOffsets[bucket];
+  rstl::vector< CResInfo >::const_iterator first = mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
       mResInfoBuckets.begin() + mBucketOffsets[bucket + 1];
   static rstl::less< CResInfo > compare;
@@ -260,8 +258,7 @@ const CPakFile::CResInfo* CPakFile::GetResInfoForLoadPreferForward(const CAssetI
   if (mStashedInARAM)
     return nullptr;
   const uint bucket = static_cast< uint >(id.Value()) & 0xff;
-  rstl::vector< CResInfo >::const_iterator first =
-      mResInfoBuckets.begin() + mBucketOffsets[bucket];
+  rstl::vector< CResInfo >::const_iterator first = mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
       mResInfoBuckets.begin() + mBucketOffsets[bucket + 1];
   static rstl::less< CResInfo > compare;
@@ -319,9 +316,8 @@ void CPakFile::EnsureWorldPakReady() {
   if (mWorldPak && mStashedInARAM) {
     rstl::vector< CResInfo > resources(mResTableCount);
     const uint size = (mResTableCount * sizeof(CResInfo) + 31) & ~31;
-    CARAMManager::WaitForDMACompletion(
-        CARAMManager::DMAToMRAM(const_cast< void* >(mpARAMHeader), resources.data(), size,
-                                CARAMManager::kDMAPrio_One));
+    CARAMManager::WaitForDMACompletion(CARAMManager::DMAToMRAM(
+        const_cast< void* >(mpARAMHeader), resources.data(), size, CARAMManager::kDMAPrio_One));
     RebuildResourceLists(resources);
     if (mBuildDepList) {
       mDepList.reserve(mResTableCount);

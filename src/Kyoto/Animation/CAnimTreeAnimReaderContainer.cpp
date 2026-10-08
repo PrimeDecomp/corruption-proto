@@ -73,13 +73,13 @@ void CAnimTreeAnimReaderContainer::VGetSegStatementSet(const CSegIdList& list,
 }
 
 void CAnimTreeAnimReaderContainer::VGetJointData_Linear(const CCharLayoutInfo& layout,
-                                               CJointData_LinearStorage& data,
-                                               const CCharAnimTime& time) const {
+                                                        CJointData_LinearStorage& data,
+                                                        const CCharAnimTime& time) const {
   mReader->VGetJointData_Linear(layout, data, time);
 }
 
 void CAnimTreeAnimReaderContainer::VGetJointData_Linear(const CCharLayoutInfo& layout,
-                                               CJointData_LinearStorage& data) const {
+                                                        CJointData_LinearStorage& data) const {
   mReader->VGetJointData_Linear(layout, data);
 }
 

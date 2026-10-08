@@ -1,7 +1,7 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x802E517C..0x802E56BC (10 native functions).
-// Source identity: asserted original basename CScriptShipCommandPath.cpp; entity-owned ship command spline/settings.
-// Complete emitted native/helper inventory retained; no speculative declarations.
+// Source identity: asserted original basename CScriptShipCommandPath.cpp; entity-owned ship command
+// spline/settings. Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x802E517C +0x244: ShipCommandPath tagged loader; source139 and1C4-byte allocation
 // 0x802E53C0 +0x64: ship command path settings destructor
 // 0x802E5424 +0x64: ship command path settings defaults constructor

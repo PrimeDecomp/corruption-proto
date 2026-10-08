@@ -96,7 +96,7 @@ private:
 };
 CHECK_SIZEOF(CModel, 0x34)
 
-CFactoryFnReturn FModelFactory(const SObjectTag& tag, const rstl::auto_ptr< uchar >& ptr,
-                                     int len, const CVParamTransfer& xfer);
+CFactoryFnReturn FModelFactory(const SObjectTag& tag, const rstl::auto_ptr< uchar >& ptr, int len,
+                               const CVParamTransfer& xfer);
 
 #endif // _CMODEL

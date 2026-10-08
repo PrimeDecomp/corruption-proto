@@ -107,8 +107,6 @@ private:
   }
 };
 
-
-
 template < typename T, int N >
 inline reserved_vector< T, N >& reserved_vector< T, N >::operator=(const reserved_vector& other) {
   if (this != &other) {

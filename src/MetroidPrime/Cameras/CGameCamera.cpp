@@ -10,8 +10,8 @@
 // 0x801EF3A8 +0x50: emitted native method/helper; original source-level symbol unresolved
 // 0x801EF3F8 +0x50: emitted native method/helper; original source-level symbol unresolved
 // 0x801EF448 +0x48: emitted native method/helper; original source-level symbol unresolved
-// 0x801EF490 +0x638: sphere projection helper; CTransitionCamera class diagnostic, not cpp assertion
-// 0x801EFAC8 +0x4: emitted native method/helper; original source-level symbol unresolved
+// 0x801EF490 +0x638: sphere projection helper; CTransitionCamera class diagnostic, not cpp
+// assertion 0x801EFAC8 +0x4: emitted native method/helper; original source-level symbol unresolved
 // 0x801EFACC +0x20: emitted native method/helper; original source-level symbol unresolved
 // 0x801EFAEC +0x4: emitted native method/helper; original source-level symbol unresolved
 // 0x801EFAF0 +0x24: emitted native method/helper; original source-level symbol unresolved

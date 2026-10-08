@@ -1,10 +1,10 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x80308934..0x80309050 (16 native functions).
-// Source identity: inferred descriptive filename for a string-property/listener manager; original class spelling and basename unproven.
-// Provisional emitting boundary: complete native interval; historical standalone placement unproven.
-// Retain every emitted helper; source inline declarations and compiler settings remain uncertain.
-// 0x80308934 +0xE8: set/insert string property, then notify listeners
-// 0x80308A1C +0x7C: notify listeners via dynamic callback plus context and argument
+// Source identity: inferred descriptive filename for a string-property/listener manager; original
+// class spelling and basename unproven. Provisional emitting boundary: complete native interval;
+// historical standalone placement unproven. Retain every emitted helper; source inline declarations
+// and compiler settings remain uncertain. 0x80308934 +0xE8: set/insert string property, then notify
+// listeners 0x80308A1C +0x7C: notify listeners via dynamic callback plus context and argument
 // 0x80308A98 +0x28: property-list insertion wrapper
 // 0x80308AC0 +0x98: allocate/link node with two owned strings
 // 0x80308B58 +0x88: mutable linear string-key lookup

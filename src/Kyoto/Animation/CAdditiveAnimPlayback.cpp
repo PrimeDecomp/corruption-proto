@@ -21,14 +21,14 @@ void CAdditiveAnimPlayback::SetWeight(float weight) {
 
   if (mPhase == kPP_FadingIn) {
     mCurWeight = mInfo.GetFadeInTime() > 0.f
-                        ? mTargetWeight * (mWeightTimer / mInfo.GetFadeInTime())
-                        : mTargetWeight;
+                     ? mTargetWeight * (mWeightTimer / mInfo.GetFadeInTime())
+                     : mTargetWeight;
     return;
   }
   if (mPhase == kPP_FadingOut) {
     mCurWeight = mInfo.GetFadeOutTime() > 0.f
-                        ? mTargetWeight * (mWeightTimer / mInfo.GetFadeOutTime())
-                        : mTargetWeight;
+                     ? mTargetWeight * (mWeightTimer / mInfo.GetFadeOutTime())
+                     : mTargetWeight;
     return;
   }
   mCurWeight = mTargetWeight;

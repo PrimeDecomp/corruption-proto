@@ -16,4 +16,5 @@
 // 0x80316140 +0xA0: emitted main-family native method/helper; exact source-level name unresolved
 // 0x803161E0 +0x164: Phazon beam deleting destructor; optional token cleanup and gun-weapon base
 // 0x80316344 +0x94: Phazon beam constructor; weapon type 3, vtable 806BEBB8
-// 0x803163D8 +0x30: registered 0x30-byte initializer; seven independent SDA constants; .ctors 0x8065BA34
+// 0x803163D8 +0x30: registered 0x30-byte initializer; seven independent SDA constants; .ctors
+// 0x8065BA34

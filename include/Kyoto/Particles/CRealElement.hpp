@@ -434,7 +434,8 @@ class CREPerlinNoiseOctave2d : public CRealElement {
   CIntElement* x14_;
 
 public:
-  CREPerlinNoiseOctave2d(CRealElement* a, CRealElement* b, CRealElement* c, CRealElement* d, CIntElement* e);
+  CREPerlinNoiseOctave2d(CRealElement* a, CRealElement* b, CRealElement* c, CRealElement* d,
+                         CIntElement* e);
   ~CREPerlinNoiseOctave2d() override;
   bool GetValue(int frame, float& valOut) const override;
 };
@@ -459,7 +460,8 @@ class CREPerlinNoiseOctave4d : public CRealElement {
   CIntElement* x14_;
 
 public:
-  CREPerlinNoiseOctave4d(CVectorElement* a, CRealElement* b, CRealElement* c, CRealElement* d, CIntElement* e);
+  CREPerlinNoiseOctave4d(CVectorElement* a, CRealElement* b, CRealElement* c, CRealElement* d,
+                         CIntElement* e);
   ~CREPerlinNoiseOctave4d() override;
   bool GetValue(int frame, float& valOut) const override;
 };

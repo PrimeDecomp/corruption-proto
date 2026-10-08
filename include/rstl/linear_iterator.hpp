@@ -15,9 +15,18 @@ public:
   const_linear_iterator(const Container* owner, int index) : mOwner(owner), mIndex(index) {}
 
   const T& operator*() const { return (*mOwner)[mIndex]; }
-  const_linear_iterator& operator++() { ++mIndex; return *this; }
-  const_linear_iterator& operator+=(int count) { mIndex += count; return *this; }
-  const_linear_iterator& operator-=(int count) { mIndex -= count; return *this; }
+  const_linear_iterator& operator++() {
+    ++mIndex;
+    return *this;
+  }
+  const_linear_iterator& operator+=(int count) {
+    mIndex += count;
+    return *this;
+  }
+  const_linear_iterator& operator-=(int count) {
+    mIndex -= count;
+    return *this;
+  }
   const_linear_iterator operator-(int count) const {
     return const_linear_iterator(mOwner, mIndex - count);
   }

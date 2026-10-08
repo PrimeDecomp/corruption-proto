@@ -20,5 +20,6 @@
 // 0x8027F890 +0x330: owned native method/helper retained; exact source-level name unresolved
 // 0x8027FBC0 +0x20: owned native method/helper retained; exact source-level name unresolved
 // 0x8027FBE0 +0xD0: plant scarab swarm destructor; vtable806BA2E0 andCSwarmBasics cleanup
-// 0x8027FCB0 +0x4C0: plant scarab swarm constructor; CSwarmBasics base,vtable806BA2E0,source100/103 andvector asserts
-// 0x80280170 +0x30: registered static initializer; .ctors8065B938,seven independent SDA constants
+// 0x8027FCB0 +0x4C0: plant scarab swarm constructor; CSwarmBasics base,vtable806BA2E0,source100/103
+// andvector asserts 0x80280170 +0x30: registered static initializer; .ctors8065B938,seven
+// independent SDA constants

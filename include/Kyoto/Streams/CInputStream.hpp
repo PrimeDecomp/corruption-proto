@@ -161,8 +161,10 @@ inline rstl::reserved_vector< T, N >::reserved_vector(CInputStream& in) : mCount
 
 #include "rstl/red_black_tree.hpp"
 template < typename T, typename P, int U, typename S, typename Cmp, typename Alloc >
-inline rstl::red_black_tree< T, P, U, S, Cmp, Alloc >::red_black_tree(
-    CInputStream& in, const S& selector, const Cmp& cmp, const Alloc& alloc)
+inline rstl::red_black_tree< T, P, U, S, Cmp, Alloc >::red_black_tree(CInputStream& in,
+                                                                      const S& selector,
+                                                                      const Cmp& cmp,
+                                                                      const Alloc& alloc)
 : mSelector(selector), mCmp(cmp), mAllocator(alloc), mCount(0) {
   const int count = in.Get< int >();
   for (int i = 0; i < count; ++i) {

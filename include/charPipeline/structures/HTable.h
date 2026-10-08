@@ -7,15 +7,16 @@
 extern "C" {
 #endif
 
-typedef u16 (DSHashFunc)(Ptr);
+typedef u16(DSHashFunc)(Ptr);
 
 typedef struct {
-    DSList* table;
-    u16 tableSize;
-    DSHashFunc* hash;
+  DSList* table;
+  u16 tableSize;
+  DSHashFunc* hash;
 } DSHashTable;
 
-void DSInitHTable(DSHashTable* hTable, u16 size, DSList* listArray, DSHashFunc* hashFunc, Ptr obj, DSLinkPtr link);
+void DSInitHTable(DSHashTable* hTable, u16 size, DSList* listArray, DSHashFunc* hashFunc, Ptr obj,
+                  DSLinkPtr link);
 void DSInsertHTableObj(DSHashTable* hTable, Ptr obj);
 void DSHTableToList(DSHashTable* hTable, DSList* list);
 void* DSNextHTableObj(DSHashTable* hTable, Ptr obj);

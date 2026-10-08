@@ -4,6 +4,4 @@
 uint CParticleGen::sDrawFlags;
 uint CParticleGen::sDrawMask;
 
-void CParticleGen::AddModifier(CWarp* warp) {
-  mModifiersList.push_back(warp);
-}
+void CParticleGen::AddModifier(CWarp* warp) { mModifiersList.push_back(warp); }

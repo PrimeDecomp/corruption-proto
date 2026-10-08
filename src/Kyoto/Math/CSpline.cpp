@@ -5,9 +5,8 @@
 #include "Kyoto/Math/CUnitVector3f.hpp"
 
 CSpline::CSpline(float duration, uint flags, const CMayaSpline& positionTimeSpline,
-                         const CMayaSpline& lookAtTimeSpline,
-                         CMotionSpline::ESplineType positionType,
-                         CMotionSpline::ESplineType lookAtType)
+                 const CMayaSpline& lookAtTimeSpline, CMotionSpline::ESplineType positionType,
+                 CMotionSpline::ESplineType lookAtType)
 : mPositionSpline(false, duration, positionType)
 , mPositionTimeSpline(positionTimeSpline)
 , mLookAtSpline(false, duration, lookAtType)
@@ -25,8 +24,8 @@ CSpline::CSpline(float duration, uint flags, const CMayaSpline& positionTimeSpli
 CSpline::~CSpline() {}
 
 void CSpline::Initialise(const rstl::vector< CVector3f >& positions,
-                             const rstl::vector< CQuaternion >& orientations,
-                             const rstl::vector< CVector3f >& lookAtPoints) {
+                         const rstl::vector< CQuaternion >& orientations,
+                         const rstl::vector< CVector3f >& lookAtPoints) {
   mPositionSpline.Initialise(positions);
   mLookAtSpline.Initialise(lookAtPoints);
   mOrientations.clear();

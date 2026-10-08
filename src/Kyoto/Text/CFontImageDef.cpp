@@ -28,6 +28,4 @@ bool CFontImageDef::IsLoaded() const {
   return true;
 }
 
-int CFontImageDef::CalculateBaseline() const {
-  return (2.5f * GetHeight()) / 3.f;
-}
+int CFontImageDef::CalculateBaseline() const { return (2.5f * GetHeight()) / 3.f; }

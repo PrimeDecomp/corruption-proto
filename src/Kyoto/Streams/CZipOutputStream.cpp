@@ -47,14 +47,14 @@ bool CZipOutputStream::Process(bool finish) {
 CZipOutputStream::~CZipOutputStream() {
   Finish();
   deflateEnd(mStream.get());
-
 }
 
 void CZipOutputStream::Finish() {
   DoFlush();
   mStream->next_in = 0;
   mStream->avail_in = 0;
-  while (!Process(true)) {}
+  while (!Process(true)) {
+  }
 }
 
 void CZipOutputStream::Write(const void* data, unsigned long length) {

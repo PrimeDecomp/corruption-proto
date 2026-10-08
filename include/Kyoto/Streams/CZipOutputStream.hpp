@@ -18,7 +18,7 @@ public:
 private:
   COutputStream* mOutput;
   int mCompressedBytesWritten;
-  rstl::auto_ptr<z_stream> mStream;
+  rstl::auto_ptr< z_stream > mStream;
   bool mFinished;
 };
 

@@ -263,7 +263,7 @@ void CAnimSource::GetSegStatementSet(const CSegIdList& list, CSegStatementSet& s
 }
 
 void CAnimSource::GetJointData_Linear(const CCharLayoutInfo& layout, CJointData_LinearStorage& data,
-                             const CCharAnimTime& time) const {
+                                      const CCharAnimTime& time) const {
   const float frameTime = time.GetSeconds();
   const float interval = GetTimePerFrame().GetSeconds();
 #ifdef __MWERKS__

@@ -2,5 +2,19 @@
  * G2MEAB WorldFormat/CCollidableTranslatedConvexPH.cpp translation-unit scaffold.
  * .text: 0x805B36EC..0x805B5D10 (30 native functions, including emitted helpers).
  * NonMatching: implementation has not been reconstructed.
- * Boundary evidence: Complete30-native translated-convex/plane-polyhedron family starts CastRay5B36EC after TriangleCollisionCache final allocator. Collision and boolean wrappers5B38B8..5B472C, primitive type5B49A8, local/world bounds5B49B4/5B4A18, destructor5B4AB0 and constructor5B4B28 share vtable806E2570 and baseCollisionPrimitive; constructor stores nonowned data+14 and owned pointer+10. GetType5B4B80 literally registers CCollidableTranslatedConvexPH with setter5B5D00. Preserve underlying convex/convex test5B4BA0, boolean5B5248, segment-plane clipping5B548C, point/transform tests5B5698/5B56F8, plane-edge lookup5B5788, data getters5B57D8/5B57E0, recursively collected edge indices5B57E8 with three vector.h482 assertions, build planes5B5B30, data destructor5B5C44/constructor5B5CB0, setter5B5D00 and table getter5B5D08+8. Data builder uses tree surfaces/triangle edges, plane array and ushortvector; allocator/vector helpers called elsewhere remain external. Next5B5D10 is an adjustor thunk subtracting0x20 and branching to5C2318, unrelated to this primitive family. No same named counterpart in Prime/Echoes; both primitive/OBBTree/collider source/header/native inventories checked. Filename inferred from individually inspected literal, not from generic PointInPlanes fingerprint.
+ * Boundary evidence: Complete30-native translated-convex/plane-polyhedron family starts
+ * CastRay5B36EC after TriangleCollisionCache final allocator. Collision and boolean
+ * wrappers5B38B8..5B472C, primitive type5B49A8, local/world bounds5B49B4/5B4A18, destructor5B4AB0
+ * and constructor5B4B28 share vtable806E2570 and baseCollisionPrimitive; constructor stores
+ * nonowned data+14 and owned pointer+10. GetType5B4B80 literally registers
+ * CCollidableTranslatedConvexPH with setter5B5D00. Preserve underlying convex/convex test5B4BA0,
+ * boolean5B5248, segment-plane clipping5B548C, point/transform tests5B5698/5B56F8, plane-edge
+ * lookup5B5788, data getters5B57D8/5B57E0, recursively collected edge indices5B57E8 with three
+ * vector.h482 assertions, build planes5B5B30, data destructor5B5C44/constructor5B5CB0, setter5B5D00
+ * and table getter5B5D08+8. Data builder uses tree surfaces/triangle edges, plane array and
+ * ushortvector; allocator/vector helpers called elsewhere remain external. Next5B5D10 is an
+ * adjustor thunk subtracting0x20 and branching to5C2318, unrelated to this primitive family. No
+ * same named counterpart in Prime/Echoes; both primitive/OBBTree/collider source/header/native
+ * inventories checked. Filename inferred from individually inspected literal, not from generic
+ * PointInPlanes fingerprint.
  */

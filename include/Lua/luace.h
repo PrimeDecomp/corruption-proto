@@ -12,8 +12,8 @@
 #define isprint(c)			( (0x20 <= (c) && (c) <= 0x7E) )
 #define ispunct(c)			( isprint(c) && ( !isalnum(c) && !isspace(c) ))
 #define isupper(c)			( 'A' <= (c) && (c) <= 'Z' )
-#define isxdigit(c)			( isdigit(c) || ('a' <= (c) && (c) <= 'f') || ('a' <= (c) && (c) <= 'f') )
-#endif
+#define isxdigit(c)			( isdigit(c) || ('a' <= (c) && (c) <= 'f') || ('a' <= (c) &&
+(c) <= 'f') ) #endif
 */
 #ifndef BUFSIZ
 #define BUFSIZ 1024
@@ -27,15 +27,15 @@
 #define L_tmpnam MAX_PATH
 #endif
 
-const char *getenv( const char *name );
-FILE *tmpfile();
+const char* getenv(const char* name);
+FILE* tmpfile();
 
-int system( const char * );
-int rename( const char *, const char * );
-int remove( const char * );
-char *tmpnam( char * );
+int system(const char*);
+int rename(const char*, const char*);
+int remove(const char*);
+char* tmpnam(char*);
 
-//char *setlocale( int category, const char *locale );
+// char *setlocale( int category, const char *locale );
 
 #define strerror(errnum) ("(unsupported)")
 extern int errno;

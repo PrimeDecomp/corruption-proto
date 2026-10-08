@@ -128,9 +128,9 @@ CCharAnimTime CAnimTreeTransition::VGetTimeRemaining() const {
 
 CSteadyStateAnimInfo CAnimTreeTransition::VGetSteadyStateAnimInfo() const {
   CSteadyStateAnimInfo info = mB->VGetSteadyStateAnimInfo();
-  return CSteadyStateAnimInfo(
-      info.IsLooping(), rstl::max_val< const CCharAnimTime& >(mTransDur, info.GetDuration()),
-      info.GetOffset());
+  return CSteadyStateAnimInfo(info.IsLooping(),
+                              rstl::max_val< const CCharAnimTime& >(mTransDur, info.GetDuration()),
+                              info.GetOffset());
 }
 
 rstl::string CAnimTreeTransition::CreatePrimitiveName(const rstl::ncrc_ptr< CAnimTreeNode >& a,

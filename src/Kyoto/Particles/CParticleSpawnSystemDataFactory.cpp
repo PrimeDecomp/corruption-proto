@@ -7,7 +7,7 @@
 #include "Kyoto/Particles/CSpawnSystemKeyframeData.hpp"
 
 CFactoryFnReturn FSpawnParticleSystemDataFactory(const SObjectTag& tag, CInputStream& in,
-                                                const CVParamTransfer& transfer) {
+                                                 const CVParamTransfer& transfer) {
   rstl::rc_ptr< IVParamObj > obj = transfer.GetObj();
   CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
   CSpawnSystemDescription* desc = CParticleSpawnSystemDataFactory::GetGeneratorDesc(in, pool);
@@ -15,13 +15,13 @@ CFactoryFnReturn FSpawnParticleSystemDataFactory(const SObjectTag& tag, CInputSt
 }
 
 CSpawnSystemDescription* CParticleSpawnSystemDataFactory::GetGeneratorDesc(CInputStream& in,
-                                                                         CSimplePool* pool) {
+                                                                           CSimplePool* pool) {
   rstl::vector< CAssetId > resources;
   return CreateGeneratorDescription(in, pool);
 }
 
-CSpawnSystemDescription* CParticleSpawnSystemDataFactory::CreateGeneratorDescription(
-    CInputStream& in, CSimplePool* pool) {
+CSpawnSystemDescription*
+CParticleSpawnSystemDataFactory::CreateGeneratorDescription(CInputStream& in, CSimplePool* pool) {
   const FourCC classId = CParticleDataFactory::GetClassID(in);
   if (classId != 'SPSM') {
     return nullptr;
@@ -32,7 +32,7 @@ CSpawnSystemDescription* CParticleSpawnSystemDataFactory::CreateGeneratorDescrip
 }
 
 bool CParticleSpawnSystemDataFactory::CreateSPSM(CSpawnSystemDescription* desc, CInputStream& in,
-                                               CSimplePool* pool) {
+                                                 CSimplePool* pool) {
   bool done = false;
   CRandom16 random(99);
   while (!done) {

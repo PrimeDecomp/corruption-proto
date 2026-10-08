@@ -23,6 +23,6 @@ private:
 CHECK_SIZEOF(CAnimCharacterSet, 0x7c)
 
 CFactoryFnReturn FAnimCharacterSet(const SObjectTag& tag, CInputStream& in,
-                                         const CVParamTransfer& xfer);
+                                   const CVParamTransfer& xfer);
 
 #endif // _CANIMCHARACTERSET

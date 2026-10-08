@@ -108,24 +108,25 @@
 // 0x802AB178 +0x58: owned native method/helper retained; exact source-level name unresolved
 // 0x802AB1D0 +0x40: owned native method/helper retained; exact source-level name unresolved
 // 0x802AB210 +0x40: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB250 +0x190: emitted area sort; both-reference specific StateManager fingerprint,retainedhere
-// 0x802AB3E0 +0x98: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB478 +0x74: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB4EC +0x88: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB574 +0x20: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB594 +0x24: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB5B8 +0x88: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB640 +0x24: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB664 +0x60: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB6C4 +0x1B8: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB87C +0x88: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB904 +0x74: owned native method/helper retained; exact source-level name unresolved
-// 0x802AB978 +0x88: owned native method/helper retained; exact source-level name unresolved
-// 0x802ABA00 +0xAC: owned native method/helper retained; exact source-level name unresolved
-// 0x802ABAAC +0x178: owned native method/helper retained; exact source-level name unresolved
-// 0x802ABC24 +0x58: owned native method/helper retained; exact source-level name unresolved
-// 0x802ABC7C +0x174: owned native method/helper retained; exact source-level name unresolved
-// 0x802ABDF0 +0x58: owned native method/helper retained; exact source-level name unresolved
-// 0x802ABE48 +0xE4: owned native method/helper retained; exact source-level name unresolved
-// 0x802ABF2C +0xE0: owned native method/helper retained; exact source-level name unresolved
-// 0x802AC00C +0x30: registered static initializer; .ctors8065B984,seven independent SDA constants
+// 0x802AB250 +0x190: emitted area sort; both-reference specific StateManager
+// fingerprint,retainedhere 0x802AB3E0 +0x98: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB478 +0x74: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB4EC +0x88: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB574 +0x20: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB594 +0x24: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB5B8 +0x88: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB640 +0x24: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB664 +0x60: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB6C4 +0x1B8: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB87C +0x88: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB904 +0x74: owned native method/helper retained; exact
+// source-level name unresolved 0x802AB978 +0x88: owned native method/helper retained; exact
+// source-level name unresolved 0x802ABA00 +0xAC: owned native method/helper retained; exact
+// source-level name unresolved 0x802ABAAC +0x178: owned native method/helper retained; exact
+// source-level name unresolved 0x802ABC24 +0x58: owned native method/helper retained; exact
+// source-level name unresolved 0x802ABC7C +0x174: owned native method/helper retained; exact
+// source-level name unresolved 0x802ABDF0 +0x58: owned native method/helper retained; exact
+// source-level name unresolved 0x802ABE48 +0xE4: owned native method/helper retained; exact
+// source-level name unresolved 0x802ABF2C +0xE0: owned native method/helper retained; exact
+// source-level name unresolved 0x802AC00C +0x30: registered static initializer;
+// .ctors8065B984,seven independent SDA constants

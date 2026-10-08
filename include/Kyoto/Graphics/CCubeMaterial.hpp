@@ -56,7 +56,8 @@ public:
 
   // Guessed name. Echoes material masks follow the compressed vertex descriptor.
   u64 GetMaterialMask() const {
-    return *reinterpret_cast< const u64* >(static_cast< const uint* >(mData) + GetTextureCount() + 3);
+    return *reinterpret_cast< const u64* >(static_cast< const uint* >(mData) + GetTextureCount() +
+                                           3);
   }
 
   void SetCurrent(const CModelFlags& flags, const CCubeSurface& surface,

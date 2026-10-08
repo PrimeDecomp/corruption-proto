@@ -59,16 +59,16 @@
 // 0x8028CD28 +0xB0: owned native method/helper retained; exact source-level name unresolved
 // 0x8028CDD8 +0x64: owned native method/helper retained; exact source-level name unresolved
 // 0x8028CE3C +0x78: owned native method/helper retained; exact source-level name unresolved
-// 0x8028CEB4 +0x8D8: FSM2 stream constructor; direct original source150/152 andtransition-vector assertions
-// 0x8028D78C +0x84: owned native method/helper retained; exact source-level name unresolved
-// 0x8028D810 +0x60: owned native method/helper retained; exact source-level name unresolved
-// 0x8028D870 +0x148: owned native method/helper retained; exact source-level name unresolved
-// 0x8028D9B8 +0x74: serialized transition stream constructor; specific Echoes fingerprint
-// 0x8028DA2C +0xD0: owned native method/helper retained; exact source-level name unresolved
-// 0x8028DAFC +0x6C: owned native method/helper retained; exact source-level name unresolved
-// 0x8028DB68 +0x20: owned native method/helper retained; exact source-level name unresolved
-// 0x8028DB88 +0x28: owned native method/helper retained; exact source-level name unresolved
-// 0x8028DBB0 +0x88: submachine node copy constructor; specific Echoes fingerprint
+// 0x8028CEB4 +0x8D8: FSM2 stream constructor; direct original source150/152 andtransition-vector
+// assertions 0x8028D78C +0x84: owned native method/helper retained; exact source-level name
+// unresolved 0x8028D810 +0x60: owned native method/helper retained; exact source-level name
+// unresolved 0x8028D870 +0x148: owned native method/helper retained; exact source-level name
+// unresolved 0x8028D9B8 +0x74: serialized transition stream constructor; specific Echoes
+// fingerprint 0x8028DA2C +0xD0: owned native method/helper retained; exact source-level name
+// unresolved 0x8028DAFC +0x6C: owned native method/helper retained; exact source-level name
+// unresolved 0x8028DB68 +0x20: owned native method/helper retained; exact source-level name
+// unresolved 0x8028DB88 +0x28: owned native method/helper retained; exact source-level name
+// unresolved 0x8028DBB0 +0x88: submachine node copy constructor; specific Echoes fingerprint
 // 0x8028DC38 +0xCC: owned native method/helper retained; exact source-level name unresolved
 // 0x8028DD04 +0xD0: owned native method/helper retained; exact source-level name unresolved
 // 0x8028DDD4 +0x6C: owned native method/helper retained; exact source-level name unresolved

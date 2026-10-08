@@ -9,7 +9,7 @@ class AudioEffect;
 struct AEffect;
 
 struct SAuxEffectProcessingState {
-  AudioEffect* mProcessor; // Owned; deleted by the corresponding Shutdown callback.
+  AudioEffect* mProcessor;    // Owned; deleted by the corresponding Shutdown callback.
   AEffect* mEffectDescriptor; // Borrowed from mProcessor.
   float* mLeftBuffer;
   float* mRightBuffer;

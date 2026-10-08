@@ -19,9 +19,7 @@ public:
   const CControllerButton& GetButton(EButton button) const { return mButtons[button]; }
   CControllerButton& GetButton(EButton button) { return mButtons[button]; }
 
-  const CControllerAxis& GetAnalogButton(EAnalogButton button) const {
-    return mTriggers[button];
-  }
+  const CControllerAxis& GetAnalogButton(EAnalogButton button) const { return mTriggers[button]; }
   CControllerAxis& GetAnalogButton(EAnalogButton button) { return mTriggers[button]; }
 
 private:

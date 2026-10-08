@@ -182,10 +182,10 @@ enum EBodyType {
   kBT_Restricted,
   kBT_Flyer,
   kBT_PitchableFlyer, // Cross-game name (DKCR HD); Echoes factory corroborated.
-  kBT_Floater, // Cross-game name (DKCR HD); Echoes factory corroborated.
+  kBT_Floater,        // Cross-game name (DKCR HD); Echoes factory corroborated.
   kBT_WallWalker,
   kBT_AiMovedFlyer, // Cross-game name (DKCR HD); Echoes factory corroborated.
-  kBT_4WayBlended // Guessed name from DKCR HD; Echoes blends four movement directions.
+  kBT_4WayBlended   // Guessed name from DKCR HD; Echoes blends four movement directions.
 };
 
 enum EBodyStateCmd {
@@ -221,7 +221,7 @@ enum EBodyStateCmd {
   kBSC_AdditiveReaction,
   kBSC_StopReaction,
   kBSC_AdditiveLoopReaction, // Guessed name
-  kBSC_AdditiveWeight, // Guessed name
+  kBSC_AdditiveWeight,       // Guessed name
   kBSC_Unknown33
 };
 

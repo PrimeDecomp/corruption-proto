@@ -210,8 +210,7 @@ void CDvdFile::StartARAMFileLoad() {
   if (!lbl_80419B9C) {
     DVDFastOpen(mFileEntry, &aramFile->mInfo.mDvdFileInfo);
   } else {
-    DVDOpen(const_cast< char* >(DecodeARAMFile(mFilename.data())),
-            &aramFile->mInfo.mDvdFileInfo);
+    DVDOpen(const_cast< char* >(DecodeARAMFile(mFilename.data())), &aramFile->mInfo.mDvdFileInfo);
   }
   DVDReadAsync(&aramFile->mInfo.mDvdFileInfo, aramFile->mBuffers[0].get(), len, 0,
                DVDARAMXferCallback);

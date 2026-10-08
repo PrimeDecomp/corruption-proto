@@ -39,8 +39,8 @@
 // 0x8029EA28 +0x2C: owned native method/helper retained; exact source-level name unresolved
 // 0x8029EA54 +0x9C: owned native method/helper retained; exact source-level name unresolved
 // 0x8029EAF0 +0x9C: owned native method/helper retained; exact source-level name unresolved
-// 0x8029EB8C +0x64: header-emitted DrawStaticGeometry renderer forwarding helper; retain at native origin
-// 0x8029EBF0 +0x98: owned native method/helper retained; exact source-level name unresolved
+// 0x8029EB8C +0x64: header-emitted DrawStaticGeometry renderer forwarding helper; retain at native
+// origin 0x8029EBF0 +0x98: owned native method/helper retained; exact source-level name unresolved
 // 0x8029EC88 +0x78: owned native method/helper retained; exact source-level name unresolved
 // 0x8029ED00 +0xA8: owned native method/helper retained; exact source-level name unresolved
 // 0x8029EDA8 +0xA4: owned native method/helper retained; exact source-level name unresolved

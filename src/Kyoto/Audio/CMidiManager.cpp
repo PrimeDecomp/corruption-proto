@@ -27,7 +27,7 @@ void CMidiManager::CMidiWrapper::SetMidiHandle(const CAudioHandle& handle) { mMi
 void CMidiManager::CMidiWrapper::SetSongId(const short id) { mSongId = id; }
 
 CAudioHandle CMidiManager::Play(const CMidiData& data, unsigned short fadeTime, bool stopExisting,
-                              short volume) {
+                                short volume) {
   bool foundExisting = false;
   uint sysHandle = 0;
   CAudioHandle handle = LocateHandle();
@@ -57,7 +57,8 @@ CAudioHandle CMidiManager::Play(const CMidiData& data, unsigned short fadeTime, 
     wrapper.SetAudioSysHandle(sysHandle);
     wrapper.SetSongId(data.GetSongId());
   } else {
-    uint sysHandle = CAudioSys::SeqPlayEx(data.GetGroupId(), data.GetSongId(), data.GetData(), nullptr, 0);
+    uint sysHandle =
+        CAudioSys::SeqPlayEx(data.GetGroupId(), data.GetSongId(), data.GetData(), nullptr, 0);
     if (fadeTime != 0) {
       CAudioSys::SeqVolume(0, 0, sysHandle, 0);
     }

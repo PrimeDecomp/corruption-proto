@@ -79,13 +79,14 @@ void CAnimSourceReader::VGetSegStatementSet(const CSegIdList& list, CSegStatemen
   mSource->GetSegStatementSet(list, set, time);
 }
 
-void CAnimSourceReader::VGetJointData_Linear(const CCharLayoutInfo& layout, CJointData_LinearStorage& data,
-                                    const CCharAnimTime& time) const {
+void CAnimSourceReader::VGetJointData_Linear(const CCharLayoutInfo& layout,
+                                             CJointData_LinearStorage& data,
+                                             const CCharAnimTime& time) const {
   mSource->GetJointData_Linear(layout, data, time);
 }
 
 void CAnimSourceReader::VGetJointData_Linear(const CCharLayoutInfo& layout,
-                                    CJointData_LinearStorage& data) const {
+                                             CJointData_LinearStorage& data) const {
   mSource->GetJointData_Linear(layout, data, mCurTime);
 }
 

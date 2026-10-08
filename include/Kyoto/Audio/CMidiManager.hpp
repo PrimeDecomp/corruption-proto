@@ -47,7 +47,7 @@ public:
   };
 
   static CAudioHandle Play(const CMidiData&, unsigned short fadeTime, bool stopExisting,
-                         short volume);
+                           short volume);
   static void Stop(const CAudioHandle&, unsigned short);
   static void StopAll();
 

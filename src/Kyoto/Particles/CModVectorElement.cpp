@@ -290,8 +290,7 @@ bool CMVESwirl::GetValue(int frame, CVector3f& pVel, CVector3f& pPos) const {
   const CVector3f tangent = CVector3f::Cross(b, posToHelix) * d;
   pVel = (b * CVector3f::Dot(b, pVel) + tangent) * c + (1.f - c) * pVel;
 #else
-  pVel = (b * CVector3f::Dot(b, pVel) + d * CVector3f::Cross(b, posToHelix)) * c +
-         (1.f - c) * pVel;
+  pVel = (b * CVector3f::Dot(b, pVel) + d * CVector3f::Cross(b, posToHelix)) * c + (1.f - c) * pVel;
 #endif
   return false;
 }

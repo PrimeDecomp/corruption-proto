@@ -72,7 +72,7 @@ public:
         topFlag = 2;
       }
       mPrev = reinterpret_cast< SGameMemInfo* >(reinterpret_cast< uintptr_t >(prev) |
-                                                   (topFlag | (flags & ~2)));
+                                                (topFlag | (flags & ~2)));
     }
     size_t GetLength() const { return mSize; }
     void SetLength(const size_t len) { mSize = len; }

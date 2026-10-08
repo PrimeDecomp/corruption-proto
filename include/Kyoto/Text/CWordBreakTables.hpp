@@ -9,5 +9,4 @@ public:
   static int GetEndRank(wchar_t ch);
 };
 
-
 #endif // _CWORDBREAKTABLES

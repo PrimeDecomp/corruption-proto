@@ -37,8 +37,7 @@ static inline const CParticleElectric::CParticleElectricManager* GetCurrentElect
       CParticleGlobals::GetCurrentParticle());
 }
 
-CVEConstant::CVEConstant(CRealElement* x, CRealElement* y, CRealElement* z)
-: mX(x), mY(y), mZ(z) {}
+CVEConstant::CVEConstant(CRealElement* x, CRealElement* y, CRealElement* z) : mX(x), mY(y), mZ(z) {}
 
 CVEConstant::~CVEConstant() {
   delete mX;
@@ -65,10 +64,7 @@ bool CVEFastConstant::GetValue(int frame, CVector3f& valOut) const {
 }
 
 CVECone::CVECone(CVectorElement* direction, CRealElement* magnitude)
-: mDirection(direction)
-, mMagnitude(magnitude)
-, mXVec(CVector3f::Zero())
-, mYVec(CVector3f::Zero()) {
+: mDirection(direction), mMagnitude(magnitude), mXVec(CVector3f::Zero()), mYVec(CVector3f::Zero()) {
   CVector3f av(CVector3f::Zero());
   mDirection->GetValue(0, av);
   CVector3f avNorm = av.AsNormalized();
@@ -414,7 +410,8 @@ bool CVEKeyframeInput::GetValue(int frame, CVector3f& valOut) const {
   if (mPercent == 2) {
     float in = 0.0f;
     x30_->GetValue(frame, in);
-    int idx = GetKeyframeIndex(GetKeyframeTime(in, x18_, x1c_), mLoop, GetLoopStart(), GetLoopEnd());
+    int idx =
+        GetKeyframeIndex(GetKeyframeTime(in, x18_, x1c_), mLoop, GetLoopStart(), GetLoopEnd());
     bool lerp = idx > 0 && idx < mLoopEnd - 1;
     if (lerp) {
       float t = CMath::Clamp(0.0f, (in - x18_) - static_cast< float >(idx) / x1c_, 1.0f);

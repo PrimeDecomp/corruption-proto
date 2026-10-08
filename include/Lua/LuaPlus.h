@@ -17,8 +17,8 @@
 #include <string.h>
 
 #ifdef _MSC_VER
-#pragma warning(disable: 4505)
-#pragma warning(disable: 4127)
+#pragma warning(disable : 4505)
+#pragma warning(disable : 4127)
 #endif // _MSC_VER
 
 #include "LuaLink.h"
@@ -42,27 +42,29 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////
 // namespace LuaPlus
 ///////////////////////////////////////////////////////////////////////////////
-namespace LuaPlus
-{
+namespace LuaPlus {
 
-//#define luaplus_assert(e) /* empty */
+// #define luaplus_assert(e) /* empty */
 
-class LuaException
-{
+class LuaException {
 public:
-	LuaException(const char* message) : m_message(message) {}
-	~LuaException() {}
+  LuaException(const char* message) : m_message(message) {}
+  ~LuaException() {}
 
-	const char* GetMessage() const			{  return m_message;  }
+  const char* GetMessage() const { return m_message; }
 
 protected:
-	const char* m_message;
+  const char* m_message;
 };
 
 #ifdef NDEBUG
-#define luaplus_assert(e) if (!(e)) (void)0
+#define luaplus_assert(e)                                                                          \
+  if (!(e))                                                                                        \
+  (void)0
 #else
-#define luaplus_assert(e) if (!(e)) throw LuaException(#e)
+#define luaplus_assert(e)                                                                          \
+  if (!(e))                                                                                        \
+  throw LuaException(#e)
 #endif
 
 class LuaStateOutFile;

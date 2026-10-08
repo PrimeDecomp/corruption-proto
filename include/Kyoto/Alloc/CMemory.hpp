@@ -33,7 +33,8 @@ void* operator new[](size_t sz, const char*, const char*);
 inline void* operator new(size_t sz) { return operator new(sz, "??(??)", nullptr); }
 inline void* operator new[](size_t sz) { return operator new[](sz, "??(??)", nullptr); }
 #else
-/*__attribute__((weak)) void* operator new(size_t sz) { return operator new(sz, "??(??)", nullptr); }
+/*__attribute__((weak)) void* operator new(size_t sz) { return operator new(sz, "??(??)", nullptr);
+}
 __attribute__((weak)) void* operator new[](size_t sz) {
   return operator new[](sz, "??(??)", nullptr);
 }*/

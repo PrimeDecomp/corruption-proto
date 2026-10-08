@@ -1,7 +1,7 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x802C3488..0x802C5858 (34 native functions).
-// Source identity: asserted original basename CPlayerLeftArm.cpp; independently constructed left-arm entity.
-// Complete emitted native/helper inventory retained; no speculative declarations.
+// Source identity: asserted original basename CPlayerLeftArm.cpp; independently constructed
+// left-arm entity. Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x802C3488 +0x148: owned native method/helper retained; exact source-level name unresolved
 // 0x802C35D0 +0x124: owned native method/helper retained; exact source-level name unresolved
 // 0x802C36F4 +0x100: owned native method/helper retained; exact source-level name unresolved
@@ -35,4 +35,5 @@
 // 0x802C5300 +0x54: owned native method/helper retained; exact source-level name unresolved
 // 0x802C5354 +0xC0: left-arm destructor
 // 0x802C5414 +0x3DC: left-arm constructor; PlayerLeftArm, source88/89/96/104
-// 0x802C57F0 +0x68: registered68-byte initializer; SDA constants andtwo three-float vectors; .ctors8065B9B4
+// 0x802C57F0 +0x68: registered68-byte initializer; SDA constants andtwo three-float vectors;
+// .ctors8065B9B4

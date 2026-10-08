@@ -106,8 +106,8 @@ public:
   static rstl::ncrc_ptr< CTrkData > FindTrack(const rstl::string& name);
 
   static void S3dAddListener(const CVector3f& pos, const CVector3f& dir, const CVector3f& heading,
-                             const CVector3f& up, float frontSur, float backSur,
-                             float soundSpeed, uint flags, uchar volume);
+                             const CVector3f& up, float frontSur, float backSur, float soundSpeed,
+                             uint flags, uchar volume);
   static bool S3dUpdateListener(const CVector3f& pos, const CVector3f& dir,
                                 const CVector3f& heading, const CVector3f& up, uchar volume);
   static bool S3dRemoveListener();

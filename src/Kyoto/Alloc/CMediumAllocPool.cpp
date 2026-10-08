@@ -26,8 +26,7 @@ void* CMediumAllocPool::Alloc(uint len) {
   ret = puddle->FindFree(blockCount);
 
   if (ret == nullptr) {
-    for (rstl::list< SMediumAllocPuddle >::iterator it = mList.begin(); it != mList.end();
-         ++it) {
+    for (rstl::list< SMediumAllocPuddle >::iterator it = mList.begin(); it != mList.end(); ++it) {
       if (it == mLastNodePrev) {
         continue;
       }

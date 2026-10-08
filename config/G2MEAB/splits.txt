@@ -789,6 +789,172 @@ MetroidPrime/ScriptLoader.cpp:
 	.text       start:0x801B95C8 end:0x801D5D68
 	.ctors      start:0x8065B7CC end:0x8065B7D0
 
+MetroidPrime/TypesMatch.cpp:
+	.text       start:0x801D5D68 end:0x801DA6D8
+	.ctors      start:0x8065B7D0 end:0x8065B7D4
+
+MetroidPrime/Player/CFrontEndGameMode.cpp:
+	.text       start:0x801DB8F0 end:0x801DBBB0
+	.ctors      start:0x8065B7D4 end:0x8065B7D8
+
+MetroidPrime/Player/CPlayerListener.cpp:
+	.text       start:0x801DBBB0 end:0x801DBD68
+	.ctors      start:0x8065B7D8 end:0x8065B7DC
+
+MetroidPrime/ScriptObjects/CScriptConditionalRelay.cpp:
+	.text       start:0x801DBD68 end:0x801DC7C8
+	.ctors      start:0x8065B7DC end:0x8065B7E0
+
+MetroidPrime/ScriptObjects/CScriptPlayerTurret.cpp:
+	.text       start:0x801DC7C8 end:0x801DF154
+	.ctors      start:0x8065B7E0 end:0x8065B7E4
+
+MetroidPrime/Player/CPlayerAnimCtrl.cpp:
+	.text       start:0x801DF154 end:0x801E2DAC
+	.ctors      start:0x8065B7E4 end:0x8065B7E8
+
+MetroidPrime/Player/CPACStateLocomotion.cpp:
+	.text       start:0x801E2DAC end:0x801E3A78
+	.ctors      start:0x8065B7E8 end:0x8065B7EC
+
+MetroidPrime/Player/CPACStateJump.cpp:
+	.text       start:0x801E3A78 end:0x801E474C
+	.ctors      start:0x8065B7EC end:0x8065B7F0
+
+MetroidPrime/Player/CPlayerBodyStateCmdMgr.cpp:
+	.text       start:0x801E474C end:0x801E4F8C
+
+MetroidPrime/Player/CPACStateAdditiveAim.cpp:
+	.text       start:0x801E4F8C end:0x801E561C
+	.ctors      start:0x8065B7F0 end:0x8065B7F4
+
+MetroidPrime/Player/CPACStateDash.cpp:
+	.text       start:0x801E561C end:0x801E5D34
+	.ctors      start:0x8065B7F4 end:0x8065B7F8
+
+MetroidPrime/CScriptMsgQueue.cpp:
+	.text       start:0x801E5D34 end:0x801E5F8C
+	.ctors      start:0x8065B7F8 end:0x8065B7FC
+
+MetroidPrime/Cameras/CCameraManager.cpp:
+	.text       start:0x801E5F8C end:0x801ECB48
+	.ctors      start:0x8065B7FC end:0x8065B800
+
+MetroidPrime/Cameras/CCinematicCamera.cpp:
+	.text       start:0x801ECB48 end:0x801EDABC
+	.ctors      start:0x8065B800 end:0x8065B804
+
+MetroidPrime/Cameras/CFirstPersonCamera.cpp:
+	.text       start:0x801EDABC end:0x801EEDFC
+	.ctors      start:0x8065B804 end:0x8065B808
+
+MetroidPrime/Cameras/CGameCamera.cpp:
+	.text       start:0x801EEDFC end:0x801F12E8
+	.ctors      start:0x8065B808 end:0x8065B80C
+
+MetroidPrime/Cameras/CInterpolationCamera.cpp:
+	.text       start:0x801F12E8 end:0x801F2EA0
+	.ctors      start:0x8065B80C end:0x8065B810
+
+MetroidPrime/Enemies/CAnimationState.cpp:
+	.text       start:0x801F2EA0 end:0x801F2F18
+	.ctors      start:0x8065B810 end:0x8065B814
+
+MetroidPrime/CHintState.cpp:
+	.text       start:0x801F2F18 end:0x801F3650
+	.ctors      start:0x8065B814 end:0x8065B818
+
+MetroidPrime/CHintManager.cpp:
+	.text       start:0x801F3650 end:0x801F66F4
+	.ctors      start:0x8065B818 end:0x8065B81C
+
+MetroidPrime/CPlayerHintManager.cpp:
+	.text       start:0x801F66F4 end:0x801F69F4
+	.ctors      start:0x8065B81C end:0x8065B820
+
+MetroidPrime/CCameraHintManager.cpp:
+	.text       start:0x801F69F4 end:0x801F83B0
+	.ctors      start:0x8065B820 end:0x8065B824
+
+MetroidPrime/Enemies/CHumanoidRagDoll.cpp:
+	.text       start:0x801F83B0 end:0x801FAE88
+	.ctors      start:0x8065B824 end:0x8065B828
+
+MetroidPrime/Enemies/CAiKnockBackMgr.cpp:
+	.text       start:0x801FAE88 end:0x801FBD90
+	.ctors      start:0x8065B828 end:0x8065B82C
+
+MetroidPrime/Enemies/CKnockBackController.cpp:
+	.text       start:0x801FBD90 end:0x801FD12C
+	.ctors      start:0x8065B82C end:0x8065B830
+
+MetroidPrime/Player/CPlayerKnockBackMgr.cpp:
+	.text       start:0x801FD12C end:0x801FEBC4
+	.ctors      start:0x8065B830 end:0x8065B834
+
+MetroidPrime/Player/CPACStateAdditiveReaction.cpp:
+	.text       start:0x801FEBC4 end:0x801FEFD8
+	.ctors      start:0x8065B834 end:0x8065B838
+
+MetroidPrime/Player/CPACStateAdditiveFlinch.cpp:
+	.text       start:0x801FEFD8 end:0x801FF338
+	.ctors      start:0x8065B838 end:0x8065B83C
+
+MetroidPrime/Player/CPACStateKnockBack.cpp:
+	.text       start:0x801FF338 end:0x801FF56C
+	.ctors      start:0x8065B83C end:0x8065B840
+
+MetroidPrime/Player/CPlayerRagDoll.cpp:
+	.text       start:0x801FF56C end:0x8020107C
+	.ctors      start:0x8065B840 end:0x8065B844
+
+MetroidPrime/Weapons/CSamusPlasmaBeam.cpp:
+	.text       start:0x8020107C end:0x80201F3C
+	.ctors      start:0x8065B844 end:0x8065B848
+
+MetroidPrime/Weapons/CSamusPowerBeam.cpp:
+	.text       start:0x80201F3C end:0x80202F08
+	.ctors      start:0x8065B848 end:0x8065B84C
+
+MetroidPrime/Weapons/CSamusSecondaryWeapon.cpp:
+	.text       start:0x80202F08 end:0x80203E58
+	.ctors      start:0x8065B84C end:0x8065B850
+
+MetroidPrime/Weapons/CSamusWeapon.cpp:
+	.text       start:0x80203E58 end:0x8020724C
+	.ctors      start:0x8065B850 end:0x8065B854
+
+MetroidPrime/ConsoleCommands.cpp:
+	.text       start:0x8020727C end:0x8020ACA4
+	.ctors      start:0x8065B858 end:0x8065B85C
+
+MetroidPrime/ScreenCapture.cpp:
+	.text       start:0x8020ACA4 end:0x8020B6CC
+
+MetroidPrime/CScanTextDebugManager.cpp:
+	.text       start:0x8020B6CC end:0x8020CD80
+	.ctors      start:0x8065B85C end:0x8065B860
+
+MetroidPrime/ScriptObjects/CScriptCinematicCamera.cpp:
+	.text       start:0x8020CD80 end:0x8020E0E0
+	.ctors      start:0x8065B860 end:0x8065B864
+
+MetroidPrime/ScriptObjects/CScriptSequenceTimer.cpp:
+	.text       start:0x8020E0E0 end:0x8020FAB0
+	.ctors      start:0x8065B864 end:0x8065B868
+
+MetroidPrime/ScriptObjects/CScriptAreaDamage.cpp:
+	.text       start:0x8020FAB0 end:0x8021066C
+	.ctors      start:0x8065B868 end:0x8065B86C
+
+MetroidPrime/Player/CPACStateGrapple.cpp:
+	.text       start:0x8021066C end:0x80210DE4
+	.ctors      start:0x8065B86C end:0x8065B870
+
+MetroidPrime/CGamePortalArea.cpp:
+	.text       start:0x80210DE4 end:0x802130DC
+	.ctors      start:0x8065B870 end:0x8065B874
+
 MetroidPrime/Cameras/CGameSpline.cpp:
 	.text       start:0x802130DC end:0x80213FB8
 	.ctors      start:0x8065B874 end:0x8065B878

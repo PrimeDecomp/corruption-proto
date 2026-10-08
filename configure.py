@@ -256,6 +256,7 @@ cflags_retro = [
     "-gccinc",
     "-inline deferred,noauto",
     "-common on",
+    "-pragma \"inline_max_size(125)\"",
 ]
 
 # REL flags

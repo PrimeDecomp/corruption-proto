@@ -11,9 +11,15 @@ MP3Proto (Game="CorruptionProto"), reports unknown properties through CBBASuppor
 re-stores the EditorProperties update flags in every object, and drops the G2ME01 and
 Tweaks overrides.
 
+G2MEAB has no Tweaks REL: TweaksLoader.cpp (config/loader_profiles/TweaksLoader.json)
+reads the MiscTemplates Tweak* records, and their member records live in ScriptLoader.cpp.
+Asset IDs are 64-bit (CAssetId).
+The property-count spelling (TWEAKS_INT_COUNT_STRUCTS, TWEAKS_USHORT_COUNT_STRUCTS) and
+NATIVE_UNREAD_MEMBERS are chosen per target reader.
+
 Generate into a staging directory and review the diff before replacing tracked files.
 Make corrections in the generator or templates so regeneration preserves them.
-The Tweaks profile pins the templates and selects the module's sources.
+Each profile pins the templates and selects its unit's sources.
 Register new translation units in configure.py.
 
 Records listed in a profile, and the shared Structs/ typedefs, have out-of-line
@@ -54,6 +60,42 @@ from textwrap import dedent
 from typing import Protocol
 
 REPOSITORY = "PrimeDecomp/retro-script-object-templates"
+# Tweak loaders read the property count as a signed 16-bit value into a ushort
+# (LoadTypedefTweakPlayer_Frozen 0x801CEE84), except these, which keep the int count
+# of the script loaders. Hard-coded: chosen per target reader, no rule found yet.
+TWEAKS_INT_COUNT_STRUCTS = {
+    "TweakBall_DeathBall",
+    "TweakBall_FireBall",
+    "TweakBall_PhazonBall",
+    "TweakGame_TimeLimitChoices",
+    "TweakGui_ScannableObjectDownloadTimes",
+    "TweakParticle",
+    "TweakPlayerGun_Arm_Position",
+    "TweakPlayerGun_Beam_Misc",
+    "TweakPlayerGun_RicochetDamage_Factor",
+    "TweakPlayer_Collision",
+}
+# Tweak member records outside the Tweak* names that read the count like the tweaks.
+TWEAKS_USHORT_COUNT_STRUCTS = {
+    "ActorParameters",
+    "BallMiscControls",
+    "BallMovementControls",
+    "CameraShakerData",
+    "DamageVulnerability",
+    "DebugControls",
+    "LightParameters",
+    "MapControls",
+    "MiscControls",
+    "PlasmaBeamInfo",
+    "PlayerControls",
+    "PlayerMiscControls",
+    "RevolutionControl",
+    "ShockWaveInfo",
+    "SpringConvergence",
+    "TIcon_Configurations",
+    "TextProperties",
+    "VelocityConvergence",
+}
 GAME_DIRECTORY = "MP3Proto"
 
 PROFILE_DIRECTORY = Path(__file__).resolve().parent.parent / "config" / "loader_profiles"
@@ -171,7 +213,7 @@ PRIMITIVES: dict[str, Primitive] = {
     "Sound": Primitive("int", "input.ReadInt32()"),
     "Float": Primitive("float", "input.ReadFloat()"),
     # G2MEAB asset IDs are 64-bit: every Asset case calls the CAssetId stream constructor
-    # (LoadTypedefActorParameters).
+    # (LoadTypedefActorParameters, TweakGame 0x802461C8).
     "Asset": Primitive(
         "CAssetId", "CAssetId(input)", "Kyoto/CAssetId.hpp"
     ),
@@ -198,6 +240,17 @@ NATIVE_INDEXED_RECORDS = {
 # the templates have nothing to override. Record -> property-ID paths to re-store.
 # Values and C++ names come from XML.
 NATIVE_INSTANCE_DEFAULTS: dict[str, tuple[tuple[int, ...], ...]] = {}
+
+# Members the native record keeps from Echoes although the reader has no case for them
+# (SLdrTweakPlayerGun_Beam_Misc: constructor 0x801BDAA8 builds three TDamageInfo at
+# 0x0..0x28; LoadTypedefTweakPlayerGun_Beam_Misc 0x801BD90C reads only 0x3C..0x48).
+NATIVE_UNREAD_MEMBERS: dict[str, tuple[tuple[int, str], ...]] = {
+    "TweakPlayerGun_Beam_Misc": (
+        (0x8AACFC27, "TDamageInfo"),
+        (0xA054FF1C, "TDamageInfo"),
+        (0xABFA93E9, "TDamageInfo"),
+    ),
+}
 
 # Every G2MEAB object loader re-stores its editor update flags after the out-of-line
 # SLdrEditorProperties constructor (LoadRelay 0x800BDEA4, LoadTimer, LoadAIHint,
@@ -232,6 +285,23 @@ NATIVE_ENUM_VALUES: dict[str, dict] = {
             0xDD1CFE2B: 4, 0x42187338: 5, 0x65A7B650: 6,
         },
         "default": 0,
+    },
+    # LoadTypedefRevolutionPhysicalControl 0x802419E8 (template order, native index + 1);
+    # its constructor 0x80242134 stores 1.
+    "RevolutionPhysicalControl:0x60D66244": {
+        "values": {
+            0x201D3330: 1, 0xE2337725: 2, 0x96A037F0: 3, 0x0FA9664A: 4, 0x65B405FC: 5,
+            0xFCBD5446: 6, 0xED209345: 7, 0x1624FAAF: 8, 0x415CDAD9: 9, 0x2891BA87: 10,
+            0x27C4AD8A: 11, 0x68FABFF4: 12, 0x1EA59587: 13, 0xA41D3F3B: 14, 0x783DE2D4: 15,
+            0x45C3998B: 16, 0xDCCAC831: 17, 0x572AC00B: 18, 0x4D3B3B88: 19, 0x34F1BC04: 20,
+            0x2BA34CDB: 21, 0xE118233E: 22, 0x78117284: 23, 0x85738BFE: 24, 0xF274BB68: 25,
+            0x82E0C1F3: 26, 0x6B7DEAD2: 27, 0x9FA95F83: 28, 0x65A662E0: 29, 0x72A091D1: 30,
+            0x1A220AEC: 31, 0x2A8052F5: 32, 0x4C1825A6: 33, 0xF763CF41: 34, 0x24F706DD: 35,
+            0xBAC0C05F: 36, 0x93EC4E32: 37, 0x1F9B31E3: 38, 0xF5743961: 39, 0xE9665934: 40,
+            0x9C368418: 41, 0xC42F22FF: 42, 0xFAAEF34B: 43, 0xEF810AAF: 44, 0xFCE1D160: 45,
+            0x9A910CA4: 46, 0x9A79A633: 47, 0x1752C5AD: 48, 0x738A4388: 49, 0x3E6D0DB6: 50,
+        },
+        "default": 1,
     },
     # LoadTypedefPIDConvergence 0x801BA368, constructor 0x801BA520.
     "PIDConvergence:0xD0810123": {"values": {0x48C2287C: 0, 0x5A778792: 1}},
@@ -448,6 +518,13 @@ class Generator:
             raise TemplateError(GAME_DIRECTORY + "/Game.xml is not a CorruptionProto template")
         self.archetypes: dict[str, str] = self.index(game, "PropertyArchetypes")
         self.objects: dict[str, str] = self.index(game, "ScriptObjects")
+        # MP3Proto keys its tweaks by name under MiscTemplates; TweaksLoader.cpp
+        # (0x8023E088..0x802471C0) reads them like script objects.
+        self.objects.update(
+            (key, path)
+            for key, path in self.index(game, "MiscTemplates").items()
+            if key.startswith("Tweak")
+        )
         self.names: dict[tuple[int, str], str] = {}
         # PropertyMap is keyed by both ID and type (the same ID may have several names).
         for entry in source.xml("PropertyMap.xml").findall("PropertyMap/Element"):
@@ -505,6 +582,14 @@ class Generator:
             raw = self.source.xml(self.archetypes[name]).find("PropertyArchetype")
             if raw is None:
                 raise TemplateError("Missing PropertyArchetype: " + name)
+            children = raw.find("SubProperties")
+            for index, (pid, archetype) in enumerate(NATIVE_UNREAD_MEMBERS.get(name, ())):
+                member = ET.Element(
+                    "Element",
+                    {"Type": "Struct", "ID": f"0x{pid:08X}", "Archetype": archetype},
+                )
+                member.set("NativeUnread", "true")
+                children.insert(index, member)
             self.raw[name] = raw
         if name not in self.resolved:
             self.resolved[name] = self.resolve(self.raw[name], trail + (name,))
@@ -877,7 +962,7 @@ class Generator:
             if kind in ZERO_DEFAULT_KINDS:
                 return [target + " = 0;"]
             return []  # Value-initialize absent primitive defaults; keep class defaults.
-        if kind in ("Array", "Spline", "AnimationSet"):
+        if kind in ("Array", "Spline", "AnimationSet", "Asset"):
             raise TemplateError("Unsupported explicit " + kind + " default")
         value = (default.text or "").strip()
         if kind in ("Vector", "Color"):
@@ -910,7 +995,7 @@ class Generator:
         else:
             number = integer(value)
             expression = str(number)
-            if kind in ("Asset", "Flags"):
+            if kind == "Flags":
                 expression = "0x%08xu" % (number & 0xFFFFFFFF)
         return [target + " = " + expression + ";"]
 
@@ -1215,7 +1300,10 @@ class Generator:
         # Known residual: when propertySize needs a saved register below propertyCount
         # (HealthInfo 0x801D4AF4, LightParameters 0x801CB120), G2MEAB swaps the two.
         # No loop spelling, local type or compiler build tried so far reproduces it.
-        count = "  const int propertyCount = input.ReadUint16();"
+        if (name.startswith("Tweak") and name not in TWEAKS_INT_COUNT_STRUCTS) or name in TWEAKS_USHORT_COUNT_STRUCTS:
+            count = "  const ushort propertyCount = input.ReadInt16();"
+        else:
+            count = "  const int propertyCount = input.ReadUint16();"
         size_type = "u16"
         lines = [
             count,
@@ -1226,6 +1314,8 @@ class Generator:
         ]
         cases: list[tuple[str | None, list[str]]] = []
         for prop in struct.fields:
+            if prop.node.get("NativeUnread"):
+                continue
             case = [f"    case 0x{property_id(prop.node):08x}: {{"]
             case.extend(
                 "      " + line

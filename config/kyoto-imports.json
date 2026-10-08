@@ -446,7 +446,7 @@
     },
     {
       "path": "Kyoto/CFactoryStore.cpp",
-      "mapped": false
+      "mapped": true
     },
     {
       "path": "Kyoto/CFrameDelayedKiller.cpp",

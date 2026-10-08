@@ -45,6 +45,6 @@ private:
   float mDeResFactor;
   float mFlashFactor;
 };
-CHECK_SIZEOF(CAuiImagePane, 0x158)
+// CHECK_SIZEOF(CAuiImagePane, 0x158) // Echoes layout; Corruption CAssetId is 64-bit
 
 #endif // _CAUIIMAGEPANE

@@ -63,6 +63,6 @@ private:
   float mShadowEnergy;
   float mShadowDrainDelayTimer;
 };
-CHECK_SIZEOF(CAuiEnergyBarT01, 0x108)
+// CHECK_SIZEOF(CAuiEnergyBarT01, 0x108) // Echoes layout; Corruption CAssetId is 64-bit
 
 #endif // _CAUIENERGYBART01

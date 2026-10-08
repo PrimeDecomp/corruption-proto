@@ -30,7 +30,7 @@ double TriPointSqrDist(const CVector3f& point, const CVector3f& a, const CVector
                        const CVector3f& c, float* baryX, float* baryY);
 // Guessed name for the existing separate single-precision implementation.
 float TriPointSqrDist_Float(const CVector3f& point, const CVector3f& a, const CVector3f& b,
-                           const CVector3f& c, float* baryX, float* baryY);
+                            const CVector3f& c, float* baryX, float* baryY);
 
 bool AABoxAABoxIntersection(const CAABox& left, const CAABox& right);
 bool AABoxAABoxIntersection(const CAABox& left, const CMaterialList& leftFilter,

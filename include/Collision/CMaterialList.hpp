@@ -1,8 +1,8 @@
 #ifndef _CMATERIALLIST
 #define _CMATERIALLIST
 
-#include "types.h"
 #include "rstl/construct.hpp"
+#include "types.h"
 
 class CInputStream;
 
@@ -66,8 +66,8 @@ enum EMaterialTypes {
   kMT_ExcludeFromLineOfSightTest = 56,
   kMT_ExcludeFromRadar = 57,
   kMT_NoPlayerCollision = 58,
-  kMT_Unknown59 = 59, // Used by the Echoes Morph Ball collision sphere.
-  kMT_Unknown60 = 60, // Included in the implicit world-render geometry mask.
+  kMT_Unknown59 = 59,   // Used by the Echoes Morph Ball collision sphere.
+  kMT_Unknown60 = 60,   // Included in the implicit world-render geometry mask.
   kMT_SeekerTarget = 63 // Target-derived name: seeker lock-on eligibility.
 };
 

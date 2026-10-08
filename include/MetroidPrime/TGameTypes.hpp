@@ -47,22 +47,18 @@ struct TEditorId {
 };
 CHECK_SIZEOF(TEditorId, 0x4)
 
+// G2MEAB stores and copies unique ids as words: CEntity keeps one at 0x8, CScriptMsg packs
+// sender/target at 0x0/0x4, and kInvalidUniqueId is a 4-byte -1. Echoes uses a ushort.
 struct TUniqueId {
-  ushort value;
+  int value;
 
-  explicit TUniqueId(ushort packed) : value(packed) {}
-  TUniqueId(const ushort version, const ushort id) : value(id | (version << 10)) {}
-
-  ushort Value() const { return value & 0x3FF; }
-  ushort Version() const { return (value >> 10) & 0x3F; }
+  explicit TUniqueId(int packed) : value(packed) {}
 
   bool operator==(const TUniqueId& other) const { return value == other.value; }
   bool operator!=(const TUniqueId& other) const { return value != other.value; }
   bool operator<(const TUniqueId& other) const { return value < other.value; }
-
-private:
 };
-CHECK_SIZEOF(TUniqueId, 0x2)
+CHECK_SIZEOF(TUniqueId, 0x4)
 
 namespace rstl {
 RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(TUniqueId)

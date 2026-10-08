@@ -734,7 +734,7 @@
     },
     {
       "path": "Kyoto/Particles/CParticleGen.cpp",
-      "mapped": false
+      "mapped": true
     },
     {
       "path": "Kyoto/Particles/CParticleGlobals.cpp",

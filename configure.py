@@ -869,6 +869,7 @@ config.libs = [
         Object(NonMatching, "Kyoto/Particles/CIntElement.cpp"),
         Object(NonMatching, "Kyoto/Particles/CModVectorElement.cpp"),
         Object(NonMatching, "Kyoto/Particles/CParticleDataFactory.cpp"),
+        Object(NonMatching, "Kyoto/Particles/CParticleGen.cpp"),
         Object(NonMatching, "Kyoto/Particles/CParticleGlobals.cpp"),
         Object(NonMatching, "Kyoto/Particles/CParticleSwoosh.cpp"),
         Object(NonMatching, "Kyoto/Particles/CParticleSwooshDataFactory.cpp"),

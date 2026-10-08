@@ -2,27 +2,28 @@
 // .text: 0x801B95C8..0x801D5D68 (370 native functions).
 // Source identity: asserted original basename; common generated property loaders and conversion glue.
 // Complete proposed native interval retained; historical source arrangement inferred.
-// No implementation or speculative declarations are supplied.
-// 0x801B95C8 +0x390: tagged property loader: PlasmaBeamInfo; target diagnostic literal, no guessed symbol rename
+// Generated typedef loaders come from scripts/generate_script_loaders.py with
+// config/loader_profiles/ScriptLoader.json; the native inventory below remains the reference.
+// 0x801B95C8 +0x390: tagged property loader: PlasmaBeamInfo; target diagnostic literal, named LoadTypedefPlasmaBeamInfo (Echoes convention)
 // 0x801B9958 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801B9994 +0xFC: emitted native method/helper; original source-level symbol unresolved
 // 0x801B9A90 +0x150: tagged property loader: TeamAIDebugEnum; target diagnostic literal, no guessed symbol rename
 // 0x801B9BE0 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801B9C1C +0xC: emitted native method/helper; original source-level symbol unresolved
 // 0x801B9C28 +0x194: convergence factory; original ScriptLoader.cpp lines 13060/13072/13083/13093
-// 0x801B9DBC +0x200: tagged property loader: Convergence; target diagnostic literal, no guessed symbol rename
+// 0x801B9DBC +0x200: tagged property loader: Convergence; target diagnostic literal, named LoadTypedefConvergence (Echoes convention)
 // 0x801B9FBC +0x7C: emitted native method/helper; original source-level symbol unresolved
 // 0x801BA038 +0x54: emitted native method/helper; original source-level symbol unresolved
-// 0x801BA08C +0xF4: tagged property loader: ProportionalConvergence; target diagnostic literal, no guessed symbol rename
+// 0x801BA08C +0xF4: tagged property loader: ProportionalConvergence; target diagnostic literal, named LoadTypedefProportionalConvergence (Echoes convention)
 // 0x801BA180 +0x58: emitted native method/helper; original source-level symbol unresolved
 // 0x801BA1D8 +0x3C: emitted native method/helper; original source-level symbol unresolved
-// 0x801BA214 +0x100: tagged property loader: VelocityConvergence; target diagnostic literal, no guessed symbol rename
+// 0x801BA214 +0x100: tagged property loader: VelocityConvergence; target diagnostic literal, named LoadTypedefVelocityConvergence (Echoes convention)
 // 0x801BA314 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801BA350 +0x18: emitted native method/helper; original source-level symbol unresolved
-// 0x801BA368 +0x17C: tagged property loader: PIDConvergence; target diagnostic literal, no guessed symbol rename
+// 0x801BA368 +0x17C: tagged property loader: PIDConvergence; target diagnostic literal, named LoadTypedefPIDConvergence (Echoes convention)
 // 0x801BA4E4 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801BA520 +0x1C: emitted native method/helper; original source-level symbol unresolved
-// 0x801BA53C +0x180: tagged property loader: SpringConvergence; target diagnostic literal, no guessed symbol rename
+// 0x801BA53C +0x180: tagged property loader: SpringConvergence; target diagnostic literal, named LoadTypedefSpringConvergence (Echoes convention)
 // 0x801BA6BC +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801BA6F8 +0x30: emitted native method/helper; original source-level symbol unresolved
 // 0x801BA728 +0x6C: emitted native method/helper; original source-level symbol unresolved
@@ -47,16 +48,16 @@
 // 0x801BB744 +0xDC: tagged property loader: TBeamInfo; target diagnostic literal, no guessed symbol rename
 // 0x801BB820 +0x58: emitted native method/helper; original source-level symbol unresolved
 // 0x801BB878 +0x3C: emitted native method/helper; original source-level symbol unresolved
-// 0x801BB8B4 +0x208: tagged property loader: ShockWaveInfo; target diagnostic literal, no guessed symbol rename
+// 0x801BB8B4 +0x208: tagged property loader: ShockWaveInfo; target diagnostic literal, named LoadTypedefShockWaveInfo (Echoes convention)
 // 0x801BBABC +0x58: emitted native method/helper; original source-level symbol unresolved
 // 0x801BBB14 +0x84: emitted native method/helper; original source-level symbol unresolved
-// 0x801BBB98 +0x158: tagged property loader: EditorProperties; target diagnostic literal, no guessed symbol rename
+// 0x801BBB98 +0x158: tagged property loader: EditorProperties; target diagnostic literal, named LoadTypedefEditorProperties (Echoes convention)
 // 0x801BBCF0 +0x68: emitted native method/helper; original source-level symbol unresolved
 // 0x801BBD58 +0x58: emitted native method/helper; original source-level symbol unresolved
-// 0x801BBDB0 +0x3C0: tagged property loader: ActorParameters; target diagnostic literal, no guessed symbol rename
+// 0x801BBDB0 +0x3C0: tagged property loader: ActorParameters; target diagnostic literal, named LoadTypedefActorParameters (Echoes convention)
 // 0x801BC170 +0x70: emitted native method/helper; original source-level symbol unresolved
 // 0x801BC1E0 +0xE0: emitted native method/helper; original source-level symbol unresolved
-// 0x801BC2C0 +0xF8: tagged property loader: VisorParameters; target diagnostic literal, no guessed symbol rename
+// 0x801BC2C0 +0xF8: tagged property loader: VisorParameters; target diagnostic literal, named LoadTypedefVisorParameters (Echoes convention)
 // 0x801BC3B8 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801BC3F4 +0x14: emitted native method/helper; original source-level symbol unresolved
 // 0x801BC408 +0xE4: tagged property loader: TweakTargeting_VulnerabilityIndicator; target diagnostic literal, no guessed symbol rename
@@ -155,13 +156,13 @@
 // 0x801C8C4C +0xCE8: tagged property loader: TweakAutoMapper_Base; target diagnostic literal, no guessed symbol rename
 // 0x801C9934 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801C9970 +0x65C: emitted native method/helper; original source-level symbol unresolved
-// 0x801C9FCC +0x14C: tagged property loader: TriggerInfo; target diagnostic literal, no guessed symbol rename
+// 0x801C9FCC +0x14C: tagged property loader: TriggerInfo; target diagnostic literal, named LoadTypedefTriggerInfo (Echoes convention)
 // 0x801CA118 +0x58: emitted native method/helper; original source-level symbol unresolved
 // 0x801CA170 +0x64: emitted native method/helper; original source-level symbol unresolved
 // 0x801CA1D4 +0x9C: emitted native method/helper; original source-level symbol unresolved
 // 0x801CA270 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801CA2AC +0x60: emitted native method/helper; original source-level symbol unresolved
-// 0x801CA30C +0x2E8: tagged property loader: TextProperties; target diagnostic literal, no guessed symbol rename
+// 0x801CA30C +0x2E8: tagged property loader: TextProperties; target diagnostic literal, named LoadTypedefTextProperties (Echoes convention)
 // 0x801CA5F4 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801CA630 +0xF4: emitted native method/helper; original source-level symbol unresolved
 // 0x801CA724 +0xDC: tagged property loader: TWeaponDamage; target diagnostic literal, no guessed symbol rename
@@ -173,10 +174,10 @@
 // 0x801CAC2C +0x128: tagged property loader: ScanInfoSecondaryModel; target diagnostic literal, no guessed symbol rename
 // 0x801CAD54 +0x68: emitted native method/helper; original source-level symbol unresolved
 // 0x801CADBC +0x58: emitted native method/helper; original source-level symbol unresolved
-// 0x801CAE14 +0x21C: tagged property loader: PlatformMotionProperties; target diagnostic literal, no guessed symbol rename
+// 0x801CAE14 +0x21C: tagged property loader: PlatformMotionProperties; target diagnostic literal, named LoadTypedefPlatformMotionProperties (Echoes convention)
 // 0x801CB030 +0x88: emitted native method/helper; original source-level symbol unresolved
 // 0x801CB0B8 +0x68: emitted native method/helper; original source-level symbol unresolved
-// 0x801CB120 +0x350: tagged property loader: LightParameters; target diagnostic literal, no guessed symbol rename
+// 0x801CB120 +0x350: tagged property loader: LightParameters; target diagnostic literal, named LoadTypedefLightParameters (Echoes convention)
 // 0x801CB470 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801CB4AC +0xC4: emitted native method/helper; original source-level symbol unresolved
 // 0x801CB570 +0x13C: tagged property loader: FlareDef; target diagnostic literal, no guessed symbol rename
@@ -188,7 +189,7 @@
 // 0x801CB98C +0x150: tagged property loader: DynamicLightMotionSpline; target diagnostic literal, no guessed symbol rename
 // 0x801CBADC +0x64: emitted native method/helper; original source-level symbol unresolved
 // 0x801CBB40 +0x4C: emitted native method/helper; original source-level symbol unresolved
-// 0x801CBB8C +0x340: tagged property loader: DamageVulnerability; target diagnostic literal, no guessed symbol rename
+// 0x801CBB8C +0x340: tagged property loader: DamageVulnerability; target diagnostic literal, named LoadTypedefDamageVulnerability (Echoes convention)
 // 0x801CBECC +0x130: emitted native method/helper; original source-level symbol unresolved
 // 0x801CBFFC +0xD0: emitted native method/helper; original source-level symbol unresolved
 // 0x801CC0CC +0x168: tagged property loader: ConditionalTest; target diagnostic literal, no guessed symbol rename
@@ -200,7 +201,7 @@
 // 0x801CC55C +0x188: tagged property loader: CameraShakerEnvelope; target diagnostic literal, no guessed symbol rename
 // 0x801CC6E4 +0x64: emitted native method/helper; original source-level symbol unresolved
 // 0x801CC748 +0x44: emitted native method/helper; original source-level symbol unresolved
-// 0x801CC78C +0x11C: tagged property loader: WeaponVulnerability; target diagnostic literal, no guessed symbol rename
+// 0x801CC78C +0x11C: tagged property loader: WeaponVulnerability; target diagnostic literal, named LoadTypedefWeaponVulnerability (Echoes convention)
 // 0x801CC8A8 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801CC8E4 +0x18: emitted native method/helper; original source-level symbol unresolved
 // 0x801CC8FC +0xDC: tagged property loader: Vector2f; target diagnostic literal, no guessed symbol rename
@@ -293,13 +294,13 @@
 // 0x801D2A94 +0xDC: tagged property loader: SurroundPan; target diagnostic literal, no guessed symbol rename
 // 0x801D2B70 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801D2BAC +0x14: emitted native method/helper; original source-level symbol unresolved
-// 0x801D2BC0 +0x1B0: tagged property loader: PathType; target diagnostic literal, no guessed symbol rename
+// 0x801D2BC0 +0x1B0: tagged property loader: PathType; target diagnostic literal, named LoadTypedefPathType (Echoes convention)
 // 0x801D2D70 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801D2DAC +0xC: emitted native method/helper; original source-level symbol unresolved
-// 0x801D2DB8 +0xC0: tagged property loader: SplineType; target diagnostic literal, no guessed symbol rename
+// 0x801D2DB8 +0xC0: tagged property loader: SplineType; target diagnostic literal, named LoadTypedefSplineType (Echoes convention)
 // 0x801D2E78 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801D2EB4 +0xC: emitted native method/helper; original source-level symbol unresolved
-// 0x801D2EC0 +0xC8: tagged property loader: ScannableParameters; target diagnostic literal, no guessed symbol rename
+// 0x801D2EC0 +0xC8: tagged property loader: ScannableParameters; target diagnostic literal, named LoadTypedefScannableParameters (Echoes convention)
 // 0x801D2F88 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801D2FC4 +0x14: emitted native method/helper; original source-level symbol unresolved
 // 0x801D2FD8 +0x148: tagged property loader: ScaleSplines; target diagnostic literal, no guessed symbol rename
@@ -341,10 +342,10 @@
 // 0x801D493C +0x150: tagged property loader: LayerInfo; target diagnostic literal, no guessed symbol rename
 // 0x801D4A8C +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801D4AC8 +0x2C: emitted native method/helper; original source-level symbol unresolved
-// 0x801D4AF4 +0xDC: tagged property loader: HealthInfo; target diagnostic literal, no guessed symbol rename
+// 0x801D4AF4 +0xDC: tagged property loader: HealthInfo; target diagnostic literal, named LoadTypedefHealthInfo (Echoes convention)
 // 0x801D4BD0 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801D4C0C +0x14: emitted native method/helper; original source-level symbol unresolved
-// 0x801D4C20 +0x134: tagged property loader: GuiWidgetProperties; target diagnostic literal, no guessed symbol rename
+// 0x801D4C20 +0x134: tagged property loader: GuiWidgetProperties; target diagnostic literal, named LoadTypedefGuiWidgetProperties (Echoes convention)
 // 0x801D4D54 +0x54: emitted native method/helper; original source-level symbol unresolved
 // 0x801D4DA8 +0x24: emitted native method/helper; original source-level symbol unresolved
 // 0x801D4DCC +0x12C: tagged property loader: DynamicLightSpotlight; target diagnostic literal, no guessed symbol rename
@@ -356,7 +357,7 @@
 // 0x801D514C +0x158: tagged property loader: DynamicLightFalloff; target diagnostic literal, no guessed symbol rename
 // 0x801D52A4 +0x58: emitted native method/helper; original source-level symbol unresolved
 // 0x801D52FC +0x48: emitted native method/helper; original source-level symbol unresolved
-// 0x801D5344 +0x23C: tagged property loader: DamageInfo; target diagnostic literal, no guessed symbol rename
+// 0x801D5344 +0x23C: tagged property loader: DamageInfo; target diagnostic literal, named LoadTypedefDamageInfo (Echoes convention)
 // 0x801D5580 +0x3C: emitted native method/helper; original source-level symbol unresolved
 // 0x801D55BC +0x1C: emitted native method/helper; original source-level symbol unresolved
 // 0x801D55D8 +0x24C: tagged property loader: CounterConditions; target diagnostic literal, no guessed symbol rename
@@ -373,3 +374,5 @@
 // 0x801D5B30 +0x148: scaled/oriented area-relative AABox conversion helper
 // 0x801D5C78 +0xC0: area-relative AABox conversion helper
 // 0x801D5D38 +0x30: registered initializer; .ctors 0x8065B7CC; full native size 0x30
+
+#include "MetroidPrime/ScriptLoader/ScriptLoaderDefinitions.inc"

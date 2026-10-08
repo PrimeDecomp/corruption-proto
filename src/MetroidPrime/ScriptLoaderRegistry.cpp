@@ -1,4 +1,189 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
-// G2MEAB .text: 0x80364614..0x80365C48 (8 retained native functions).
-// Descriptive registry basename inferred; original source filename remains unproven.
-// Preserve native helpers, virtual stubs and inline emissions in target order.
+#include "MetroidPrime/ScriptLoader.hpp"
+
+#include "rstl/algorithm.hpp"
+
+struct NamedScriptLoader {
+  NamedScriptLoader(CFourCC type, FScriptLoader loader) : mType(type), mLoader(loader) {}
+
+  FourCC mType;
+  FScriptLoader mLoader;
+
+  bool operator<(const NamedScriptLoader& other) const { return mType < other.mType; }
+};
+
+// The target initializer inlines all 154 constructors and first writes seven
+// shared-header .sbss constants that are not identified yet; both remain unmatched.
+NamedScriptLoader gkLoaderFuncs[] = {
+    NamedScriptLoader('ACTR', &LoadActor),
+    NamedScriptLoader('ACKF', &LoadActorKeyframe),
+    NamedScriptLoader('AMOR', &LoadActorMorph),
+    NamedScriptLoader('ATRN', &LoadActorTransform),
+    NamedScriptLoader('ADMG', &LoadAreaDamage),
+    NamedScriptLoader('AIHT', &LoadAIHint),
+    NamedScriptLoader('AJMP', &LoadAiJumpPoint),
+    NamedScriptLoader('AIKF', &LoadAIKeyframe),
+    NamedScriptLoader('AITP', &LoadAITaskPoint),
+    NamedScriptLoader('AIWP', &LoadAIWaypoint),
+    NamedScriptLoader('AMIA', &LoadAmbientAI),
+    NamedScriptLoader('REAA', &LoadAreaAttributes),
+    NamedScriptLoader('ATMA', &LoadAtomicAlpha),
+    NamedScriptLoader('BALT', &LoadBallTrigger),
+    NamedScriptLoader('BSTR', &LoadBeastRider),
+    NamedScriptLoader('BSKR', &LoadBerserker),
+    NamedScriptLoader('BLWF', &LoadBlinkWolf),
+    NamedScriptLoader('CABL', &LoadCable),
+    NamedScriptLoader('BLUR', &LoadCameraBlurKeyframe),
+    NamedScriptLoader('FILT', &LoadCameraFilterKeyframe),
+    NamedScriptLoader('CAMH', &LoadCameraHint),
+    NamedScriptLoader('CAMP', &LoadCameraPitch),
+    NamedScriptLoader('CAMS', &LoadCameraShaker),
+    NamedScriptLoader('CANB', &LoadCannonBall),
+    NamedScriptLoader('CINE', &LoadCinematicCamera),
+    NamedScriptLoader('CLRM', &LoadColorModulate),
+    NamedScriptLoader('CRLY', &LoadConditionalRelay),
+    NamedScriptLoader('CSAC', &LoadContextSensitiveAction),
+    NamedScriptLoader('CSAT', &LoadContextSensitiveActivator),
+    NamedScriptLoader('CTLH', &LoadControlHint),
+    NamedScriptLoader('CNTA', &LoadControllerAction),
+    NamedScriptLoader('CNTR', &LoadCounter),
+    NamedScriptLoader('COVR', &LoadCoverPoint),
+    NamedScriptLoader('CRAR', &LoadCrossAreaRelay),
+    NamedScriptLoader('DTRG', &LoadDamageableTrigger),
+    NamedScriptLoader('DTRO', &LoadDamageableTriggerOrientated),
+    NamedScriptLoader('DMGA', &LoadDamageActor),
+    NamedScriptLoader('DRKS', &LoadDarkSamus),
+    NamedScriptLoader('DEBR', &LoadDebris),
+    NamedScriptLoader('DEFM', &LoadDefenseMechanoid),
+    NamedScriptLoader('DBAR', &LoadDestructibleBarrier),
+    NamedScriptLoader('DFOG', &LoadDistanceFog),
+    NamedScriptLoader('DOCK', &LoadDock),
+    NamedScriptLoader('DOOR', &LoadDoor),
+    NamedScriptLoader('DLHT', &LoadDynamicLight),
+    NamedScriptLoader('EFCT', &LoadEffect),
+    NamedScriptLoader('EFTR', &LoadEffectRepulsor),
+    NamedScriptLoader('EMPU', &LoadElectroMagneticPulse),
+    NamedScriptLoader('FXDC', &LoadEnvFxDensityController),
+    NamedScriptLoader('EYEP', &LoadEyePod),
+    NamedScriptLoader('FLPS', &LoadFalsePerspective),
+    NamedScriptLoader('FGHT', &LoadFargullHatcher),
+    NamedScriptLoader('FGHS', &LoadFargullHatcherSwarm),
+    NamedScriptLoader('FISH', &LoadFishCloud),
+    NamedScriptLoader('FSHM', &LoadFishCloudModifier),
+    NamedScriptLoader('FSWM', &LoadFlyerSwarm),
+    NamedScriptLoader('FLYP', &LoadFlyingPirate),
+    NamedScriptLoader('FOGO', &LoadFogOverlay),
+    NamedScriptLoader('FOGV', &LoadFogVolume),
+    NamedScriptLoader('FRND', &LoadFriendly),
+    NamedScriptLoader('FNWK', &LoadFrontEndDataNetwork),
+    NamedScriptLoader('GENR', &LoadGenerator),
+    NamedScriptLoader('GOBD', &LoadGeneratedObjectDeleter),
+    NamedScriptLoader('GRAP', &LoadGrapplePoint),
+    NamedScriptLoader('GRFL', &LoadGragnolFlyer),
+    NamedScriptLoader('GMNU', &LoadGuiMenu),
+    NamedScriptLoader('GPJN', &LoadGuiPlayerJoinManager),
+    NamedScriptLoader('GSCR', &LoadGuiScreen),
+    NamedScriptLoader('GSLD', &LoadGuiSlider),
+    NamedScriptLoader('GWIG', &LoadGuiWidget),
+    NamedScriptLoader('GNTB', &LoadGunTurretBase),
+    NamedScriptLoader('GNTT', &LoadGunTurretTop),
+    NamedScriptLoader('HHNT', &LoadHUDHint),
+    NamedScriptLoader('MEMO', &LoadHUDMemo),
+    NamedScriptLoader('KRAK', &LoadKorakk),
+    NamedScriptLoader('KRBM', &LoadKorbaMaw),
+    NamedScriptLoader('KRBA', &LoadKorbaSnatcherSwarm),
+    NamedScriptLoader('LUAX', &LoadLUAScript),
+    NamedScriptLoader('MANT', &LoadMantha),
+    NamedScriptLoader('MRLY', &LoadMemoryRelay),
+    NamedScriptLoader('MHOP', &LoadMetroidHopper),
+    NamedScriptLoader('MHAT', &LoadMetroidHatcher),
+    NamedScriptLoader('MYSF', &LoadMysteryFlyer),
+    NamedScriptLoader('NOTU', &LoadPTCNoseTurret),
+    NamedScriptLoader('OPAA', &LoadOptionalAreaAsset),
+    NamedScriptLoader('PCTL', &LoadPathControl),
+    NamedScriptLoader('PMCT', &LoadPathMeshCtrl),
+    NamedScriptLoader('PDBR', &LoadPhysicsDebris),
+    NamedScriptLoader('PHZS', &LoadPhazonFlyerSwarm),
+    NamedScriptLoader('PLCH', &LoadPhazonLeech),
+    NamedScriptLoader('PPDL', &LoadPhazonPuddle),
+    NamedScriptLoader('PCKP', &LoadPickup),
+    NamedScriptLoader('PDRN', &LoadPirateDrone),
+    NamedScriptLoader('PLAT', &LoadPlatform),
+    NamedScriptLoader('PSSM', &LoadPlantScarabSwarm),
+    NamedScriptLoader('PLAC', &LoadPlayerActor),
+    NamedScriptLoader('PLCT', &LoadPlayerController),
+    NamedScriptLoader('HINT', &LoadPlayerHint),
+    NamedScriptLoader('PGVS', &LoadPlayerGravityScalar),
+    NamedScriptLoader('PLRT', &LoadPlayerTurret),
+    NamedScriptLoader('PUAP', &LoadPlayerUserAnimPoint),
+    NamedScriptLoader('POIN', &LoadPointOfInterest),
+    NamedScriptLoader('RADD', &LoadRadialDamage),
+    NamedScriptLoader('RRLY', &LoadRelayRandom),
+    NamedScriptLoader('REPL', &LoadRepulsor),
+    NamedScriptLoader('RIPL', &LoadRipple),
+    NamedScriptLoader('RMAC', &LoadRoomAcoustics),
+    NamedScriptLoader('REPH', &LoadReptilicusHunter),
+    NamedScriptLoader('RID1', &LoadRidley1),
+    NamedScriptLoader('RUMB', &LoadRumbleEffect),
+    NamedScriptLoader('RUND', &LoadRundas),
+    NamedScriptLoader('SWJT', &LoadScrewAttackWallJumpTarget),
+    NamedScriptLoader('SLCT', &LoadLayerController),
+    NamedScriptLoader('SRLY', &LoadRelay),
+    NamedScriptLoader('SPRL', &LoadPositionRelay),
+    NamedScriptLoader('SDB1', &LoadSeedBoss1),
+    NamedScriptLoader('SBO1', &LoadSeedBoss1Orb),
+    NamedScriptLoader('SQTR', &LoadSequenceTimer),
+    NamedScriptLoader('SHDW', &LoadShadowProjector),
+    NamedScriptLoader('SHIP', &LoadShip),
+    NamedScriptLoader('SHCI', &LoadShipCommandIcon),
+    NamedScriptLoader('SHCP', &LoadShipCommandPath),
+    NamedScriptLoader('SHPX', &LoadShipProxy),
+    NamedScriptLoader('SKRP', &LoadSkyRipple),
+    NamedScriptLoader('SOND', &LoadSound),
+    NamedScriptLoader('SNDM', &LoadSoundModifier),
+    NamedScriptLoader('PIRT', &LoadSpacePirate),
+    NamedScriptLoader('SPWN', &LoadSpawnPoint),
+    NamedScriptLoader('SPFN', &LoadSpecialFunction),
+    NamedScriptLoader('BALS', &LoadSpiderBallAttractionSurface),
+    NamedScriptLoader('BALW', &LoadSpiderBallWaypoint),
+    NamedScriptLoader('SPIN', &LoadSpinner),
+    NamedScriptLoader('STEM', &LoadSteam),
+    NamedScriptLoader('STMB', &LoadSteamBot),
+    NamedScriptLoader('STML', &LoadSteamLord),
+    NamedScriptLoader('STAU', &LoadStreamedAudio),
+    NamedScriptLoader('MOVI', &LoadStreamedMovie),
+    NamedScriptLoader('SUBT', &LoadSubtitles),
+    NamedScriptLoader('SCTL', &LoadSurfaceControl),
+    NamedScriptLoader('SWBT', &LoadSwarmBot),
+    NamedScriptLoader('SWTC', &LoadSwitch),
+    NamedScriptLoader('TGPT', &LoadTargetingPoint),
+    NamedScriptLoader('TMAI', &LoadTeamAiMgr),
+    NamedScriptLoader('TXPN', &LoadTextPane),
+    NamedScriptLoader('TKEY', &LoadTimeKeyframe),
+    NamedScriptLoader('TIMR', &LoadTimer),
+    NamedScriptLoader('TRGR', &LoadTrigger),
+    NamedScriptLoader('FLAR', &LoadVisorFlare),
+    NamedScriptLoader('VGOO', &LoadVisorGoo),
+    NamedScriptLoader('WATR', &LoadWater),
+    NamedScriptLoader('WAYP', &LoadWaypoint),
+    NamedScriptLoader('WPNG', &LoadWeaponGenerator),
+    NamedScriptLoader('WLIT', &LoadWorldLightFader),
+    NamedScriptLoader('TEL1', &LoadWorldTeleporter),
+};
+
+int gkLoaderFuncCount = ARRAY_SIZE(gkLoaderFuncs);
+
+FScriptLoader GetScriptLoaderForType(CFourCC type) {
+  static bool sorted = false;
+  if (!sorted) {
+    rstl::sort(gkLoaderFuncs, gkLoaderFuncs + gkLoaderFuncCount);
+    sorted = true;
+  }
+
+  const NamedScriptLoader key(type, nullptr);
+  const NamedScriptLoader* const loader =
+      rstl::binary_find(gkLoaderFuncs, gkLoaderFuncs + gkLoaderFuncCount, key);
+  if (loader && loader != gkLoaderFuncs + gkLoaderFuncCount) {
+    return loader->mLoader;
+  }
+  return nullptr;
+}

@@ -170,19 +170,19 @@ NamedScriptLoader gkLoaderFuncs[] = {
     NamedScriptLoader('TEL1', &LoadWorldTeleporter),
 };
 
-int g_LoaderFuncCount = ARRAY_SIZE(gkLoaderFuncs);
+int gkLoaderFuncCount = ARRAY_SIZE(gkLoaderFuncs);
 
 FScriptLoader GetScriptLoaderForType(CFourCC type) {
   static bool sorted = false;
   if (!sorted) {
-    rstl::sort(gkLoaderFuncs, gkLoaderFuncs + g_LoaderFuncCount);
+    rstl::sort(gkLoaderFuncs, gkLoaderFuncs + gkLoaderFuncCount);
     sorted = true;
   }
 
   const NamedScriptLoader key(type, nullptr);
   const NamedScriptLoader* const loader =
-      rstl::binary_find(gkLoaderFuncs, gkLoaderFuncs + g_LoaderFuncCount, key);
-  if (loader && loader != gkLoaderFuncs + g_LoaderFuncCount) {
+      rstl::binary_find(gkLoaderFuncs, gkLoaderFuncs + gkLoaderFuncCount, key);
+  if (loader && loader != gkLoaderFuncs + gkLoaderFuncCount) {
     return loader->mLoader;
   }
   return nullptr;

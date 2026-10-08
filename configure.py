@@ -311,6 +311,31 @@ def ZlibLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
+# Provisional MetroTRK profile borrowed from the Mario Party 4 TRK_MINNOW_DOLPHIN build.
+cflags_trk = [
+    *cflags_base,
+    "-use_lmw_stmw on",
+    "-str reuse,readonly",
+    "-common off",
+    "-sdata 0",
+    "-sdata2 0",
+    "-inline auto,deferred",
+    "-enum min",
+    "-sdatathreshold 0",
+    "-i include/TRK_MINNOW_DOLPHIN",
+]
+
+
+def TrkLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/1.3",
+        "cflags": cflags_trk,
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
 # Tentative LZO compiler profile from Echoes; prototype optimization remains unverified.
 def LzoLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
@@ -1557,7 +1582,7 @@ config.libs = [
     RetroLib("rstl", [
         Object(NonMatching, "rstl/locked_cache_allocator.cpp"),
     ]),
-    RuntimeLib("MetroTRK", [
+    TrkLib("MetroTRK", [
         Object(NonMatching, "MetroTRK/mainloop.c"),
         Object(NonMatching, "MetroTRK/nubevent.c"),
         Object(NonMatching, "MetroTRK/nubinit.c"),

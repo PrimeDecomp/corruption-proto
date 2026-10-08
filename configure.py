@@ -834,6 +834,7 @@ config.libs = [
         Object(NonMatching, "Kyoto/Animation/IAnimReader.cpp"),
         Object(NonMatching, "Kyoto/Animation/CAllFormatsAnimSource.cpp"),
         Object(NonMatching, "Kyoto/CDvdRequest.cpp"),
+        Object(NonMatching, "Kyoto/CDvdRequestManager.cpp"),
         Object(NonMatching, "Kyoto/Text/CColorInstruction.cpp"),
         Object(NonMatching, "Kyoto/Text/CColorOverrideInstruction.cpp"),
         Object(NonMatching, "Kyoto/Text/CDrawStringOptions.cpp"),

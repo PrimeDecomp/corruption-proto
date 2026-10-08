@@ -438,7 +438,7 @@
     },
     {
       "path": "Kyoto/CDvdRequestManager.cpp",
-      "mapped": false
+      "mapped": true
     },
     {
       "path": "Kyoto/CFactoryMgr.cpp",

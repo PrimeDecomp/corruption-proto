@@ -28,10 +28,10 @@ public:
     uint GetType() const { return mType; }
 
   private:
-    uint mId;
+    CAssetId mId;
     uint mType;
-    uint x8_;
     uint xc_;
+    uint x10_;
     rstl::optional_object< CToken > mToken;
   };
 

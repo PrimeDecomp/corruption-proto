@@ -36,8 +36,8 @@ CCECharacterInfo::CCECharacterInfo(CInputStream& in)
     mCmdlOverlay = in.Get< CAssetId >();
     mCksrOverlay = in.Get< CAssetId >();
   } else {
-    mCmdlOverlay = 0;
-    mCksrOverlay = 0;
+    mCmdlOverlay = CAssetId(0);
+    mCksrOverlay = CAssetId(0);
   }
   if (mTableCount > 4) {
     mAnimIdxs = rstl::vector< uint >(in);

@@ -2,9 +2,9 @@
 #ifndef _SLDRPLASMABEAMINFO_HPP
 #define _SLDRPLASMABEAMINFO_HPP
 
+#include "Kyoto/CAssetId.hpp"
 #include "Kyoto/Graphics/CColor.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
-#include "Kyoto/SObjectTag.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
 
 struct SLdrPlasmaBeamInfo {

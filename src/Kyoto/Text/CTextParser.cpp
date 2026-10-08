@@ -44,9 +44,10 @@ void CTextParser::ParseText(CTextExecuteBuffer& buffer, const wchar_t* str, int 
 CAssetId CTextParser::GetAssetIdFromString(
     const rstl::string& text, const rstl::vector< rstl::pair< CAssetId, CAssetId > >* textureMap) {
   const rstl::wstring str = CStringExtras::ConvertToUNICODE(text);
-  const CAssetId id = (static_cast< uint >(GetColorValue(str.data())) << 24) |
-                      (GetColorValue(str.data() + 2) << 16) | (GetColorValue(str.data() + 4) << 8) |
-                      GetColorValue(str.data() + 6);
+  const CAssetId id(static_cast< uint >((static_cast< uint >(GetColorValue(str.data())) << 24) |
+                                        (GetColorValue(str.data() + 2) << 16) |
+                                        (GetColorValue(str.data() + 4) << 8) |
+                                        GetColorValue(str.data() + 6)));
   if (textureMap) {
     typedef rstl::pair< CAssetId, CAssetId > AssetPair;
     rstl::vector< AssetPair >::const_iterator it = rstl::binary_find(
@@ -60,9 +61,9 @@ CAssetId CTextParser::GetAssetIdFromString(
 }
 
 TToken< CRasterFont > CTextParser::GetFont(const wchar_t* str, int len) {
-  const CAssetId id = (static_cast< uint >(GetColorValue(str)) << 24) |
-                      (GetColorValue(str + 2) << 16) | (GetColorValue(str + 4) << 8) |
-                      GetColorValue(str + 6);
+  const CAssetId id(static_cast< uint >((static_cast< uint >(GetColorValue(str)) << 24) |
+                                        (GetColorValue(str + 2) << 16) |
+                                        (GetColorValue(str + 4) << 8) | GetColorValue(str + 6)));
   return mObjectStore.GetObj(SObjectTag('FONT', id));
 }
 

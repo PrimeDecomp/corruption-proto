@@ -81,15 +81,15 @@ CFactoryFnReturn FParticleFactory(const SObjectTag& tag, CInputStream& in,
 }
 
 CGenDescription* CParticleDataFactory::GetGeneratorDesc(CInputStream& in, CSimplePool* pool,
-                                                        uint id) {
-  rstl::vector< uint > assets;
+                                                        const CAssetId& id) {
+  rstl::vector< CAssetId > assets;
   assets.reserve(8);
   return CParticleDataFactory::CreateGeneratorDescription(in, assets, id, pool);
 }
 
 CGenDescription* CParticleDataFactory::CreateGeneratorDescription(CInputStream& in,
-                                                                  rstl::vector< uint >& assets,
-                                                                  const uint id,
+                                                                  rstl::vector< CAssetId >& assets,
+                                                                  const CAssetId& id,
                                                                   CSimplePool* pool) {
   if (rstl::count(assets.begin(), assets.end(), id) != 0) {
     return nullptr;
@@ -1409,12 +1409,12 @@ CUVElement* CParticleDataFactory::GetTextureElement(CInputStream& in, CSimplePoo
     ret = nullptr;
     break;
   case SBIG('CNST'): {
-    CAssetId id = 0;
+    CAssetId id = kInvalidAssetId;
     FourCC subId = GetClassID(in);
     if (subId != SBIG('NONE')) {
-      id = in.ReadInt32();
+      id = CAssetId(in);
     }
-    if (id == 0) {
+    if (id == kInvalidAssetId) {
       TToken< CTexture > tex = CreateTexture(-1);
       ret = rs_new CUVEConstant(tex);
     } else {
@@ -1424,10 +1424,10 @@ CUVElement* CParticleDataFactory::GetTextureElement(CInputStream& in, CSimplePoo
     break;
   }
   case SBIG('ATEX'): {
-    CAssetId id = 0;
+    CAssetId id = kInvalidAssetId;
     FourCC subId = GetClassID(in);
     if (subId != SBIG('NONE')) {
-      id = in.ReadInt32();
+      id = CAssetId(in);
     }
     CIntElement* tileW = GetIntElement(in);
     CIntElement* tileH = GetIntElement(in);
@@ -1435,7 +1435,7 @@ CUVElement* CParticleDataFactory::GetTextureElement(CInputStream& in, CSimplePoo
     CIntElement* strideH = GetIntElement(in);
     CIntElement* cycleFrames = GetIntElement(in);
     bool loop = GetBool(in);
-    if (id == 0) {
+    if (id == kInvalidAssetId) {
       TToken< CTexture > tex = CreateTexture(-1);
       ret = rs_new CUVEAnimTexture(tex, tileW, tileH, strideW, strideH, cycleFrames, loop);
     } else {
@@ -1456,11 +1456,11 @@ CParticleDataFactory::GetChildGeneratorDesc(CInputStream& in, CSimplePool* pool,
   FourCC clsId = GetClassID(in);
   CAssetId id;
   if (clsId != SBIG('NONE')) {
-    id = in.ReadInt32();
+    id = CAssetId(in);
   } else {
     return rstl::optional_object< TToken< CGenDescription > >();
   }
-  if (id == 0) {
+  if (id == kInvalidAssetId) {
     return rstl::optional_object< TToken< CGenDescription > >();
   }
   return GetChildGeneratorDesc(id, pool, resources);
@@ -1480,11 +1480,11 @@ CParticleDataFactory::GetSwooshGeneratorDesc(CInputStream& in, CSimplePool* pool
   FourCC clsId = GetClassID(in);
   CAssetId id;
   if (clsId != SBIG('NONE')) {
-    id = in.ReadInt32();
+    id = CAssetId(in);
   } else {
     return rstl::optional_object< TToken< CSwooshDescription > >();
   }
-  if (id == 0) {
+  if (id == kInvalidAssetId) {
     return rstl::optional_object< TToken< CSwooshDescription > >();
   }
   return TToken< CSwooshDescription >(pool->GetObj(SObjectTag(SBIG('SWHC'), id)));
@@ -1495,11 +1495,11 @@ CParticleDataFactory::GetElectricGeneratorDesc(CInputStream& in, CSimplePool* po
   FourCC clsId = GetClassID(in);
   CAssetId id;
   if (clsId != SBIG('NONE')) {
-    id = in.ReadInt32();
+    id = CAssetId(in);
   } else {
     return rstl::optional_object< TToken< CElectricDescription > >();
   }
-  if (id == 0) {
+  if (id == kInvalidAssetId) {
     return rstl::optional_object< TToken< CElectricDescription > >();
   }
   return TToken< CElectricDescription >(pool->GetObj(SObjectTag(SBIG('ELSC'), id)));
@@ -1510,11 +1510,11 @@ rstl::optional_object< TToken< CModel > > CParticleDataFactory::GetModel(CInputS
   FourCC clsId = GetClassID(in);
   CAssetId id;
   if (clsId != SBIG('NONE')) {
-    id = in.ReadInt32();
+    id = CAssetId(in);
   } else {
     return rstl::optional_object< TToken< CModel > >();
   }
-  if (id == 0) {
+  if (id == kInvalidAssetId) {
     return rstl::optional_object< TToken< CModel > >();
   }
   return TToken< CModel >(pool->GetObj(SObjectTag(SBIG('CMDL'), id)));

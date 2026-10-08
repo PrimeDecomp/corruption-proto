@@ -122,6 +122,6 @@ private:
   mutable const CPakFile::CResInfo* mCachedResInfo;
   bool mForwardSeek;
 };
-CHECK_SIZEOF(CResLoader, 0x70)
+CHECK_SIZEOF(CResLoader, 0x78)
 
 #endif // _CRESLOADER

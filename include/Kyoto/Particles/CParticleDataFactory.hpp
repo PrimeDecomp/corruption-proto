@@ -17,9 +17,10 @@ class CSwooshDescription;
 
 class CParticleDataFactory {
 public:
-  static CGenDescription* GetGeneratorDesc(CInputStream& in, CSimplePool* pool, uint id);
-  static CGenDescription* CreateGeneratorDescription(CInputStream&, rstl::vector< uint >& assets,
-                                                     uint id, CSimplePool* pool);
+  static CGenDescription* GetGeneratorDesc(CInputStream& in, CSimplePool* pool, const CAssetId& id);
+  static CGenDescription* CreateGeneratorDescription(CInputStream&,
+                                                     rstl::vector< CAssetId >& assets,
+                                                     const CAssetId& id, CSimplePool* pool);
   static void LoadGPSMTokens(CGenDescription* desc);
   static bool CreateGPSM(CGenDescription* desc, CInputStream& in,
                          rstl::vector< CAssetId >& resources, CSimplePool* pool);

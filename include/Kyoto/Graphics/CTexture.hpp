@@ -99,7 +99,7 @@ public:
   void MangleMipmap(int mip);
   const char GetBitsPerPixel() const { return mBitsPerPixel; }
 
-  void UnloadBitmapData(CAssetId textureId) const;
+  void UnloadBitmapData(const CAssetId& textureId) const;
   bool TryReloadBitmapData(CResFactory& factory) const;
   int GetBitmapDataStatus() const; // Guessed name.
   bool LoadToMRAM() const;
@@ -146,6 +146,6 @@ private:
   mutable uint mFrameAllocated;
 };
 CHECK_SIZEOF(CTexture, 0x68)
-NESTED_CHECK_SIZEOF(CTexture, CDumpedBitmapDataReloader, 0x1c)
+NESTED_CHECK_SIZEOF(CTexture, CDumpedBitmapDataReloader, 0x28)
 
 #endif // _CTEXTURE

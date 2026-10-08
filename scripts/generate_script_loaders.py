@@ -170,8 +170,10 @@ PRIMITIVES: dict[str, Primitive] = {
     "Flags": Primitive("uint", "uint(input.ReadInt32())"),
     "Sound": Primitive("int", "input.ReadInt32()"),
     "Float": Primitive("float", "input.ReadFloat()"),
+    # G2MEAB asset IDs are 64-bit: every Asset case calls the CAssetId stream constructor
+    # (LoadTypedefActorParameters).
     "Asset": Primitive(
-        "CAssetId", "CAssetId(input.ReadInt32())", "Kyoto/SObjectTag.hpp"
+        "CAssetId", "CAssetId(input)", "Kyoto/CAssetId.hpp"
     ),
     "String": Primitive("rstl::string", "rstl::string(input)", "rstl/string.hpp"),
     "Vector": Primitive("CVector3f", "CVector3f(input)", "Kyoto/Math/CVector3f.hpp"),

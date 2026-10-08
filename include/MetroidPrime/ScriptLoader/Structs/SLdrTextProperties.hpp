@@ -2,9 +2,9 @@
 #ifndef _SLDRTEXTPROPERTIES_HPP
 #define _SLDRTEXTPROPERTIES_HPP
 
+#include "Kyoto/CAssetId.hpp"
 #include "Kyoto/Graphics/CColor.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
-#include "Kyoto/SObjectTag.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
 
 struct SLdrTextProperties {

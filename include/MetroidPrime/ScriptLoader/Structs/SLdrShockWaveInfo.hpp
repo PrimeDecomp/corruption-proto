@@ -2,8 +2,8 @@
 #ifndef _SLDRSHOCKWAVEINFO_HPP
 #define _SLDRSHOCKWAVEINFO_HPP
 
+#include "Kyoto/CAssetId.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
-#include "Kyoto/SObjectTag.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
 #include "MetroidPrime/ScriptLoader/Structs/SLdrDamageInfo.hpp"
 

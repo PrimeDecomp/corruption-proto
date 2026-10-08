@@ -23,6 +23,6 @@ public:
 private:
   CParticleData mData;
 };
-CHECK_SIZEOF(CParticlePOINode, 0x44)
+CHECK_SIZEOF(CParticlePOINode, 0x58)
 
 #endif // _CPARTICLEPOINODE

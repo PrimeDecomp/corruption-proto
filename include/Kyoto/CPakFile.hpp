@@ -23,7 +23,7 @@ public:
     CAssetId mId;
     uchar mData[7];
 
-    CResInfo(uint id, uint fourCC, uint offset, uint size, uint flags, uint groupedSize);
+    CResInfo(CAssetId id, uint fourCC, uint offset, uint size, uint flags, uint groupedSize);
     uint GetType() const;
     uint GetOffset() const;
     uint GetSize() const;
@@ -53,9 +53,9 @@ public:
     return mNameList;
   }
   const SObjectTag* GetResIdByName(const char* name) const;
-  const CResInfo* GetResInfo(uint id) const;
-  const CResInfo* GetResInfoForLoadDirectionless(uint id);
-  const CResInfo* GetResInfoForLoadPreferForward(uint id);
+  const CResInfo* GetResInfo(const CAssetId& id) const;
+  const CResInfo* GetResInfoForLoadDirectionless(const CAssetId& id);
+  const CResInfo* GetResInfoForLoadPreferForward(const CAssetId& id);
   uint GetFakeStaticSize() const;
 
 private:
@@ -85,7 +85,7 @@ private:
   mutable int mCurrentSeek;
 };
 CHECK_SIZEOF(CPakFile, 0x9c)
-NESTED_CHECK_SIZEOF(CPakFile, CResInfo, 0xb)
+NESTED_CHECK_SIZEOF(CPakFile, CResInfo, 0xf)
 
 namespace rstl {
 RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(CPakFile::CResInfo)

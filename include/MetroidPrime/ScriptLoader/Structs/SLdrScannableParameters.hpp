@@ -2,8 +2,8 @@
 #ifndef _SLDRSCANNABLEPARAMETERS_HPP
 #define _SLDRSCANNABLEPARAMETERS_HPP
 
+#include "Kyoto/CAssetId.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
-#include "Kyoto/SObjectTag.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
 
 struct SLdrScannableParameters {

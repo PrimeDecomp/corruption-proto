@@ -34,8 +34,6 @@ private:
   IObjectStore* mObjectStore;
   IObj* mObject;
   CVParamTransfer mParams;
-  // Preserve the prototype reference allocation size used by matched CToken.
-  char mPrototypeReserved[12];
 };
 CHECK_SIZEOF(CObjectReference, 0x30)
 #endif // _COBJECTREFERENCE

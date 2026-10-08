@@ -38,7 +38,7 @@ CRasterFont::CRasterFont(CInputStream& in, IObjectStore* store)
       int fInfoC = in.ReadInt32();
       int fontSize = in.ReadInt32();
       rstl::string fontName(in);
-      CAssetId fontId = in.ReadInt32();
+      CAssetId fontId = CAssetId(in);
 
       if (store != nullptr) {
         mTexture = store->GetObj(SObjectTag('TXTR', fontId));

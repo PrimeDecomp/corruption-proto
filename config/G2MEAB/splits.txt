@@ -2843,7 +2843,7 @@ Kyoto/Graphics/DolphinCGraphics.cpp:
 	.data       start:0x806DF340 end:0x806DF358 align:4
 	.bss        start:0x807826DC end:0x80782B14 align:4 common
 	.sdata      start:0x80796CC0 end:0x80796CD0 align:4
-	.sbss       start:0x8079B2A4 end:0x8079B2E8 align:4
+	.sbss       start:0x8079B288 end:0x8079B358 align:4
 	.sdata2     start:0x807A1D04 end:0x807A1DA0 align:4
 
 Kyoto/Graphics/DolphinCPalette.cpp:

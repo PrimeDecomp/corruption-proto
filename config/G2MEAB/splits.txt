@@ -1015,6 +1015,10 @@ MetroidPrime/Weapons/CSamusWeapon.cpp:
 	.text       start:0x80203E58 end:0x8020724C
 	.ctors      start:0x8065B850 end:0x8065B854
 
+MetroidPrime/Weapons/WeaponGlobals.cpp:
+	.text       start:0x8020724C end:0x8020727C
+	.ctors      start:0x8065B854 end:0x8065B858
+
 MetroidPrime/ConsoleCommands.cpp:
 	.text       start:0x8020727C end:0x8020ACA4
 	.ctors      start:0x8065B858 end:0x8065B85C
@@ -1094,6 +1098,10 @@ MetroidPrime/Cameras/CCameraColliderGroup.cpp:
 MetroidPrime/ScriptObjects/CPlatformWaypointTracker.cpp:
 	.text       start:0x8021E304 end:0x8021F340
 	.ctors      start:0x8065B898 end:0x8065B89C
+
+MetroidPrime/Particles/ParticleGeneratorSupport.cpp:
+	.text       start:0x8021F340 end:0x8021F378
+	.ctors      start:0x8065B89C end:0x8065B8A0
 
 MetroidPrime/ScriptObjects/CScriptCameraPitch.cpp:
 	.text       start:0x8021F378 end:0x8021FD30
@@ -2479,6 +2487,9 @@ Kyoto/Basics/CStopwatch.cpp:
 
 Kyoto/Basics/RAssert.cpp:
 	.text       start:0x804900E0 end:0x80490234
+
+Kyoto/Basics/PackedFloat.cpp:
+	.text       start:0x80490234 end:0x8049024C
 
 Kyoto/Basics/CBasicsDolphin.cpp:
 	.text       start:0x8049024C end:0x804904E8

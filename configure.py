@@ -1268,6 +1268,7 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/ScriptObjects/CScriptAmbientAI.cpp"),
         Object(NonMatching, "MetroidPrime/CSaveGameManager.cpp"),
         Object(NonMatching, "MetroidPrime/CSaveGameInterface.cpp"),
+        Object(NonMatching, "MetroidPrime/Weapons/CElectricBeamProjectile.cpp"),
         Object(NonMatching, "MetroidPrime/ScriptObjects/CDamageEffect.cpp"),
         Object(NonMatching, "MetroidPrime/CPauseScreenBackground.cpp"),
         Object(NonMatching, "MetroidPrime/CRedundantHintManager.cpp"),

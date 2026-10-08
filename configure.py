@@ -300,6 +300,17 @@ def RuntimeLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
+# Provisional zlib 1.1.3 profile; Prime's zlib compiler profile is the starting point.
+def ZlibLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+    return {
+        "lib": lib_name,
+        "mw_version": "GC/1.3.2",
+        "cflags": [*cflags_runtime, "-inline deferred", "-i include/zlib-1.1.3"],
+        "progress_category": "sdk",
+        "objects": objects,
+    }
+
+
 # Tentative LZO compiler profile from Echoes; prototype optimization remains unverified.
 def LzoLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     return {
@@ -1656,7 +1667,7 @@ config.libs = [
         Object(NonMatching, "Runtime/w_sqrt.c"),
         Object(NonMatching, "Runtime/stricmp.c"),
     ]),
-    RuntimeLib("zlib", [
+    ZlibLib("zlib", [
         Object(NonMatching, "zlib-1.1.3/adler32.c"),
         Object(NonMatching, "zlib-1.1.3/deflate.c"),
         Object(NonMatching, "zlib-1.1.3/infblock.c"),

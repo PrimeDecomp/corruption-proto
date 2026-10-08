@@ -13,38 +13,3 @@
  * bitmask+150, a distinct larger-object family. Both Prime/Echoes primitive/OBBox interfaces and
  * full native inventories consulted; neither has this named standalone class/TU.
  */
-
-// Native functions without reference source, drafted with mwdec (exact objdiff matches).
-// mwdec-drafted
-extern int lbl_80796BE0;
-struct CMaterialFilter;
-struct CMaterialList;
-struct CMaterialFilter { int Passes(const CMaterialList&) const; };
-struct CMaterialList { };
-extern "C" void fn_8002C18C(int);
-
-extern "C" int fn_804801DC();
-extern "C" int fn_804803A4();
-extern "C" void fn_8048043C(int val, int obj, int obj2);
-extern "C" void fn_8048087C(int val);
-
-extern "C" int fn_804801DC() {
-    return lbl_80796BE0;
-}
-
-extern "C" int fn_804803A4() {
-    return 0x4f524258;
-}
-
-extern "C" void fn_8048043C(int val, int obj, int obj2) {
-    if ((unsigned char)((CMaterialFilter*)*(int*)((char*)obj2 + 0x6c))->Passes(*(const CMaterialList*)(obj + 8))) {
-        fn_8002C18C(val);
-    } else {
-        fn_8002C18C(val);
-    }
-}
-
-extern "C" void fn_8048087C(int val) {
-    lbl_80796BE0 = val;
-}
-

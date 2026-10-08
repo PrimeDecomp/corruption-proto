@@ -3635,7 +3635,7 @@ MetroidPrime/CEulerAngles.cpp:
 	.ctors      start:0x8065BC44 end:0x8065BC48
 
 Kyoto/Animation/CParticleResData.cpp:
-	.text       start:0x805610AC end:0x80561278
+	.text       start:0x805610AC end:0x80561300
 
 Kyoto/Math/CVector4f.cpp:
 	.text       start:0x80561300 end:0x80561380

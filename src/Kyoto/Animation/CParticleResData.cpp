@@ -1,7 +1,8 @@
 /*
  * G2MEAB Kyoto/Animation/CParticleResData.cpp (NonMatching).
- * .text: 0x805610AC..0x80561278 (end exclusive; 2 native functions).
+ * .text: 0x805610AC..0x80561300 (end exclusive; 3 native functions).
  * Prime and Echoes references inspected; original source placement remains inferred.
+ * Includes one separately emitted tree-distance helper; original header placement is inferred.
  * Reference constructor retains version-gated asset-ID vectors. The native constructor
  * reads all six vectors unconditionally; its serialization remains to be reconstructed.
  */

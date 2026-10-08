@@ -160,7 +160,7 @@ void LoadTypedefScannableParameters(SLdrScannableParameters& sldrThis, CInputStr
     const u16 propertySize = input.ReadUint16();
     switch (propertyId) {
     case 0xb94e9be7: {
-      sldrThis.scannableInfo0 = CAssetId_ReadFromStream(input);
+      sldrThis.scannableInfo0 = CAssetId(input);
       break;
     }
     default:
@@ -607,7 +607,7 @@ void LoadTypedefTextProperties(SLdrTextProperties& sldrThis, CInputStream& input
       break;
     }
     case 0x0db9f8b6: {
-      sldrThis.defaultFont = CAssetId_ReadFromStream(input);
+      sldrThis.defaultFont = CAssetId(input);
       break;
     }
     case 0x18dd95cd: {
@@ -750,19 +750,19 @@ void LoadTypedefActorParameters(SLdrActorParameters& sldrThis, CInputStream& inp
       break;
     }
     case 0xc0ba9e18: {
-      sldrThis.darkModel = CAssetId_ReadFromStream(input);
+      sldrThis.darkModel = CAssetId(input);
       break;
     }
     case 0x9f027d91: {
-      sldrThis.darkSkin = CAssetId_ReadFromStream(input);
+      sldrThis.darkSkin = CAssetId(input);
       break;
     }
     case 0x6b1fbc3a: {
-      sldrThis.echoModel = CAssetId_ReadFromStream(input);
+      sldrThis.echoModel = CAssetId(input);
       break;
     }
     case 0xeb1d06be: {
-      sldrThis.echoSkin = CAssetId_ReadFromStream(input);
+      sldrThis.echoSkin = CAssetId(input);
       break;
     }
     case 0x1499803c: {
@@ -876,7 +876,7 @@ void LoadTypedefShockWaveInfo(SLdrShockWaveInfo& sldrThis, CInputStream& input) 
     const u16 propertySize = input.ReadUint16();
     switch (propertyId) {
     case 0x369f7d09: {
-      sldrThis.shockWaveEffect = CAssetId_ReadFromStream(input);
+      sldrThis.shockWaveEffect = CAssetId(input);
       break;
     }
     case 0x337f9524: {
@@ -904,11 +904,11 @@ void LoadTypedefShockWaveInfo(SLdrShockWaveInfo& sldrThis, CInputStream& input) 
       break;
     }
     case 0xbd321538: {
-      sldrThis.visorElectricEffect = CAssetId_ReadFromStream(input);
+      sldrThis.visorElectricEffect = CAssetId(input);
       break;
     }
     case 0xa2850b37: {
-      sldrThis.sound_VisorElectric = CAssetId_ReadFromStream(input);
+      sldrThis.sound_VisorElectric = CAssetId(input);
       break;
     }
     default:
@@ -1177,23 +1177,23 @@ void LoadTypedefPlasmaBeamInfo(SLdrPlasmaBeamInfo& sldrThis, CInputStream& input
       break;
     }
     case 0x459ae4a8: {
-      sldrThis.weaponSystem = CAssetId_ReadFromStream(input);
+      sldrThis.weaponSystem = CAssetId(input);
       break;
     }
     case 0x4f387c49: {
-      sldrThis.contactEffect = CAssetId_ReadFromStream(input);
+      sldrThis.contactEffect = CAssetId(input);
       break;
     }
     case 0xddd52e3a: {
-      sldrThis.pulseEffect = CAssetId_ReadFromStream(input);
+      sldrThis.pulseEffect = CAssetId(input);
       break;
     }
     case 0xc6f229c6: {
-      sldrThis.beamTexture = CAssetId_ReadFromStream(input);
+      sldrThis.beamTexture = CAssetId(input);
       break;
     }
     case 0x8f1a76c3: {
-      sldrThis.glowTexture = CAssetId_ReadFromStream(input);
+      sldrThis.glowTexture = CAssetId(input);
       break;
     }
     case 0xc26c291c: {
@@ -1241,7 +1241,7 @@ void LoadTypedefPlasmaBeamInfo(SLdrPlasmaBeamInfo& sldrThis, CInputStream& input
       break;
     }
     case 0xaeb31af3: {
-      sldrThis.beamStreaks = CAssetId_ReadFromStream(input);
+      sldrThis.beamStreaks = CAssetId(input);
       break;
     }
     default:

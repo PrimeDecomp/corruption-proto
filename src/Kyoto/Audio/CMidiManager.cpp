@@ -116,7 +116,7 @@ CMidiManager::CMidiData::CMidiData(CInputStream& in)
   in.ReadInt32();
   mSongId = in.ReadInt32();
   mGroupId = in.ReadInt32();
-  mAgscId = CAssetId_ReadFromStream(in);
+  mAgscId = CAssetId(in);
   int len = in.ReadInt32();
   mData = rs_new uchar[len];
   in.Get(mData.get(), len);

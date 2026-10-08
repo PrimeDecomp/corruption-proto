@@ -116,7 +116,7 @@ void CPakFile::InitialHeaderLoad() {
   mNameList.reserve(nameCount);
   for (int i = 0; i < nameCount; ++i) {
     const FourCC type = in.ReadInt32();
-    const CAssetId id = CAssetId_ReadFromStream(in);
+    const CAssetId id = CAssetId(in);
     const rstl::string name = CStringExtras::ReadString(in);
     mNameList.push_back_unsafe(
         rstl::pair< rstl::string, SObjectTag >(name, SObjectTag(type, id)));
@@ -167,7 +167,7 @@ void CPakFile::LoadResourceTable(CMemoryInStream& in) {
   for (int i = 0; i < static_cast< int >(mResTableCount); ++i) {
     const uint flags = in.ReadInt32();
     const uint type = in.ReadInt32();
-    const CAssetId id = CAssetId_ReadFromStream(in);
+    const CAssetId id = CAssetId(in);
     const uint size = in.ReadInt32();
     const uint offset = in.ReadInt32();
     sortedResources.push_back_unsafe(CResInfo(id, type, offset, size, flags, 0));

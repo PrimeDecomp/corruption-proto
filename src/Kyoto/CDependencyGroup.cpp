@@ -13,7 +13,7 @@ void CDependencyGroup::ReadFromStream(CInputStream& in) {
 
   for (int i = 0; i < numTags; ++i) {
     FourCC type = in.ReadInt32();
-    CAssetId id = CAssetId_ReadFromStream(in);
+    CAssetId id = CAssetId(in);
     mObjectTags.push_back_unsafe(SObjectTag(type, id));
   }
 }

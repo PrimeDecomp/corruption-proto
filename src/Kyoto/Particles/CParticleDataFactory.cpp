@@ -1412,7 +1412,7 @@ CUVElement* CParticleDataFactory::GetTextureElement(CInputStream& in, CSimplePoo
     CAssetId id = kInvalidAssetId;
     FourCC subId = GetClassID(in);
     if (subId != SBIG('NONE')) {
-      id = CAssetId_ReadFromStream(in);
+      id = CAssetId(in);
     }
     if (id == kInvalidAssetId) {
       TToken< CTexture > tex = CreateTexture(-1);
@@ -1427,7 +1427,7 @@ CUVElement* CParticleDataFactory::GetTextureElement(CInputStream& in, CSimplePoo
     CAssetId id = kInvalidAssetId;
     FourCC subId = GetClassID(in);
     if (subId != SBIG('NONE')) {
-      id = CAssetId_ReadFromStream(in);
+      id = CAssetId(in);
     }
     CIntElement* tileW = GetIntElement(in);
     CIntElement* tileH = GetIntElement(in);
@@ -1456,7 +1456,7 @@ CParticleDataFactory::GetChildGeneratorDesc(CInputStream& in, CSimplePool* pool,
   FourCC clsId = GetClassID(in);
   CAssetId id;
   if (clsId != SBIG('NONE')) {
-    id = CAssetId_ReadFromStream(in);
+    id = CAssetId(in);
   } else {
     return rstl::optional_object< TToken< CGenDescription > >();
   }
@@ -1480,7 +1480,7 @@ CParticleDataFactory::GetSwooshGeneratorDesc(CInputStream& in, CSimplePool* pool
   FourCC clsId = GetClassID(in);
   CAssetId id;
   if (clsId != SBIG('NONE')) {
-    id = CAssetId_ReadFromStream(in);
+    id = CAssetId(in);
   } else {
     return rstl::optional_object< TToken< CSwooshDescription > >();
   }
@@ -1495,7 +1495,7 @@ CParticleDataFactory::GetElectricGeneratorDesc(CInputStream& in, CSimplePool* po
   FourCC clsId = GetClassID(in);
   CAssetId id;
   if (clsId != SBIG('NONE')) {
-    id = CAssetId_ReadFromStream(in);
+    id = CAssetId(in);
   } else {
     return rstl::optional_object< TToken< CElectricDescription > >();
   }
@@ -1510,7 +1510,7 @@ rstl::optional_object< TToken< CModel > > CParticleDataFactory::GetModel(CInputS
   FourCC clsId = GetClassID(in);
   CAssetId id;
   if (clsId != SBIG('NONE')) {
-    id = CAssetId_ReadFromStream(in);
+    id = CAssetId(in);
   } else {
     return rstl::optional_object< TToken< CModel > >();
   }

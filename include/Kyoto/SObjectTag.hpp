@@ -15,7 +15,7 @@ struct SObjectTag {
   SObjectTag() {}
   SObjectTag(FourCC type, CAssetId id) : type(type), id(id) {}
   SObjectTag(const SObjectTag& other) : type(other.type), id(other.id) {}
-  SObjectTag(CInputStream& in) : type(in.ReadInt32()), id(CAssetId_ReadFromStream(in)) {}
+  SObjectTag(CInputStream& in) : type(in.ReadInt32()), id(in) {}
 
   bool operator<(const SObjectTag& other) const {
     if (type == other.type) {

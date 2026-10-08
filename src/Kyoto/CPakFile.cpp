@@ -51,7 +51,7 @@ CPakFile::CPakFile(const rstl::string& filename, bool buildDepList, bool worldPa
 , mResTableOffset(0)
 , mResTableCount(0)
 , mFakeStaticSize(0)
-, mAramBase(CARAMManager::GetInvalidAlloc())
+, mpARAMHeader(CARAMManager::GetInvalidAlloc())
 , mCurrentSeek(-1) {}
 
 CPakFile::~CPakFile() {
@@ -59,12 +59,12 @@ CPakFile::~CPakFile() {
     AsyncIdle();
   }
   CMemory::OffsetFakeStatics(-mFakeStaticSize);
-  CARAMManager::Free(mAramBase);
+  CARAMManager::Free(mpARAMHeader);
 }
 
 uint CPakFile::GetFakeStaticSize() const {
   return mResTableCount * sizeof(CResInfo) + mDepList.size() * sizeof(CAssetId) +
-         mResList.size() * sizeof(CResInfo) + mBucketOffsets.size() * sizeof(uint);
+         mResInfoBuckets.size() * sizeof(CResInfo) + mBucketOffsets.size() * sizeof(uint);
 }
 
 void CPakFile::UpdateFakeStaticSize() {
@@ -147,9 +147,9 @@ void CPakFile::DataLoad() {
 
   if (mWorldPak) {
     const uint size = (mResTableCount * sizeof(CResInfo) + 31) & ~31;
-    mAramBase = CARAMManager::Alloc(size);
-    const uint handle = CARAMManager::DMAToARAM(mResList.data(),
-                                                 const_cast< void* >(mAramBase), size,
+    mpARAMHeader = CARAMManager::Alloc(size);
+    const uint handle = CARAMManager::DMAToARAM(mResInfoBuckets.data(),
+                                                 const_cast< void* >(mpARAMHeader), size,
                                                  CARAMManager::kDMAPrio_One);
     CARAMManager::WaitForDMACompletion(handle);
   }
@@ -214,9 +214,9 @@ const CPakFile::CResInfo* CPakFile::GetResInfo(uint id) const {
     return nullptr;
   const uint bucket = id & 0xff;
   rstl::vector< CResInfo >::const_iterator first =
-      mResList.begin() + mBucketOffsets[bucket];
+      mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
-      mResList.begin() + mBucketOffsets[bucket + 1];
+      mResInfoBuckets.begin() + mBucketOffsets[bucket + 1];
   static rstl::less< CResInfo > compare;
   rstl::vector< CResInfo >::const_iterator it =
       rstl::lower_bound(first, last, CResInfo(id, 'TXTR', 0, 0, 0, 0), compare);
@@ -230,9 +230,9 @@ const CPakFile::CResInfo* CPakFile::GetResInfoForLoadDirectionless(uint id) {
     return nullptr;
   const uint bucket = id & 0xff;
   rstl::vector< CResInfo >::const_iterator first =
-      mResList.begin() + mBucketOffsets[bucket];
+      mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
-      mResList.begin() + mBucketOffsets[bucket + 1];
+      mResInfoBuckets.begin() + mBucketOffsets[bucket + 1];
   static rstl::less< CResInfo > compare;
   rstl::vector< CResInfo >::const_iterator it =
       rstl::lower_bound(first, last, CResInfo(id, 'TXTR', 0, 0, 0, 0), compare);
@@ -261,9 +261,9 @@ const CPakFile::CResInfo* CPakFile::GetResInfoForLoadPreferForward(uint id) {
     return nullptr;
   const uint bucket = id & 0xff;
   rstl::vector< CResInfo >::const_iterator first =
-      mResList.begin() + mBucketOffsets[bucket];
+      mResInfoBuckets.begin() + mBucketOffsets[bucket];
   rstl::vector< CResInfo >::const_iterator last =
-      mResList.begin() + mBucketOffsets[bucket + 1];
+      mResInfoBuckets.begin() + mBucketOffsets[bucket + 1];
   static rstl::less< CResInfo > compare;
   rstl::vector< CResInfo >::const_iterator it =
       rstl::lower_bound(first, last, CResInfo(id, 'TXTR', 0, 0, 0, 0), compare);
@@ -292,8 +292,8 @@ void CPakFile::RebuildResourceLists(const rstl::vector< CResInfo >& sortedResour
   rstl::reserved_vector< uint, 256 > bucketCounts(0);
 
   const CResInfo emptyInfo(0, 'TXTR', 0, 0, 0, 0);
-  mResList.clear();
-  mResList.resize(mResTableCount, emptyInfo);
+  mResInfoBuckets.clear();
+  mResInfoBuckets.resize(mResTableCount, emptyInfo);
   mBucketOffsets.clear();
   mBucketOffsets.reserve(257);
   for (rstl::vector< CResInfo >::const_iterator it = sortedResources.begin();
@@ -310,7 +310,7 @@ void CPakFile::RebuildResourceLists(const rstl::vector< CResInfo >& sortedResour
   for (int i = 0; i < sortedResources.size(); ++i) {
     const CResInfo& info = sortedResources[i];
     const uint bucket = info.GetId() & 0xff;
-    mResList[mBucketOffsets[bucket] + bucketCounts[bucket]] = info;
+    mResInfoBuckets[mBucketOffsets[bucket] + bucketCounts[bucket]] = info;
     ++bucketCounts[bucket];
   }
 }
@@ -320,7 +320,7 @@ void CPakFile::EnsureWorldPakReady() {
     rstl::vector< CResInfo > resources(mResTableCount);
     const uint size = (mResTableCount * sizeof(CResInfo) + 31) & ~31;
     CARAMManager::WaitForDMACompletion(
-        CARAMManager::DMAToMRAM(const_cast< void* >(mAramBase), resources.data(), size,
+        CARAMManager::DMAToMRAM(const_cast< void* >(mpARAMHeader), resources.data(), size,
                                 CARAMManager::kDMAPrio_One));
     RebuildResourceLists(resources);
     if (mBuildDepList) {
@@ -338,7 +338,7 @@ void CPakFile::sub_80323554() {
   if (mWorldPak) {
     mStashedInARAM = true;
     mDepList = rstl::vector< CAssetId >();
-    mResList = rstl::vector< CResInfo >();
+    mResInfoBuckets = rstl::vector< CResInfo >();
     mBucketOffsets = rstl::vector< uint >();
     UpdateFakeStaticSize();
   }

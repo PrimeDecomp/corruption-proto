@@ -77,10 +77,10 @@ private:
   uint mResTableOffset;
   uint mResTableCount;
   int mFakeStaticSize;
-  const void* mAramBase;
+  const void* mpARAMHeader;
   rstl::vector< rstl::pair< rstl::string, SObjectTag > > mNameList;
   rstl::vector< CAssetId > mDepList;
-  rstl::vector< CResInfo > mResList;
+  rstl::vector< CResInfo > mResInfoBuckets;
   rstl::vector< uint > mBucketOffsets;
   mutable int mCurrentSeek;
 };

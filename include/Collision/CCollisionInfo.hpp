@@ -6,6 +6,7 @@
 #include "MetroidPrime/TGameTypes.hpp"
 
 class CAABox;
+class CTransform4f;
 
 class CCollisionInfo {
 public:
@@ -14,13 +15,13 @@ public:
 
   CCollisionInfo(EInvalid = kI_Invalid);
   CCollisionInfo(const CVector3f& point, const CMaterialList& rightMaterial,
-                 const CMaterialList& leftMaterial, const CVector3f& normal, ushort value);
+                 const CMaterialList& leftMaterial, const CVector3f& normal, int value);
   CCollisionInfo(const CVector3f& point, const CMaterialList& rightMaterial,
                  const CMaterialList& leftMaterial, const CVector3f& leftNormal,
-                 const CVector3f& rightNormal, ushort value);
+                 const CVector3f& rightNormal, int value);
   CCollisionInfo(const CAABox& box, const CMaterialList& rightMaterial,
                  const CMaterialList& leftMaterial, const CVector3f& leftNormal,
-                 const CVector3f& rightNormal, ushort value);
+                 const CVector3f& rightNormal, int value);
 
   bool IsValid() const { return mValid; }
   bool HasExtents() const { return mHasExtents; }
@@ -30,9 +31,11 @@ public:
   const CMaterialList& GetMaterialRight() const { return mMaterialRight; }
   const CVector3f& GetNormalLeft() const { return mNormalLeft; }
   const CVector3f& GetNormalRight() const { return mNormalRight; }
-  TUniqueId GetObjectId() const { return mObjectId; }
-  void SetObjectId(TUniqueId id) { mObjectId = id; }
+  int GetObjectId() const { return mObjectId; }
+  void SetObjectId(int id) { mObjectId = id; }
   void Swap();
+  // Guessed name (target-derived): transforms point, extents and normals.
+  void Transform(const CTransform4f& xf);
 
 private:
   CVector3f mPoint;
@@ -43,14 +46,14 @@ private:
   CMaterialList mMaterialRight;
   CVector3f mNormalLeft;
   CVector3f mNormalRight;
-  TUniqueId mObjectId;
+  int mObjectId;
   bool mValid : 1;
   bool mHasExtents : 1;
 };
 CHECK_SIZEOF(CCollisionInfo, 0x60)
 
 namespace rstl {
-RSTL_DECLARE_TRIVIALLY_DESTRUCTIBLE(CCollisionInfo)
+RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(CCollisionInfo)
 }
 
 #endif // _CCOLLISIONINFO

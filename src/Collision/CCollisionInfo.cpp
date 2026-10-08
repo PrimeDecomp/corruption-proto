@@ -18,12 +18,13 @@
 #include "Collision/CCollisionInfo.hpp"
 
 #include "Kyoto/Math/CAABox.hpp"
+#include "Kyoto/Math/CTransform4f.hpp"
 
 #include "rstl/algorithm.hpp"
 
 CCollisionInfo::CCollisionInfo(const CVector3f& point, const CMaterialList& rightMat,
                                const CMaterialList& leftMat, const CVector3f& normal,
-                               const ushort value)
+                               const int value)
 : mPoint(point)
 , mExtentX(CVector3f::Zero())
 , mExtentY(CVector3f::Zero())
@@ -38,7 +39,7 @@ CCollisionInfo::CCollisionInfo(const CVector3f& point, const CMaterialList& righ
 
 CCollisionInfo::CCollisionInfo(const CVector3f& point, const CMaterialList& rightMat,
                                const CMaterialList& leftMat, const CVector3f& leftNormal,
-                               const CVector3f& rightNormal, const ushort value)
+                               const CVector3f& rightNormal, const int value)
 : mPoint(point)
 , mExtentX(CVector3f::Zero())
 , mExtentY(CVector3f::Zero())
@@ -53,7 +54,7 @@ CCollisionInfo::CCollisionInfo(const CVector3f& point, const CMaterialList& righ
 
 CCollisionInfo::CCollisionInfo(const CAABox& aabox, const CMaterialList& rightMat,
                                const CMaterialList& leftMat, const CVector3f& leftNormal,
-                               const CVector3f& rightNormal, const ushort value)
+                               const CVector3f& rightNormal, const int value)
 : mPoint(aabox.GetMinPoint())
 , mExtentX(aabox.GetMaxPoint().GetX() - aabox.GetMinPoint().GetX(), 0.f, 0.f)
 , mExtentY(0.f, aabox.GetMaxPoint().GetY() - aabox.GetMinPoint().GetY(), 0.f)
@@ -79,10 +80,22 @@ CCollisionInfo::CCollisionInfo(EInvalid)
 , mValid(false)
 , mHasExtents(false) {}
 
+void CCollisionInfo::Transform(const CTransform4f& xf) {
+  mPoint = xf * mPoint;
+  mExtentX = xf.Rotate(mExtentX);
+  mExtentY = xf.Rotate(mExtentY);
+  mExtentZ = xf.Rotate(mExtentZ);
+  mHasExtents = false;
+  mNormalLeft = xf.Rotate(mNormalLeft);
+  mNormalRight = xf.Rotate(mNormalRight);
+}
+
 CVector3f CCollisionInfo::GetExtreme() const { return mPoint + mExtentX + mExtentY + mExtentZ; }
 
 void CCollisionInfo::Swap() {
   mNormalLeft = -mNormalLeft;
   mNormalRight = -mNormalRight;
-  rstl::swap(mMaterialLeft, mMaterialRight);
+  CMaterialList tmp(mMaterialLeft);
+  mMaterialLeft = mMaterialRight;
+  mMaterialRight = tmp;
 }

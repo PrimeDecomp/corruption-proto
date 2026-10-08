@@ -16,6 +16,7 @@ public:
   CVector3f GetPoint(float t) const { return mStart + t * mDelta; }
 
   const CVector3f& GetStart() const { return mStart; }
+  const CVector3f& GetEnd() const { return mEnd; }
   const CVector3f& GetDelta() const { return mDelta; }
   const CVector3f& GetDirection() const { return mDirection; }
   float GetLength() const { return mLength; }

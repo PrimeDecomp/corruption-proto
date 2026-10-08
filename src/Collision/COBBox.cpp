@@ -22,14 +22,136 @@
 #include "Collision/CollisionUtil.hpp"
 
 #include "Kyoto/Math/CMath.hpp"
+#include "Kyoto/Math/CMatrix3f.hpp"
 #include "Kyoto/Math/CQuad.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
 
 #include <float.h>
 #include <math.h>
 
+bool COBBox::SeparatingAxisTest(CSeparationInfo& info, const bool& wantGap,
+                                const CVector3f& aExtents, const CVector3f& translation,
+                                const CMatrix3f& rot, const CVector3f& bExtents) {
+  info.mAxis = -1;
+  info.mDistance = FLT_MAX;
+  float absT = -1.f;
+  float sum = -1.f;
+  bool hit = false;
+  CMatrix3f absR(CMatrix3f::Identity());
+  absR = CMatrix3f(1e-15f + CMath::AbsF(rot.Get00()),
+                   1e-15f + CMath::AbsF(rot.Get01()),
+                   1e-15f + CMath::AbsF(rot.Get02()),
+                   1e-15f + CMath::AbsF(rot.Get10()),
+                   1e-15f + CMath::AbsF(rot.Get11()),
+                   1e-15f + CMath::AbsF(rot.Get12()),
+                   1e-15f + CMath::AbsF(rot.Get20()),
+                   1e-15f + CMath::AbsF(rot.Get21()),
+                   1e-15f + CMath::AbsF(rot.Get22()));
+  sum = aExtents[0] + bExtents[0]*absR.Get00() + bExtents[1]*absR.Get10() + bExtents[2]*absR.Get20();
+  absT = CMath::AbsF(translation[0]);
+  if (TestAxis(info, 1, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[1] + bExtents[0]*absR.Get01() + bExtents[1]*absR.Get11() + bExtents[2]*absR.Get21();
+  absT = CMath::AbsF(translation[1]);
+  if (TestAxis(info, 2, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[2] + bExtents[0]*absR.Get02() + bExtents[1]*absR.Get12() + bExtents[2]*absR.Get22();
+  absT = CMath::AbsF(translation[2]);
+  if (TestAxis(info, 3, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = bExtents[0] + aExtents[0]*absR.Get00() + aExtents[1]*absR.Get10() + aExtents[2]*absR.Get20();
+  absT = CMath::AbsF(translation[0]*rot.Get00() + translation[1]*rot.Get10() + translation[2]*rot.Get20());
+  if (TestAxis(info, 4, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = bExtents[1] + aExtents[0]*absR.Get01() + aExtents[1]*absR.Get11() + aExtents[2]*absR.Get21();
+  absT = CMath::AbsF(translation[0]*rot.Get01() + translation[1]*rot.Get11() + translation[2]*rot.Get21());
+  if (TestAxis(info, 5, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = bExtents[2] + aExtents[0]*absR.Get02() + aExtents[1]*absR.Get12() + aExtents[2]*absR.Get22();
+  absT = CMath::AbsF(translation[0]*rot.Get02() + translation[1]*rot.Get12() + translation[2]*rot.Get22());
+  if (TestAxis(info, 6, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[1]*absR.Get20() + aExtents[2]*absR.Get10() + bExtents[1]*absR.Get02() + bExtents[2]*absR.Get01();
+  absT = CMath::AbsF(translation[2]*rot.Get10() - translation[1]*rot.Get20());
+  if (TestAxis(info, 7, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[2]*absR.Get00() + aExtents[0]*absR.Get20() + bExtents[1]*absR.Get12() + bExtents[2]*absR.Get11();
+  absT = CMath::AbsF(translation[0]*rot.Get20() - translation[2]*rot.Get00());
+  if (TestAxis(info, 8, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[0]*absR.Get10() + aExtents[1]*absR.Get00() + bExtents[1]*absR.Get22() + bExtents[2]*absR.Get21();
+  absT = CMath::AbsF(translation[1]*rot.Get00() - translation[0]*rot.Get10());
+  if (TestAxis(info, 9, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[1]*absR.Get21() + aExtents[2]*absR.Get11() + bExtents[2]*absR.Get00() + bExtents[0]*absR.Get02();
+  absT = CMath::AbsF(translation[2]*rot.Get11() - translation[1]*rot.Get21());
+  if (TestAxis(info, 10, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[2]*absR.Get01() + aExtents[0]*absR.Get21() + bExtents[2]*absR.Get10() + bExtents[0]*absR.Get12();
+  absT = CMath::AbsF(translation[0]*rot.Get21() - translation[2]*rot.Get01());
+  if (TestAxis(info, 11, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[0]*absR.Get11() + aExtents[1]*absR.Get01() + bExtents[2]*absR.Get20() + bExtents[0]*absR.Get22();
+  absT = CMath::AbsF(translation[1]*rot.Get01() - translation[0]*rot.Get11());
+  if (TestAxis(info, 12, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[1]*absR.Get22() + aExtents[2]*absR.Get12() + bExtents[0]*absR.Get01() + bExtents[1]*absR.Get00();
+  absT = CMath::AbsF(translation[2]*rot.Get12() - translation[1]*rot.Get22());
+  if (TestAxis(info, 13, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[2]*absR.Get02() + aExtents[0]*absR.Get22() + bExtents[0]*absR.Get11() + bExtents[1]*absR.Get10();
+  absT = CMath::AbsF(translation[0]*rot.Get22() - translation[2]*rot.Get02());
+  if (TestAxis(info, 14, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  sum = aExtents[0]*absR.Get12() + aExtents[1]*absR.Get02() + bExtents[0]*absR.Get21() + bExtents[1]*absR.Get20();
+  absT = CMath::AbsF(translation[1]*rot.Get02() - translation[0]*rot.Get12());
+  if (TestAxis(info, 15, absT, sum, wantGap, hit)) {
+    return true;
+  }
+  return hit;
+}
+
+bool COBBox::TestAxis(CSeparationInfo& info, const int& axis, const float& distance,
+                      const float& radius, const bool& wantGap, bool& hit) {
+  if (distance > radius) {
+    if (!wantGap) {
+      return true;
+    }
+    hit = true;
+    float gap = distance - radius;
+    if (gap < info.mDistance) {
+      info.mDistance = gap;
+      info.mAxis = axis;
+    }
+  }
+  return false;
+}
+
+bool COBBox::OBBIntersectsBox(CSeparationInfo& info, const COBBox& a, const COBBox& b) {
+  CVector3f translation = b.mTransform.GetTranslation();
+  CMatrix3f rot = b.mTransform.BuildMatrix3f();
+  return !SeparatingAxisTest(info, false, a.mExtents, translation, rot, b.mExtents);
+}
+
 COBBox::COBBox(const CTransform4f& xf, const CVector3f& extents)
 : mTransform(xf), mExtents(extents) {}
+
+COBBox::COBBox(const COBBox& other, const CTransform4f& xf)
+: mTransform(xf * other.mTransform), mExtents(other.mExtents) {}
 
 COBBox::COBBox(CInputStream& in) : mTransform(in), mExtents(in) {}
 
@@ -48,6 +170,8 @@ CAABox COBBox::CalculateAABox(const CTransform4f& xf) const {
 
   return bounds;
 }
+
+CAABox COBBox::CalculateLocalAABox() const { return CalculateAABox(CTransform4f::Identity()); }
 
 COBBox COBBox::FromAABox(const CAABox& box, const CTransform4f& xf) {
   CVector3f center = box.GetCenterPoint();
@@ -80,41 +204,48 @@ bool COBBox::LineIntersectsBox(const CMRay& ray, CVector3f& point, float& penetr
 
 CQuad COBBox::GetQuad(CAABox::EBoxFaceId face) const {
   switch (face) {
-  case CAABox::kF_YMin:
-    return CQuad(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ()));
-  case CAABox::kF_YMax:
-    return CQuad(mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ()));
-  case CAABox::kF_XMin:
-    return CQuad(mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ()));
-  case CAABox::kF_XMax:
-    return CQuad(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ()));
-  case CAABox::kF_ZMax:
-    return CQuad(mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ()));
-  case CAABox::kF_ZMin:
-    return CQuad(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ()));
-  default:
-    return CQuad(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ()),
-                 mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ()),
-                 mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ()));
+  case CAABox::kF_YMin: {
+    return CQuad(CVector3f(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ())));
+  }
+  case CAABox::kF_YMax: {
+    return CQuad(CVector3f(mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ())));
+  }
+  case CAABox::kF_XMin: {
+    return CQuad(CVector3f(mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ())));
+  }
+  case CAABox::kF_XMax: {
+    return CQuad(CVector3f(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ())));
+  }
+  case CAABox::kF_ZMax: {
+    return CQuad(CVector3f(mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ())));
+  }
+  case CAABox::kF_ZMin: {
+    return CQuad(CVector3f(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), mExtents.GetY(), -mExtents.GetZ())));
+  }
+  default: {
+    return CQuad(CVector3f(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ())),
+                 CVector3f(mTransform * CVector3f(-mExtents.GetX(), -mExtents.GetY(), -mExtents.GetZ())));
+  }
   }
 }
 

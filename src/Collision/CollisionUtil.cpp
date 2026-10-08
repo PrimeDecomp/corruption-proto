@@ -692,29 +692,101 @@ float AABoxPointDist(const CVector3f& point, const CAABox& box, CVector3f* close
 
 float AABoxPointSqrDist(const CVector3f& point, const CAABox& box, CVector3f* closestPoint) {
   float distanceSquared = 0.f;
-  for (int axis = 0; axis < 3; ++axis) {
-    float closest = point[axis];
-    if (point[axis] < box.GetMinPoint()[axis]) {
-      closest = box.GetMinPoint()[axis];
-      const float delta = point[axis] - closest;
+  if (closestPoint != nullptr) {
+    if (point[0] < box.GetMinPoint()[0]) {
+      (*closestPoint)[0] = box.GetMinPoint()[0];
+      const float delta = point[0] - box.GetMinPoint()[0];
       distanceSquared += delta * delta;
-    } else if (point[axis] > box.GetMaxPoint()[axis]) {
-      closest = box.GetMaxPoint()[axis];
-      const float delta = point[axis] - closest;
+    } else if (point[0] > box.GetMaxPoint()[0]) {
+      (*closestPoint)[0] = box.GetMaxPoint()[0];
+      const float delta = point[0] - box.GetMaxPoint()[0];
+      distanceSquared += delta * delta;
+    } else {
+      (*closestPoint)[0] = point[0];
+    }
+    if (point[1] < box.GetMinPoint()[1]) {
+      (*closestPoint)[1] = box.GetMinPoint()[1];
+      const float delta = point[1] - box.GetMinPoint()[1];
+      distanceSquared += delta * delta;
+    } else if (point[1] > box.GetMaxPoint()[1]) {
+      (*closestPoint)[1] = box.GetMaxPoint()[1];
+      const float delta = point[1] - box.GetMaxPoint()[1];
+      distanceSquared += delta * delta;
+    } else {
+      (*closestPoint)[1] = point[1];
+    }
+    if (point[2] < box.GetMinPoint()[2]) {
+      (*closestPoint)[2] = box.GetMinPoint()[2];
+      const float delta = point[2] - box.GetMinPoint()[2];
+      distanceSquared += delta * delta;
+    } else if (point[2] > box.GetMaxPoint()[2]) {
+      (*closestPoint)[2] = box.GetMaxPoint()[2];
+      const float delta = point[2] - box.GetMaxPoint()[2];
+      distanceSquared += delta * delta;
+    } else {
+      (*closestPoint)[2] = point[2];
+    }
+  } else {
+    if (point[0] < box.GetMinPoint()[0]) {
+      const float delta = point[0] - box.GetMinPoint()[0];
+      distanceSquared += delta * delta;
+    } else if (point[0] > box.GetMaxPoint()[0]) {
+      const float delta = point[0] - box.GetMaxPoint()[0];
       distanceSquared += delta * delta;
     }
-    if (closestPoint != nullptr) {
-      (*closestPoint)[axis] = closest;
+    if (point[1] < box.GetMinPoint()[1]) {
+      const float delta = point[1] - box.GetMinPoint()[1];
+      distanceSquared += delta * delta;
+    } else if (point[1] > box.GetMaxPoint()[1]) {
+      const float delta = point[1] - box.GetMaxPoint()[1];
+      distanceSquared += delta * delta;
+    }
+    if (point[2] < box.GetMinPoint()[2]) {
+      const float delta = point[2] - box.GetMinPoint()[2];
+      distanceSquared += delta * delta;
+    } else if (point[2] > box.GetMaxPoint()[2]) {
+      const float delta = point[2] - box.GetMaxPoint()[2];
+      distanceSquared += delta * delta;
     }
   }
   return distanceSquared;
+}
+
+// Guessed name: squared distance from a point to the segment covered by a CMRay.
+float RayPointSqrDist(const CMRay& ray, const CVector3f& point, CVector3f* closestPoint) {
+  const CVector3f toPoint = point - ray.GetStart();
+  const float t = CVector3f::Dot(toPoint, ray.GetDirection());
+  if (t < 0.f) {
+    if (closestPoint != nullptr) {
+      *closestPoint = ray.GetStart();
+    }
+    return toPoint.MagSquared();
+  }
+  if (t > ray.GetLength()) {
+    if (closestPoint != nullptr) {
+      *closestPoint = ray.GetEnd();
+    }
+    return (point - ray.GetEnd()).MagSquared();
+  }
+  const CVector3f closest = ray.GetStart() + t * ray.GetDirection();
+  if (closestPoint != nullptr) {
+    *closestPoint = closest;
+  }
+  return (point - closest).MagSquared();
+}
+
+// Guessed name for the square-root wrapper.
+float RayPointDist(const CMRay& ray, const CVector3f& point, CVector3f* closestPoint) {
+  return CMath::SqrtF(RayPointSqrDist(ray, point, closestPoint));
 }
 
 bool RayTriangleIntersection(const CVector3f& point, const CVector3f& dir, const CVector3f* verts,
                              float& d) {
   CVector3f v0tov1 = verts[1] - verts[0];
   CVector3f v0tov2 = verts[2] - verts[0];
-  CVector3f cross0 = CVector3f(CVector3f::Cross(dir, v0tov2));
+  CVector3f cross0(dir.GetY() * v0tov2.GetZ() - v0tov2.GetY() * dir.GetZ(),
+                   dir.GetZ() * v0tov2.GetX() - v0tov2.GetZ() * dir.GetX(),
+                   dir.GetX() * v0tov2.GetY() - v0tov2.GetX() * dir.GetY());
   const float dot0 = CVector3f::Dot(v0tov1, cross0);
   if (dot0 < 10.f * FLT_EPSILON) {
     return false;
@@ -726,7 +798,9 @@ bool RayTriangleIntersection(const CVector3f& point, const CVector3f& dir, const
     return false;
   }
 
-  const CVector3f cross1 = CVector3f::Cross(v0toPoint, v0tov1);
+  CVector3f cross1(v0toPoint.GetY() * v0tov1.GetZ() - v0tov1.GetY() * v0toPoint.GetZ(),
+                   v0toPoint.GetZ() * v0tov1.GetX() - v0tov1.GetZ() * v0toPoint.GetX(),
+                   v0toPoint.GetX() * v0tov1.GetY() - v0tov1.GetX() * v0toPoint.GetY());
   const float dot2 = CVector3f::Dot(cross1, dir);
   if (dot2 < 0.f || dot1 + dot2 > dot0) {
     return false;

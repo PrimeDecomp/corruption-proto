@@ -32,6 +32,10 @@ double TriPointSqrDist(const CVector3f& point, const CVector3f& a, const CVector
 float TriPointSqrDist_Float(const CVector3f& point, const CVector3f& a, const CVector3f& b,
                             const CVector3f& c, float* baryX, float* baryY);
 
+// Guessed names: point-to-segment distance for a CMRay.
+float RayPointSqrDist(const CMRay& ray, const CVector3f& point, CVector3f* closestPoint);
+float RayPointDist(const CMRay& ray, const CVector3f& point, CVector3f* closestPoint);
+
 bool AABoxAABoxIntersection(const CAABox& left, const CAABox& right);
 bool AABoxAABoxIntersection(const CAABox& left, const CMaterialList& leftFilter,
                             const CAABox& right, const CMaterialList& rightFilter,

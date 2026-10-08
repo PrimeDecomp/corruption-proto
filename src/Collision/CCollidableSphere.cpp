@@ -274,21 +274,10 @@ CCollidableSphere::CastRayInternal(const CInternalRayCastStructure& internalRayC
 }
 
 CAABox CCollidableSphere::CalculateAABox(const CTransform4f& xf) const {
-  const float radius = mSphere.GetRadius();
-  CVector3f xfPos = xf * mSphere.GetCenter();
-  const CVector3f extent(radius, radius, radius);
-  return CAABox(xfPos - extent, xfPos + extent);
+  return mSphere.GetTransformedBoundingBox(xf);
 }
 
-CAABox CCollidableSphere::CalculateLocalAABox() const {
-  const float radius = mSphere.GetRadius();
-  CVector3f xfPos = mSphere.GetCenter();
-  const float x = xfPos.GetX();
-  const float y = xfPos.GetY();
-  const float z = xfPos.GetZ();
-  return CAABox(CVector3f(x - radius, y - radius, z - radius),
-                CVector3f(x + radius, y + radius, z + radius));
-}
+CAABox CCollidableSphere::CalculateLocalAABox() const { return mSphere.GetBoundingBox(); }
 
 FourCC CCollidableSphere::GetPrimType() const { return 'SPHR'; }
 

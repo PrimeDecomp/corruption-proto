@@ -36,8 +36,11 @@ public:
   T* get() const { return mPointer; }
   T& operator*() const { return *mPointer; }
   T* release() const {
-    mOwns = false;
-    return mPointer;
+    if (mOwns) {
+      mOwns = false;
+      return mPointer;
+    }
+    return 0;
   }
   bool null() const { return mPointer == 0; }
   void reset() {

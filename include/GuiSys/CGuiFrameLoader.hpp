@@ -22,5 +22,5 @@ private:
   rstl::auto_ptr< uchar > mBuffer;
   rstl::single_ptr< CDvdRequest > mRequest;
 };
-// CHECK_SIZEOF(CGuiFrameLoader, 0x1c) // Echoes layout; Corruption CAssetId is 64-bit
+CHECK_SIZEOF(CGuiFrameLoader, 0x28)
 #endif // _CGUIFRAMELOADER

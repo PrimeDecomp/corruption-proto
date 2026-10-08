@@ -61,7 +61,6 @@ CWeaponDescription::CWeaponDescription()
 , mRTLA(true)
 , mBHBT(true)
 , mTRAT(nullptr)
-, mPJFX(-1)
 , mRNGE(nullptr)
 , mFOFF(nullptr) {}
 

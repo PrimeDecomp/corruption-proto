@@ -45,12 +45,19 @@ void CGuiObject::RotateReset() {
 }
 
 CVector3f CGuiObject::RotateW2O(const CVector3f& vec) const {
-  return GetWorldTransform().TransposeRotate(vec);
+  const CVector3f result = GetWorldTransform().TransposeRotate(vec);
+  const float y = result.GetY();
+  const float z = result.GetZ();
+  return CVector3f(result.GetX(), y, z);
 }
 
 CVector3f CGuiObject::RotateTranslateW2O(const CVector3f& vec) const {
   const CTransform4f& world = GetWorldTransform();
-  return world.TransposeRotate(vec - world.GetTranslation());
+  const CVector3f result = world.TransposeRotate(
+      CVector3f(vec.GetX() - world.Get03(), vec.GetY() - world.Get13(), vec.GetZ() - world.Get23()));
+  const float y = result.GetY();
+  const float z = result.GetZ();
+  return CVector3f(result.GetX(), y, z);
 }
 
 void CGuiObject::MultiplyO2P(const CTransform4f& xf) {
@@ -64,10 +71,14 @@ void CGuiObject::AddChildObject(CGuiObject* child, bool makeWorldLocal, bool atE
     mChild = child;
   } else if (atEnd) {
     CGuiObject* last = mChild;
-    while (last->mNextSibling != nullptr) {
-      last = last->mNextSibling;
+    for (;;) {
+      CGuiObject* next = last->mNextSibling;
+      if (next == nullptr) {
+        last->mNextSibling = child;
+        break;
+      }
+      last = next;
     }
-    last->mNextSibling = child;
   } else {
     child->mNextSibling = mChild;
     mChild = child;
@@ -112,18 +123,20 @@ void CGuiObject::SetO2WTransform(const CTransform4f& xf) {
   SetO2PTransform(local);
 }
 
-const CTransform4f& CGuiObject::GetWorldTransform() const {
+#pragma inline_max_size(10000)
+inline const CTransform4f& CGuiObject::GetWorldTransform() const {
   if (!mWorldTransformValid) {
-    if (mParent == nullptr) {
+    if (mParent != nullptr) {
+      mWorldXF = mParent->GetWorldTransform() * mLocalXF;
+    } else {
       return mLocalXF;
     }
-    mWorldXF = mParent->GetWorldTransform() * mLocalXF;
     mWorldTransformValid = true;
   }
   return mWorldXF;
 }
 
-void CGuiObject::RecalculateTransforms() {
+inline void CGuiObject::RecalculateTransforms() {
   mWorldTransformValid = false;
   for (CGuiObject* child = mChild; child != nullptr; child = child->mNextSibling) {
     child->RecalculateTransforms();

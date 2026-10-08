@@ -91,17 +91,20 @@ public:
   CCollisionPrimitive(const CMaterialList& list);
   CCollisionPrimitive(const CCollisionPrimitive& other) : mMaterial(other.mMaterial) {}
 
+  virtual ~CCollisionPrimitive();
   virtual uint GetTableIndex() const = 0;
   virtual CAABox CalculateAABox(const CTransform4f&) const = 0;
   virtual CAABox CalculateLocalAABox() const = 0;
   virtual FourCC GetPrimType() const = 0;
-  virtual ~CCollisionPrimitive();
+  // Guessed name: GJK support mapping (farthest point along a direction in local space);
+  // the base implementation returns a zero vector.
+  virtual CVector3f GetSupportPoint(const CVector3f&) const { return CVector3f::Zero(); }
   virtual CRayCastResult CastRayInternal(const CInternalRayCastStructure&) const = 0;
 
   CRayCastResult CastRay(const CVector3f& start, const CVector3f& direction, float length,
-                         const CMaterialFilter& filter, const CTransform4f& transform) const {
-    return CastRayInternal(CInternalRayCastStructure(start, direction, length, transform, filter));
-  }
+                         const CMaterialFilter& filter, const CTransform4f& transform) const;
+  CRayCastResult CastRay(const CVector3f& start, const CVector3f& direction, float length,
+                         const CTransform4f& transform) const;
 
   void SetMaterial(const CMaterialList& material) { mMaterial = material; }
   const CMaterialList& GetMaterial() const { return mMaterial; }
@@ -165,7 +168,5 @@ private:
   CMaterialList mMaterial;
 };
 CHECK_SIZEOF(CCollisionPrimitive, 0x10)
-
-inline CCollisionPrimitive::~CCollisionPrimitive() {}
 
 #endif // _CCOLLISIONPRIMITIVE

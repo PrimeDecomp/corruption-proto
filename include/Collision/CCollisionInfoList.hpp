@@ -6,11 +6,10 @@
 
 class CCollisionInfoList {
 public:
-  void Add(const CCollisionInfo& info) {
-    if (mList.size() == 32) {
-      return;
+  inline void Add(const CCollisionInfo& info) {
+    if (mList.size() != 32) {
+      mList.push_back(info);
     }
-    mList.push_back(info);
   }
   void Swap(int start) {
     for (int i = start; i < GetCount(); ++i) {

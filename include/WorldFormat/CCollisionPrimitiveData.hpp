@@ -19,7 +19,7 @@ public:
                           const u64* materials, const uchar* vertexMaterials,
                           const uchar* edgeMaterials, const uchar* surfaceMaterials,
                           const CCollisionEdge* edges, const ushort* surfaceIndices,
-                          const ushort* extraIndices, const CVector3f* vertices, bool ownsArrays);
+                          const ushort* triangleAdjacency, const CVector3f* vertices, bool ownsArrays);
   ~CCollisionPrimitiveData();
 
   int GetTriangleCount() const { return mTriangleCount; }
@@ -33,6 +33,9 @@ public:
   // Additional-flags overload is target-derived; this spelling is reconstructed.
   CCollisionSurface GetTriangle(ushort index, const CTransform4f* xf, u64 additionalFlags) const;
   const ushort* GetTriangleEdgeIndices(ushort index) const { return mSurfaceIndices + index * 3; }
+  // Per-triangle adjacent triangle indices, one per edge (parallel to GetTriangleEdgeIndices);
+  // inferred from the coplanar-edge flood fill in CCollidableTranslatedConvexPH.
+  const ushort* GetTriangleAdjacentIndices(ushort index) const { return mTriangleAdjacency + index * 3; }
   u64 GetVertMaterial(uint index) const { return mMaterials[mVertexMaterials[index]]; }
   u64 GetEdgeMaterial(uint index) const { return mMaterials[mEdgeMaterials[index]]; }
   u64 GetTriangleMaterial(uint index) const { return mMaterials[mSurfaceMaterials[index]]; }
@@ -50,7 +53,7 @@ protected:
   const uchar* mSurfaceMaterials;
   const CCollisionEdge* mEdges;
   const ushort* mSurfaceIndices;
-  const ushort* x28_; // Additional serialized index array; role unresolved.
+  const ushort* mTriangleAdjacency; // Adjacent triangle per edge, three per triangle.
   const CVector3f* mVertices;
   ushort mCacheId;
   bool mOwnsArrays : 1;

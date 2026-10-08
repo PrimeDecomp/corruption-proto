@@ -116,10 +116,9 @@ CRayCastResult CCollidableAABox::CastRayInternal(const CInternalRayCastStructure
     return CRayCastResult::MakeInvalid();
   }
 
-  const CTransform4f rayCastXf = rayCast.GetTransform();
-  const CTransform4f rayCastXfInv = rayCast.GetTransform().GetQuickInverse();
-  const CVector3f localRayStart = rayCastXfInv * rayCast.GetRay().GetStart();
-  const CVector3f localRayDir = rayCastXfInv.Rotate(rayCast.GetRay().GetDirection());
+  const CTransform4f& rayCastXf = rayCast.GetTransform();
+  const CVector3f localRayStart = rayCastXf.TransposeMultiply(rayCast.GetRay().GetStart());
+  const CVector3f localRayDir = rayCastXf.TransposeRotate(rayCast.GetRay().GetDirection());
 
   const float rayMaxTime = rayCast.GetMaxTime();
   float tMin;
@@ -152,3 +151,9 @@ CAABox CCollidableAABox::Transform(const CTransform4f& xf) const {
 
 FourCC CCollidableAABox::GetPrimType() const { return 'AABX'; }
 uint CCollidableAABox::GetTableIndex() const { return sTableIndex; }
+
+void CRayCastResult::Transform(const CTransform4f& xf) {
+  mPoint = xf * mPoint;
+  CVector3f normal = xf.Rotate(mPlane.GetNormal());
+  mPlane = CPlane(mPoint, CUnitVector3f(normal.GetX(), normal.GetY(), normal.GetZ()));
+}

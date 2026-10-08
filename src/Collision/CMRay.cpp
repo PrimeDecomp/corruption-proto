@@ -41,6 +41,5 @@ CMRay::CMRay(const CVector3f& start, const CVector3f& dir, float length)
 , mDirection(dir) {}
 
 CMRay CMRay::GetInvUnscaledTransformRay(const CTransform4f& xf) const {
-  CTransform4f invXf = xf.GetQuickInverse();
-  return CMRay(invXf * mStart, invXf * mEnd, mLength, mInvLength);
+  return CMRay(xf.TransposeMultiply(mStart), xf.TransposeMultiply(mEnd), mLength, mInvLength);
 }

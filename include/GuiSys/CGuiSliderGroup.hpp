@@ -29,10 +29,6 @@ public:
   EState GetState() const { return mState; }
 
 private:
-  // Guessed names: native operations only select direction and mark held input.
-  void Decrement();
-  void Increment();
-
   float mMinVal;
   float mMaxVal;
   float mRoundedCurVal;

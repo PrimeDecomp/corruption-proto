@@ -38,7 +38,7 @@ const u64 kFlippedTriangle = 0x01000000;
 CCollisionPrimitiveData::CCollisionPrimitiveData(
     int materialCount, int vertexCount, int edgeCount, int triangleCount, const u64* materials,
     const uchar* vertexMaterials, const uchar* edgeMaterials, const uchar* surfaceMaterials,
-    const CCollisionEdge* edges, const ushort* surfaceIndices, const ushort* extraIndices,
+    const CCollisionEdge* edges, const ushort* surfaceIndices, const ushort* triangleAdjacency,
     const CVector3f* vertices, bool ownsArrays)
 : mMaterialCount(materialCount)
 , mVertexCount(vertexCount)
@@ -50,7 +50,7 @@ CCollisionPrimitiveData::CCollisionPrimitiveData(
 , mSurfaceMaterials(surfaceMaterials)
 , mEdges(edges)
 , mSurfaceIndices(surfaceIndices)
-, x28_(extraIndices)
+, mTriangleAdjacency(triangleAdjacency)
 , mVertices(vertices)
 , mCacheId(CollisionPrimitiveDataCache::AllocateId())
 , mOwnsArrays(ownsArrays) {}
@@ -66,7 +66,7 @@ CCollisionPrimitiveData::CCollisionPrimitiveData()
 , mSurfaceMaterials(nullptr)
 , mEdges(nullptr)
 , mSurfaceIndices(nullptr)
-, x28_(nullptr)
+, mTriangleAdjacency(nullptr)
 , mVertices(nullptr)
 , mCacheId(CollisionPrimitiveDataCache::AllocateId())
 , mOwnsArrays(false) {}
@@ -79,7 +79,7 @@ CCollisionPrimitiveData::~CCollisionPrimitiveData() {
     CMemory::Free(mSurfaceMaterials);
     CMemory::Free(mEdges);
     CMemory::Free(mSurfaceIndices);
-    CMemory::Free(x28_);
+    CMemory::Free(mTriangleAdjacency);
   }
 
   ++CollisionPrimitiveDataCache::gGeometryRevision;

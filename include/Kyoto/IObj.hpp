@@ -11,7 +11,7 @@ extern const SObjectTag gkInvalidObjectTag;
 
 class IObj {
 public:
-  virtual ~IObj();
+  virtual ~IObj() {}
 };
 
 class CObjOwnerDerivedFromIObjUntyped : public IObj {

@@ -19,6 +19,9 @@ public:
   CFinalInput(int channel, float dt, const CControllerGamepadData& data, float leftDif,
               float rightDiv);
   CFinalInput(int channel, float dt, const COsContext& context);
+
+  bool GetDigitalValue(int input) const;
+  bool GetButtonStateByte1(int input) const;
   CFinalInput(const CFinalInput& other)
   : mDt(other.mDt)
   , mControllerIdx(other.mControllerIdx)

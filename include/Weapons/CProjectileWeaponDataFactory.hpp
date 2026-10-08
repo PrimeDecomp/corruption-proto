@@ -14,7 +14,8 @@ public:
   static bool CreateWPSM(CWeaponDescription* desc, CInputStream& in, CSimplePool* pool);
 };
 
-CFactoryFnReturn FProjectileWeaponDataFactory(const SObjectTag& tag, CInputStream& in,
+CFactoryFnReturn FProjectileWeaponDataFactory(const SObjectTag& tag,
+                                              const rstl::auto_ptr< uchar >& data, int length,
                                               const CVParamTransfer& transfer);
 
 #endif // _CPROJECTILEWEAPONDATAFACTORY

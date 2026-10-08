@@ -5,7 +5,13 @@
  */
 #include "GuiSys/CGuiFactories.hpp"
 
-#include "GuiSys/CAuiBitmapMeter.hpp"
+#include "GuiSys/CGuiFrame.hpp"
+#include "Kyoto/CFactoryMgr.hpp"
+#include "Kyoto/CSimplePool.hpp"
+#include "Kyoto/CVParamTransfer.hpp"
+#include "Kyoto/Streams/CMemoryInStream.hpp"
+
+#include "GuiSys/CAuiBarMeter.hpp"
 #include "GuiSys/CAuiEnergyBarT01.hpp"
 #include "GuiSys/CAuiImagePane.hpp"
 #include "GuiSys/CAuiMeter.hpp"
@@ -49,8 +55,17 @@ CGuiWidget* FGuiWidgetFactoryInGame(FourCC type, CGuiFrame* frame, CInputStream&
   case 'IMGP':
     return CAuiImagePane::Create(frame, in, pool, version);
   case 'BMTR':
-    return CAuiBitmapMeter::Create(frame, in, pool, version);
+    return CAuiBarMeter::Create(frame, in, pool, version);
   default:
     return nullptr;
   }
+}
+
+CFactoryFnReturn RGuiFrameFactoryInGame(const SObjectTag& tag, const rstl::auto_ptr< uchar >& buffer,
+                                        int size, const CVParamTransfer& xfer) {
+  CMemoryInStream in(buffer.get(), size);
+  const rstl::rc_ptr< IVParamObj > obj = xfer.GetObj();
+  CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
+
+  return rs_new CGuiFrame(in, pool);
 }

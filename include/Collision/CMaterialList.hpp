@@ -2,6 +2,7 @@
 #define _CMATERIALLIST
 
 #include "rstl/construct.hpp"
+#include "rstl/string.hpp"
 #include "types.h"
 
 class CInputStream;
@@ -122,6 +123,8 @@ public:
   // GetField__13CMaterialListCFUxUx weak
   // Intersection__13CMaterialListCFRC13CMaterialList weak
   static int BitPosition(u64 flags);
+  static rstl::string GetMaterialName(const EMaterialTypes& material);
+  rstl::string GetSharedMaterialString(const CMaterialList& other) const;
   // GetMaterialString__13CMaterialListCFv weak
   bool SharesMaterials(const CMaterialList& other) const {
     return (other.mValue & mValue) ? true : false;

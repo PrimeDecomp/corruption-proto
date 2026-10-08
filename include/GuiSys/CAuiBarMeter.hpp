@@ -1,5 +1,5 @@
-#ifndef _CAUIBITMAPMETER
-#define _CAUIBITMAPMETER
+#ifndef _CAUIBARMETER
+#define _CAUIBARMETER
 
 #include "GuiSys/CGuiWidget.hpp"
 #include "Kyoto/Math/CVector2f.hpp"
@@ -9,15 +9,15 @@
 
 class CTexture;
 
-// Guessed name: the BMTR widget is a textured meter with a trailing shadow bar.
-class CAuiBitmapMeter : public CGuiWidget {
+// BMTR widget: a textured meter with a trailing shadow bar.
+class CAuiBarMeter : public CGuiWidget {
 public:
-  CAuiBitmapMeter(const CGuiWidgetParms& parms, CSimplePool* pool, CAssetId textureId,
+  CAuiBarMeter(const CGuiWidgetParms& parms, CSimplePool* pool, CAssetId textureId,
                   const rstl::reserved_vector< CVector3f, 4 >& coords,
                   const rstl::reserved_vector< CVector2f, 4 >& uvs, bool loadTexture);
 
   // CGuiObject
-  ~CAuiBitmapMeter() override;
+  ~CAuiBarMeter() override;
 
   // CGuiWidget
   FourCC GetWidgetTypeID() const override;
@@ -49,6 +49,6 @@ private:
   float mDecreaseSpeed;
   float mShadowDrainSpeed;
 };
-// CHECK_SIZEOF(CAuiBitmapMeter, 0x144) // Echoes layout; Corruption CAssetId is 64-bit
+CHECK_SIZEOF(CAuiBarMeter, 0x150)
 
-#endif // _CAUIBITMAPMETER
+#endif // _CAUIBARMETER

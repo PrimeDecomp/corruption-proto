@@ -56,7 +56,7 @@ void CGuiModel::EndDraw() { sDrawing = false; }
 
 CGuiModel* CGuiModel::Create(CGuiFrame* frame, CInputStream& in, uint version) {
   const CGuiWidgetParms parms = ReadWidgetHeader(frame, in);
-  const CAssetId modelId = in.Get< CAssetId >();
+  const CAssetId modelId(in);
   const int modelIndex = in.Get< int >();
   const uint lightMask = in.Get< uint >();
 

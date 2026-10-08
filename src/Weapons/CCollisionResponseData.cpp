@@ -11,30 +11,27 @@
 #include "Kyoto/CVParamTransfer.hpp"
 #include "Kyoto/Particles/CParticleDataFactory.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
+#include "Kyoto/Streams/CMemoryInStream.hpp"
 #include "Weapons/CDecalDescription.hpp"
 
-const int CCollisionResponseData::kInvalidSFX = -1;
-const EWeaponCollisionResponseTypes CCollisionResponseData::skWorldMaterialTable[] = {
-    kWCR_Default, kWCR_Unknown2, kWCR_Metal,   kWCR_Grass,   kWCR_Ice,     kWCR_Goo,
-    kWCR_Metal,   kWCR_Wood,     kWCR_Grass,   kWCR_Lava,    kWCR_Lava,    kWCR_Ice,
-    kWCR_Mud,     kWCR_Metal,    kWCR_Default, kWCR_Goo,     kWCR_Goo,     kWCR_Sand,
-    kWCR_Default, kWCR_Default,  kWCR_Default, kWCR_Metal,   kWCR_Default, kWCR_Default,
-    kWCR_Default, kWCR_Default,  kWCR_Default, kWCR_Default, kWCR_Default, kWCR_Default,
-    kWCR_Default, kWCR_Default,
+const int CCollisionResponseData::skWorldMaterialTable[] = {
+    -2, kWCR_Crate, kWCR_Metal, kWCR_Grass, kWCR_Ice, -2, kWCR_Metal, kWCR_Wood,
+    kWCR_Grass, kWCR_Metal, kWCR_Glass, kWCR_Snow, kWCR_Default, -2, kWCR_Default, kWCR_Default,
+    kWCR_Goo, kWCR_Sand, kWCR_Default, kWCR_Default, -2, -2, kWCR_Wood2, kWCR_Mud,
+    -2, kWCR_Default, -2, -2, -2, -2, -2, -2,
 };
 
-CCollisionResponseData::CCollisionResponseData(CInputStream& in, CSimplePool* sp)
-: mAudibleRange(50.f), mAudibleFallOff(0.2f) {
+CCollisionResponseData::CCollisionResponseData(CInputStream& in, CSimplePool* sp) {
   bool done = false;
   mGeneratorTokens.assign(kWCR_Count);
-  mSoundEffectIds.assign(kWCR_Count, kInvalidSFX);
+  mSoundTokens.assign(kWCR_Count);
   mDecalTokens.assign(kWCR_Count);
 
   if (CParticleDataFactory::GetClassID(in) != 'CRSM') {
     return;
   }
 
-  CRandom16 random;
+  CRandom16 random(99);
   CGlobalRandom globalRandom(random);
 
   while (!done) {
@@ -43,19 +40,9 @@ CCollisionResponseData::CCollisionResponseData(CInputStream& in, CSimplePool* sp
       continue;
     }
 
-    switch (clsId) {
-    case 'RNGE':
-      CParticleDataFactory::GetClassID(in);
-      mAudibleRange = CParticleDataFactory::GetReal(in);
-      continue;
-    case 'FOFF':
-      CParticleDataFactory::GetClassID(in);
-      mAudibleFallOff = CParticleDataFactory::GetReal(in);
-      continue;
-    case '_END':
+    if (clsId == '_END') {
       done = true;
-      break;
-    default:
+    } else {
       return;
     }
   }
@@ -67,7 +54,7 @@ bool CCollisionResponseData::CheckAndAddResourcesToResponse(const FourCC clsId, 
     return true;
   }
 
-  if (CheckAndAddSoundFXToResponse(clsId, in)) {
+  if (CheckAndAddSoundFXToResponse(clsId, in, sp)) {
     return true;
   }
 
@@ -81,17 +68,9 @@ bool CCollisionResponseData::CheckAndAddResourcesToResponse(const FourCC clsId, 
 bool CCollisionResponseData::CheckAndAddParticleSystemToResponse(const FourCC clsId,
                                                                  CInputStream& in,
                                                                  CSimplePool* sp) {
-  static const FourCC kWCRTIDs[] = {
-      'NODP', 'DEFS', 'CRTS', 'MTLS', 'GRAS', 'ICEE', 'GOOO', 'WODS', 'WATR', '1MUD', '1LAV',
-      '1SAN', '1PRJ', 'DCHR', 'DCHS', 'DCSH', 'DENM', 'DESP', 'DESH', 'BTLE', 'WASP', 'TALP',
-      'PTGM', 'SPIR', 'FPIR', 'FFLE', 'PARA', 'BMON', 'BFLR', 'PBOS', 'IBOS', '1SVA', '1RPR',
-      '1MTR', '1PDS', '1FLB', '1DRN', '1MRE', 'CHOZ', 'JZAP', '1ISE', '1BSE', '1ATB', '1ATA',
-      '1MPR', '1GRN', '1DKS', '1SND', '1SB1', 'BTSP', 'WWSP', 'TASP', 'TGSP', 'SPSP', 'FPSP',
-      'FFSP', 'PSSP', 'BMSP', 'BFSP', 'PBSP', 'IBSP', '2SVA', '2RPR', '2MTR', '2PDS', '2FLB',
-      '2DRN', '2MRE', 'CHSP', 'JZSP', '3ISE', '3BSE', '3ATB', '3ATA', '3MPR', '3GRN', '3DKS',
-      '3SND', '3SB1', 'BTSH', 'WWSH', 'TASH', 'TGSH', 'SPSH', 'FPSH', 'FFSH', 'PSSH', 'BMSH',
-      'BFSH', 'PBSH', 'IBSH', '3SVA', '3RPR', '3MTR', '3PDS', '3FLB', '3DRN', '3MRE', 'CHSH',
-      'JZSH', '5ISE', '5BSE', '5ATB', '5ATA', '5MPR', '5GRN', '5DKS', '5SND', '5SB1'};
+  static const FourCC kWCRTIDs[] = {'NODP', 'DEFS', 'CRTS', 'MTLS', 'GRAS', 'GLAS', 'ICEE',
+                                    'SNEE', 'GOOO', 'WODS', 'WATR', '1MUD', '1WOD', '1LAV',
+                                    '1SAN', '1PRJ', 'DCHR', 'CSHD', 'DENM', 'DSNM'};
 
   for (int i = 0; i < ARRAY_SIZE(kWCRTIDs); i++) {
     if (clsId != kWCRTIDs[i]) {
@@ -104,26 +83,22 @@ bool CCollisionResponseData::CheckAndAddParticleSystemToResponse(const FourCC cl
   return false;
 }
 
-bool CCollisionResponseData::CheckAndAddSoundFXToResponse(const FourCC clsId, CInputStream& in) {
-  static const FourCC kCRTSFXIDs[] = {
-      'NSFX', 'DSFX', 'CSFX', 'MSFX', 'GRFX', 'ICFX', 'GOFX', 'WSFX', 'WTFX', '2MUD', '2LAV',
-      '2SAN', '2PRJ', 'DCFX', 'DSFX', 'DSHX', 'DEFX', 'ESFX', 'SHFX', 'BEFX', 'WWFX', 'TAFX',
-      'GTFX', 'SPFX', 'FPFX', 'FFFX', 'PAFX', 'BMFX', 'BFFX', 'PBFX', 'IBFX', '4SVA', '4RPR',
-      '4MTR', '4PDS', '4FLB', '4DRN', '4MRE', 'CZFX', 'JZAS', '2ISE', '2BSE', '2ATB', '2ATA',
-      '2MPR', '2GRN', '2DKS', '2SND', '2SB1', 'BSFX', 'WSFX', 'TSFX', 'GSFX', 'SSFX', 'FSFX',
-      'SFFX', 'PSFX', 'MSFX', 'SBFX', 'PBSX', 'IBSX', '5SVA', '5RPR', '5MTR', '5PDS', '5FLB',
-      '5DRN', '5MRE', 'CSFX', 'JZPS', '4ISE', '4BSE', '4ATB', '4ATA', '4MPR', '4GRN', '4DKS',
-      '4SND', '4SB1', 'BHFX', 'WHFX', 'THFX', 'GHFX', 'SHFX', 'FHFX', 'HFFX', 'PHFX', 'MHFX',
-      'HBFX', 'PBHX', 'IBHX', '6SVA', '6RPR', '6MTR', '6PDS', '6FLB', '6DRN', '6MRE', 'CHFX',
-      'JZHS', '6ISE', '6BSE', '6ATB', '6ATA', '6MPR', '6GRN', '6DKS', '6SND', '6SB1'};
+bool CCollisionResponseData::CheckAndAddSoundFXToResponse(const FourCC clsId, CInputStream& in,
+                                                          CSimplePool* sp) {
+  static const FourCC kCRTSFXIDs[] = {'NSFX', 'DSND', 'CSND', 'MSND', 'GSND', 'GLND', 'ISND',
+                                      'SNND', 'GOSD', 'WOSD', 'WTSD', '4MUD', '1WOD', '4LAV',
+                                      '4SAN', '3PRJ', 'DCSD', 'CSSD', 'DESD', 'DSSD'};
 
   for (int i = 0; i < ARRAY_SIZE(kCRTSFXIDs); i++) {
     if (clsId != kCRTSFXIDs[i]) {
       continue;
     }
+
     if (CParticleDataFactory::GetClassID(in) != 'NONE') {
-      mSoundEffectIds[i] = in.Get< int >();
+      mSoundTokens[i] =
+          TLockedToken< CAudioGroupSet >(sp->GetObj(SObjectTag('CAUD', CAssetId(in))));
     }
+
     return true;
   }
 
@@ -132,8 +107,9 @@ bool CCollisionResponseData::CheckAndAddSoundFXToResponse(const FourCC clsId, CI
 
 bool CCollisionResponseData::CheckAndAddDecalToResponse(const FourCC clsId, CInputStream& in,
                                                         CSimplePool* sp) {
-  static const FourCC kCRTDecalIDs[] = {'NDCL', 'DDCL', 'CODL', 'MEDL', 'GRDL', 'ICDL', 'GODL',
-                                        'WODL', 'WTDL', '3MUD', '3LAV', '3SAN', 'CHDL', 'ENDL'};
+  static const FourCC kCRTDecalIDs[] = {'NDCL', 'DDCL', 'CODL', 'MEDL', 'GRDL', 'GLDL', 'ICDL',
+                                        'SNDL', 'GODL', 'WODL', 'WTDL', '3MUD', '1WOD', '3LAV',
+                                        '3SAN', '....', 'CHDL', 'CSDL', 'ENDL', 'ESDL'};
 
   for (int i = 0; i < ARRAY_SIZE(kCRTDecalIDs); i++) {
     if (clsId != kCRTDecalIDs[i]) {
@@ -141,8 +117,7 @@ bool CCollisionResponseData::CheckAndAddDecalToResponse(const FourCC clsId, CInp
     }
 
     if (CParticleDataFactory::GetClassID(in) != 'NONE') {
-      CAssetId id = in.Get< CAssetId >();
-      mDecalTokens[i] = TToken< CDecalDescription >(sp->GetObj(SObjectTag('DPSC', id)));
+      mDecalTokens[i] = TToken< CDecalDescription >(sp->GetObj(SObjectTag('DPSC', CAssetId(in))));
     }
 
     return true;
@@ -175,9 +150,6 @@ CCollisionResponseData::GetParticleDescription(const EWeaponCollisionResponseTyp
     } else if (ResponseTypeIsEnemySpecial(type)) {
       idx = kWCR_EnemySpecial;
       found = true;
-    } else if (ResponseTypeIsEnemyShielded(type)) {
-      idx = kWCR_EnemyShielded;
-      found = true;
     }
 
     if (found && !mGeneratorTokens.at(idx).valid()) {
@@ -192,9 +164,10 @@ CCollisionResponseData::GetParticleDescription(const EWeaponCollisionResponseTyp
   return mGeneratorTokens.at(idx);
 }
 
-uint CCollisionResponseData::GetSoundEffectId(EWeaponCollisionResponseTypes type) const {
+rstl::optional_object< TLockedToken< CAudioGroupSet > >
+CCollisionResponseData::GetSoundDescription(const EWeaponCollisionResponseTypes type) const {
   int idx = type;
-  if (mSoundEffectIds.at(idx) == kInvalidSFX) {
+  if (!mSoundTokens.at(idx).valid()) {
     bool found = false;
     if (ResponseTypeIsEnemyNormal(type)) {
       idx = kWCR_EnemyNormal;
@@ -202,21 +175,18 @@ uint CCollisionResponseData::GetSoundEffectId(EWeaponCollisionResponseTypes type
     } else if (ResponseTypeIsEnemySpecial(type)) {
       idx = kWCR_EnemySpecial;
       found = true;
-    } else if (ResponseTypeIsEnemyShielded(type)) {
-      idx = kWCR_EnemyShielded;
-      found = true;
     }
 
-    if (found && mSoundEffectIds.at(idx) == kInvalidSFX) {
+    if (found && !mSoundTokens.at(idx).valid()) {
       idx = kWCR_EnemyNormal;
     }
 
-    if (mSoundEffectIds.at(idx) == kInvalidSFX) {
+    if (!mSoundTokens.at(idx).valid()) {
       idx = kWCR_Default;
     }
   }
 
-  return mSoundEffectIds.at(idx);
+  return mSoundTokens.at(idx);
 }
 
 rstl::optional_object< TLockedToken< CDecalDescription > >
@@ -224,8 +194,8 @@ CCollisionResponseData::GetDecalDescription(const EWeaponCollisionResponseTypes 
   return mDecalTokens.at(type);
 }
 
-bool CCollisionResponseData::ResponseTypeIsEnemyShielded(const EWeaponCollisionResponseTypes type) {
-  if (type >= kWCR_EnemyShieldedFirst && type <= kWCR_EnemyShieldedLast) {
+bool CCollisionResponseData::ResponseTypeIsEnemySpecial(const EWeaponCollisionResponseTypes type) {
+  if (type >= kWCR_EnemySpecial && type <= kWCR_EnemySpecial) {
     return true;
   }
 
@@ -233,33 +203,26 @@ bool CCollisionResponseData::ResponseTypeIsEnemyShielded(const EWeaponCollisionR
 }
 
 bool CCollisionResponseData::ResponseTypeIsEnemyNormal(const EWeaponCollisionResponseTypes type) {
-  if (type >= kWCR_EnemyNormalFirst && type <= kWCR_EnemyNormalLast) {
+  if (type >= kWCR_EnemyNormal && type <= kWCR_EnemyNormal) {
     return true;
   }
 
   return false;
 }
 
-bool CCollisionResponseData::ResponseTypeIsEnemySpecial(const EWeaponCollisionResponseTypes type) {
-  if (type >= kWCR_EnemySpecialFirst && type <= kWCR_EnemySpecialLast) {
-    return true;
-  }
-
-  return false;
-}
-
-float CCollisionResponseData::GetAudibleRange() const { return mAudibleRange; }
-float CCollisionResponseData::GetAudibleFallOff() const { return mAudibleFallOff; }
-
-EWeaponCollisionResponseTypes CCollisionResponseData::GetWorldCollisionResponseType(const int idx) {
-  if (idx >= 0 && idx < ARRAY_SIZE(skWorldMaterialTable)) {
-    return skWorldMaterialTable[idx];
+EWeaponCollisionResponseTypes CCollisionResponseData::GetWorldCollisionResponseType(uint flags) {
+  for (int i = 0; i < 32; i++) {
+    if ((flags & (1 << i)) != 0 && skWorldMaterialTable[i] != -2) {
+      return static_cast< EWeaponCollisionResponseTypes >(skWorldMaterialTable[i]);
+    }
   }
   return kWCR_Default;
 }
 
-CFactoryFnReturn FCollisionResponseDataFactory(const SObjectTag& tag, CInputStream& in,
+CFactoryFnReturn FCollisionResponseDataFactory(const SObjectTag& tag,
+                                               const rstl::auto_ptr< uchar >& data, int length,
                                                const CVParamTransfer& xfer) {
+  CMemoryInStream in(data.get(), length);
   rstl::rc_ptr< IVParamObj > obj = xfer.GetObj();
   CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
   return rs_new CCollisionResponseData(in, pool);

@@ -2,3 +2,6 @@
 
 CMemoryInStream::CMemoryInStream(const void* data, unsigned long length, EOwnerShip ownership)
 : CInputStream(data, length, ownership == kOS_Owned) {}
+
+CMemoryInStream::CMemoryInStream(const void* data, unsigned long length)
+: CInputStream(data, length) {}

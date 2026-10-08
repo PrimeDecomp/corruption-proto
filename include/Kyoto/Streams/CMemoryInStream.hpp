@@ -9,7 +9,7 @@ public:
 
   CMemoryInStream(const void* data, unsigned long length);
   CMemoryInStream(const void* data, unsigned long length, EOwnerShip ownership);
-  virtual ~CMemoryInStream();
+  virtual ~CMemoryInStream() {}
 };
 
 #endif

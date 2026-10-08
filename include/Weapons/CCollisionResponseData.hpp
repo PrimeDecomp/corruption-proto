@@ -10,12 +10,13 @@ class CInputStream;
 class CSimplePool;
 class CGenDescription;
 class CDecalDescription;
+class CAudioGroupSet;
 
 class CCollisionResponseData {
 public:
   typedef rstl::vector< rstl::optional_object< TLockedToken< CGenDescription > > >
       GeneratorListType;
-  typedef rstl::vector< int > SoundEffectIdListType;
+  typedef rstl::vector< rstl::optional_object< TLockedToken< CAudioGroupSet > > > SoundListType;
   typedef rstl::vector< rstl::optional_object< TLockedToken< CDecalDescription > > > DecalListType;
 
   CCollisionResponseData(CInputStream& in, CSimplePool* pool);
@@ -23,33 +24,28 @@ public:
 
   bool CheckAndAddResourcesToResponse(const FourCC clsId, CInputStream& in, CSimplePool* pool);
   bool CheckAndAddParticleSystemToResponse(const FourCC clsId, CInputStream& in, CSimplePool* pool);
-  bool CheckAndAddSoundFXToResponse(const FourCC clsId, CInputStream& in);
+  bool CheckAndAddSoundFXToResponse(const FourCC clsId, CInputStream& in, CSimplePool* pool);
   bool CheckAndAddDecalToResponse(const FourCC clsId, CInputStream& in, CSimplePool* pool);
   bool AddParticleSystemToResponse(EWeaponCollisionResponseTypes type, CInputStream& in,
                                    CSimplePool* pool);
 
   rstl::optional_object< TLockedToken< CGenDescription > >
   GetParticleDescription(EWeaponCollisionResponseTypes type) const;
-  uint GetSoundEffectId(EWeaponCollisionResponseTypes type) const;
+  rstl::optional_object< TLockedToken< CAudioGroupSet > >
+  GetSoundDescription(EWeaponCollisionResponseTypes type) const;
   rstl::optional_object< TLockedToken< CDecalDescription > >
   GetDecalDescription(EWeaponCollisionResponseTypes type) const;
-  float GetAudibleRange() const;
-  float GetAudibleFallOff() const;
-  static EWeaponCollisionResponseTypes GetWorldCollisionResponseType(int material);
+  static EWeaponCollisionResponseTypes GetWorldCollisionResponseType(uint materialFlags);
   static bool ResponseTypeIsEnemyNormal(EWeaponCollisionResponseTypes type);
   static bool ResponseTypeIsEnemySpecial(EWeaponCollisionResponseTypes type);
-  static bool ResponseTypeIsEnemyShielded(EWeaponCollisionResponseTypes type);
 
 private:
   GeneratorListType mGeneratorTokens;
-  SoundEffectIdListType mSoundEffectIds;
+  SoundListType mSoundTokens;
   DecalListType mDecalTokens;
-  float mAudibleRange;
-  float mAudibleFallOff;
 
-  static const int kInvalidSFX;
-  static const EWeaponCollisionResponseTypes skWorldMaterialTable[];
+  static const int skWorldMaterialTable[];
 };
-CHECK_SIZEOF(CCollisionResponseData, 0x38)
+CHECK_SIZEOF(CCollisionResponseData, 0x30)
 
 #endif // _CCOLLISIONRESPONSEDATA

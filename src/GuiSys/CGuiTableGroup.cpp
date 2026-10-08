@@ -10,16 +10,38 @@
 #include "Kyoto/Streams/CInputStream.hpp"
 #include "rstl/math.hpp"
 
+// The retail CFinalInput exposes buttons through out-of-line accessors indexed by input id.
+
 void CGuiTableGroup::ProcessUserInput(const CFinalInput& input) {
-  if (input.PA()) {
+  if (input.GetDigitalValue(3)) {
     DoAdvance();
-  } else if (input.PB()) {
+  } else if (input.GetButtonStateByte1(4)) {
     DoCancel();
   } else {
-    bool decrement =
-        mVertical ? input.DLAUp() || input.DDPUp() : input.DLALeft() || input.DDPLeft();
-    bool increment =
-        mVertical ? input.DLADown() || input.DDPDown() : input.DLARight() || input.DDPRight();
+    bool decrement;
+    if (mVertical) {
+      decrement = false;
+      if (input.GetDigitalValue(0xc) || input.GetDigitalValue(8)) {
+        decrement = true;
+      }
+    } else {
+      decrement = false;
+      if (input.GetDigitalValue(0xf) || input.GetDigitalValue(0xb)) {
+        decrement = true;
+      }
+    }
+    bool increment;
+    if (mVertical) {
+      increment = false;
+      if (input.GetDigitalValue(0xd) || input.GetDigitalValue(9)) {
+        increment = true;
+      }
+    } else {
+      increment = false;
+      if (input.GetDigitalValue(0xe) || input.GetDigitalValue(0xa)) {
+        increment = true;
+      }
+    }
 
     if (mDecRepeat.Update(input.DeltaTime(), decrement) && decrement) {
       DoDecrement();
@@ -190,7 +212,7 @@ void CGuiTableGroup::SetMenuSelectionChangeCallback(
 
 void CGuiTableGroup::OnActivate() {
   CGuiWidget::OnActivate();
-  CGuiWidget* worker = GetWorkerWidget(mUserSelection);
+  CGuiWidget* const& worker = GetWorkerWidget(mUserSelection);
   worker->SetIsActive(GetIsActive());
 }
 

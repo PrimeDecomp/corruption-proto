@@ -10,6 +10,7 @@
 #include "Kyoto/Math/CTransform4f.hpp"
 #include "MetroidPrime/ActorCommon.hpp"
 
+class CAudioGroupSet;
 class CDecalDescription;
 class CElementGen;
 class CParticleSwoosh;
@@ -39,11 +40,10 @@ public:
   CollisionOccured(EWeaponCollisionResponseTypes type, bool deflected, bool useTarget,
                    bool keepActive, const CVector3f& position, const CVector3f& normal,
                    const CVector3f& target);
-  uint GetSoundIdForCollision(EWeaponCollisionResponseTypes type) const;
+  rstl::optional_object< TLockedToken< CAudioGroupSet > >
+  GetSoundForCollision(EWeaponCollisionResponseTypes type) const;
   rstl::optional_object< TLockedToken< CDecalDescription > >
   GetDecalForCollision(EWeaponCollisionResponseTypes type) const;
-  float GetAudibleRange() const;
-  float GetAudibleFallOff() const;
   float GetMaxTurnRate() const;
   void SetVelocity(const CVector3f& velocity);
   const CVector3f& GetVelocity() const;

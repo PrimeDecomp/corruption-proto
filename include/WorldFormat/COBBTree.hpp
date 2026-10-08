@@ -80,7 +80,7 @@ public:
     rstl::vector< uchar > mSurfaceMaterials;
     rstl::vector< CCollisionEdge > mEdges;
     rstl::vector< ushort > mSurfaceIndices;
-    rstl::vector< ushort > x60_; // Additional serialized index array; role unresolved.
+    rstl::vector< ushort > mTriangleAdjacency; // Adjacent triangle per edge, three per triangle.
     rstl::vector< CVector3f > mVertices;
   };
 

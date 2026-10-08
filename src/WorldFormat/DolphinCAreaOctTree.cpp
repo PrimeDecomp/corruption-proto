@@ -68,11 +68,11 @@ CAreaOctTree::CAreaOctTree(const CAABox& bounds, Node::ETreeType treeType, const
                            int edgeCount, int triangleCount, const u64* materials,
                            const uchar* vertexMaterials, const uchar* edgeMaterials,
                            const uchar* surfaceMaterials, const CCollisionEdge* edges,
-                           const ushort* surfaceIndices, const ushort* extraIndices,
+                           const ushort* surfaceIndices, const ushort* triangleAdjacency,
                            const CVector3f* vertices)
 : CCollisionPrimitiveData(materialCount, vertexCount, edgeCount, triangleCount, materials,
                           vertexMaterials, edgeMaterials, surfaceMaterials, edges, surfaceIndices,
-                          extraIndices, vertices, false)
+                          triangleAdjacency, vertices, false)
 , mAabb(bounds)
 , mTreeType(treeType)
 , mBuf(buffer)
@@ -104,15 +104,15 @@ void CAreaOctTree::MakeFromMemory(void* buffer, uint bufferLength, CAreaOctTree*
   uint* surfaceHeader = reinterpret_cast< uint* >(edges + edgeCount);
   uint triangleCount = *surfaceHeader / 3;
   ushort* surfaceIndices = reinterpret_cast< ushort* >(surfaceHeader + 1);
-  uint* extraIndexHeader = reinterpret_cast< uint* >(surfaceIndices + triangleCount * 3);
-  ushort* extraIndices = reinterpret_cast< ushort* >(extraIndexHeader + 1);
-  uint* vertexHeader = reinterpret_cast< uint* >(extraIndices + triangleCount * 3);
+  uint* adjacencyHeader = reinterpret_cast< uint* >(surfaceIndices + triangleCount * 3);
+  ushort* triangleAdjacency = reinterpret_cast< ushort* >(adjacencyHeader + 1);
+  uint* vertexHeader = reinterpret_cast< uint* >(triangleAdjacency + triangleCount * 3);
   uint vertexCount = *vertexHeader;
   CVector3f* vertices = reinterpret_cast< CVector3f* >(vertexHeader + 1);
 
   *treeOut = rs_new CAreaOctTree(bounds, treeType, static_cast< uchar* >(buffer), treeBuffer,
                                  materialCount, vertexCount, edgeCount, triangleCount, materials,
                                  vertexMaterials, edgeMaterials, surfaceMaterials, edges,
-                                 surfaceIndices, extraIndices, vertices);
+                                 surfaceIndices, triangleAdjacency, vertices);
   *valid = true;
 }

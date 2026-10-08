@@ -7,6 +7,9 @@
 #include "Kyoto/Math/CVector3f.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
 
+class CAABox;
+class CTransform4f;
+
 class CSphere {
 public:
   CSphere(const CVector3f& pos, float radius) : mCenter(pos), mRadius(radius) {}
@@ -18,6 +21,10 @@ public:
   CUnitVector3f GetSurfaceNormal(const CVector3f& v) const;
   // Guessed name (target-derived: nearest surface point, or the center when degenerate).
   CVector3f GetSurfacePoint(const CVector3f& v) const;
+
+  // Guessed names (target-derived from CCollidableSphere::CalculateLocalAABox/CalculateAABox).
+  CAABox GetBoundingBox() const;
+  CAABox GetTransformedBoundingBox(const CTransform4f& xf) const;
 
 private:
   CVector3f mCenter;

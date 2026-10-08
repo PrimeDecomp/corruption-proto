@@ -71,3 +71,25 @@ CVector3d operator-(const CVector3d& v) { return CVector3d(-v.GetX(), -v.GetY(),
 CVector3d operator*(double lhs, const CVector3d& rhs) {
   return CVector3d(lhs * rhs.GetX(), lhs * rhs.GetY(), lhs * rhs.GetZ());
 }
+
+CVector3d operator*(const CVector3d& lhs, double rhs) {
+  return CVector3d(lhs.GetX() * rhs, lhs.GetY() * rhs, lhs.GetZ() * rhs);
+}
+
+bool operator==(const CVector3d& lhs, const CVector3d& rhs) {
+  return lhs.GetX() == rhs.GetX() && lhs.GetY() == rhs.GetY() && lhs.GetZ() == rhs.GetZ();
+}
+
+CVector3d& CVector3d::operator*=(double scale) {
+  mX *= scale;
+  mY *= scale;
+  mZ *= scale;
+  return *this;
+}
+
+CVector3d& CVector3d::operator+=(const CVector3d& other) {
+  mX += other.mX;
+  mY += other.mY;
+  mZ += other.mZ;
+  return *this;
+}

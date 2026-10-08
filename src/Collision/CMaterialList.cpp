@@ -1,25 +1,101 @@
 /*
- * G2MEAB Collision/CMaterialList.cpp translation-unit scaffold.
+ * G2MEAB Collision/CMaterialList.cpp
  * .text: 0x80476108..0x804762A8
- * (3 native functions, including emitted helpers).
- * NonMatching: implementation has not been
- * reconstructed.
- * Boundary evidence: Leading76108 formats names of common bits in a 64-bit
- * material mask using76220
- * lookup of material IDs0..63 and invalid fallback. Stream
- * constructor76288 reads the same64-bit
- * material representation and ends762A8. Both reference
- * CMaterialList source/header and Echoes
- * native constructor corroborate identity;
- * formatter/lookup are additional prototype debug natives
- * and original filename is inferred from
- * this coherent class sequence (no filename assertion seen).
- * Next762A8 is independently
- * inspected MovingSphereSphere quadratic intersection.
+ * Debug name helpers for material masks plus the stream constructor.
  */
 #include "Collision/CMaterialList.hpp"
 
 #include "Kyoto/Streams/CInputStream.hpp"
+#include "rstl/string.hpp"
+
+static const char* const sMaterialNames[64] = {
+    "Unknown",
+    "Stone",
+    "Metal",
+    "Grass",
+    "Ice",
+    "Pillar",
+    "MetalGrating",
+    "Phazon",
+    "Dirt",
+    "SP_Metal",
+    "Glass",
+    "Snow",
+    "Fabric",
+    "Halfpipe",
+    "Unused3",
+    "Unused4",
+    "Shield",
+    "Sand",
+    "Seed_Organics",
+    "Web",
+    "ShootThru",
+    "CameraThru",
+    "Wood",
+    "Organic",
+    "RedundantEdge/FlippedTri",
+    "Rubber",
+    "SeeThru",
+    "ScanThru",
+    "AiWalkThru",
+    "Ceiling",
+    "Wall",
+    "Floor",
+    "Player",
+    "Character",
+    "Trigger",
+    "Projectile",
+    "Bomb",
+    "Ground Collider",
+    "NoStaticWorldCollision",
+    "Scannable",
+    "Target",
+    "Orbit",
+    "Occluder",
+    "Immovable",
+    "Debris",
+    "PowerBomb",
+    "TargetableProjectile",
+    "CollisionOnlyActor",
+    "AiBlock",
+    "Platform",
+    "NonSolidDamageable",
+    "ShowOnRadar",
+    "PlatformSlave",
+    "NoIceSpread",
+    "GrappleThrough",
+    "CanJumpOnCharacter",
+    "ExcludeFromLineOfSightTest",
+    "DontShowOnRadar",
+    "JumpNotAllowed",
+    "Solid",
+    "Complex",
+    "SpiderBall",
+    "ScrewAttackWallJump",
+    "Seek",
+};
+
+// Guessed names (target-derived): look up the debug name of one material bit.
+rstl::string CMaterialList::GetMaterialName(const EMaterialTypes& material) {
+  int index = material;
+  if (index >= 0 && index <= 63) {
+    return rstl::string_l(sMaterialNames[index]);
+  }
+  return rstl::string_l("Invalid");
+}
+
+// Guessed name (target-derived): names of the materials set in both lists.
+rstl::string CMaterialList::GetSharedMaterialString(const CMaterialList& other) const {
+  rstl::string result;
+  u64 shared = mValue & other.mValue;
+  for (u64 i = 0; i < 64; ++i) {
+    EMaterialTypes material = EMaterialTypes(i);
+    if ((shared & (u64(1) << i)) != 0) {
+      result.append(GetMaterialName(material) + " ");
+    }
+  }
+  return result;
+}
 
 CMaterialList::CMaterialList(CInputStream& in) : mValue(in.ReadInt64()) {}
 

@@ -14,6 +14,7 @@ class CModel;
 class CGenDescription;
 class CSwooshDescription;
 class CCollisionResponseData;
+class CAudioGroupSet; // CAUD resource
 
 // WPSM resource layout: property names and offsets are corroborated by the native factory.
 class CWeaponDescription {
@@ -22,6 +23,7 @@ public:
   typedef rstl::optional_object< TLockedToken< CGenDescription > > TChildGeneratorDesc;
   typedef rstl::optional_object< TLockedToken< CSwooshDescription > > TSwooshGeneratorDesc;
   typedef rstl::optional_object< TLockedToken< CCollisionResponseData > > TCollisionResponseDesc;
+  typedef rstl::optional_object< TLockedToken< CAudioGroupSet > > TAudioDesc;
 
   CWeaponDescription();
   ~CWeaponDescription();
@@ -87,10 +89,10 @@ public:
   TSwooshGeneratorDesc mASW3;
   TParticleModel mOHEF;
   TCollisionResponseDesc mCOLR;
-  int mPJFX;
+  TAudioDesc mPSFX;
   CRealElement* mRNGE;
   CRealElement* mFOFF;
 };
-CHECK_SIZEOF(CWeaponDescription, 0xe8)
+CHECK_SIZEOF(CWeaponDescription, 0xf4)
 
 #endif // _CWEAPONDESCRIPTION

@@ -9,6 +9,7 @@ class CInputStream;
 class CWorldLight {
   static const CVector3f kDefaultPosition;
   static const CVector3f kDefaultDirection;
+  static const CVector3f kDefaultUp;
 
 public:
   enum EWorldLightType {
@@ -27,19 +28,25 @@ public:
 
 private:
   EWorldLightType mType;
-  CVector3f mColor;
+  CColor mColor;
   CVector3f mPosition;
   CVector3f mDirection;
+  CVector3f mUp;
   float mQ;
   float mCutoffAngle;
-  float x30_;
+  float x34_;
   bool mCastShadows;
-  float x38_;
+  float x3c_;
   EFalloffType mFalloff;
-  float x40_;
-  uint x44_;
+  float x44_;
+  float mAlphaOffset;
+  float mAlphaScale;
+  uint x50_;
+  float x54_;
+  float x58_;
+  uint x5c_;
 };
-CHECK_SIZEOF(CWorldLight, 0x48)
+CHECK_SIZEOF(CWorldLight, 0x60)
 
 namespace rstl {
 RSTL_DECLARE_TRIVIALLY_DESTRUCTIBLE(CWorldLight)

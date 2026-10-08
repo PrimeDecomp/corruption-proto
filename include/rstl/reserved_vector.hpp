@@ -33,7 +33,12 @@ public:
     uninitialized_fill_n(data(), count, value);
   };
   reserved_vector(const reserved_vector& other) : mCount(other.mCount) {
-    uninitialized_copy_n(other.data(), mCount, data());
+    // Always placement-new (with its null check), even for types rstl copies by assignment.
+    const T* it = other.data();
+    T* cur = data();
+    for (int remaining = mCount; remaining != 0; --remaining, ++it, ++cur) {
+      new (cur) T(*it);
+    }
   }
   reserved_vector(CInputStream& in);
 

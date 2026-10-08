@@ -6,6 +6,7 @@
 #include "GuiSys/CGuiWidget.hpp"
 
 #include "GuiSys/CGuiFrame.hpp"
+#include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Math/CMatrix3f.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
 #include <stdio.h>
@@ -111,7 +112,16 @@ void CGuiWidget::ParseBaseInfo(CGuiFrame* frame, CInputStream& in, const CGuiWid
   }
 }
 
-void CGuiWidget::ReadUnusedThing(CInputStream& in) { in.ReadInt32(); }
+void CGuiWidget::ReadUnusedThing(CInputStream& in) {
+  const uint unusedTriggersAndFunctions = in.ReadInt32();
+  if (unusedTriggersAndFunctions != 0) {
+    CCallStack stack(0, "CGuiWidget.cpp(243) : ", kUnknownType);
+    rs_log_assert_failure(&stack, "CGuiWidget.cpp", 243, "Verify", "unusedTriggersAndFunctions == 0",
+                          "Way old version of a CGuiFrameResource!  Recook!");
+    rs_debugger_printf("Would have thrown exception: %s\n", "false");
+    RAssert_TriggerIllegalInstruction();
+  }
+}
 
 void CGuiWidget::Draw(const CGuiWidgetDrawParms& parms) const {}
 
@@ -149,8 +159,10 @@ CGuiWidget* CGuiWidget::FindWidget(short id) {
 }
 
 void CGuiWidget::SetColor(const CColor& color) {
-  mColor = color;
-  RecalcWidgetColor(kTM_Children);
+  if (!(mColor == color)) {
+    mColor = color;
+    RecalcWidgetColor(kTM_Children);
+  }
 }
 
 void CGuiWidget::RecalcWidgetColor(ETraversalMode mode) {
@@ -229,9 +241,11 @@ void CGuiWidget::SetIdleXform(const CTransform4f& xf, bool reapply) {
 }
 
 CGuiWidget* CGuiWidget::GetWorkerWidget(int workerId) {
-  const CGuiWidget* widget = static_cast< const CGuiWidget* >(GetChildObject());
-  while (widget != nullptr && widget->GetWorkerId() != workerId) {
-    widget = static_cast< const CGuiWidget* >(widget->GetNextSibling());
+  const CGuiObject* object = GetChildObject();
+  for (; object != nullptr; object = object->GetNextSibling()) {
+    if (static_cast< const CGuiWidget* >(object)->GetWorkerId() == workerId) {
+      break;
+    }
   }
-  return const_cast< CGuiWidget* >(widget);
+  return const_cast< CGuiWidget* >(static_cast< const CGuiWidget* >(object));
 }

@@ -14,13 +14,13 @@ DSError TRKSuppAccessFile(u32 file_handle, u8* data, size_t* count,
 DSError TRKRequestSend(TRKBuffer* msgBuf, int* bufferId, u32 p1, u32 p2,
                        int p3);
 
-DSError HandleOpenFileSupportRequest(const char* path, u8 replyError,
-                                     u32* param_3, u8* ioResult);
+DSError HandleOpenFileSupportRequest(const char* path, u8 mode, u32* handle,
+                                     DSIOResult* ioResult);
 
-DSError HandleCloseFileSupportRequest(int replyError, u8* ioResult);
+DSError HandleCloseFileSupportRequest(u32 handle, DSIOResult* ioResult);
 
-DSError HandlePositionFileSupportRequest(u32 replyErr, u32* param_2,
-                                         u8 param_3, u8* ioResult);
+DSError HandlePositionFileSupportRequest(u32 handle, u32* offset, u8 whence,
+                                         DSIOResult* ioResult);
 
 #ifdef __cplusplus
 }

@@ -148,6 +148,7 @@ typedef enum {
 	DSMSGMEMORY_Space_io      = 0x80
 };
 
+#pragma enumsalwaysint on
 typedef enum {
 	NUBEVENT_Null       = 0,
 	NUBEVENT_Shutdown   = 1,
@@ -156,6 +157,7 @@ typedef enum {
 	NUBEVENT_Exception  = 4,
 	NUBEVENT_Support    = 5
 } NubEventType;
+#pragma enumsalwaysint reset
 
 typedef enum {
 	VALIDMEM_Readable  = 0,

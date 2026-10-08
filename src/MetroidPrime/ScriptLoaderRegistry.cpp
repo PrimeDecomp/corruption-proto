@@ -13,7 +13,7 @@ struct NamedScriptLoader {
 
 // The target initializer inlines all 154 constructors and first writes seven
 // shared-header .sbss constants that are not identified yet; both remain unmatched.
-NamedScriptLoader g_LoaderFuncs[] = {
+NamedScriptLoader gkLoaderFuncs[] = {
     NamedScriptLoader('ACTR', &LoadActor),
     NamedScriptLoader('ACKF', &LoadActorKeyframe),
     NamedScriptLoader('AMOR', &LoadActorMorph),
@@ -170,19 +170,19 @@ NamedScriptLoader g_LoaderFuncs[] = {
     NamedScriptLoader('TEL1', &LoadWorldTeleporter),
 };
 
-int g_LoaderFuncCount = ARRAY_SIZE(g_LoaderFuncs);
+int g_LoaderFuncCount = ARRAY_SIZE(gkLoaderFuncs);
 
 FScriptLoader GetScriptLoaderForType(CFourCC type) {
   static bool sorted = false;
   if (!sorted) {
-    rstl::sort(g_LoaderFuncs, g_LoaderFuncs + g_LoaderFuncCount);
+    rstl::sort(gkLoaderFuncs, gkLoaderFuncs + g_LoaderFuncCount);
     sorted = true;
   }
 
   const NamedScriptLoader key(type, nullptr);
   const NamedScriptLoader* const loader =
-      rstl::binary_find(g_LoaderFuncs, g_LoaderFuncs + g_LoaderFuncCount, key);
-  if (loader && loader != g_LoaderFuncs + g_LoaderFuncCount) {
+      rstl::binary_find(gkLoaderFuncs, gkLoaderFuncs + g_LoaderFuncCount, key);
+  if (loader && loader != gkLoaderFuncs + g_LoaderFuncCount) {
     return loader->mLoader;
   }
   return nullptr;

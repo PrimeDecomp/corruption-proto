@@ -1,110 +1,29 @@
 #ifndef _ACTORCOMMON
 #define _ACTORCOMMON
 
+// Responses are named after the 4CC tags of the CRSM tables (particle/sound/decal).
 enum EWeaponCollisionResponseTypes {
-  kWCR_None,
-  kWCR_Default,
-  kWCR_Unknown2,
-  kWCR_Metal,
-  kWCR_Grass,
-  kWCR_Ice,
-  kWCR_Goo,
-  kWCR_Wood,
-  kWCR_Water,
-  kWCR_Mud,
-  kWCR_Lava,
-  kWCR_Sand,
-  kWCR_Projectile,
-  kWCR_OtherProjectile,
-  kWCR_Unknown14,
-  kWCR_Unknown15,
-  kWCR_EnemyNormal,
-  kWCR_EnemySpecial,
-  kWCR_EnemyShielded,
-  kWCR_Unknown19,
-  kWCR_Unknown20,
-  kWCR_Unknown21,
-  kWCR_Unknown22,
-  kWCR_Unknown23,
-  kWCR_Unknown24,
-  kWCR_Unknown25,
-  kWCR_Unknown26,
-  kWCR_Unknown27,
-  kWCR_Unknown28,
-  kWCR_Unknown29,
-  kWCR_Unknown30,
-  kWCR_Unknown31,
-  kWCR_Unknown32,
-  kWCR_Unknown33,
-  kWCR_Unknown34,
-  kWCR_Unknown35,
-  kWCR_Unknown36,
-  kWCR_Unknown37,
-  kWCR_ChozoGhost,
-  kWCR_Unknown39,
-  kWCR_Unknown40,
-  kWCR_Unknown41,
-  kWCR_AtomicBeta,
-  kWCR_AtomicAlpha,
-  kWCR_Unknown44,
-  kWCR_Unknown45,
-  kWCR_Unknown46,
-  kWCR_Unknown47,
-  kWCR_Unknown48,
-  kWCR_Unknown49,
-  kWCR_Unknown50,
-  kWCR_Unknown51,
-  kWCR_Unknown52,
-  kWCR_Unknown53,
-  kWCR_Unknown54,
-  kWCR_Unknown55,
-  kWCR_Unknown56,
-  kWCR_Unknown57,
-  kWCR_Unknown58,
-  kWCR_Unknown59,
-  kWCR_Unknown60,
-  kWCR_Unknown61,
-  kWCR_Unknown62,
-  kWCR_Unknown63,
-  kWCR_Unknown64,
-  kWCR_Unknown65,
-  kWCR_Unknown66,
-  kWCR_Unknown67,
-  kWCR_Unknown68,
-  kWCR_Unknown69,
-  kWCR_Unknown70,
-  kWCR_Unknown71,
-  kWCR_Unknown72,
-  kWCR_Unknown73,
-  kWCR_Unknown74,
-  kWCR_Unknown75,
-  kWCR_Unknown76,
-  kWCR_Unknown77,
-  kWCR_Unknown78,
-  kWCR_Unknown79,
-  kWCR_Unknown80,
-  kWCR_Unknown81,
-  kWCR_Unknown82,
-  kWCR_Unknown83,
-  kWCR_Unknown84,
-  kWCR_Unknown85,
-  kWCR_Unknown86,
-  kWCR_Unknown87,
-  kWCR_Unknown88,
-  kWCR_Unknown89,
-  kWCR_Unknown90,
-  kWCR_Unknown91,
-  kWCR_AtomicBetaReflect,
-  kWCR_AtomicAlphaReflect,
-  kWCR_Unknown107 = 107, // Last response in Echoes's extended reflection range.
-  // Guessed names: target-derived fallback ranges, not individual enemy identities.
-  kWCR_EnemyNormalFirst = 19,
-  kWCR_EnemyNormalLast = 47,
-  kWCR_EnemySpecialFirst = 49,
-  kWCR_EnemySpecialLast = 77,
-  kWCR_EnemyShieldedFirst = 79,
-  kWCR_EnemyShieldedLast = 107,
-  kWCR_Count = 109,
+  kWCR_None,         // NODP
+  kWCR_Default,      // DEFS
+  kWCR_Crate,        // CRTS
+  kWCR_Metal,        // MTLS
+  kWCR_Grass,        // GRAS
+  kWCR_Glass,        // GLAS
+  kWCR_Ice,          // ICEE
+  kWCR_Snow,         // SNEE
+  kWCR_Goo,          // GOOO
+  kWCR_Wood,         // WODS
+  kWCR_Water,        // WATR
+  kWCR_Mud,          // 1MUD
+  kWCR_Wood2,        // 1WOD
+  kWCR_Lava,         // 1LAV
+  kWCR_Sand,         // 1SAN
+  kWCR_Projectile,   // 1PRJ
+  kWCR_OtherProjectile, // DCHR (Prime name)
+  kWCR_Shield,       // CSHD (guessed from the tag)
+  kWCR_EnemyNormal,  // DENM
+  kWCR_EnemySpecial, // DSNM
+  kWCR_Count,
 };
 enum EProjectileAttrib {
   kPA_None = 0,

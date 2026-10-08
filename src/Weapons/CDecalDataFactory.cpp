@@ -13,9 +13,11 @@
 #include "Kyoto/IObj.hpp"
 #include "Kyoto/Particles/CParticleDataFactory.hpp"
 #include "Kyoto/Streams/CInputStream.hpp"
+#include "Kyoto/Streams/CMemoryInStream.hpp"
 
-CFactoryFnReturn FDecalDataFactory(const SObjectTag& tag, CInputStream& in,
-                                   const CVParamTransfer& transfer) {
+CFactoryFnReturn FDecalDataFactory(const SObjectTag& tag, const rstl::auto_ptr< uchar >& data,
+                                   int length, const CVParamTransfer& transfer) {
+  CMemoryInStream in(data.get(), length);
   rstl::rc_ptr< IVParamObj > obj = transfer.GetObj();
   CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
   CDecalDescription* ret = CDecalDataFactory::GetGeneratorDesc(in, pool);

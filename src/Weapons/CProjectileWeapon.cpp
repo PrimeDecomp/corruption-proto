@@ -768,12 +768,13 @@ CProjectileWeapon::CollisionOccured(EWeaponCollisionResponseTypes type, bool def
   return response->GetParticleDescription(type);
 }
 
-uint CProjectileWeapon::GetSoundIdForCollision(EWeaponCollisionResponseTypes type) const {
+rstl::optional_object< TLockedToken< CAudioGroupSet > >
+CProjectileWeapon::GetSoundForCollision(EWeaponCollisionResponseTypes type) const {
   if (!mWeaponDesc->GetCollisionResponse()) {
-    return uint(-1);
+    return rstl::optional_object_null();
   }
   TToken< CCollisionResponseData > response = *mWeaponDesc->GetCollisionResponse();
-  return response->GetSoundEffectId(type);
+  return response->GetSoundDescription(type);
 }
 
 rstl::optional_object< TLockedToken< CDecalDescription > >
@@ -783,22 +784,6 @@ CProjectileWeapon::GetDecalForCollision(EWeaponCollisionResponseTypes type) cons
   }
   TToken< CCollisionResponseData > response = *mWeaponDesc->GetCollisionResponse();
   return response->GetDecalDescription(type);
-}
-
-float CProjectileWeapon::GetAudibleRange() const {
-  if (!mWeaponDesc->GetCollisionResponse()) {
-    return 0.f;
-  }
-  TToken< CCollisionResponseData > response = *mWeaponDesc->GetCollisionResponse();
-  return response->GetAudibleRange();
-}
-
-float CProjectileWeapon::GetAudibleFallOff() const {
-  if (!mWeaponDesc->GetCollisionResponse()) {
-    return 0.f;
-  }
-  TToken< CCollisionResponseData > response = *mWeaponDesc->GetCollisionResponse();
-  return response->GetAudibleFallOff();
 }
 
 float CProjectileWeapon::GetMaxTurnRate() const { return mMaxTurnRate; }

@@ -84,6 +84,9 @@ public:
   ERestartMode GetRestartMode() const { return mRestartMode; }
 
   void SetMaxSpeed(bool enabled);
+  // Guessed name. 0x80009888 deletes the token at 0x130 once something else holds a reference
+  // too; CMFGame calls it every tick in the FRND game mode.
+  void ReleaseStreamToken();
   bool IsMaxSpeed();
   // Guessed names inherited from Echoes; the flag forces 30-FPS ticks and frame waits.
   void SetThirtyFps(bool enabled);

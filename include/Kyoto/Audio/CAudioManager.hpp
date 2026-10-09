@@ -238,6 +238,7 @@ public:
   static void SetDuration(CAudioHandle handle, float duration);
   static bool IsPlaying(CAudioHandle handle);
   static bool IsQueued(CAudioHandle handle);
+  // Empty (0x80568C00); CMFGame calls it where Echoes' calls CSfxManager::SetMuted.
   static void SetMuted(bool muted);
   static void SetChannel(ESfxChannels channel);
   static ESfxChannels GetChannel();

@@ -13,6 +13,8 @@ public:
   static void ShutDown();
   // Echoes' name; CStateManager's update calls it (0x800EB650).
   static void Update(float dt, CStateManager& mgr);
+  // Echoes' name; CMFGame's destructor calls it (0x800ECA58).
+  static void Reinitialize();
 };
 
 #endif // _CDECALMANAGER

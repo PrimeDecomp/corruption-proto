@@ -5,6 +5,7 @@
 
 #include "MetroidPrime/CActor.hpp"
 
+class CActorLights;
 class CActorParameters;
 class CModelData;
 
@@ -12,7 +13,7 @@ class CModelData;
 // (0x8029F944) takes Echoes' CActor arguments: the prototype split Echoes' CActor into CActor
 // (transform, materials, fluids) and this class, which builds the model from the CModelData and
 // keeps the rest of CActorParameters. It adds cast flag 2; CPhysicsActor derives from it.
-// Vtable 0x806BAB8C; the layout past CActor (0xF8..0x170) is not modelled.
+// Vtable 0x806BAB8C; past CActor (0xF8..0x170) only the actor lights are modelled.
 class CRenderActor : public CActor {
 public:
   CRenderActor(TUniqueId uid, const rstl::string& name, const CEntityInfo& info, uint castFlags,
@@ -41,8 +42,13 @@ public:
   virtual void Virtual98();
   virtual void Virtual9C();
 
+  // Echoes' name; Echoes' CActor owns the lights (null for an unlit actor).
+  CActorLights* ActorLights() { return mActorLights; }
+
 private:
-  uchar xF8_[0x170 - 0xF8];
+  uchar xF8_[0xFC - 0xF8];
+  CActorLights* mActorLights;
+  uchar x100_[0x170 - 0x100];
 };
 CHECK_SIZEOF(CRenderActor, 0x170)
 

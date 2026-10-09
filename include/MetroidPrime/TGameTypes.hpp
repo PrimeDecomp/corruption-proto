@@ -29,6 +29,8 @@ struct TEditorId {
   uint Value() const { return value & 0x3FFFFFF; }
   uint Id() const { return value & 0xffff; }
   int AreaNum() const { return (value >> 16) & 0x3ff; }
+  // The setter of AreaNum, after its name; the console's SENDMESSAGE and SETTRANSFORM inline it.
+  void SetAreaNum(int areaNum) { value = (value & ~0x3FF0000) | ((areaNum << 16) & 0x3FF0000); }
 
   void PutTo(COutputStream&) const;
 

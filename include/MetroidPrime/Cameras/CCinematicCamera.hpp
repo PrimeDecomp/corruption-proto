@@ -16,6 +16,9 @@ public:
   // scale; the camera manager's 0x801E80E8 tests 0x2.
   uint GetFlags() const { return mFlags; }
   float GetSlowMotionScale() const { return mSlowMotionScale; }
+  // Echoes' name. 0x801ED6E4: always in hard mode, otherwise the flag of the script cinematic
+  // camera at 0x208. CMFGame checks it while the 0x4 flag is set and the 0x200 flag is not.
+  bool CanSkip(const CStateManager& mgr) const;
 
 private:
   uchar xF8_[0x208 - 0xF8];

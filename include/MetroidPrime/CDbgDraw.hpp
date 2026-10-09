@@ -44,6 +44,9 @@ public:
   // Guessed name. 0x8002EF58 ages the timed primitives by the frame time and drops the expired
   // ones, unless the instance is persistent; CStateManager's update calls it while the game runs.
   void Update(float dt, CStateManager& mgr);
+  // Prime's name (DrawDebugStuff's callee in Prime's map). 0x8002EC74 draws the primitives;
+  // CRenderManager's debug draw calls it on gpDbgDraw, then on gpPersistentDbgDraw.
+  void Draw();
 
 private:
   bool mPersistent; // Guessed name

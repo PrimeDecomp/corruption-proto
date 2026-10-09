@@ -3,8 +3,10 @@
 
 #include "types.h"
 
+#include "Kyoto/SObjectTag.hpp"
 #include "Kyoto/TFunctor.hpp"
 #include "rstl/string.hpp"
+#include "rstl/vector.hpp"
 
 class CGuid;
 
@@ -45,6 +47,16 @@ public:
   static void Shutdown();
   // CMain's frame loop polls for host messages once per frame.
   static void PollMessages();
+
+  // 0x80540988: when connected, asks the host for the list of assets it serves and waits for it.
+  static void RefreshNetworkAssets();
+  // Guessed names. One asset the host serves: its file on the host and the resource it replaces.
+  struct SNetworkAsset {
+    rstl::string mFilename;
+    SObjectTag mTag;
+  };
+  // 0x805400BC returns the list RefreshNetworkAssets fills.
+  static const rstl::vector< SNetworkAsset >& GetNetworkAssets();
 };
 
 #endif // _CBBASUPPORT

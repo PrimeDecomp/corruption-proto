@@ -7,20 +7,41 @@
 #include "MetroidPrime/ConsoleCommands.hpp"
 
 #include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Audio/CAudioSoundEffect.hpp"
+#include "Kyoto/CFrameDelayedKiller.hpp"
+#include "Kyoto/CSimplePool.hpp"
+#include "Kyoto/Graphics/CModel.hpp"
+#include "Kyoto/Graphics/CTexture.hpp"
 #include "Kyoto/Math/CVector2f.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
+#include "Kyoto/SObjectTag.hpp"
+#include "Kyoto/Streams/CBBAInStream.hpp"
+#include "Kyoto/TToken.hpp"
 #include "Kyoto/Text/CStringTokenizer.hpp"
+#include "MetroidPrime/CActorLights.hpp"
+#include "MetroidPrime/CControllerRecorder.hpp"
+#include "MetroidPrime/CDisplayManager.hpp"
 #include "MetroidPrime/CEntityInfo.hpp"
+#include "MetroidPrime/CGameArea.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/CInputGenerator.hpp"
+#include "MetroidPrime/CMFGame.hpp"
 #include "MetroidPrime/CMain.hpp"
+#include "MetroidPrime/CObjectList.hpp"
+#include "MetroidPrime/CRenderActor.hpp"
 #include "MetroidPrime/CScriptMsgUtils.hpp"
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerCallbackLists.hpp"
 #include "MetroidPrime/CStateManagerObject.hpp"
+#include "MetroidPrime/CWorld.hpp"
+#include "MetroidPrime/Cameras/CCameraManager.hpp"
+#include "MetroidPrime/Cameras/CGameCamera.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CPlayer.hpp"
 #include "MetroidPrime/Player/CPlayerState.hpp"
+#include "MetroidPrime/ScriptObjects/CScriptSpawnPoint.hpp"
+#include "MetroidPrime/TCastTo.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
 #include "MetroidPrime/Tweaks/CTweakContents.hpp"
 
@@ -39,6 +60,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+class CScriptWaypoint;
 
 // Guessed names. The state the mouse commands store (0xC bytes). The host sends the Windows
 // mouse key state, whose left, right and middle buttons are 0x1, 0x2 and 0x10.
@@ -253,9 +276,17 @@ void AddDebugVar(const char* name, uint* value) {
   AddDebugVar(SDebugVar(name, SDebugVar::kT_Uint32, value));
 }
 
-// Guessed name. CMain's post-update callback: puts the player camera back where the last
-// FASTSCRIPTCOOK or RESTARTGAMEAREA found it.
-void RestoreCameraTransform();
+// Guessed name. CMain's post-update callback: puts the debug camera back where the last
+// FASTSCRIPTCOOK or RESTARTGAMEAREA found it, once the restarted game runs with it again.
+void RestoreCameraTransform() {
+  if (sSavedCameraTransform && sStateManager != nullptr) {
+    CDisplayManager& display = sStateManager->DisplayManager();
+    if (display.IsDebugCameraActive()) {
+      display.PlayerCameraManager()->GetDebugCamera()->SetTransform(*sSavedCameraTransform);
+      sSavedCameraTransform = rstl::optional_object< CTransform4f >();
+    }
+  }
+}
 
 // Guessed name.
 static void OnStateManagerDestroyed(CStateManager&) { sStateManager = nullptr; }
@@ -280,9 +311,47 @@ void ShutdownConsoleCommands() {
   sStateManagerConnection = rstl::auto_ptr< IConnection >();
 }
 
-// Not implemented yet; they need members CStateManager.hpp does not expose (see the report).
-void FastScriptCook(const char* command, const char* args);
-void RestartGameArea(const char* command, const char* args);
+// Restarts like RESTARTGAMEAREA with the script objects loaded from the host, and optionally
+// queues a script message ("<editor id in hex> <message>") the restarted game sends.
+void FastScriptCook(const char*, const char* args) {
+  rs_debugger_printf("Fast script cook initiated\n");
+  gpfnWarningPrintf("Fast script cook initiated\n...\n");
+  gpGameDebug->SetOptionValue(CGameDebug::kDO_PCLoadScriptObjects, 1.f);
+  if (args != nullptr && *args != '\0') {
+    uint editorId;
+    int message;
+    if (sscanf(args, "%x %d", &editorId, &message) == 2) {
+      gpGameState->QueueScriptMsg(TEditorId(editorId), message);
+    } else {
+      rs_debugger_printf("Internal error? Could not extract editor id and message from \n%s\n",
+                         args);
+    }
+  }
+  if (sStateManager != nullptr) {
+    const CDisplayManager& display = sStateManager->GetDisplayManager();
+    if (display.IsDebugCameraActive()) {
+      sSavedCameraTransform = display.PlayerCameraManager()->GetDebugCamera()->GetTransform();
+    }
+    sStateManager->ObjectManager().GetWorld()->LockCurrentAreaTokens();
+    gpMain->SetRestartMode(CMain::kRM_None);
+    CMFGame::ActivateMultiplayerGui();
+  }
+}
+
+// Keeps the debug camera where it is (see RestoreCameraTransform) and the area's assets the host
+// does not serve, then quits to restart the game.
+void RestartGameArea(const char*, const char*) {
+  rs_debugger_printf("Restart game area.\n");
+  if (sStateManager != nullptr) {
+    const CDisplayManager& display = sStateManager->GetDisplayManager();
+    if (display.IsDebugCameraActive()) {
+      sSavedCameraTransform = display.PlayerCameraManager()->GetDebugCamera()->GetTransform();
+    }
+    sStateManager->ObjectManager().GetWorld()->LockCurrentAreaTokens();
+    gpMain->SetRestartMode(CMain::kRM_None);
+    CMFGame::ActivateMultiplayerGui();
+  }
+}
 
 static void GameSpeed(const char*, const char* args) {
   float speed = 1.f;
@@ -298,9 +367,109 @@ static void AdvanceFrame(const char*, const char*) {
   rs_debugger_printf("Advanced 1 frame.\n");
 }
 
+// Reads the lights of the live areas again from the host and makes every lit actor pick its
+// lights again.
+void ReloadAreaLights(const char*, const char*) {
+  if (sStateManager != nullptr) {
+    CWorld* world = sStateManager->ObjectManager().GetWorld();
+    for (CGameArea::CChainIterator it = world->ChainHead(CWorld::kC_Alive);
+         it != CWorld::AliveAreasEnd(); ++it) {
+      it->ReloadLights();
+    }
+
+    CObjectList& actors = sStateManager->ObjectManager().ObjectListById(kOL_RenderActor);
+    for (int i = actors.GetFirstObjectIndex(); i != -1; i = actors.GetNextObjectIndex(i)) {
+      CActorLights* lights = static_cast< CRenderActor* >(actors[i])->ActorLights();
+      if (lights != nullptr) {
+        lights->SetDirty();
+      }
+    }
+  }
+  gpfnWarningPrintf("Reloaded area lights.\n");
+}
+
+// Rebuilds the loaded textures and models the host serves from its files, in place.
+void ReloadNetworkAssets(const char*, const char*) {
+  CFrameDelayedKiller::StallAndFlushAllAllocations();
+  const rstl::vector< CBBASupport::SNetworkAsset >& assets = CBBASupport::GetNetworkAssets();
+  for (int i = 0; i < assets.size(); ++i) {
+    const CBBASupport::SNetworkAsset& asset = assets[i];
+    if (asset.mTag.type == 'TXTR') {
+      TToken< CTexture > texture = gpSimplePool->GetObj(asset.mTag);
+      if (texture.IsLoaded()) {
+        rs_debugger_printf("Rebuilding %s in ReloadNetworkAssets.\n", asset.mFilename.data());
+        CBBAInStream in(asset.mFilename.data());
+        CTexture* object = texture.GetT();
+        object->~CTexture();
+        new (object) CTexture(in, CTexture::kAM_Zero, CTexture::kBK_Zero);
+      }
+    } else if (asset.mTag.type == 'CMDL') {
+      TToken< CModel > model = gpSimplePool->GetObj(asset.mTag);
+      if (model.IsLoaded()) {
+        rs_debugger_printf("Rebuilding %s in ReloadNetworkAssets.\n", asset.mFilename.data());
+        CBBAInStream in(asset.mFilename.data());
+        const uint size = in.GetRemainingBytes();
+        rstl::auto_ptr< uchar > data = rstl::auto_ptr< uchar >(static_cast< uchar* >(CMemory::Alloc(
+            size, IAllocator::kHI_RoundUpLen, IAllocator::kSC_Unk1, IAllocator::kTP_Heap,
+            CCallStack(-1, "ConsoleCommands.cpp(558) : ", kUnknownType))));
+        in.Get(data.get(), size);
+        CModel* object = model.GetT();
+        object->~CModel();
+        new (object) CModel(data, size, *gpSimplePool);
+      }
+    }
+  }
+}
+
+void RefreshNetworkAssets(const char*, const char*) {
+  rs_debugger_printf("Refreshing network loading assets.\n");
+  CBBASupport::RefreshNetworkAssets();
+}
+
 static void Screenshot(const char*, const char*) {
   rs_debugger_printf("Taking screenshot.\n");
   gpMain->TakeScreenshot();
+}
+
+// Guessed name. The internal name of the area being entered.
+static rstl::string GetNextAreaName(CStateManager& mgr) {
+  CWorld* world = mgr.ObjectManager().World();
+  return world->GetArea(mgr.ObjectManager().GetNextAreaId())->IGetInternalAreaName();
+}
+
+// "<seconds> <interlaced>": captures every frame for that long into files named after the area,
+// or ends the capture already running.
+void CaptureMovie(const char*, const char* args) {
+  rs_debugger_printf("Continuous frame capture.\n");
+  CStringTokenizer tokenizer(args);
+  rstl::string seconds = tokenizer.ReadToken(nullptr, '"');
+  const float time = atof(seconds.data());
+  rstl::string interlacedText = tokenizer.ReadToken(nullptr, '"');
+  const bool interlaced = atoi(interlacedText.data()) != 0;
+  rs_debugger_printf("Capturing %f seconds %sinterlaced.\n", time, interlaced ? "" : "non-");
+  if (gpGameDebug->IsMovieCaptureRunning()) {
+    gpGameDebug->FinishMovieCapture();
+  } else if (sStateManager != nullptr) {
+    sInputGenerator->GetRecorder().SetCaptureMode(true);
+    gpGameDebug->SetMovieCaptureName(GetNextAreaName(*sStateManager));
+    gpGameDebug->ResetMovieCaptureFrame();
+    gpGameDebug->SetMovieCaptureTime(time);
+    gpGameDebug->StartMovieCapture(interlaced);
+  }
+}
+
+void TitleScreen(const char*, const char*) {
+  gpMain->SetRestartMode(CMain::kRM_Default);
+  CMFGame::ActivateMultiplayerGui();
+}
+
+// Reads the tweaks the host's tools write and recreates the tweak globals from them.
+void ReloadTweaks(const char*, const char*) {
+  rs_debugger_printf("Reloading tweaks.\n");
+  CBBAInStream in("c:\\FIO\\Auto.ntwk");
+  LoadTweaks(in);
+  CreateTweakGlobals();
+  gpfnWarningPrintf("TWEAKS RELOADED!\n");
 }
 
 static void DropConnection(const char*, const char*) {
@@ -319,10 +488,10 @@ static void SendMessage(const char*, const char* args) {
       if (sStateManager != nullptr) {
         // The editor id is taken as relative to the player's area.
         const CPlayer* player = sStateManager->ObjectManager().GetPlayer();
-        editorId =
-            (editorId & ~0x03FF0000) | ((player->GetCurrentAreaId().Value() << 16) & 0x03FF0000);
+        TEditorId id(editorId);
+        id.SetAreaNum(player->GetCurrentAreaId().Value());
         CStateManagerObject::TIdListResult range =
-            sStateManager->ObjectManager().GetIdListForScript(TEditorId(editorId));
+            sStateManager->ObjectManager().GetIdListForScript(id);
         for (CStateManagerObject::TIdList::const_iterator it = range.first; it != range.second;
              ++it) {
           TUniqueId uid = it->second;
@@ -335,6 +504,70 @@ static void SendMessage(const char*, const char* args) {
       }
     } else {
       rs_debugger_printf("Internal error? Could not extract editor id and message from \n%s\n",
+                         args);
+    }
+  }
+}
+
+// Moves the script object to a transform relative to the player's area. Spawn points take the
+// transform as it is; actors keep their scale.
+void SetTransform(const char*, const char* args) {
+  if (args != nullptr && *args != '\0') {
+    uint editorId;
+    float m00, m01, m02, m03;
+    float m10, m11, m12, m13;
+    float m20, m21, m22, m23;
+    if (sscanf(args, "%x %f %f %f %f %f %f %f %f %f %f %f %f", &editorId, &m00, &m01, &m02, &m03,
+               &m10, &m11, &m12, &m13, &m20, &m21, &m22, &m23) == 13) {
+      if (sStateManager != nullptr) {
+        // The editor id is taken as relative to the player's area.
+        TAreaId areaId = sStateManager->ObjectManager().GetPlayer()->GetCurrentAreaId();
+        TEditorId id(editorId);
+        id.SetAreaNum(areaId.Value());
+        TUniqueId uid = sStateManager->ObjectManager().GetIdForScript(id);
+        if (uid == kInvalidUniqueId) {
+          return;
+        }
+        CTransform4f xf(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23);
+
+        CScriptSpawnPoint* spawnPoint =
+            TCastToPtr< CScriptSpawnPoint >(sStateManager->ObjectManager().ObjectById(uid));
+        if (spawnPoint != nullptr) {
+          CTransform4f worldXf =
+              sStateManager->ObjectManager().World()->GetArea(areaId)->GetTransform() * xf;
+          spawnPoint->SetTransform(worldXf);
+        }
+
+        // The only pointer cast to CActor is the const one.
+        CActor* actor = const_cast< CActor* >(
+            TCastToConstPtr< CActor >(sStateManager->ObjectManager().ObjectById(uid)));
+        if (actor != nullptr) {
+          CTransform4f oldXf = actor->GetTransform();
+          CVector3f right = xf.GetRight().AsNormalized() * oldXf.GetRight().Magnitude();
+          CVector3f forward = xf.GetForward().AsNormalized() * oldXf.GetForward().Magnitude();
+          CVector3f up = xf.GetUp().AsNormalized() * oldXf.GetUp().Magnitude();
+          CTransform4f localXf = CTransform4f::FromColumns(right, forward, up, xf.GetTranslation());
+          CTransform4f worldXf =
+              sStateManager->ObjectManager().World()->GetArea(areaId)->GetTransform() * localXf;
+          actor->SetTransform(worldXf);
+
+          const bool randomWasAvailable = sStateManager->IsRandomAvailable();
+          sStateManager->SetRandomAvailable(true);
+          if (TCastToConstPtr< CScriptWaypoint >(actor) != nullptr) {
+            CObjectList& objects = sStateManager->ObjectManager().ObjectListById(kOL_All);
+            for (int i = objects.GetFirstObjectIndex(); i != -1;
+                 i = objects.GetNextObjectIndex(i)) {
+              CActor* other = const_cast< CActor* >(TCastToConstPtr< CActor >(objects[i]));
+              if (other != nullptr) {
+                other->Virtual60(*sStateManager);
+              }
+            }
+          }
+          sStateManager->SetRandomAvailable(randomWasAvailable);
+        }
+      }
+    } else {
+      rs_debugger_printf("Internal error? Could not extract editor id or transform from \n%s\n",
                          args);
     }
   }
@@ -472,6 +705,39 @@ static void GetAllDebugVars(const char*, const char*) {
   }
 }
 
+// "debug" moves the debug camera, "teleport" the player, both to a transform relative to the
+// player's area; "teleport_ws" moves the player to a world transform.
+void SetDebugTransform(const char*, const char* args) {
+  if (args != nullptr && *args != '\0') {
+    char target[1024];
+    float m00, m01, m02, m03;
+    float m10, m11, m12, m13;
+    float m20, m21, m22, m23;
+    if (sscanf(args, "%s %f %f %f %f %f %f %f %f %f %f %f %f", target, &m00, &m01, &m02, &m03, &m10,
+               &m11, &m12, &m13, &m20, &m21, &m22, &m23) == 13) {
+      if (sStateManager != nullptr) {
+        CTransform4f xf(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23);
+        CPlayer* player = sStateManager->ObjectManager().Player();
+        TAreaId areaId = player->GetCurrentAreaId();
+        CTransform4f worldXf =
+            sStateManager->ObjectManager().World()->GetArea(areaId)->GetTransform() * xf;
+        CCameraManager* cameraManager = sStateManager->DisplayManager().PlayerCameraManager();
+        if (stricmp(target, "debug") == 0) {
+          gpGameDebug->SetOptionValue(CGameDebug::kDO_DebugCamera, 1.f);
+          sStateManager->DisplayManager().ActivateDebugCamera(*sStateManager);
+          cameraManager->GetDebugCamera()->SetTransform(worldXf);
+        } else if (stricmp(target, "teleport") == 0) {
+          player->Teleport(worldXf, *sStateManager, true);
+        } else if (stricmp(target, "teleport_ws") == 0) {
+          player->Teleport(xf, *sStateManager, true);
+        }
+      }
+    } else {
+      rs_debugger_printf("Internal error? Could not get transform from \n%s\n", args);
+    }
+  }
+}
+
 static void SetDebugOption(const char*, const char* args) {
   CStringTokenizer tokenizer(args);
   while (!tokenizer.IsExhausted()) {
@@ -541,6 +807,31 @@ static void MouseInfo(const char*, const char* args) {
   sMouseInfo.mRightButton = (buttons & 0x2) != 0;
   sMouseInfo.mMiddleButton = (buttons & 0x10) != 0;
   sMouseInfo.mPosition.SetY(y);
+}
+
+// Prints the script layers of the player's area.
+void ShowLayerInfo(const char*, const char*) {
+  if (sStateManager != nullptr) {
+    TAreaId areaId = sStateManager->ObjectManager().GetPlayer()->GetCurrentAreaId();
+    CWorld* world = sStateManager->ObjectManager().World();
+    if (world->DoesAreaExist(areaId) && world->IsAreaValid(areaId)) {
+      world->GetArea(areaId)->DumpScriptLayers(*sStateManager);
+    }
+  }
+}
+
+// Plays the sound effect with the given asset id, stopping the one played before.
+void PlaySound(const char*, const char* args) {
+  if (sSoundHandle) {
+    sSoundHandle.StopWithFade();
+  }
+  TToken< CAudioSoundEffect > sound = gpSimplePool->GetObj(SObjectTag('CAUD', CAssetId(args)));
+  sSoundHandle = sound->PlayPanned(1.f, 0.f);
+}
+
+void StopSound(const char*, const char*) {
+  sSoundHandle.StopWithFade();
+  sSoundHandle.Clear();
 }
 
 static void PrintDebugMessages(const char*, const char*) {

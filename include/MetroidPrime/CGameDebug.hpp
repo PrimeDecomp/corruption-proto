@@ -545,6 +545,9 @@ public:
   CIOWin::EMessageReturn ProcessMenuInput(const CControlMapper& mapper, const CFinalInput& input);
   // Guessed name. main only handles the tweak load/save options while the menu is closed.
   bool IsMenuOpen() const { return mMenu.valid(); }
+  // Guessed name. The Demo page offers to save the recorded demo while the flag is set;
+  // CMFGame's destructor clears it.
+  void SetDemoSaveable(bool saveable) { xA169_ = saveable; }
 
   // Guessed names. The movie capture name ("<name>_NNN_" once a free slot was chosen) and the
   // remaining capture time that main counts down.
@@ -565,6 +568,13 @@ public:
   }
   // Guessed name. Set once a capture ends; main hands it to the frame capture.
   bool IsMovieCaptureFinished() const { return xA16C_; }
+  // Guessed names. The console's CAPTUREMOVIE starts a capture with the flag above set to its
+  // interlace argument, and restarts the frame number ScreenCapture.cpp counts in the file names.
+  void StartMovieCapture(bool interlaced) {
+    xA16B_ = true;
+    xA16C_ = interlaced;
+  }
+  void ResetMovieCaptureFrame() { xA180_ = 0; }
 
   // Guessed name. 0x80048C20: the player item of a powerup option (kDO_PowerBeam ..
   // kDO_ItemPercentage), -1 for any other option.
@@ -660,7 +670,7 @@ private:
   int xA160_exitItemId;
   int xA164_controller;
   bool xA168_;
-  bool xA169_; // Cleared by CMFGame
+  bool xA169_; // Cleared by CMFGame's destructor
   bool xA16A_;
   bool xA16B_; // main
   bool xA16C_; // main; not initialized

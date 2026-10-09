@@ -496,7 +496,7 @@ void CActor::Think(float dt, CStateManager& mgr) {
   CEntity::Think(dt, mgr);
 }
 
-void CActor::Virtual60() {}
+void CActor::Virtual60(CStateManager&) {}
 
 void CActor::SetTransformDirty() {
   xe4_1_ = true;

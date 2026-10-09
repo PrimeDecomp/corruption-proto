@@ -11,6 +11,8 @@ public:
   ~CWorldTransManager();
 
   void TouchModels(); // 0x801769D4
+  // 0x80175870. CMFGame calls it after its first tick.
+  void EndTransition();
 };
 
 #endif // _CWORLDTRANSMANAGER

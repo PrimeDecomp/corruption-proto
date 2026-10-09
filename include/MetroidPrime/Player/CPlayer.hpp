@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+#include "MetroidPrime/CControlMapper.hpp"
 #include "MetroidPrime/CPhysicsActor.hpp"
 
 class CFinalInput;
@@ -24,10 +25,17 @@ public:
   // Echoes' name and signature (0x800184D8). CStateManager::ProcessPlayerInput passes it the
   // frame's input outside cinematics.
   void ProcessInput(const CFinalInput& input, CStateManager& mgr);
+  // Prime's name and signature; emitted in CPlayerMovement.cpp (0x801AB980). Stops the player,
+  // clears its collision cache and moves it, facing the transform's forward direction.
+  void Teleport(const CTransform4f& xf, CStateManager& mgr, bool resetBallCam);
+  // Guessed name. CMFGame drives the debug menu with it.
+  const CControlMapper& GetControlMapper() const { return mControlMapper; }
 
 private:
   uchar x2E0_[0x304C - 0x2E0];
   float mDeathTime; // Echoes' name
+  uchar x3050_[0x3124 - 0x3050];
+  CControlMapper mControlMapper;
 };
 
 #endif // _CPLAYER

@@ -53,7 +53,7 @@ CGuiWidget* CGuiTextPane::Create(CGuiFrame* frame, CInputStream& in, CSimplePool
     SFontInfo font(extentX, extentY, fontColor, outlineColor, fontId);
     SFontInfo alternate(alternateX, alternateY, fontColor, outlineColor, alternateId);
     CGuiTextProperties properties(wordWrap, justification, vertical);
-    pane = NEW CGuiTextPane(parms, pool, width, height, scaleCenter, properties, font, alternate,
+    pane = rs_new CGuiTextPane(parms, pool, width, height, scaleCenter, properties, font, alternate,
                                false);
   } else {
     bool wordWrap = in.ReadBool();
@@ -64,7 +64,7 @@ CGuiWidget* CGuiTextPane::Create(CGuiFrame* frame, CInputStream& in, CSimplePool
     bool scaleToViewport = version >= 3 ? in.ReadBool() : false;
 
     CGuiTextProperties properties(wordWrap, justification, vertical);
-    pane = NEW CGuiTextPane(parms, pool, width, height, scaleCenter, properties, font, alternate,
+    pane = rs_new CGuiTextPane(parms, pool, width, height, scaleCenter, properties, font, alternate,
                                scaleToViewport);
   }
   pane->ParseBaseInfo(frame, in, parms, version);

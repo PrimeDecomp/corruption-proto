@@ -78,7 +78,7 @@ CGuiTableGroup* CGuiTableGroup::Create(CGuiFrame* frame, CInputStream& in, CSimp
     selectWrapAround = in.ReadBool();
   }
 
-  CGuiTableGroup* group = NEW CGuiTableGroup(parms, selectWrapAround);
+  CGuiTableGroup* group = rs_new CGuiTableGroup(parms, selectWrapAround);
   group->ParseBaseInfo(frame, in, parms, version);
   return group;
 }

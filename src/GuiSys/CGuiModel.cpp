@@ -60,7 +60,7 @@ CGuiModel* CGuiModel::Create(CGuiFrame* frame, CInputStream& in, uint version) {
   const int modelIndex = in.Get< int >();
   const uint lightMask = in.Get< uint >();
 
-  CGuiModel* model = NEW CGuiModel(parms, modelId, lightMask, modelIndex);
+  CGuiModel* model = rs_new CGuiModel(parms, modelId, lightMask, modelIndex);
   model->ParseBaseInfo(frame, in, parms, version);
   return model;
 }

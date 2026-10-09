@@ -17,7 +17,7 @@ public:
   : mBoneCount(0)
   , mCapacity(in.Get< uint >())
   , mIndirectionMap(100, rstl::pair< CSegId, CSegId >(CSegId::Null(), CSegId::Null()))
-  , mNodes(reinterpret_cast< T* >(NEW char[mCapacity * sizeof(T)]))
+  , mNodes(reinterpret_cast< T* >(rs_new char[mCapacity * sizeof(T)]))
   , mCurPrevBone(CSegId::Null()) {
     for (int i = 0; i < mCapacity; ++i) {
       CSegId seg(in);
@@ -63,7 +63,7 @@ TSegIdMap< T >::TSegIdMap(uchar count)
 , mIndirectionMap(100, rstl::pair< CSegId, CSegId >(CSegId::Null(), CSegId::Null()))
 , mNodes(nullptr)
 , mCurPrevBone(CSegId::Null()) {
-  mNodes = reinterpret_cast< T* >(NEW uchar[count * sizeof(T)]);
+  mNodes = reinterpret_cast< T* >(rs_new uchar[count * sizeof(T)]);
   CCharAnimMemoryMetrics::AddToTotalSize(mCapacity, CCharAnimMemoryMetrics::kASS_Two);
 }
 

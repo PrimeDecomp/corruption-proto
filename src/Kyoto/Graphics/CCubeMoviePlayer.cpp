@@ -197,7 +197,7 @@ static void MyTHPYuv2RgbTextureSetup(void* y, void* u, void* v, ushort width, us
 CMoviePlayer::CMoviePlayer(const char* path, const float preLoadSeconds, const bool loop,
                            const bool deinterlace)
 : mDvdFile(SelectMoviePath(path).data())
-, mIndexLoad(NEW SIndexLoad)
+, mIndexLoad(rs_new SIndexLoad)
 , mNextReadSize(0)
 , mNextReadOff(0)
 , mReadSizeWrapped(0)
@@ -413,7 +413,7 @@ void CMoviePlayer::PostDVDReadRequestIfNeeded() {
     if (!usedPrefetch) {
       mRequestBuffer = rstl::auto_ptr< uchar >(
           static_cast< uchar* >(CMemory::Alloc(mNextReadSize, IAllocator::kHI_RoundUpLen)));
-      rstl::single_ptr< CRealDvdRequest > request(NEW CRealDvdRequest);
+      rstl::single_ptr< CRealDvdRequest > request(rs_new CRealDvdRequest);
       DVDOpen(const_cast< char* >(mDvdFile.GetFilename().data()), &request->FileInfo());
       request->FileInfo().cb.userData = this;
       DVDReadAsyncPrio(&request->FileInfo(), mRequestBuffer.get(), mNextReadSize, mNextReadOff,
@@ -446,7 +446,7 @@ void CMoviePlayer::PrefetchNextFrame() {
     mPrefetchOff = mNextReadOff + mNextReadSize;
     mPrefetchBuffer =
         static_cast< uchar* >(CMemory::Alloc(mPrefetchSize, IAllocator::kHI_RoundUpLen));
-    rstl::single_ptr< CRealDvdRequest > request(NEW CRealDvdRequest);
+    rstl::single_ptr< CRealDvdRequest > request(rs_new CRealDvdRequest);
     DVDOpen(const_cast< char* >(mDvdFile.GetFilename().data()), &request->FileInfo());
     request->FileInfo().cb.userData = this;
     DVDReadAsyncPrio(&request->FileInfo(), mPrefetchBuffer.get(), mPrefetchSize, mPrefetchOff,

@@ -7,7 +7,7 @@ CZipOutputStream::CZipOutputStream(COutputStream* output, int level)
 : COutputStream(1024)
 , mOutput(output)
 , mCompressedBytesWritten(0)
-, mStream(rs_new(14) z_stream)
+, mStream(rs_new_line(14) z_stream)
 , mFinished(false) {
   mStream->zalloc = CZipSupport::Alloc;
   mStream->zfree = CZipSupport::Free;

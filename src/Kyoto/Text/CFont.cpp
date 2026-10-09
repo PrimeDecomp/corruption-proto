@@ -58,7 +58,7 @@ CFont::CFont(const CFont& other) : mFontSize(other.mFontSize), mScale(other.mSca
 CFont::CFont(float scale) : mFontSize(static_cast< int >(kFontCellSize * scale)), mScale(scale) {
   if (!sFontInitialized) {
     sFontInitialized = true;
-    unsigned char* tiled = rs_new_in("DolphinCFont.cpp", 193) unsigned char[65536];
+    unsigned char* tiled = rs_new_line_in("DolphinCFont.cpp", 193) unsigned char[65536];
     LinearToTile8(tiled, sSystemFont);
     memcpy(sSystemFont, tiled, sizeof(sSystemFont));
     CMemory::Free(tiled);

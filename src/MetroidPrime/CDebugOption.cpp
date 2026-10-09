@@ -19,7 +19,7 @@ CDebugOption::CDebugOption(int a, int b, const rstl::string& name, float value, 
 , mMax(max)
 , mStep(step)
 , mColor(color)
-, mValueSignal(rs_new(34) ValueSignal())
+, mValueSignal(rs_new_line(34) ValueSignal())
 , x34_(0.9f)
 , mChoices(nullptr) {}
 
@@ -32,7 +32,7 @@ CDebugOption::CDebugOption(int a, int b, const rstl::string& name, bool value, c
 , mMax(1.f)
 , mStep(1.f)
 , mColor(color)
-, mValueSignal(rs_new(55) ValueSignal())
+, mValueSignal(rs_new_line(55) ValueSignal())
 , x34_(0.9f)
 , mChoices(nullptr) {}
 
@@ -48,10 +48,10 @@ CDebugOption::~CDebugOption() {
 
 void CDebugOption::AddChoice(const rstl::string& name, float value) {
   if (mChoices == nullptr) {
-    mChoices = rs_new(78) rstl::vector< SChoice* >(20, nullptr);
+    mChoices = rs_new_line(78) rstl::vector< SChoice* >(20, nullptr);
     mChoices->clear();
   }
-  mChoices->push_back(rs_new(82) SChoice(name, value));
+  mChoices->push_back(rs_new_line(82) SChoice(name, value));
 }
 
 // Returns the name of the choice whose value is exactly `value`, or null when the option has

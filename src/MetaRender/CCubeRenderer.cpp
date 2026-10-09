@@ -294,7 +294,7 @@ void Buckets::Clear() {
 CCubeRenderer::SModelSurfaceOrder::SModelSurfaceOrder(const CCubeModel& model)
 : mSurfaceIndices(), mOpaqueEnd(0), mSortedEnd(0), mTotalCount(0) {
   const rstl::vector< void* >& surfaces = model.GetModelInstance().Surfaces();
-  mSurfaceIndices = NEW ushort[surfaces.size()];
+  mSurfaceIndices = rs_new ushort[surfaces.size()];
   ushort* index = mSurfaceIndices.get();
   int count = 0;
   for (int i = 0; i < surfaces.size(); ++i) {
@@ -404,7 +404,7 @@ CCubeRenderer::CCubeRenderer(IObjectStore& store, COsContext& context, CMemorySy
 CGraphicsPalette* CCubeRenderer::ClonePalette(const TLockedToken< CTexture >& texture) {
   const CGraphicsPalette* palette = texture->GetPalette();
   CGraphicsPalette* result =
-      NEW CGraphicsPalette(palette->GetFormat(), palette->GetEntryCount());
+      rs_new CGraphicsPalette(palette->GetFormat(), palette->GetEntryCount());
   memcpy(result->Lock(), palette->GetPaletteData(), result->GetEntryCount() * sizeof(ushort));
   result->UnLock();
   return result;
@@ -518,16 +518,16 @@ void CCubeRenderer::AddStaticGeometry(const rstl::vector< CMetroidModelInstance 
                                       int areaId) {
   if (FindStaticGeometry(geometry) == mAreaListItems.end()) {
     rstl::auto_ptr< rstl::vector< rstl::auto_ptr< CCubeModel > > > models =
-        NEW rstl::vector< rstl::auto_ptr< CCubeModel > >();
+        rs_new rstl::vector< rstl::auto_ptr< CCubeModel > >();
     rstl::auto_ptr< rstl::vector< TCachedToken< CTexture > > > textures =
-        NEW rstl::vector< TCachedToken< CTexture > >();
+        rs_new rstl::vector< TCachedToken< CTexture > >();
     if (!geometry->empty()) {
       CCubeModel::MakeTexturesFromMats(geometry->front().GetMaterialPointer(), *textures, mObjStore,
                                        false);
       models->reserve(geometry->size());
       for (int i = 0; i < geometry->size(); ++i) {
         const CMetroidModelInstance& instance = (*geometry)[i];
-        models->push_back(NEW CCubeModel(
+        models->push_back(rs_new CCubeModel(
             const_cast< rstl::vector< void* >* >(&instance.GetSurfaces()), textures.get(),
             instance.GetMaterialPointer(), instance.GetVertexPointer(), instance.GetNormalPointer(),
             instance.GetColorPointer(), instance.GetTCPointer(), instance.GetPackedTCPointer(),
@@ -829,7 +829,7 @@ void CCubeRenderer::EvaluateModelLights(uchar* lights, const CAABox& bounds, con
 
 IRenderer* AllocateRenderer(IObjectStore& store, COsContext& context, CMemorySys& memory,
                             IFactory& factory) {
-  CCubeRenderer* renderer = NEW CCubeRenderer(store, context, memory, factory);
+  CCubeRenderer* renderer = rs_new CCubeRenderer(store, context, memory, factory);
   IWeaponRenderer::SetRenderer(renderer);
   return renderer;
 }
@@ -981,7 +981,7 @@ void CCubeRenderer::CacheReflection(void (*callback)(void*, const CVector3f&), v
     mReflectionDirty = false;
     mReflectionAge = 0;
     if (!mReflectionTex.get()) {
-      mReflectionTex = NEW CTexture(kTF_RGB565, 128, 128, 1);
+      mReflectionTex = rs_new CTexture(kTF_RGB565, 128, 128, 1);
     }
     const CViewport& viewport = CGraphics::GetViewport();
     const int left = viewport.mLeft;
@@ -2654,7 +2654,7 @@ void CCubeRenderer::AllocatePhazonSuitMaskTexture() {
   mRequestRGBA6 = true;
   if (!mSilhouetteMask.get()) {
     const CViewport& viewport = CGraphics::GetViewport();
-    mSilhouetteMask = NEW CTexture(kTF_I8, viewport.mWidth >> 2, viewport.mHeight >> 2, 1);
+    mSilhouetteMask = rs_new CTexture(kTF_I8, viewport.mWidth >> 2, viewport.mHeight >> 2, 1);
   }
   mSilhouetteMaskCountdown = 2;
 }

@@ -26,7 +26,7 @@ CParticleSpawnSystemDataFactory::CreateGeneratorDescription(CInputStream& in, CS
   if (classId != 'SPSM') {
     return nullptr;
   }
-  CSpawnSystemDescription* desc = NEW CSpawnSystemDescription();
+  CSpawnSystemDescription* desc = rs_new CSpawnSystemDescription();
   CreateSPSM(desc, in, pool);
   return desc;
 }
@@ -102,7 +102,7 @@ bool CParticleSpawnSystemDataFactory::CreateSPSM(CSpawnSystemDescription* desc, 
     case 'SPWN': {
       const FourCC childId = CParticleDataFactory::GetClassID(in);
       if (childId == 'CNST') {
-        desc->mSPWN = NEW CSpawnSystemKeyframeData(in);
+        desc->mSPWN = rs_new CSpawnSystemKeyframeData(in);
         desc->mSPWN->LoadAllSpawnedSystemTokens(pool);
       }
       break;

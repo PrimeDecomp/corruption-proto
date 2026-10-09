@@ -58,7 +58,7 @@ private:
       const rstl::vector< rstl::pair< uint, bool > >& boolStates,
       const rstl::vector< rstl::pair< uint, int > >& intStates,
       const rstl::vector< rstl::pair< uint, CParticleData::EParentedMode > >& particleStates)
-  : CAnimSourceReaderBase(NEW CAnimSourceInfo(source), poiData, time, passedBoolCount,
+  : CAnimSourceReaderBase(rs_new CAnimSourceInfo(source), poiData, time, passedBoolCount,
                           passedIntCount, passedParticleCount, passedSoundCount, boolStates,
                           intStates, particleStates)
   , mSource(source)

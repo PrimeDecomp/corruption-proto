@@ -84,7 +84,7 @@ void CAnimTreeAnimReaderContainer::VGetJointData_Linear(const CCharLayoutInfo& l
 }
 
 rstl::ownership_transfer< IAnimReader > CAnimTreeAnimReaderContainer::VClone() const {
-  return NEW CAnimTreeAnimReaderContainer(mReader->VClone(), mName, mAnimDbIdx);
+  return rs_new CAnimTreeAnimReaderContainer(mReader->VClone(), mName, mAnimDbIdx);
 }
 
 CAnimTreeEffectiveContribution

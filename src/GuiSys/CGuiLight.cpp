@@ -30,20 +30,20 @@ CGuiLight* CGuiLight::Create(CGuiFrame* parent, CInputStream& in, CSimplePool* s
     lt.SetAngleAttenuation(angC, angL, angQ);
     lt.SetLightId(lightId);
 
-    ret = NEW CGuiLight(parms, lt);
+    ret = rs_new CGuiLight(parms, lt);
     break;
   }
   case kLT_Point: {
     CLight lt = CLight::BuildPoint(CVector3f::Zero(), color);
     lt.SetAttenuation(distC, distL, distQ);
     lt.SetLightId(lightId);
-    ret = NEW CGuiLight(parms, lt);
+    ret = rs_new CGuiLight(parms, lt);
     break;
   }
   case kLT_Directional: {
     CLight lt = CLight::BuildDirectional(CVector3f::Zero(), color);
     lt.SetLightId(lightId);
-    ret = NEW CGuiLight(parms, lt);
+    ret = rs_new CGuiLight(parms, lt);
     break;
   }
   default:

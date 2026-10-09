@@ -132,7 +132,7 @@ void CDvdFile::TryARAMFile() {
   if (!CARAMManager::IsValidAlloc(mARAMBuffer)) {
     return;
   }
-  mARAMFile = NEW CDvdFileARAM();
+  mARAMFile = rs_new CDvdFileARAM();
   CDvdFileARAM* arfile = mARAMFile.get();
   arfile->mInfo.mDvdFile = this;
   arfile->mGotARAMInterrupt = true;
@@ -288,10 +288,10 @@ CDvdRequest* CDvdFile::AsyncSeekRead(void* dest, uint len, ESeekOrigin origin, i
   if (mARAMAllocated) {
     const int roundedLen = (len + 31) & ~31;
     DCFlushRange(dest, roundedLen);
-    request = NEW CARAMDvdRequest(CARAMManager::DMAToMRAM(
+    request = rs_new CARAMDvdRequest(CARAMManager::DMAToMRAM(
         mARAMBuffer + mOffset, dest, roundedLen, CARAMManager::kDMAPrio_One));
   } else {
-    CRealDvdRequest* req = NEW CRealDvdRequest();
+    CRealDvdRequest* req = rs_new CRealDvdRequest();
     DVDFileInfo* info = &req->FileInfo();
     DVDFastOpen(mFileEntry, info);
     DVDReadAsync(info, dest, (len + 31) & ~31, mOffset, internalCallback);

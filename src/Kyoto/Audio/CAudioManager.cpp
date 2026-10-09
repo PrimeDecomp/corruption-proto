@@ -695,7 +695,7 @@ void CAudioManager::Update(float dt) {
       mpTranslationTableToken->IsLoaded()) {
     if (mpTranslationTable == nullptr) {
       TToken< rstl::vector< short > > token(*mpTranslationTableToken);
-      mpTranslationTable = NEW rstl::vector< short >(*token.GetT());
+      mpTranslationTable = rs_new rstl::vector< short >(*token.GetT());
     }
     mpTranslationTableToken = nullptr;
   }
@@ -875,7 +875,7 @@ bool CAudioManager::LoadTranslationTable(CSimplePool* pool, const SObjectTag* ta
     delete mpTranslationTable;
   }
   mpTranslationTable = nullptr;
-  mpTranslationTableToken = NEW CToken(pool->GetObj(*tag));
+  mpTranslationTableToken = rs_new CToken(pool->GetObj(*tag));
   mpTranslationTableToken->Lock();
   return true;
 }
@@ -1317,5 +1317,5 @@ bool CAudioManager::CSfxWrapper::IsEmitter() const { return false; }
 
 CFactoryFnReturn FAudioTranslationTableFactory(const SObjectTag&, CInputStream& in,
                                                const CVParamTransfer&) {
-  return NEW rstl::vector< short >(in);
+  return rs_new rstl::vector< short >(in);
 }

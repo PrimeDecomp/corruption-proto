@@ -1,7 +1,7 @@
 #include "Kyoto/Animation/CAnimTreeBlend.hpp"
 
 rstl::ownership_transfer< IAnimReader > CAnimTreeBlend::VClone() const {
-  return NEW CAnimTreeBlend(CharacterSpaceBlend(), Cast(mA->Clone()), Cast(mB->Clone()),
+  return rs_new CAnimTreeBlend(CharacterSpaceBlend(), Cast(mA->Clone()), Cast(mB->Clone()),
                                mBlendWeight, mName);
 }
 

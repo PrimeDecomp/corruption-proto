@@ -781,7 +781,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
   }
   RAssert_SetDiagnosticPrintCallback(rs_debugger_printf);
   rstl::single_ptr< CGameGlobalObjects > globalObjects(
-      rs_new_in("Main.cpp", 2351) CGameGlobalObjects(*mOsContext, *mMemorySys));
+      rs_new_line_in("Main.cpp", 2351) CGameGlobalObjects(*mOsContext, *mMemorySys));
   mGameGlobalObjects = globalObjects.get();
   CStringTable::SetLanguage(GetLanguage());
   for (int i = 0; i < 4; ++i) {
@@ -806,7 +806,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
       showAudioTweaksStatus = true;
     }
     rstl::single_ptr< CGameArchitectureSupport > architecture(
-        rs_new_in("Main.cpp", 2393) CGameArchitectureSupport(*mOsContext));
+        rs_new_line_in("Main.cpp", 2393) CGameArchitectureSupport(*mOsContext));
     mArchSupport = architecture.get();
     srand(startupTimer.GetElapsedMicros());
     rs_debugger_printf("Beginning main loop...\n");
@@ -938,7 +938,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
         CGraphics::EndScene();
         CFrameDelayedKiller::StallAndFlushAllAllocations();
         architecture = nullptr;
-        architecture = rs_new_in("Main.cpp", 2689) CGameArchitectureSupport(*mOsContext);
+        architecture = rs_new_line_in("Main.cpp", 2689) CGameArchitectureSupport(*mOsContext);
         mArchSupport = architecture.get();
       }
       UpdateTweakDebugOptions();
@@ -1031,10 +1031,10 @@ CGameArchitectureSupport::CGameArchitectureSupport(COsContext& context)
   InitializeConsoleCommands(&mInputGenerator);
   rs_debugger_printf("Initializing IOWins...\n");
   gpIOWinManager = &mIoWinMgr;
-  mIoWinMgr.AddIOWin(rs_new_in("Main.cpp", 1415) CMainFlow(), 0, 0);
-  mIoWinMgr.AddIOWin(rs_new_in("Main.cpp", 1416) CConsoleOutputWindow(8, 5.f, 0.75f), 100, 0);
-  mIoWinMgr.AddIOWin(rs_new_in("Main.cpp", 1418) CAudioStateWin(), 100, -1);
-  mIoWinMgr.AddIOWin(rs_new_in("Main.cpp", 1420) CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
+  mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1415) CMainFlow(), 0, 0);
+  mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1416) CConsoleOutputWindow(8, 5.f, 0.75f), 100, 0);
+  mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1418) CAudioStateWin(), 100, -1);
+  mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1420) CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
                      10000, 100000);
   gpGameState->GameOptions().EnsureOptions();
 }
@@ -1136,7 +1136,7 @@ void CMain::MemoryCardInitializePump() {
     return;
   }
   if (mGameGlobalObjects->MemoryCard().get() == nullptr) {
-    mGameGlobalObjects->MemoryCard() = rs_new_in("Main.cpp", 1681) CMemoryCard();
+    mGameGlobalObjects->MemoryCard() = rs_new_line_in("Main.cpp", 1681) CMemoryCard();
   }
   CMemoryCard* card = mGameGlobalObjects->MemoryCard().get();
   if (card->InitializePump()) {

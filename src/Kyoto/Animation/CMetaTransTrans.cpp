@@ -13,7 +13,7 @@ rstl::ncrc_ptr< CAnimTreeNode >
 CMetaTransTrans::VGetTransitionTree(const rstl::ncrc_ptr< CAnimTreeNode >& a,
                                     const rstl::ncrc_ptr< CAnimTreeNode >& b,
                                     const CAnimSysContext& animSys) const {
-  return NEW CAnimTreeTransition(
+  return rs_new CAnimTreeTransition(
       mCharacterSpaceBlend, a, b, mTransDur, mRunA, mFlags,
       CAnimTreeTransition::CreatePrimitiveName(a, b, mTransDur.GetSeconds()));
 }

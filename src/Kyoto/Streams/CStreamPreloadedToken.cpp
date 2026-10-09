@@ -120,7 +120,7 @@ FindFile(const rstl::string& path) {
 static CStreamPreloadedData* AcquireFile(const rstl::string& path) {
   rstl::list< rstl::auto_ptr< CStreamPreloadedData > >::iterator it = FindFile(path);
   if (it == mPreloadedDatas.end()) {
-    rstl::auto_ptr< CStreamPreloadedData > data(NEW CStreamPreloadedData(path));
+    rstl::auto_ptr< CStreamPreloadedData > data(rs_new CStreamPreloadedData(path));
     it = mPreloadedDatas.insert(mPreloadedDatas.end(), data);
   } else {
     ++(*it)->mRefCount;

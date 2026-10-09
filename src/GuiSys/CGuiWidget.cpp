@@ -31,7 +31,7 @@ CGuiWidget::CGuiWidgetParms::CGuiWidgetParms(CGuiFrame* frame, short selfId, sho
 CGuiWidget* CGuiWidget::Create(CGuiFrame* frame, CInputStream& in, CSimplePool* pool,
                                uint version) {
   const CGuiWidgetParms parms = ReadWidgetHeader(frame, in);
-  CGuiWidget* widget = NEW CGuiWidget(parms);
+  CGuiWidget* widget = rs_new CGuiWidget(parms);
   widget->ParseBaseInfo(frame, in, parms, version);
   return widget;
 }
@@ -42,7 +42,7 @@ CGuiWidget* CGuiWidget::CreateGroup(CGuiFrame* frame, CInputStream& in, CSimpleP
   in.ReadInt16();
   in.ReadBool();
 
-  CGuiWidget* widget = NEW CGuiWidget(parms);
+  CGuiWidget* widget = rs_new CGuiWidget(parms);
   widget->ParseBaseInfo(frame, in, parms, version);
   return widget;
 }

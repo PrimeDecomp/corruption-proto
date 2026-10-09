@@ -67,5 +67,5 @@ CFactoryFnReturn RGuiFrameFactoryInGame(const SObjectTag& tag, const rstl::auto_
   const rstl::rc_ptr< IVParamObj > obj = xfer.GetObj();
   CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
 
-  return NEW CGuiFrame(in, pool);
+  return rs_new CGuiFrame(in, pool);
 }

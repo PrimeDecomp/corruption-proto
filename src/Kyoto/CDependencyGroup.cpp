@@ -32,7 +32,7 @@ int CDependencyGroup::GetCountForResType(FourCC type) const {
 
 CFactoryFnReturn FDependencyGroupFactory(const SObjectTag& tag, CInputStream& in,
                                          const CVParamTransfer& xfer) {
-  return NEW CDependencyGroup(in);
+  return rs_new CDependencyGroup(in);
 }
 
 CDependencyGroupToken::CDependencyGroupToken(const TToken< CDependencyGroup >& group,

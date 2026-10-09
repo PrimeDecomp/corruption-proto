@@ -112,7 +112,7 @@ CPortalAreaData::~CPortalAreaData() {}
 CFactoryFnReturn FPortalAreaDataFactory(const SObjectTag& tag, CInputStream& in,
                                         const CVParamTransfer& xfer) {
   in.ReadInt32();
-  return NEW CPortalAreaData(in);
+  return rs_new CPortalAreaData(in);
 }
 
 void CPortalAreaData::FindOverlappingVolumes(const CAABox& bounds,

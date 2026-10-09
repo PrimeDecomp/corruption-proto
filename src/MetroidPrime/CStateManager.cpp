@@ -141,18 +141,18 @@ CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& str
                              const rstl::ncrc_ptr< CMapWorldInfo >& mapWorldInfo,
                              const rstl::ncrc_ptr< CWorldTransManager >& worldTransManager,
                              const rstl::ncrc_ptr< CWorldLayerState >& worldLayerState)
-: mCallbackLists(rs_new(206) CStateManagerCallbackLists())
-, mObjectManager(rs_new(215) CStateManagerObject(*this, stringProperties, mailbox, mapWorldInfo))
-, mCollision(rs_new(216) CStateManagerCollision(*this, *mObjectManager))
+: mCallbackLists(rs_new_line(206) CStateManagerCallbackLists())
+, mObjectManager(rs_new_line(215) CStateManagerObject(*this, stringProperties, mailbox, mapWorldInfo))
+, mCollision(rs_new_line(216) CStateManagerCollision(*this, *mObjectManager))
 , mArchQueue(nullptr)
 , mDisplayManager(nullptr)
 , mRenderManager(nullptr)
 , x128_(kInvalidUniqueId)
-, mWeaponMgr(rs_new(226) CWeaponMgr())
-, mFluidPlaneManager(rs_new(227) CFluidPlaneManager())
-, mEnvFxManager(rs_new(228) CEnvFxManager())
-, mActorModelParticles(rs_new(229) CActorModelParticles())
-, mAssetFactory(rs_new(217) CStateManagerAssetFactory(*this))
+, mWeaponMgr(rs_new_line(226) CWeaponMgr())
+, mFluidPlaneManager(rs_new_line(227) CFluidPlaneManager())
+, mEnvFxManager(rs_new_line(228) CEnvFxManager())
+, mActorModelParticles(rs_new_line(229) CActorModelParticles())
+, mAssetFactory(rs_new_line(217) CStateManagerAssetFactory(*this))
 , mAudioGroupDependencies(static_cast< CDependencyGroup* >(nullptr))
 , mWorldTransManager(worldTransManager)
 , mCurrentWorldLayerState(worldLayerState)
@@ -200,13 +200,13 @@ CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& str
 , mPhazonEnragedSlowdownCurve(gpSimplePool->GetObj("PhazonEnragedSlowdownUSER")) {
   rs_debugger_printf("Game type is %s\n",
                      SObjectTag::Type2Text(gpGameState->GetGameMode().GetGameType()));
-  mRumbleManager = rs_new(299) CRumbleManager(kIOP_Player1);
+  mRumbleManager = rs_new_line(299) CRumbleManager(kIOP_Player1);
   gpGameState->SetQueuedScriptMsgEnabled(true);
   InitializeStateManagerConsoleCommands(this);
   CMemory::SetOutOfMemoryCallback(MemoryAllocatorAllocationFailedCallback, this);
   mShadowTex.Lock();
-  sProfileCountersA = rs_new(367) rstl::map< rstl::string, CGameProfileStats::SStats >();
-  sProfileCountersB = rs_new(368) rstl::map< rstl::string, SProfileCountersB >();
+  sProfileCountersA = rs_new_line(367) rstl::map< rstl::string, CGameProfileStats::SStats >();
+  sProfileCountersB = rs_new_line(368) rstl::map< rstl::string, SProfileCountersB >();
 }
 
 // 0x80296220. Echoes' teardown: every object except the players and cameras is sent a delete
@@ -891,7 +891,7 @@ void CStateManager::DeferStateTransition(EStateManagerTransition t) {
     mObjectManager->GetWorld()->SetLoadPauseState(true);
     mDeferredTransition = t;
     if (mDeferredTransition == kSMT_SaveGame) {
-      mSaveGameScreen = rs_new(3699) CSaveGameInterface(kSC_InGame, gpGameState->GetCardSerial());
+      mSaveGameScreen = rs_new_line(3699) CSaveGameInterface(kSC_InGame, gpGameState->GetCardSerial());
     }
   }
 }
@@ -915,7 +915,7 @@ void CStateManager::ShowPausedHUDMemo(CAssetId strg, float time) {
 // 0x8028F88C. Guessed name. The front-end UI script object builds the save-game screen through
 // it, so unlike DeferStateTransition's it runs in the front-end context.
 void CStateManager::CreateFrontEndSaveGameScreen() {
-  mSaveGameScreen = rs_new(3736) CSaveGameInterface(kSC_FrontEnd, gpGameState->GetCardSerial());
+  mSaveGameScreen = rs_new_line(3736) CSaveGameInterface(kSC_FrontEnd, gpGameState->GetCardSerial());
 }
 
 // 0x8028F834

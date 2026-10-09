@@ -123,8 +123,8 @@ bool CARAMManager::Initialize(uint chunkSize, uint size, uint secondChunkSize) {
   uint aramSize = ARGetSize() - mPreInitializeAlloc;
   uint numChunks = size / chunkSize;
   uint secondNumChunks = (aramSize - size) / secondChunkSize;
-  mPools[1] = NEW CAramPool(chunkSize, numChunks);
-  mPools[0] = NEW CAramPool(secondChunkSize, secondNumChunks);
+  mPools[1] = rs_new CAramPool(chunkSize, numChunks);
+  mPools[0] = rs_new CAramPool(secondChunkSize, secondNumChunks);
   mDMAUniqueID = 0;
   mbInitialized = true;
   return true;
@@ -143,7 +143,7 @@ bool CARAMManager::Free(const void* ptr, int pool) { return mPools[pool]->Free(p
 
 int CARAMManager::DMAToARAM(void* src, void* dest, uint len, EDMAPriority priority) {
   DCFlushRange(src, len);
-  SAramDMARequest* req = NEW SAramDMARequest();
+  SAramDMARequest* req = rs_new SAramDMARequest();
   req->mComplete = false;
   req->mUniqueID = mDMAUniqueID;
   mActiveDMAs.push_back(req);
@@ -158,7 +158,7 @@ int CARAMManager::DMAToARAM(void* src, void* dest, uint len, EDMAPriority priori
 
 int CARAMManager::DMAToMRAM(void* src, void* dest, uint len, EDMAPriority priority) {
   DCInvalidateRange(dest, len);
-  SAramDMARequest* req = NEW SAramDMARequest();
+  SAramDMARequest* req = rs_new SAramDMARequest();
   req->mComplete = false;
   req->mUniqueID = mDMAUniqueID;
   mActiveDMAs.push_back(req);

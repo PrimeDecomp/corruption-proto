@@ -11,13 +11,13 @@ rstl::rc_ptr< IMetaTrans > CMetaTransFactory::CreateMetaTrans(CInputStream& in) 
   EMetaTransType type = static_cast< EMetaTransType >(in.ReadInt32());
   switch (type) {
   case kMTT_MetaAnim:
-    return NEW CMetaTransMetaAnim(in);
+    return rs_new CMetaTransMetaAnim(in);
   case kMTT_Trans:
-    return NEW CMetaTransTrans(in);
+    return rs_new CMetaTransTrans(in);
   case kMTT_PhaseTrans:
-    return NEW CMetaTransPhaseTrans(in);
+    return rs_new CMetaTransPhaseTrans(in);
   case kMTT_Snap:
-    return NEW CMetaTransSnap;
+    return rs_new CMetaTransSnap;
   default:
     return rstl::rc_ptr< IMetaTrans >();
   }

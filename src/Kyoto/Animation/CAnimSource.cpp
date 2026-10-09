@@ -35,7 +35,7 @@ RotationAndOffsetStorage::GetRotationsAndOffsets(const rstl::vector< CQuaternion
                                                  uint numFrames) {
   mRotationsPerFrame = rotations.size() / numFrames;
   mOffsetsPerFrame = offsets.size() / numFrames;
-  rstl::auto_ptr< uint > storage(NEW uint[DataSizeInBytes(rotations.size() / numFrames, //
+  rstl::auto_ptr< uint > storage(rs_new uint[DataSizeInBytes(rotations.size() / numFrames, //
                                                              offsets.size() / numFrames,   //
                                                              numFrames                     //
                                                              ) /

@@ -5,7 +5,7 @@
 
 rstl::auto_ptr< uint > CFBStreamedCompression::GetRotationsAndOffsets(uint words,
                                                                       CInputStream& in) {
-  rstl::auto_ptr< uint > data(NEW uint[words]);
+  rstl::auto_ptr< uint > data(rs_new uint[words]);
   void* cursor = data.get();
   CStandardMultiFormatHeader* mainHeader = static_cast< CStandardMultiFormatHeader* >(cursor);
   new (mainHeader) CStandardMultiFormatHeader(in);

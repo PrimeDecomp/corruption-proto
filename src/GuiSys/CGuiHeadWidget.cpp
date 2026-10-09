@@ -10,7 +10,7 @@
 CGuiWidget* CGuiHeadWidget::Create(CGuiFrame* frame, CInputStream& in, CSimplePool* pool,
                                    uint version) {
   CGuiWidgetParms parms = ReadWidgetHeader(frame, in);
-  CGuiHeadWidget* widget = NEW CGuiHeadWidget(parms);
+  CGuiHeadWidget* widget = rs_new CGuiHeadWidget(parms);
   frame->SetHeadWidget(widget);
   widget->ParseBaseInfo(frame, in, parms, version);
   return widget;

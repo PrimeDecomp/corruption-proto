@@ -21,7 +21,7 @@ COBBTree::CSimpleAllocator* COBBTree::CNode::spAllocator = nullptr;
 COBBTree* COBBTree::sPrebuiltTrees[4] = {};
 
 COBBTree::CSimpleAllocator::CSimpleAllocator(uint size)
-: mBuffer(NEW char[size]), mSize(size), mOffset(0) {}
+: mBuffer(rs_new char[size]), mSize(size), mOffset(0) {}
 
 COBBTree::CSimpleAllocator::~CSimpleAllocator() {
   if (mBuffer) {
@@ -83,7 +83,7 @@ COBBTree::COBBTree(CInputStream& in)
 , mRoot(nullptr) {
   BindIndexData();
   CNode::SetAllocator(&mAllocator);
-  mRoot = NEW CNode(in);
+  mRoot = rs_new CNode(in);
 }
 
 COBBTree::~COBBTree() {
@@ -112,9 +112,9 @@ rstl::auto_ptr< COBBTree > COBBTree::BuildOrientedBoundingBoxTree(const CVector3
     surfaces.push_back_unsafe(i);
   }
   CNode::SetAllocator(nullptr);
-  CLeafData* leaf = NEW CLeafData(surfaces);
-  CNode* root = NEW CNode(CTransform4f::Translate(center), halfExtent, nullptr, nullptr, leaf);
-  return NEW COBBTree(indexData, root);
+  CLeafData* leaf = rs_new CLeafData(surfaces);
+  CNode* root = rs_new CNode(CTransform4f::Translate(center), halfExtent, nullptr, nullptr, leaf);
+  return rs_new COBBTree(indexData, root);
 }
 
 void COBBTree::SetPrebuiltTree(COBBTree* tree, EPreBuiltTrees which) {
@@ -130,9 +130,9 @@ COBBTree::CNode::CNode(const CTransform4f& xf, const CVector3f& extents, const C
 COBBTree::CNode::CNode(CInputStream& in)
 : mObb(in)
 , mIsLeaf(in.Get< bool >())
-, mLeft(mIsLeaf ? nullptr : NEW CNode(in))
-, mRight(mIsLeaf ? nullptr : NEW CNode(in))
-, mLeaf(mIsLeaf ? NEW CLeafData(in) : nullptr) {}
+, mLeft(mIsLeaf ? nullptr : rs_new CNode(in))
+, mRight(mIsLeaf ? nullptr : rs_new CNode(in))
+, mLeaf(mIsLeaf ? rs_new CLeafData(in) : nullptr) {}
 
 COBBTree::CNode::~CNode() {
   delete mLeft;
@@ -162,7 +162,7 @@ void COBBTree::CNode::SetAllocator(CSimpleAllocator* allocator) { spAllocator = 
 
 void* COBBTree::CNode::operator new(size_t size, const char* file, int line) {
   if (!spAllocator) {
-    return NEW char[size];
+    return rs_new char[size];
   }
   return spAllocator->Alloc(size);
 }

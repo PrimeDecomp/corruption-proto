@@ -18,7 +18,7 @@ CGuiWidget* CGuiPane::Create(CGuiFrame* frame, CInputStream& in, CSimplePool* po
   float y = in.ReadFloat();
   float z = in.ReadFloat();
 
-  CGuiPane* pane = NEW CGuiPane(parms, width, height, CVector3f(x, y, z));
+  CGuiPane* pane = rs_new CGuiPane(parms, width, height, CVector3f(x, y, z));
   pane->ParseBaseInfo(frame, in, parms, version);
   return pane;
 }
@@ -36,7 +36,7 @@ CGuiPane::CGuiPane(const CGuiWidgetParms& parms, float width, float height,
 : CGuiWidget(parms)
 , mWidth(width)
 , mHeight(height)
-, mPanePoints(NEW float[12])
+, mPanePoints(rs_new float[12])
 , mScaleCenter(scaleCenter) {
   InitializeBuffers();
 }

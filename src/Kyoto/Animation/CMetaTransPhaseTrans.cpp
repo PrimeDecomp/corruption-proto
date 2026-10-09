@@ -25,14 +25,14 @@ CMetaTransPhaseTrans::VGetTransitionTree(const rstl::ncrc_ptr< CAnimTreeNode >& 
   b->VSetPhase(*phase);
 
   rstl::ownership_transfer< IVaryingAnimationTimeScale > timeScaleA =
-      NEW CLinearAnimationTimeScale(CCharAnimTime::ZeroFlat(), 1.f, mTransDur, scaleA);
+      rs_new CLinearAnimationTimeScale(CCharAnimTime::ZeroFlat(), 1.f, mTransDur, scaleA);
   rstl::ownership_transfer< IVaryingAnimationTimeScale > timeScaleB =
-      NEW CLinearAnimationTimeScale(CCharAnimTime::ZeroFlat(), scaleB, mTransDur, 1.f);
-  rstl::ncrc_ptr< CAnimTreeNode > treeA = NEW CAnimTreeTimeScale(
+      rs_new CLinearAnimationTimeScale(CCharAnimTime::ZeroFlat(), scaleB, mTransDur, 1.f);
+  rstl::ncrc_ptr< CAnimTreeNode > treeA = rs_new CAnimTreeTimeScale(
       a, timeScaleA, mTransDur, CAnimTreeTimeScale::CreatePrimitiveName(a, 1.f, mTransDur, scaleA));
-  rstl::ncrc_ptr< CAnimTreeNode > treeB = NEW CAnimTreeTimeScale(
+  rstl::ncrc_ptr< CAnimTreeNode > treeB = rs_new CAnimTreeTimeScale(
       b, timeScaleB, mTransDur, CAnimTreeTimeScale::CreatePrimitiveName(b, scaleB, mTransDur, 1.f));
-  return NEW CAnimTreeTransition(
+  return rs_new CAnimTreeTransition(
       mCharacterSpaceBlend, treeA, treeB, mTransDur, mRunA, mFlags,
       CAnimTreeTransition::CreatePrimitiveName(treeA, treeB, mTransDur.GetSeconds()));
 }

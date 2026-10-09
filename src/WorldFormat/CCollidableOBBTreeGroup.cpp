@@ -27,14 +27,14 @@ uint CCollidableOBBTreeGroup::sTableIndex = -1;
 
 CFactoryFnReturn FCollidableOBBTreeGroupFactory(const SObjectTag& tag, CInputStream& in,
                                                 const CVParamTransfer& xfer) {
-  return NEW COBBTreeGroup(in);
+  return rs_new COBBTreeGroup(in);
 }
 
 COBBTreeGroup::COBBTreeGroup(CInputStream& in) : mAabox(CAABox::MakeMaxInvertedBox()) {
   int obbCount = in.ReadInt32();
   mTrees.reserve(obbCount);
   for (uint i = 0; i < obbCount; ++i) {
-    mTrees.push_back(NEW COBBTree(in));
+    mTrees.push_back(rs_new COBBTree(in));
   }
 
   mAabbs.reserve(mTrees.size());

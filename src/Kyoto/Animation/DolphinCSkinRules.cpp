@@ -10,7 +10,7 @@
 CSkinRules::CSkinRules(CInputStream& in)
 : mBones(in), mMatrixIndices(in), mVertexCount(in.ReadInt32()), mVertexToBone(nullptr) {
   if (mVertexCount > 0) {
-    mVertexToBone = NEW uchar[mVertexCount];
+    mVertexToBone = rs_new uchar[mVertexCount];
     in.Get(mVertexToBone.get(), mVertexCount);
   }
   CModel::AddToTotal(sizeof(CSkinRules) + mBones.size() * sizeof(CVirtualBone));
@@ -40,7 +40,7 @@ void CSkinRules::BuildAccumulatedTransforms(const CPoseAsTransforms_Linear& pose
 
 CFactoryFnReturn FSkinRulesFactory(const SObjectTag& tag, CInputStream& in,
                                    const CVParamTransfer& params) {
-  return NEW CSkinRules(in);
+  return rs_new CSkinRules(in);
 }
 
 void CSkinRules::LoadMatrixBank(int bank) const {

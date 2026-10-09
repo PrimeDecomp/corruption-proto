@@ -20,7 +20,7 @@ CMetaAnimBlend::VGetAnimationTree(const CAnimSysContext& animSys,
           : CMetaAnimTreeBuildOrders::NoSpecialOrders();
   rstl::ncrc_ptr< CAnimTreeNode > a = mAnimA->GetAnimationTree(animSys, oa);
   rstl::ncrc_ptr< CAnimTreeNode > b = mAnimB->GetAnimationTree(animSys, ob);
-  return NEW CAnimTreeBlend(mCharacterSpaceBlend, a, b, mBlend,
+  return rs_new CAnimTreeBlend(mCharacterSpaceBlend, a, b, mBlend,
                                CAnimTreeBlend::CreatePrimitiveName(a, b, mBlend));
 }
 

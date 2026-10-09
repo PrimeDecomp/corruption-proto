@@ -229,7 +229,7 @@ CFactoryFnReturn FRasterFontFactory(const SObjectTag& tag, CInputStream& in,
   const rstl::rc_ptr< IVParamObj > obj = xfer.GetObj();
   CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
 
-  return NEW CRasterFont(in, pool);
+  return rs_new CRasterFont(in, pool);
 }
 
 void CRasterFont::SetupRenderState() {

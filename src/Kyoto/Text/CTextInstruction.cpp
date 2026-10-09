@@ -6,7 +6,7 @@
 #include "Kyoto/Text/TextCommon.hpp"
 
 CTextInstruction* CTextInstruction::Create(const wchar_t* str, const int len) {
-  char* storage = NEW char[len * sizeof(wchar_t) + sizeof(CTextInstruction) + sizeof(wchar_t)];
+  char* storage = rs_new char[len * sizeof(wchar_t) + sizeof(CTextInstruction) + sizeof(wchar_t)];
   return new (storage) CTextInstruction(str, len);
 }
 

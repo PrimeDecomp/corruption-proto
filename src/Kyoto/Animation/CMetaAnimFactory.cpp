@@ -12,15 +12,15 @@ rstl::rc_ptr< IMetaAnim > CMetaAnimFactory::CreateMetaAnim(CInputStream& in) {
   EMetaAnimType type = static_cast< EMetaAnimType >(in.ReadInt32());
   switch (type) {
   case kMAT_Play:
-    return NEW CMetaAnimPlay(in);
+    return rs_new CMetaAnimPlay(in);
   case kMAT_Blend:
-    return NEW CMetaAnimBlend(in);
+    return rs_new CMetaAnimBlend(in);
   case kMAT_PhaseBlend:
-    return NEW CMetaAnimPhaseBlend(in);
+    return rs_new CMetaAnimPhaseBlend(in);
   case kMAT_Random:
-    return NEW CMetaAnimRandom(in);
+    return rs_new CMetaAnimRandom(in);
   case kMAT_Sequence:
-    return NEW CMetaAnimSequence(in);
+    return rs_new CMetaAnimSequence(in);
   default:
     return rstl::rc_ptr< IMetaAnim >();
   }

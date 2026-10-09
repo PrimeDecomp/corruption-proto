@@ -55,7 +55,7 @@ rstl::auto_ptr< IObj > CFactoryMgr::MakeObjectFromMemory(const SObjectTag& tag,
     FMemFactoryFunc factory = memIt->second;
     if (compressed) {
       rstl::auto_ptr< CInputStream > in(
-          NEW CMemoryInStream(buffer.get(), size, CMemoryInStream::kOS_NotOwned));
+          rs_new CMemoryInStream(buffer.get(), size, CMemoryInStream::kOS_NotOwned));
       const uint length = in->ReadInt32();
       CLZOInputStream lzo(in, size - in->GetReadPosition(), length);
       rstl::auto_ptr< uchar > data(lzo.ReleaseBuffer());
@@ -74,7 +74,7 @@ rstl::auto_ptr< IObj > CFactoryMgr::MakeObjectFromMemory(const SObjectTag& tag,
   FFactoryFunc factory = mFactories.find(tag.type)->second;
   if (compressed) {
     rstl::auto_ptr< CInputStream > in(
-        NEW CMemoryInStream(buffer.get(), size, CMemoryInStream::kOS_NotOwned));
+        rs_new CMemoryInStream(buffer.get(), size, CMemoryInStream::kOS_NotOwned));
     const uint length = in->ReadInt32();
     CLZOInputStream lzo(in, size - in->GetReadPosition(), length);
     return factory(tag, lzo, params).GetObjForTransfer();

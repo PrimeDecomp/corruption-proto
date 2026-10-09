@@ -185,6 +185,7 @@
 #include "MetroidPrime/CDebugOption.hpp"
 #include "MetroidPrime/CDecalManager.hpp"
 #include "MetroidPrime/CGameArchitectureSupport.hpp"
+#include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/CGameGlobalObjects.hpp"
 #include "MetroidPrime/CGameProfiler.hpp"
 #include "MetroidPrime/CInGameTweakManager.hpp"
@@ -239,11 +240,7 @@ extern IController* gpController;
 class CMemoryCard;
 extern CMemoryCard* gpMemoryCard;
 
-// Unnamed callees of RsMain in other translation units.
-class CGameDebug;
-extern "C" CGameDebug* gpGameDebug;       // Guessed name (0x8079710C); CGameGlobalObjects+0x130.
-extern "C" void fn_8003CBDC(CGameDebug*); // CGameDebug.cpp: registers every debug option.
-extern bool sProgressiveModePrompt;       // Echoes name; the second bit of the save region.
+extern bool sProgressiveModePrompt; // Echoes name; the second bit of the save region.
 
 // Guessed. Owns the screenshot capture buffer between frames. The object belongs to
 // ScreenCapture.cpp, whose functions 0x8020B4D0/0x8020B4E0/0x8020B534 test, free and allocate
@@ -287,37 +284,6 @@ private:
   rstl::string mName;
   bool mActive;
 };
-
-// CGameDebug keeps its options as optional CDebugOption slots (0x50 bytes) from offset 4. main
-// reads a few of them by index; the class itself belongs to CGameDebug.cpp and is not modelled.
-static inline CDebugOption* GetDebugOption(int index) {
-  rstl::optional_object< CDebugOption >& slot =
-      reinterpret_cast< rstl::optional_object< CDebugOption >* >(
-          reinterpret_cast< uchar* >(gpGameDebug) + 4)[index];
-  return slot ? &slot.data() : nullptr;
-}
-
-static inline float GetDebugOptionValue(int index) {
-  const CDebugOption* option = GetDebugOption(index);
-  if (option != nullptr) {
-    return option->GetValue();
-  }
-  return -1.f;
-}
-
-static inline void SetDebugOptionValue(int index, float value) {
-  CDebugOption* option = GetDebugOption(index);
-  if (option != nullptr) {
-    option->SetValue(value);
-  }
-}
-
-// Guessed. CGameDebug's byte at 0xa130 is set while its debug menu is up; CGameDebug then
-// forwards input to the menu object at 0x9fec. main only acts on option requests while it is
-// closed.
-static inline bool IsDebugMenuActive() {
-  return *(reinterpret_cast< const bool* >(gpGameDebug) + 0xa130);
-}
 
 #define UNUSED_STACK_VAL 0x7337D00D
 
@@ -473,10 +439,10 @@ void CMain::ShutdownSubsystems() {
   OSReport("Stack usage: %d bytes (%dk)\n", used, static_cast< uint >(used) / 1024);
 }
 
-// Guessed name. Debug option 263 doubles as the "keep running" switch; with no option
-// registered the value defaults to -1, which also ends the loop.
+// Guessed name. The "Terminate Game" debug option ends the main loop; with no option registered
+// the value defaults to -1, which also ends the loop.
 bool CMain::CheckTerminate() {
-  if (GetDebugOptionValue(263) != 0.f) {
+  if (gpGameDebug->GetOptionValue(CGameDebug::kDO_TerminateGame) != 0.f) {
     return true;
   }
   return false;
@@ -590,28 +556,32 @@ bool CMain::CheckReset() {
   return false;
 }
 
-// Debug options 51..54 are "Load Tweaks from PC Host", "Save Tweaks to PC Host", "Load Tweaks
-// from Memory Card" and "Save Tweaks to Memory Card"; only the audio tweaks are handled here.
-// Each is requested by setting it to 1 and acknowledged by resetting it to 0.
+// The Audio category's tweak load/save options; only the audio tweaks are handled here. Each is
+// requested by setting it to 1 and acknowledged by resetting it to 0, and only while the debug
+// menu is closed.
 void CMain::UpdateTweakDebugOptions() {
-  if (!IsDebugMenuActive() && GetDebugOption(51) != nullptr &&
-      static_cast< int >(GetDebugOptionValue(51)) == 1) {
-    SetDebugOptionValue(51, 0.f);
+  if (!gpGameDebug->IsMenuOpen() &&
+      gpGameDebug->GetOption(CGameDebug::kDO_LoadTweaksFromPCHost) != nullptr &&
+      gpGameDebug->GetOptionInt(CGameDebug::kDO_LoadTweaksFromPCHost) == 1) {
+    gpGameDebug->SetOptionValue(CGameDebug::kDO_LoadTweaksFromPCHost, 0.f);
     gpTweakManager->ReadFromPCHost(rstl::string_l("c:/AudioTweaks.txt"));
   }
-  if (!IsDebugMenuActive() && GetDebugOption(52) != nullptr &&
-      static_cast< int >(GetDebugOptionValue(52)) == 1) {
-    SetDebugOptionValue(52, 0.f);
+  if (!gpGameDebug->IsMenuOpen() &&
+      gpGameDebug->GetOption(CGameDebug::kDO_SaveTweaksToPCHost) != nullptr &&
+      gpGameDebug->GetOptionInt(CGameDebug::kDO_SaveTweaksToPCHost) == 1) {
+    gpGameDebug->SetOptionValue(CGameDebug::kDO_SaveTweaksToPCHost, 0.f);
     gpTweakManager->WriteToPCHost(rstl::string_l("c:/AudioTweaks.txt"));
   }
-  if (!IsDebugMenuActive() && GetDebugOption(53) != nullptr &&
-      static_cast< int >(GetDebugOptionValue(53)) == 1) {
-    SetDebugOptionValue(53, 0.f);
+  if (!gpGameDebug->IsMenuOpen() &&
+      gpGameDebug->GetOption(CGameDebug::kDO_LoadTweaksFromMemoryCard) != nullptr &&
+      gpGameDebug->GetOptionInt(CGameDebug::kDO_LoadTweaksFromMemoryCard) == 1) {
+    gpGameDebug->SetOptionValue(CGameDebug::kDO_LoadTweaksFromMemoryCard, 0.f);
     gpTweakManager->ReadFromMemoryCard(rstl::string_l("AudioTweaks"));
   }
-  if (!IsDebugMenuActive() && GetDebugOption(54) != nullptr &&
-      static_cast< int >(GetDebugOptionValue(54)) == 1) {
-    SetDebugOptionValue(54, 0.f);
+  if (!gpGameDebug->IsMenuOpen() &&
+      gpGameDebug->GetOption(CGameDebug::kDO_SaveTweaksToMemoryCard) != nullptr &&
+      gpGameDebug->GetOptionInt(CGameDebug::kDO_SaveTweaksToMemoryCard) == 1) {
+    gpGameDebug->SetOptionValue(CGameDebug::kDO_SaveTweaksToMemoryCard, 0.f);
     gpTweakManager->WriteToMemoryCard(rstl::string_l("AudioTweaks"));
   }
 }
@@ -635,7 +605,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
   mAverageDrawTime = 0.2f;
   InitializeSubsystems();
   globalObjects->PostInitialize(*mOsContext, *mMemorySys);
-  fn_8003CBDC(gpGameDebug);
+  gpGameDebug->AddDebugOptions();
   AddWorldPaks();
 
   {
@@ -730,7 +700,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
         mAverageDrawTime = mDrawTimes.GetAverage().data();
         double idleTime =
             (1.f / 60.f - (tickTime + architecture->GetStopwatch2().GetElapsedTime())) - 0.00075;
-        if (static_cast< int >(GetDebugOptionValue(269)) > 2) {
+        if (gpGameDebug->GetOptionInt(CGameDebug::kDO_StreamingStatus) > 2) {
           idleTime = 1.0;
         }
         AsyncIdle(idleTime > 0.0 ? static_cast< uint >(idleTime * 1000000.0) : 0);
@@ -755,8 +725,8 @@ int CMain::RsMain(int argc, const char* const* argv) {
       x70_frameCallbacks.x60_postDraw.Emit();
       architecture->Update();
       x70_frameCallbacks.x78_postUpdate.Emit();
-      GetDebugOption(147)->ClearMessages();
-      GetDebugOption(272)->ClearMessages();
+      gpGameDebug->GetOption(CGameDebug::kDO_GenericMsgs)->ClearMessages();
+      gpGameDebug->GetOption(CGameDebug::kDO_ShowFramerate)->ClearMessages();
       CAudioManager_Update(1.f / 60.f);
       if (CheckTerminate()) {
         gpGameState->AudioGroups().clear();

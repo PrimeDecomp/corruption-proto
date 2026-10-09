@@ -479,6 +479,13 @@ public:
   }
   bool IsOptionSet(int index) { return GetOptionValue(index) != 0.f; }
   int GetOptionInt(int index) { return static_cast< int >(GetOptionValue(index)); }
+  // Does nothing when the option was never registered.
+  void SetOptionValue(int index, float value) {
+    CDebugOption* option = GetOption(index);
+    if (option != nullptr) {
+      option->SetValue(value);
+    }
+  }
 
   // Guessed names. Register an option in its slot (the first registration wins) and add a named
   // value to an option. The color defaults to white.
@@ -502,7 +509,7 @@ public:
   void DumpLog();
   void FreeLog();
   void CloseMenu();
-  // Guessed name. main reads the menu's presence flag (+0xA130) directly.
+  // Guessed name. main only handles the tweak load/save options while the menu is closed.
   bool IsMenuOpen() const { return mMenu.valid(); }
 
   // Guessed names. The movie capture name ("<name>_NNN_" once a free slot was chosen) and the

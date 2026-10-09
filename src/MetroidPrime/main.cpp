@@ -208,6 +208,27 @@
 //   down again and frees the tweaks directly instead of reloading Tweaks.rel.
 // - The soft-reset chord is checked over 51 controller buttons and the reset options stream is
 //   asserted to fit kGameOptionsFromResetSize (Main.cpp line 2242).
+//
+// Architecture-loop differences (CGameArchitectureSupport):
+// - The object is 0xC8 bytes: queue, tick and draw stopwatches, input generator (with an embedded
+//   CControllerRecorder), IOWin manager, a prototype-only scan-text debug manager, the frame
+//   counter and three tick remainders. There is no audio system member, no CSfxManager and no
+//   infinite-loop alarm; audio comes up through CAudioManager in the constructor.
+// - UpdateTicks emits CMain's per-frame signals around the tick loop: a pre-tick TSignal0, a
+//   TSignal1<float> per fixed tick (emitted out of line here) and a post-tick TSignal0.
+// - Broadband adapter messages are polled once per frame before ticking.
+// - While a debug movie capture runs, each frame is exactly one 1/60 s step and the capture
+//   countdown is printed; otherwise the controller recorder's game speed and single-step flag
+//   scale the accumulated time (speed 0 still pumps input and IOWin messages, i.e. a pause).
+// - kDO_FakePAL50HzUpdate makes every tick report dt = 1/50 while the remainder is still drained
+//   in 1/60 steps, so game time runs slower instead of ticking less often.
+// - Frames slower than 0.035 s, the max-speed mode and the thirty-fps mode clamp the remainder
+//   rather than catching up.
+// - The scan-text debug manager is updated on every tick, and the console commands are bound to
+//   the input generator.
+// - CArchitectureQueue::Push is inline (its list insert helpers are emitted in this TU).
+// - The class has no Draw or PreloadAudio: RsMain draws through the IOWin manager directly, and
+//   CMain::UpdateGPMetrics selects GX performance counters from kDO_DrawTimeInfo.
 
 extern "C" int CBBASupport_InitializeBBA(int);
 extern "C" void

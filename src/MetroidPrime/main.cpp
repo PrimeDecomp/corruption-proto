@@ -8,15 +8,9 @@
 // 0x800059F0 +0xAC: retained emitted/native function; exact class/type/name unresolved
 // 0x80005A9C +0x104: retained emitted/native function; exact class/type/name unresolved
 // 0x80005BA0 +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80005BF0 +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x80005C14 +0x80: retained emitted/native function; exact class/type/name unresolved
 // 0x80005C94 +0x150: retained emitted/native function; exact class/type/name unresolved
 // 0x80005DE4 +0x54: retained emitted/native function; exact class/type/name unresolved
 // 0x80005E68 +0x1CC: retained emitted/native function; exact class/type/name unresolved
-// 0x80006034 +0x5C: retained emitted/native function; exact class/type/name unresolved
-// 0x80006090 +0xBC: retained emitted/native function; exact class/type/name unresolved
-// 0x8000614C +0xDC: retained emitted/native function; exact class/type/name unresolved
-// 0x80006228 +0xB8: retained emitted/native function; exact class/type/name unresolved
 // 0x800062E0 +0xC: retained emitted/native function; exact class/type/name unresolved
 // 0x800062EC +0x50: retained emitted/native function; exact class/type/name unresolved
 // 0x8000633C +0xB8: retained emitted/native function; exact class/type/name unresolved
@@ -36,7 +30,6 @@
 // 0x80006884 +0x68: retained emitted/native function; exact class/type/name unresolved
 // 0x800068EC +0x20: retained emitted/native function; exact class/type/name unresolved
 // 0x8000690C +0x28: retained emitted/native function; exact class/type/name unresolved
-// 0x80006934 +0x58: retained emitted/native function; exact class/type/name unresolved
 // 0x800069E0 +0xE4: retained emitted/native function; exact class/type/name unresolved
 // 0x80006AC4 +0x150: retained emitted/native function; exact class/type/name unresolved
 // 0x80006C14 +0x64: retained emitted/native function; exact class/type/name unresolved
@@ -61,8 +54,6 @@
 // 0x80007BB8 +0xDC: retained emitted/native function; exact class/type/name unresolved
 // 0x80007C94 +0x1CC: retained emitted/native function; exact class/type/name unresolved
 // 0x80007E60 +0x5C: retained emitted/native function; exact class/type/name unresolved
-// 0x80007EBC +0x120: retained emitted/native function; exact class/type/name unresolved
-// 0x80007FDC +0xAD4: CMain RsMain game loop; Main.cpp allocation sites2351/2393/2689
 // 0x80008AB0 +0x48: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AF8 +0x220: retained emitted/native function; exact class/type/name unresolved
 // 0x80008D18 +0x174: retained emitted/native function; exact class/type/name unresolved
@@ -87,16 +78,10 @@
 // 0x80009508 +0x20: retained emitted/native function; exact class/type/name unresolved
 // 0x80009528 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000954C +0x80: retained emitted/native function; exact class/type/name unresolved
-// 0x800095CC +0x7C: retained emitted/native function; exact class/type/name unresolved
-// 0x80009648 +0x5C: retained emitted/native function; exact class/type/name unresolved
-// 0x800096A4 +0x58: emitted reserved-average float GetAverage helper
-// 0x800096FC +0x134: emitted reserved-average float AddValue helper
-// 0x80009830 +0x58: retained emitted/native function; exact class/type/name unresolved
 // 0x80009888 +0x54: retained emitted/native function; exact class/type/name unresolved
 // 0x800098DC +0x52C: CMain CheckReset; Main.cpp assertion line2242 for game-options stream size
 // 0x80009E08 +0x64: retained emitted/native function; exact class/type/name unresolved
 // 0x80009E6C +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80009EBC +0x4C: retained emitted/native function; exact class/type/name unresolved
 // 0x80009F08 +0x7C0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A6C8 +0xC4: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A78C +0x150: retained emitted/native function; exact class/type/name unresolved
@@ -145,15 +130,8 @@
 // 0x8000EFBC +0x268: main safe-frame debug rendering; four screen-edge quads
 // 0x8000F224 +0x84: BBA message callback, directly registered by InitializeSubsystems through local C834 adapter
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x8000F2CC +0x11C: emitted TOneStatic architecture operator new
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
-// 0x8000F50C +0xC: emitted TOneStatic architecture allocation-space accessor
-// 0x8000F518 +0x24: emitted TOneStatic architecture reference counter accessor
-// 0x8000F53C +0x11C: emitted TOneStatic global-objects operator new
 // 0x8000F658 +0x124: emitted TOneStatic global-objects operator delete
-// 0x8000F77C +0xC: emitted TOneStatic global-objects allocation-space accessor
-// 0x8000F788 +0x24: emitted TOneStatic global-objects reference counter accessor
-// 0x8000F7AC +0xC8: GetAverageValue<float>; strong normalized match in both reference main TUs
 // 0x8000F874 +0x64: emitted rc_ptr release helper; typed identity not copied from ambiguous identical reference bodies
 // 0x8000F8D8 +0x64: emitted IOWin rc_ptr release helper, directly used by architecture constructor
 // 0x8000F93C +0xD0: retained emitted/native function; exact class/type/name unresolved
@@ -182,21 +160,43 @@
 
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Alloc/LockedCache.hpp"
+#include "Kyoto/Audio/CStreamAudioManager.hpp"
 #include "Kyoto/Basics/COsContext.hpp"
+#include "Kyoto/Basics/CStopwatch.hpp"
 #include "Kyoto/CARAMManager.hpp"
+#include "Kyoto/CARAMToken.hpp"
+#include "Kyoto/CDvdFile.hpp"
 #include "Kyoto/CFrameDelayedKiller.hpp"
+#include "Kyoto/CResFactory.hpp"
+#include "Kyoto/Graphics/CGraphics.hpp"
+#include "Kyoto/Input/CControllerGamepadData.hpp"
+#include "Kyoto/Input/IController.hpp"
 #include "Kyoto/Particles/CElementGen.hpp"
+#include "Kyoto/Streams/CBitStreamReader.hpp"
+#include "Kyoto/Streams/CMemoryInStream.hpp"
 #include "Kyoto/TFunctor.hpp"
+#include "Kyoto/Text/CStringTable.hpp"
+#include "MetaRender/CCubeRenderer.hpp"
+#include "MetroidPrime/CDebugOption.hpp"
+#include "MetroidPrime/CGameArchitectureSupport.hpp"
+#include "MetroidPrime/CGameGlobalObjects.hpp"
+#include "MetroidPrime/CSaveRegion.hpp"
+#include "MetroidPrime/Player/CGameState.hpp"
 
+#include "rstl/auto_ptr.hpp"
+#include "rstl/optional_object.hpp"
 #include "rstl/string.hpp"
 
 #include "dolphin/ar.h"
 #include "dolphin/arq.h"
+#include "dolphin/base/PPCArch.h"
 #include "dolphin/os.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSMemory.h"
 
 #include "stdio.h"
+#include "stdlib.h"
 #include "string.h"
 
 // Boot and main-loop differences from Echoes/Prime, as far as the prototype code shows them:
@@ -231,6 +231,87 @@ CBBASupport_RegisterStringMessageCallback(int,
 extern "C" void CBBASupport_Shutdown();
 extern "C" void CAudioManager_Shutdown();
 void FreeTweaks();
+extern "C" void RAssert_SetDiagnosticPrintCallback(void (*callback)(const char* format, ...));
+extern "C" void CAudioManager_Update(float dt);
+extern IController* gpController;
+class CMemoryCard;
+extern CMemoryCard* gpMemoryCard;
+class CTweaks;
+extern CTweaks* gpTweakManager;
+
+// Unnamed callees of RsMain in other translation units.
+class CGameDebug;
+class CGameProfiler;
+extern "C" CGameDebug* gpGameDebug;       // Guessed name (0x8079710C); CGameGlobalObjects+0x130.
+extern "C" CGameProfiler* gpGameProfiler; // Guessed name (0x80798758).
+extern "C" void fn_8003CBDC(CGameDebug*); // CGameDebug.cpp: registers every debug option.
+extern "C" bool fn_8017ECB0(CTweaks*, const rstl::string&); // Echoes: ReadFromMemoryCard.
+extern "C" void fn_8016D600(CGameProfiler*, float);         // CGameProfiler.cpp: frame update.
+extern "C" void fn_8016D054(CGameProfiler*, const char*);   // CGameProfiler.cpp: begin section.
+extern "C" void fn_8016CED0(CGameProfiler*, const char*);   // CGameProfiler.cpp: end section.
+extern "C" void fn_803E7CE4();     // AudioDebug.cpp: first function of the unit.
+extern "C" void fn_8065B4A0(uint); // PadFallback.c; Echoes calls PADRecalibrate(0xf0000000) here.
+
+// Unnamed main.cpp functions that RsMain calls; not implemented yet.
+extern "C" void fn_8000A78C(CMain*); // Programs the GX performance metrics from debug options.
+extern "C" void fn_800074A8(CMain*); // Saves/loads tweaks on request of debug options.
+extern "C" void fn_8000C888();       // Resolves asset ids once all paks are loaded.
+
+// Guessed. Owns the screenshot capture buffer between frames; handed to fn_800077C4, which
+// services sTakeScreenshot and the capture debug options.
+struct SScreenshotState {
+  SScreenshotState() : x8_(0) {}
+
+  rstl::auto_ptr< uchar > x0_buffer;
+  uint x8_;
+};
+extern "C" void fn_800077C4(SScreenshotState& state);
+
+// Guessed name. A named CGameProfiler section that RsMain keeps open around a frame; the
+// section is closed around EndScene and when it goes out of scope.
+class CProfileSection {
+public:
+  CProfileSection(const rstl::string& name) : mName(name), mActive(true) {
+    if (gpGameProfiler != nullptr) {
+      fn_8016D054(gpGameProfiler, mName.data());
+    }
+  }
+  ~CProfileSection() { Stop(); }
+
+  void Stop() {
+    if (gpGameProfiler != nullptr && mActive) {
+      fn_8016CED0(gpGameProfiler, mName.data());
+      mActive = false;
+    }
+  }
+  void Start() {
+    if (gpGameProfiler != nullptr && !mActive) {
+      fn_8016D054(gpGameProfiler, mName.data());
+      mActive = true;
+    }
+  }
+
+private:
+  rstl::string mName;
+  bool mActive;
+};
+
+// CGameDebug keeps its options as optional CDebugOption slots (0x50 bytes) from offset 4. main
+// reads a few of them by index; the class itself belongs to CGameDebug.cpp and is not modelled.
+static inline CDebugOption* GetDebugOption(int index) {
+  rstl::optional_object< CDebugOption >& slot =
+      reinterpret_cast< rstl::optional_object< CDebugOption >* >(
+          reinterpret_cast< uchar* >(gpGameDebug) + 4)[index];
+  return slot ? &slot.data() : nullptr;
+}
+
+static inline float GetDebugOptionValue(int index) {
+  const CDebugOption* option = GetDebugOption(index);
+  if (option != nullptr) {
+    return option->GetValue();
+  }
+  return -1.f;
+}
 
 #define UNUSED_STACK_VAL 0x7337D00D
 
@@ -240,6 +321,9 @@ static uchar sMainSpace[sizeof(CMain)];
 static u32 sARAMMemArray[3];
 uint gARAMAllocationSize;
 static bool sTakeScreenshot;
+// Guessed names. The seed values for the tick/draw averages live in .sdata.
+static float sInitialTickTime = 0.3f;
+static float sInitialDrawTime = 0.2f;
 
 // Guessed name: static-function counterpart of TNonStaticCallback2 used to wrap the BBA
 // command handler.
@@ -381,6 +465,230 @@ void CMain::ShutdownSubsystems() {
   // The top 0x2000 bytes are never painted, so they count as used.
   const int used = (thread->stackBase - 0x2000 - ptr) + 0x2000;
   OSReport("Stack usage: %d bytes (%dk)\n", used, static_cast< uint >(used) / 1024);
+}
+
+// Guessed name. Debug option 263 doubles as the "keep running" switch; with no option
+// registered the value defaults to -1, which also ends the loop.
+bool CMain::CheckTerminate() {
+  if (GetDebugOptionValue(263) != 0.f) {
+    return true;
+  }
+  return false;
+}
+
+int CMain::RsMain(int argc, const char* const* argv) {
+  PPCSetFpIEEEMode();
+  CStopwatch startupTimer;
+  if (GetLockedCacheAllocationBase() == LCGetBase()) {
+    LCEnable();
+  }
+  RAssert_SetDiagnosticPrintCallback(rs_debugger_printf);
+  rstl::single_ptr< CGameGlobalObjects > globalObjects(
+      new ("Main.cpp(2351) : ", nullptr) CGameGlobalObjects(*mOsContext, *mMemorySys));
+  mGameGlobalObjects = globalObjects.get();
+  CStringTable::SetLanguage(GetLanguage());
+  for (int i = 0; i < 4; ++i) {
+    mTickTimes.AddValue(sInitialTickTime);
+    mDrawTimes.AddValue(sInitialDrawTime);
+  }
+  mAverageTickTime = 0.3f;
+  mAverageDrawTime = 0.2f;
+  InitializeSubsystems();
+  globalObjects->PostInitialize(*mOsContext, *mMemorySys);
+  fn_8003CBDC(gpGameDebug);
+  AddWorldPaks();
+
+  {
+    rstl::string audioTweaksStatus;
+    bool showAudioTweaksStatus;
+    if (fn_8017ECB0(gpTweakManager, rstl::string_l("AudioTweaks"))) {
+      audioTweaksStatus = rstl::string_l("Loaded audio tweaks from memory card\n");
+      showAudioTweaksStatus = true;
+    } else {
+      audioTweaksStatus = rstl::string_l("FAILED to load audio tweaks from memory card\n");
+      showAudioTweaksStatus = true;
+    }
+    rstl::single_ptr< CGameArchitectureSupport > architecture(
+        new ("Main.cpp(2393) : ", nullptr) CGameArchitectureSupport(*mOsContext));
+    mArchSupport = architecture.get();
+    srand(startupTimer.GetElapsedMicros());
+    rs_debugger_printf("Beginning main loop...\n");
+
+    SScreenshotState screenshot;
+    if (CSaveRegion::GetNonVolatileSettingsBuffer() != nullptr) {
+      CMemoryInStream stream(CSaveRegion::GetNonVolatileSettingsBuffer(),
+                             CSaveRegion::kSaveBufferSize);
+      CBitStreamReader reader(stream);
+      reader.ReadBits(1);
+      reader.ReadBits(1);
+      gpGameState->GameOptions() = CGameOptions(reader);
+      gpGameState->PreviousGameResults() = CGameState::SPreviousGameResults(reader);
+      gpGameState->GameOptions().EnsureOptions();
+    }
+
+    if (CGraphics::CanSetProgressiveMode()) {
+      bool progressive = CGraphics::GetProgressiveDefault();
+      // The prototype's gamepad data keeps 51 buttons from 0x64; the Start button is at 0x70.
+      if (gpController->GetGamepadData(0).GetButton(kBU_Start).GetIsPressed()) {
+        progressive = !progressive;
+        gpfnWarningPrintf("Progressive mode has been turned %s\n", progressive ? "ON" : "OFF");
+      }
+      CGraphics::SetProgressiveMode(progressive);
+    }
+    if (CDvdFile::FileExists("Strings.pak")) {
+      gpfnWarningPrintf("WARNING: Using strings.pak file, strings ingame might be out of date.\n");
+    }
+
+    while (!mFinished) {
+      fn_8016D600(gpGameProfiler, 1.f / 60.f);
+      CProfileSection section(rstl::string_l("Update+Render"));
+      architecture->GetStopwatch2().Reset();
+      gpResourceFactory->GetResLoader().AsyncIdlePakLoading();
+      if (gpMemoryCard == nullptr && gpResourceFactory->GetResLoader().AreAllPaksLoaded()) {
+        MemoryCardInitializePump();
+        fn_8000C888();
+      }
+      CARAMManager::CollectGarbage();
+      CARAMToken::UpdateAllDMAs();
+      if (!architecture->UpdateTicks()) {
+        mFinished = true;
+      }
+      const double tickTime = architecture->GetStopwatch2().GetElapsedTime();
+      mTickTimes.AddValue(tickTime / (1.f / 60.f));
+      mAverageTickTime = mTickTimes.GetAverage().data();
+      architecture->GetStopwatch2().Reset();
+      fn_8000A78C(this);
+
+      if (showAudioTweaksStatus) {
+        showAudioTweaksStatus = false;
+        gpfnWarningPrintf("");
+        gpfnWarningPrintf(audioTweaksStatus.data());
+        gpfnWarningPrintf(" \n \n ");
+        rs_debugger_printf(audioTweaksStatus.data());
+      }
+
+      bool drawFrame = true;
+      if (IsMaxSpeed()) {
+        AsyncIdle(1000000);
+        if (mMaxSpeedDrawTimer <= 0.f) {
+          mMaxSpeedDrawTimer = 1.f;
+        } else {
+          drawFrame = false;
+          CFrameDelayedKiller::FlushAllocationsForFrame();
+          CFrameDelayedKiller::FlushAllocationsForFrame();
+        }
+      }
+      if (drawFrame) {
+        gpRender->BeginScene();
+        architecture->GetIOWinManager().Draw();
+        x70_frameCallbacks.x48_preDraw();
+        DrawDebugMetrics(tickTime, architecture->GetStopwatch2());
+        fn_803E7CE4();
+        fn_800077C4(screenshot);
+        const double drawTime = architecture->GetStopwatch2().GetElapsedTime();
+        mDrawTimes.AddValue(drawTime / (1.f / 60.f));
+        mAverageDrawTime = mDrawTimes.GetAverage().data();
+        double idleTime =
+            (1.f / 60.f - (tickTime + architecture->GetStopwatch2().GetElapsedTime())) - 0.00075;
+        if (static_cast< int >(GetDebugOptionValue(269)) > 2) {
+          idleTime = 1.0;
+        }
+        AsyncIdle(idleTime > 0.0 ? static_cast< uint >(idleTime * 1000000.0) : 0);
+        if (gpMain->GetThirtyFps()) {
+          const float waitTime =
+              1.f / 30.f -
+              static_cast< float >(tickTime + architecture->GetStopwatch2().GetElapsedTime());
+          if (waitTime > 0.f) {
+            CStopwatch::Wait(waitTime);
+          }
+        }
+        section.Stop();
+        gpRender->EndScene();
+        section.Start();
+        if (mGameFrameDrawn) {
+          ++architecture->GetFramesDrawn();
+          mGameFrameDrawn = false;
+        }
+      } else {
+        gpResourceFactory->AsyncIdle(1000000, false);
+      }
+      x70_frameCallbacks.x60_postDraw();
+      architecture->Update();
+      x70_frameCallbacks.x78_postUpdate();
+      GetDebugOption(147)->ClearMessages();
+      GetDebugOption(272)->ClearMessages();
+      CAudioManager_Update(1.f / 60.f);
+      if (CheckTerminate()) {
+        gpGameState->AudioGroups().clear();
+        break;
+      }
+
+      bool resetArchitecture = false;
+      if (architecture->GetIOWinManager().IsEmpty()) {
+        rs_debugger_printf("IOWinManager got empty.  Resetting game architecture\n");
+        resetArchitecture = true;
+      } else if (CheckReset()) {
+        rs_debugger_printf("Reset pressed...\n");
+        resetArchitecture = true;
+      }
+      if (resetArchitecture) {
+        mRestartMode = kRM_Default;
+        CStreamAudioManager::StopAll();
+        fn_8065B4A0(0xf0000000);
+        CGraphics::SetIsBeginSceneClearFb(true);
+        CGraphics::BeginScene();
+        CGraphics::EndScene();
+        CFrameDelayedKiller::StallAndFlushAllAllocations();
+        architecture = nullptr;
+        architecture = new ("Main.cpp(2689) : ", nullptr) CGameArchitectureSupport(*mOsContext);
+        mArchSupport = architecture.get();
+      }
+      fn_800074A8(this);
+    }
+  }
+
+  ShutdownSubsystems();
+  globalObjects = nullptr;
+  CARAMManager::Shutdown();
+  rs_debugger_printf("Shutting down the game...\n");
+  return 0;
+}
+
+void CMain::AsyncIdle(uint time) {
+  if (time < 500) {
+    uint total = 0;
+    for (int i = 0; i < mFrameTimes.capacity(); ++i) {
+      total += mFrameTimes[i];
+    }
+    if (total < 500 * mFrameTimes.capacity()) {
+      time = 500;
+    } else {
+      time = 0;
+    }
+  }
+  mFrameTimes[mFrameTimeIdx] = time;
+  mFrameTimeIdx = mFrameTimeIdx + 1;
+  if (mFrameTimeIdx >= mFrameTimes.capacity()) {
+    mFrameTimeIdx = 0;
+  }
+
+  uint idleTime = 5000;
+  if (time <= 5000) {
+    idleTime = time;
+  }
+  if (idleTime < mFrameTimeMinimum) {
+    idleTime = mFrameTimeMinimum;
+  }
+  mFrameTimeMinimum = 0;
+  bool maxSpeed = false;
+  if (IsMaxSpeed()) {
+    maxSpeed = true;
+    idleTime = 1000000;
+  }
+
+  if (idleTime != 0) {
+    gpResourceFactory->AsyncIdle(idleTime, maxSpeed);
+  }
 }
 
 int CMain::GetLanguage() const {

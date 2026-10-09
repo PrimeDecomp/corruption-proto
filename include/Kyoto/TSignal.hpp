@@ -27,6 +27,7 @@ public:
     CSignalConnection* mConnection;
     TFunctor0 mFunctor;
   };
+  typedef rstl::list< SSlot >::const_iterator const_iterator;
 
   ~TSignal0() {
     for (rstl::list< SSlot >::iterator it = mSlots.begin(); it != mSlots.end(); ++it) {
@@ -36,12 +37,12 @@ public:
 
   // Calls every slot; the next node is fetched before the call so a slot may disconnect itself.
   void operator()() const {
-    rstl::list< SSlot >::const_iterator end = mSlots.end();
-    rstl::list< SSlot >::const_iterator it = mSlots.begin();
+    const_iterator end = mSlots.end();
+    const_iterator it = mSlots.begin();
     while (it != end) {
-      const SSlot& slot = *it;
+      const_iterator slot = it;
       ++it;
-      slot.mFunctor();
+      slot->mFunctor();
     }
   }
 
@@ -56,6 +57,7 @@ public:
     CSignalConnection* mConnection;
     TFunctor1< P1 > mFunctor;
   };
+  typedef typename rstl::list< SSlot >::const_iterator const_iterator;
 
   ~TSignal1() {
     for (typename rstl::list< SSlot >::iterator it = mSlots.begin(); it != mSlots.end(); ++it) {
@@ -64,12 +66,12 @@ public:
   }
 
   void operator()(P1 p1) const {
-    typename rstl::list< SSlot >::const_iterator end = mSlots.end();
-    typename rstl::list< SSlot >::const_iterator it = mSlots.begin();
+    const_iterator end = mSlots.end();
+    const_iterator it = mSlots.begin();
     while (it != end) {
-      const SSlot& slot = *it;
+      const_iterator slot = it;
       ++it;
-      slot.mFunctor(p1);
+      slot->mFunctor(p1);
     }
   }
 

@@ -18,6 +18,7 @@ class CMemorySys;
 class CDvdRequestSys;
 class CGameGlobalObjects;
 class CGameArchitectureSupport;
+class CStopwatch;
 
 // Six signals embedded in CMain at 0x70 with an out-of-line implicit constructor (0x8000EE28)
 // and destructor (0x8000EAC4). The game architecture fires the first three around the tick
@@ -58,6 +59,10 @@ public:
   void ResetGameState();
   void MemoryCardInitializePump();
   int GetLanguage() const;
+  void AsyncIdle(uint time);
+  bool CheckTerminate();
+  void AddWorldPaks();
+  void DrawDebugMetrics(double dt, CStopwatch& stopWatch);
 
   // Guessed name: the "screenshot" console command prints "Taking screenshot.\n" and calls
   // this, which only raises a flag consumed by the debug draw path.

@@ -43,6 +43,11 @@ public:
   const rstl::string* GetChoiceName(float value);
   void AddChoice(const rstl::string& name, float value);
 
+  // Guessed names, used by main.cpp. ClearMessages is emitted there (0x80005BF0) and empties the
+  // string vector at 0x38 once per frame.
+  float GetValue() const { return mValue; }
+  void ClearMessages() { x38_.clear(); }
+
 private:
   int x0_;
   int x4_;

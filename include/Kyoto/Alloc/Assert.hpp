@@ -19,16 +19,20 @@ extern void (*gpfnWarningPrintf)(const char* format, ...);
 // this build logs "Would have thrown exception" and traps instead of throwing.
 // The original macros use __LINE__; the line is explicit here so the original line numbers
 // survive in the strings and the rs_log_assert_failure argument. The macro names are guessed.
-#define RS_VERIFY_FAILURE(line, conditionText, exceptionText, message)                          \
-  {                                                                                            \
-    CCallStack stack(0, __FILE__ "(" RS_STRINGIZE(line) ") : ", kUnknownType);                 \
-    rs_log_assert_failure(&stack, __FILE__, line, "Verify", conditionText, message);           \
-    rs_debugger_printf("Would have thrown exception: %s\n", exceptionText);                    \
-    RAssert_TriggerIllegalInstruction();                                                       \
+#define RS_VERIFY_FAILURE(line, conditionText, exceptionText, message)                             \
+  RS_VERIFY_FAILURE_IN(__FILE__, line, conditionText, exceptionText, message)
+
+// Same, for sources whose original file name differs from ours (Main.cpp, TOneStatic.h).
+#define RS_VERIFY_FAILURE_IN(file, line, conditionText, exceptionText, message)                    \
+  {                                                                                                \
+    CCallStack stack(0, file "(" RS_STRINGIZE(line) ") : ", kUnknownType);                         \
+    rs_log_assert_failure(&stack, file, line, "Verify", conditionText, message);                   \
+    rs_debugger_printf("Would have thrown exception: %s\n", exceptionText);                        \
+    RAssert_TriggerIllegalInstruction();                                                           \
   }
 
-#define RS_VERIFY_THROW(line, condition, exception, message)                                    \
-  if ((condition) == false)                                                                    \
+#define RS_VERIFY_THROW(line, condition, exception, message)                                       \
+  if ((condition) == false)                                                                        \
   RS_VERIFY_FAILURE(line, #condition, #exception, message)
 
 #endif

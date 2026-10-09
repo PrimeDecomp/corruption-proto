@@ -10,12 +10,13 @@
 // 0x80037188..0x800373C0: token-list helpers (not CActor methods)
 // 0x80036D08, 0x80036E58..0x8003705C: fluid-list sort and the fluid height compare
 // 0x800369C8 / 0x800368E8: Virtual5C, draws the touch bounds
-// 0x80036908: Virtual78, pulsing debug color
 // 0x80036804, 0x800367E4: square-root helpers
 // 0x800367BC: GetDamageVulnerability(), returns the normal vulnerability (0x800E1588)
 // 0x80036618 / 0x80036478: Virtual3C, sends the damage states
 // 0x80035998 / 0x80035B18: AcceptScriptMsg and its delegate thunk
 // 0x80035880: string copy from +0x88 (not a CActor method)
+// 0x800358A4: reserved_vector<TUniqueId, 4>::operator=, out of line with a constructing copy;
+//   the shared rstl header inlines it, so SetFluidList does not match yet
 // 0x8003527C / 0x80035208 / 0x8003516C: SetInFluid, reserved_vector erase, RemoveInvalidFluidIds
 // 0x80034B04..0x80034FFC: sound playback, Virtual74 and signal-connection helpers
 
@@ -23,6 +24,9 @@
 
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerObject.hpp"
+
+#include "Kyoto/Graphics/CGraphics.hpp"
+#include "Kyoto/Math/CAbsAngle.hpp"
 
 // As in Echoes, the solid material comes from a variable rather than a constant.
 static EMaterialTypes SolidMaterial = kMT_Solid;
@@ -46,6 +50,14 @@ CActor::CActor(TUniqueId uid, const rstl::string& name, const CEntityInfo& info,
 , xe4_6_(0xF) {}
 
 CActor::~CActor() {}
+
+// Fades between red and green over a ten second cycle.
+CColor CActor::Virtual78() const {
+  const float t = CMath::ModF(CGraphics::GetSecondsMod900(), 10.f) / 10.f;
+  const float green =
+      (1.f + static_cast< float >(sin(CAbsAngle::FromDegrees(360.f * t).AsRadians()))) / 2.f;
+  return CColor(1.f - green, green, 0.f, 1.f);
+}
 
 CHealthInfo* CActor::HealthInfo() { return nullptr; }
 

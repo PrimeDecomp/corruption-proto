@@ -67,15 +67,19 @@ public:
   virtual EWeaponCollisionResponseTypes GetCollisionResponseType(const CVector3f&, const CVector3f&,
                                                                  const CWeaponMode&,
                                                                  int) const; // 0x58
-  virtual void Virtual5C();                                    // 0x5C, draws the touch bounds
+  // 0x5C: draws the touch bounds in Virtual78's color. Virtual74 connects it (pointer to member
+  // lbl_806B229C) to a draw signal in 0xF0 while a debug option is set.
+  virtual void Virtual5C();
   virtual void Virtual60();                                    // 0x60, empty
   virtual void Virtual64();                                    // 0x64, weak, returns 0
   virtual void Virtual68();                                    // 0x68, weak, empty
   virtual void Virtual6C();                                    // 0x6C, weak, empty
   virtual CVector3f Virtual70(const CStateManager& mgr) const; // 0x70, weak, GetAimPosition(mgr, 0)
-  virtual void Virtual74(CStateManager& mgr);                  // 0x74, called after 'XCRT'
-  virtual CColor Virtual78() const;                            // 0x78, pulsing debug color
-  virtual void Virtual7C(); // 0x7C, empty; called after material changes
+  // 0x74: AcceptScriptMsg subscribes it (pointer to member lbl_806B2290) to CGameDebug option
+  // 0xF5 into 0xE8 and then calls it.
+  virtual void Virtual74(CStateManager& mgr);
+  virtual CColor Virtual78() const; // 0x78, pulsing debug color
+  virtual void Virtual7C();         // 0x7C, empty; called after material changes
 
   const CTransform4f& GetTransform() const { return mTransform; }
   void SetTransform(const CTransform4f& xf);

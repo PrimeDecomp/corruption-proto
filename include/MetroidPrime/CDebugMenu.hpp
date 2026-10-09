@@ -5,8 +5,12 @@
 
 #include "Kyoto/Graphics/CColor.hpp"
 #include "Kyoto/Text/CFont.hpp"
+#include "MetroidPrime/CControlMapper.hpp"
 
+#include "rstl/pair.hpp"
 #include "rstl/string.hpp"
+
+class CFinalInput;
 
 // Guessed name (the unit's inferred basename). A small self-contained debug menu: a title and a
 // fixed table of rows drawn with the debug CFont over a translucent, pulsing backdrop. The title
@@ -29,12 +33,23 @@ public:
              int selection, float lineSpacing);
 
   // Guessed names.
-  void Draw();                 // 0x800492C8; also records the left and right edges
-  int GetRightEdge() const;    // 0x80049B30
-  int GetLeftEdge() const;     // 0x80049B38
-  void Update(float dt);       // 0x80049D24; held-direction auto repeat
+  void Draw();              // 0x800492C8; also records the left and right edges
+  int GetRightEdge() const; // 0x80049B30
+  int GetLeftEdge() const;  // 0x80049B38
+  void Update(float dt);    // 0x80049D24; held-direction auto repeat
+
+  // Guessed name. Reads the first pad: up/down start or stop the auto repeat, and Start, Select
+  // or Back pick the current row, returning (row id, row index). Returns (kNoItem, kNoItem)
+  // otherwise, and until all three have been released once after the menu opened.
+  rstl::pair< int, int > ProcessInput(const CFinalInput& input);
+
+  // Guessed name. 0x80795950 (-1); CGameDebug compares the returned id against it.
+  static int kNoItem;
 
 private:
+  // Guessed name. True when none of Select, Start and Back is pressed.
+  bool AreSelectButtonsReleased(const CFinalInput& input);
+
   enum EScrollDirection {
     kSD_None,
     kSD_Up,
@@ -51,9 +66,7 @@ private:
   int x28_inputArmed; // Set once all select commands have been released
   CFont mFont;
   float mLineSpacing;
-  // CControlMapper, constructed by 0x80010F8C and queried with GetPressInput/GetDigitalInput
-  // for commands 0x4E..0x54. There is no Corruption CControlMapper header yet.
-  uchar x38_controlMapper[0x104];
+  CControlMapper mControlMapper;
   int mLeftEdge;
   int mRightEdge;
 };

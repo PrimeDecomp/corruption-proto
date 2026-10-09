@@ -3,17 +3,12 @@
 // Inferred development-menu emitter; original filename is unknown.
 // Constructors and destructor remain in CFrontEndUIDevelopment.
 // Preserve iterator/pointer swap variants and all sort/vector helpers.
-// Not yet implemented (both need CControlMapper, which has no Corruption header yet):
-// 0x801DABC4 +0x22C: menu input. Returns false when the menu is empty; GetPressInput 0x4F or
-//   key 0x1C moves the selection up and 0x50 or key 0x1E moves it down, skipping hidden
-//   entries and wrapping; then the selected entry handles its own input. Returns whether
-//   anything changed.
-// 0x801DAFF8 +0x1C0: entry input. GetPressInput 0x52 or keys 0x07/0x1D step to the next choice
-//   (wrapping), 0x53 or key 0x1B to the previous one.
 
 #include "MetroidPrime/CDevelopmentMenu.hpp"
 
+#include "Kyoto/Basics/COsContext.hpp"
 #include "Kyoto/Text/CFont.hpp"
+#include "MetroidPrime/CMain.hpp"
 
 #include "rstl/algorithm.hpp"
 
@@ -28,6 +23,36 @@ bool operator<(const CDevelopmentMenu::SEntry& a, const CDevelopmentMenu::SEntry
 }
 
 void CDevelopmentMenu::SEntry::Activate() {}
+
+// The development keyboard drives the menu as well as the pad.
+static inline bool IsKeyJustPressed(int key) {
+  return gpMain->GetOsContext()->GetOsKeyState(key).JustPressed();
+}
+
+bool CDevelopmentMenu::SEntry::ProcessInput(const CControlMapper& mapper,
+                                            const CFinalInput& input) {
+  bool changed = false;
+  if (mapper.GetPressInput(CControlMapper::kC_DebugMenuRight, input,
+                           CControlMapper::kFT_Unfiltered) ||
+      IsKeyJustPressed(7) || IsKeyJustPressed(0x1d)) {
+    ++mSelectedChoice;
+    if (mChoices.size() != 0) {
+      mSelectedChoice %= mChoices.size();
+    }
+    changed = true;
+  }
+  // The previous choice is on DebugMenuSelect, not DebugMenuLeft.
+  if (mapper.GetPressInput(CControlMapper::kC_DebugMenuSelect, input,
+                           CControlMapper::kFT_Unfiltered) ||
+      (IsKeyJustPressed(0x1b) && mChoices.size() != 0)) {
+    --mSelectedChoice;
+    if (mSelectedChoice < 0) {
+      mSelectedChoice = mChoices.size() - 1;
+    }
+    changed = true;
+  }
+  return changed;
+}
 
 void CDevelopmentMenu::SEntry::Draw(const CVector2i& pos, const CColor& color) const {
   CFont font(mFontScale);
@@ -50,6 +75,39 @@ void CDevelopmentMenu::ActivateSelection() {
   if (mSelection > 0 && mSelection < mEntries.size()) {
     mEntries[mSelection].Activate();
   }
+}
+
+bool CDevelopmentMenu::ProcessInput(const CFinalInput& input) {
+  int numEntries = 0;
+  for (int i = 0; i < mEntries.size(); ++i) {
+    ++numEntries;
+  }
+  if (numEntries == 0) {
+    return false;
+  }
+
+  bool changed = false;
+  if (mControlMapper.GetPressInput(CControlMapper::kC_DebugMenuUp, input,
+                                   CControlMapper::kFT_Unfiltered) ||
+      IsKeyJustPressed(0x1c)) {
+    changed = true;
+    do {
+      mSelection = mSelection - 1;
+      mSelection = mSelection + mEntries.size();
+      mSelection = mSelection % mEntries.size();
+    } while (!mEntries[mSelection].mVisible);
+  }
+  if (mControlMapper.GetPressInput(CControlMapper::kC_DebugMenuDown, input,
+                                   CControlMapper::kFT_Unfiltered) ||
+      IsKeyJustPressed(0x1e)) {
+    changed = true;
+    do {
+      mSelection = mSelection + 1;
+      mSelection = mSelection % mEntries.size();
+    } while (!mEntries[mSelection].mVisible);
+  }
+  changed |= mEntries[mSelection].ProcessInput(mControlMapper, input);
+  return changed;
 }
 
 void CDevelopmentMenu::Draw(const CVector2i& pos, const CColor& selectedColor,

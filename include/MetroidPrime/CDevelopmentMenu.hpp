@@ -5,9 +5,12 @@
 
 #include "Kyoto/Graphics/CColor.hpp"
 #include "Kyoto/Math/CVector2i.hpp"
+#include "MetroidPrime/CControlMapper.hpp"
 
 #include "rstl/string.hpp"
 #include "rstl/vector.hpp"
+
+class CFinalInput;
 
 // Guessed name (the unit's inferred basename). The text menu of the development front end
 // (CFrontEndUIDevelopment keeps one at 0x4C and builds it, including the world/area/layer
@@ -31,6 +34,8 @@ public:
     void AddChoice(const SChoice& choice);
     void Draw(const CVector2i& pos, const CColor& color) const;
     void Activate();
+    // Steps to the next or previous choice; returns whether it did.
+    bool ProcessInput(const CControlMapper& mapper, const CFinalInput& input);
 
     rstl::string mName;
     rstl::string x10_;
@@ -51,14 +56,15 @@ public:
   void AddEntry(const SEntry& entry);
   void Draw(const CVector2i& pos, const CColor& selectedColor, const CColor& color) const;
   void ActivateSelection();
+  // Moves between the visible entries, then lets the selected entry handle its choices.
+  // Returns whether anything changed.
+  bool ProcessInput(const CFinalInput& input);
 
 private:
   int x0_;
   rstl::vector< SEntry > mEntries;
   int mSelection;
-  // CControlMapper; queried with GetPressInput for the menu commands 0x4F..0x53. There is no
-  // Corruption CControlMapper header yet.
-  uchar x18_controlMapper[0x104];
+  CControlMapper mControlMapper;
 };
 
 // Entries sort by key, then alphabetically.

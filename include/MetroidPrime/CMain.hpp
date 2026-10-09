@@ -88,6 +88,7 @@ public:
   float GetAverageDrawTime() const { return mAverageDrawTime; }
 
   SMainFrameCallbacks& FrameCallbacks() { return x70_frameCallbacks; }
+  COsContext* GetOsContext() const { return mOsContext; }
 
 private:
   // Prototype-only leading vector; its element type is trivially destructible (the

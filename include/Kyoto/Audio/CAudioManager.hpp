@@ -6,8 +6,8 @@
 
 #include "types.h"
 
-#include "Kyoto/Audio/CAudioSys.hpp"
 #include "Kyoto/Audio/CAudioHandle.hpp"
+#include "Kyoto/Audio/CAudioSys.hpp"
 #include "rstl/auto_ptr.hpp"
 #include "rstl/pair.hpp"
 #include "rstl/reserved_vector.hpp"

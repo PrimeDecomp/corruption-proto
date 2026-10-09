@@ -28,7 +28,7 @@ extern void (*gpfnWarningPrintf)(const char* format, ...);
     CCallStack stack(0, file "(" RS_STRINGIZE(line) ") : ", kUnknownType);                         \
     rs_log_assert_failure(&stack, file, line, "Verify", conditionText, message);                   \
     rs_debugger_printf("Would have thrown exception: %s\n", exceptionText);                        \
-    rs_halt_cpu();                                                           \
+    rs_halt_cpu();                                                                                 \
   }
 
 // The condition is stored in a bool before the test: CObjectListSmall::AddObject (0x80262294)

@@ -87,7 +87,6 @@
 // 0x8000B3B8 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B444 +0x118: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B69C +0xCC: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B768 +0x6C: CGameArchitectureSupport::Update; touches the world-transition models (CGameState getter 0x80159C7C, TouchModels 0x801769D4), pushes FrameEnd and pumps; not implemented (needs CGameState/CWorldTransManager declarations)
 // 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
 // 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
 // 0x8000C218 +0xBC: CGameGlobalObjects LoadStringTable; STRG_Main token ownership
@@ -173,6 +172,7 @@
 #include "MetroidPrime/ConsoleCommands.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
+#include "MetroidPrime/Player/CWorldTransManager.hpp"
 #include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 
 #include "rstl/auto_ptr.hpp"
@@ -221,9 +221,11 @@
 //   countdown is printed; otherwise the controller recorder's game speed and single-step flag
 //   scale the accumulated time (speed 0 still pumps input and IOWin messages, i.e. a pause).
 // - kDO_FakePAL50HzUpdate makes every tick report dt = 1/50 while the remainder is still drained
-//   in 1/60 steps, so game time runs slower instead of ticking less often.
-// - Frames slower than 0.035 s, the max-speed mode and the thirty-fps mode clamp the remainder
-//   rather than catching up.
+//   in 1/60 steps: there are still about 60 ticks per real second, so game time runs about 20%
+//   fast rather than ticking less often.
+// - The thirty-fps mode sets the remainder to 1/30 every frame (exactly two ticks per frame);
+//   frames slower than 0.035 s and the max-speed mode clamp it to a single tick instead of
+//   catching up.
 // - The scan-text debug manager is updated on every tick, and the console commands are bound to
 //   the input generator.
 // - CArchitectureQueue::Push is inline (its list insert helpers are emitted in this TU).
@@ -1023,6 +1025,13 @@ bool CGameArchitectureSupport::UpdateTicks() {
   mPreviousTickRemainder = mTickRemainder;
   mIoWinMgr.PumpMessages(mArchQueue);
   return !quit;
+}
+
+// Same as Echoes: the frame is closed after drawing.
+void CGameArchitectureSupport::Update() {
+  gpGameState->WorldTransitionManager()->TouchModels();
+  mArchQueue.Push(MakeMsg::CreateFrameEnd(kAMT_Game, mGameFrameCount));
+  mIoWinMgr.PumpMessages(mArchQueue);
 }
 
 // The "DrawTime Info" option picks one counter of each GX performance group (its value modulo

@@ -6,10 +6,12 @@
 #include "Kyoto/CToken.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 
+#include "rstl/rc_ptr.hpp"
 #include "rstl/reserved_vector.hpp"
 #include "rstl/vector.hpp"
 
 class CBitStreamReader;
+class CWorldTransManager;
 class CBitStreamWriter;
 
 // Minimal view of the prototype's CGameState for main.cpp; only the members main touches are
@@ -43,6 +45,8 @@ public:
   CGameOptions& GameOptions() { return mGameOptions; }
   SPreviousGameResults& PreviousGameResults() { return mPreviousGameResults; } // Guessed name
   rstl::vector< CToken >& AudioGroups() { return mAudioGroups; }               // Guessed name
+  // Out of line (0x80159C7C); returns the rc_ptr at 0x28. Echoes' name.
+  rstl::rc_ptr< CWorldTransManager >& WorldTransitionManager();
 
 private:
   uchar x0_[0x68];

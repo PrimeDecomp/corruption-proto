@@ -79,9 +79,6 @@
 // 0x80009528 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000954C +0x80: retained emitted/native function; exact class/type/name unresolved
 // 0x80009888 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x800098DC +0x52C: CMain CheckReset; Main.cpp assertion line2242 for game-options stream size
-// 0x80009E08 +0x64: retained emitted/native function; exact class/type/name unresolved
-// 0x80009E6C +0x50: retained emitted/native function; exact class/type/name unresolved
 // 0x80009F08 +0x7C0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A6C8 +0xC4: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A78C +0x150: retained emitted/native function; exact class/type/name unresolved
@@ -162,19 +159,23 @@
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/LockedCache.hpp"
 #include "Kyoto/Audio/CStreamAudioManager.hpp"
+#include "Kyoto/Basics/CBasics.hpp"
 #include "Kyoto/Basics/COsContext.hpp"
 #include "Kyoto/Basics/CStopwatch.hpp"
 #include "Kyoto/CARAMManager.hpp"
 #include "Kyoto/CARAMToken.hpp"
 #include "Kyoto/CDvdFile.hpp"
 #include "Kyoto/CFrameDelayedKiller.hpp"
+#include "Kyoto/CMemoryCardSys.hpp"
 #include "Kyoto/CResFactory.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Input/CControllerGamepadData.hpp"
 #include "Kyoto/Input/IController.hpp"
 #include "Kyoto/Particles/CElementGen.hpp"
 #include "Kyoto/Streams/CBitStreamReader.hpp"
+#include "Kyoto/Streams/CBitStreamWriter.hpp"
 #include "Kyoto/Streams/CMemoryInStream.hpp"
+#include "Kyoto/Streams/CMemoryStreamOut.hpp"
 #include "Kyoto/TFunctor.hpp"
 #include "Kyoto/Text/CStringTable.hpp"
 #include "MetaRender/CCubeRenderer.hpp"
@@ -188,12 +189,17 @@
 #include "rstl/optional_object.hpp"
 #include "rstl/string.hpp"
 
+#include "dolphin/ai.h"
 #include "dolphin/ar.h"
 #include "dolphin/arq.h"
 #include "dolphin/base/PPCArch.h"
+#include "dolphin/dvd.h"
+#include "dolphin/gx/GXManage.h"
 #include "dolphin/os.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSMemory.h"
+#include "dolphin/pad.h"
+#include "dolphin/vi/vifuncs.h"
 
 #include "stdio.h"
 #include "stdlib.h"
@@ -251,6 +257,9 @@ extern "C" void fn_8016D054(CGameProfiler*, const char*);   // CGameProfiler.cpp
 extern "C" void fn_8016CED0(CGameProfiler*, const char*);   // CGameProfiler.cpp: end section.
 extern "C" void fn_803E7CE4();     // AudioDebug.cpp: first function of the unit.
 extern "C" void fn_8065B4A0(uint); // PadFallback.c; Echoes calls PADRecalibrate(0xf0000000) here.
+// CGameOptions.cpp: the slider position of an option value, (value - min) / (max - min).
+extern "C" float fn_8017DD30(int value, int min, int max);
+extern bool sProgressiveModePrompt; // Echoes name; the second bit of the save region.
 
 // Unnamed main.cpp functions that RsMain calls; not implemented yet.
 extern "C" void fn_8000A78C(CMain*); // Programs the GX performance metrics from debug options.
@@ -473,6 +482,114 @@ bool CMain::CheckTerminate() {
   if (GetDebugOptionValue(263) != 0.f) {
     return true;
   }
+  return false;
+}
+
+// The prototype's gamepad data has 51 buttons (from 0x64, where our shared header only names
+// the first 12 from 0x34).
+static const int kLastGamepadButton = 50;
+
+bool CMain::CheckReset() {
+  const BOOL resetPressed = OSGetResetButtonState();
+  const CControllerGamepadData& pad = gpController->GetGamepadData(0);
+  // The chord is buttons 1, 2 and 7 (B, X and Start in Echoes) with nothing else held.
+  bool resetChord = true;
+  for (int i = 0; i <= kLastGamepadButton && resetChord; ++i) {
+    const bool pressed = pad.GetButton(static_cast< EButton >(i)).GetIsPressed();
+    switch (i) {
+    case 1:
+    case 2:
+    case 7:
+      if (!pressed) {
+        resetChord = false;
+      }
+      break;
+    default:
+      if (pressed) {
+        resetChord = false;
+      }
+      break;
+    }
+  }
+  if (resetChord) {
+    if (mResetInputDelay >= 0.5f) {
+      mSoftResetHoldTime += 1.f / 60.f;
+      if (mSoftResetHoldTime > 0.5f) {
+        mResetButtonHeld = true;
+      }
+    }
+  } else {
+    if (mResetInputDelay < 0.5f) {
+      mResetInputDelay += 1.f / 60.f;
+    }
+    mSoftResetHoldTime = 0.f;
+  }
+  if (!resetPressed && mResetButtonHeld) {
+    mResetRequested = true;
+  }
+  if (!CMemoryCardSys::mIsCardBusy && (mResetRequested || mManageCard || mGameExitReset)) {
+
+    // Unlike Echoes there is no infinite-loop alarm to cancel and no sound system to quit.
+    GXDrawDone();
+    GXAbortFrame();
+    if (!mGameExitReset) {
+      gpGameState->GameOptions() = CGameOptions();
+      gpGameState->PreviousGameResults() = CGameState::SPreviousGameResults();
+      __PADDisableRecalibration(false);
+    } else {
+      CGameOptions& options = gpGameState->GameOptions();
+      options.SetScreenBrightness(4, fn_8017DD30(4, 0, 8), false);
+      options.SetScreenPositionX(0, fn_8017DD30(0, -30, 30), false);
+      options.SetScreenPositionY(0, fn_8017DD30(0, -19, 19), false);
+      options.SetScreenStretch(0, fn_8017DD30(0, -10, 10), false);
+      __PADDisableRecalibration(true);
+    }
+    {
+      CMemoryStreamOut stream(CSaveRegion::GetSaveBuffer(), CSaveRegion::kSaveBufferSize);
+      CBitStreamWriter writer(stream);
+      writer.WriteBits(CGraphics::GetProgressiveMode() ? 1 : 0, 1);
+      writer.WriteBits(sProgressiveModePrompt ? 1 : 0, 1);
+      gpGameState->GameOptions().PutTo(writer);
+      gpGameState->PreviousGameResults().PutTo(writer);
+      writer.FlushAll();
+      if (!(writer.GetOutputStream().GetWrittenBytes() < CSaveRegion::kSaveBufferSize)) {
+        RS_VERIFY_FAILURE_IN("Main.cpp", 2242,
+                             "outBitStream.Stream().GetWrittenBytes() < kGameOptionsFromResetSize",
+                             "false",
+                             CBasics::Stringize("Need to enlarge game options stream to %d",
+                                                stream.GetWrittenBytes()));
+      }
+      if (!(writer.GetOutputStream().GetWrittenBytes() < CSaveRegion::kSaveBufferSize)) {
+        // The original calls the fatal C++ rs_debugger_printf overload (0x804907F0) here.
+        rs_debugger_printf("Reset failed: Tried %d", stream.GetWrittenBytes());
+      } else {
+        OSReport("Wrote: %d\n", writer.GetOutputStream().GetWrittenBytes());
+      }
+    }
+
+    gpGameState->GameOptions().EnsureOptions();
+    VISetBlack(true);
+    VIFlush();
+    VIWaitForRetrace();
+    if (mManageCard) {
+      OSResetSystem(OS_RESET_HOTRESET, 0, true);
+    } else if (DVDCheckDisk()) {
+      AISetStreamPlayState(0);
+      void* savedOptions = CSaveRegion::GetSaveRegionStart();
+      memcpy(savedOptions, CSaveRegion::GetSaveBuffer(), CSaveRegion::kSaveBufferSize);
+      DCFlushRange(savedOptions, CSaveRegion::kSaveBufferSize);
+      OSSetSaveRegion(savedOptions, CSaveRegion::GetSaveRegionEnd());
+      OSResetSystem(OS_RESET_RESTART, 0, false);
+    } else {
+      OSResetSystem(OS_RESET_HOTRESET, 0, false);
+    }
+    mResetButtonHeld = false;
+    mResetRequested = false;
+    mGameExitReset = false;
+    mManageCard = false;
+    return true;
+  }
+  mResetButtonHeld = resetPressed;
   return false;
 }
 

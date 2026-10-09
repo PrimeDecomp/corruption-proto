@@ -13,10 +13,19 @@ class CBitStreamWriter;
 // main.cpp. Field types follow the copy (word/float pairs, a bool, a vector<uint>, a halfword).
 class CGameOptions {
 public:
+  CGameOptions();
   explicit CGameOptions(CBitStreamReader& in);
 
   void PutTo(CBitStreamWriter& out) const;
   void EnsureOptions(); // Echoes name; called after the options are restored.
+
+  // Echoes names, matched by order and clamp range (0..8, -30..30, -19..19, -10..10). Unlike
+  // Echoes, the prototype's setters also take the slider position of the value, which callers
+  // compute with fn_8017DD30 (see main.cpp).
+  void SetScreenBrightness(int value, float position, bool apply);
+  void SetScreenPositionX(int value, float position, bool apply);
+  void SetScreenPositionY(int value, float position, bool apply);
+  void SetScreenStretch(int value, float position, bool apply);
 
 private:
   uint x0_;

@@ -19,6 +19,7 @@ public:
     TFunctor2< A1, A2 > mFunctor;
   };
 
+  typedef TFunctor2< A1, A2 > Functor;
   typedef rstl::list< SSlot > SlotList;
   typedef typename SlotList::iterator iterator;
 
@@ -30,6 +31,9 @@ public:
     }
   }
 
+  // Guessed name, as TSignal1's. The <CStateManager&, CEntity&> instance is emitted in
+  // CGameArea.cpp (0x8005986C); the functor is passed by value.
+  rstl::auto_ptr< IConnection > Connect(Functor functor);
   void Emit(A1 a1, A2 a2) const; // Name confirmed by Metroid Prime Remastered symbols
 
 private:

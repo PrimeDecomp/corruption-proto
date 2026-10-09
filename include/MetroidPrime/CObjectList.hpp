@@ -47,6 +47,15 @@ public:
   void RemoveObject(TUniqueId uid);   // 0x80011718
   void AddObject(CEntity& entity);    // 0x8001180C
   int size() const { return mCount; } // Echoes' name
+  // Echoes' names. CStateManager::DisplayAlertAboutOutOfAmmo walks the list through them.
+  int GetFirstObjectIndex() const { return mFirstId; }
+  int GetNextObjectIndex(int idx) const {
+    if (idx != -1) {
+      return mObjects[idx].mNext;
+    } else {
+      return -1;
+    }
+  }
 
   // Echoes' guessed name. CStateManagerObject's constructor keeps the dynamic lists in a second
   // view, which UpdateObjectInLists re-filters when an entity changes.

@@ -80,9 +80,11 @@ class CWorldTransManager;
 //    model particles and EnvFx, as in Echoes.
 // 2. A CStopwatch is started and a CGameProfileStats is built from the "State Manager Numbers"
 //    debug option; the particle, decal and projectile seeds are set from the frame counter.
-// 3. The update then walks through 23 phases. Each one emits a "before" signal, does the work
-//    the state manager still does itself, and emits an "after" signal (CStateManagerCallbackLists
-//    0x0..0x438, two signals per phase). The work, in order: entity index check (debug), map
+// 3. The update then walks through its phases, emitting the CStateManagerCallbackLists signals
+//    (0x0..0x438) around the work the state manager still does itself. Most phases have a
+//    "before" and an "after" signal; the frame start, map world sphere, play time, render clock,
+//    power-ups, PreThink, fluid planes and gameplay checks only have a "before" one. The work, in
+//    order: entity index check (debug), map
 //    world sphere, play time, hints, power-up timers and the render clock (running only); the
 //    script message the game state queued; PreThink (and the fluid planes); decals, sorted
 //    lists, platforms and actors (running only); player input; the player move, sorted lists

@@ -305,6 +305,20 @@ static inline float GetDebugOptionValue(int index) {
   return -1.f;
 }
 
+static inline void SetDebugOptionValue(int index, float value) {
+  CDebugOption* option = GetDebugOption(index);
+  if (option != nullptr) {
+    option->SetValue(value);
+  }
+}
+
+// Guessed. CGameDebug's byte at 0xa130 is set while its debug menu is up; CGameDebug then
+// forwards input to the menu object at 0x9fec. main only acts on option requests while it is
+// closed.
+static inline bool IsDebugMenuActive() {
+  return *(reinterpret_cast< const bool* >(gpGameDebug) + 0xa130);
+}
+
 #define UNUSED_STACK_VAL 0x7337D00D
 
 CMain* gpMain;
@@ -574,6 +588,32 @@ bool CMain::CheckReset() {
   }
   mResetButtonHeld = resetPressed;
   return false;
+}
+
+// Debug options 51..54 are "Load Tweaks from PC Host", "Save Tweaks to PC Host", "Load Tweaks
+// from Memory Card" and "Save Tweaks to Memory Card"; only the audio tweaks are handled here.
+// Each is requested by setting it to 1 and acknowledged by resetting it to 0.
+void CMain::UpdateTweakDebugOptions() {
+  if (!IsDebugMenuActive() && GetDebugOption(51) != nullptr &&
+      static_cast< int >(GetDebugOptionValue(51)) == 1) {
+    SetDebugOptionValue(51, 0.f);
+    gpTweakManager->ReadFromPCHost(rstl::string_l("c:/AudioTweaks.txt"));
+  }
+  if (!IsDebugMenuActive() && GetDebugOption(52) != nullptr &&
+      static_cast< int >(GetDebugOptionValue(52)) == 1) {
+    SetDebugOptionValue(52, 0.f);
+    gpTweakManager->WriteToPCHost(rstl::string_l("c:/AudioTweaks.txt"));
+  }
+  if (!IsDebugMenuActive() && GetDebugOption(53) != nullptr &&
+      static_cast< int >(GetDebugOptionValue(53)) == 1) {
+    SetDebugOptionValue(53, 0.f);
+    gpTweakManager->ReadFromMemoryCard(rstl::string_l("AudioTweaks"));
+  }
+  if (!IsDebugMenuActive() && GetDebugOption(54) != nullptr &&
+      static_cast< int >(GetDebugOptionValue(54)) == 1) {
+    SetDebugOptionValue(54, 0.f);
+    gpTweakManager->WriteToMemoryCard(rstl::string_l("AudioTweaks"));
+  }
 }
 
 int CMain::RsMain(int argc, const char* const* argv) {

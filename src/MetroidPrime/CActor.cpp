@@ -24,6 +24,9 @@
 //   DrawTouchBounds to the draw signal at CStateManager+0x18 into 0xF0, and the delegate thunk;
 //   they need CGameDebug (option at gpGameDebug+0x4C94)
 
+// SetFluidList and SetInFluid call reserved_vector<TUniqueId, 4>::operator= out of line.
+#define RSTL_DONT_INLINE_RESERVED_VECTOR
+
 #include "MetroidPrime/CActor.hpp"
 
 #include "MetroidPrime/CDamageInfo.hpp"

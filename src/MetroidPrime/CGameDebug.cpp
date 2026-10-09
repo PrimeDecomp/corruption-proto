@@ -7,9 +7,11 @@
 //   ":*?\"<>|\\/\n\t%" with a find_first_of(const char*) that rstl::string lacks)
 // 0x8003CA84 +0xD8: emitted string find helper used by movie name sanitization
 // 0x8003CB5C +0x80: emitted string iterator search helper
-// 0x800451AC +0x880: debug menu input and selected option handling
-// 0x80045A2C +0xD8: debug menu/timing update
-// 0x800466E4 +0xD58: debug menu construction from category/options; vector.h assertion482
+// 0x800451AC +0x880: debug menu input and selected option handling (blocked on unnamed
+//   CGameState/CPlayerState/CGameOptions/language helpers and the menu builder below)
+// 0x800466E4 +0xD58: debug menu construction from category/options (OpenMenu(page, controller));
+//   vector.h assertion482; blocked on the unnamed demo/save-slot helpers and the
+//   optional_object<CDebugMenu> assign helpers 0x8004743C/0x80047484/0x8004775C
 // 0x8004743C +0x48: retained native/emitted helper; exact historical name/type unresolved
 // 0x80047484 +0xA8: retained native/emitted helper; exact historical name/type unresolved
 // 0x8004752C +0x18C: retained native/emitted helper; exact historical name/type unresolved
@@ -443,6 +445,24 @@ void CGameDebug::Draw() {
     }
   }
   gpRender->SetDepthReadWrite(true, true);
+}
+
+// Guessed name. Steps the open debug menu; "Save Debug Message Log" closes the menu and dumps the
+// log once. The callers (CMFGame and CFrontEndUIDevelopment) pass the result on as their IOWin
+// message return, and it is always kMR_Normal.
+int CGameDebug::UpdateMenu(float dt) {
+  if (!mMenu) {
+    return 0;
+  }
+  mMenu.data().Update(dt);
+  if (IsOptionSet(kDO_SaveDebugMessageLog)) {
+    if (mMenu) {
+      CloseMenu();
+    }
+    SetOptionValue(kDO_SaveDebugMessageLog, 0.f);
+    DumpLog();
+  }
+  return 0;
 }
 
 // Guessed name. Reads the tweaks and engine switches back into their options.

@@ -521,6 +521,8 @@ public:
   void ApplyOptions();
   // Guessed name. 0x80045B04, called by main after drawing the frame.
   void Draw();
+  // Guessed name. 0x80045A2C, called while the menu is open; returns kMR_Normal (0).
+  int UpdateMenu(float dt);
 
   // Guessed names. Emits the signal of every option changed since the last call.
   void DispatchChangedOptions(CStateManager& mgr);

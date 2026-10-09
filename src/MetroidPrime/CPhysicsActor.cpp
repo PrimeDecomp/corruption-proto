@@ -64,7 +64,8 @@ CPhysicsActor::CPhysicsActor(TUniqueId uid, const rstl::string& name, const CEnt
 , mCollisionAccuracyModifier(1.f)
 , mNumTicksStuck(0)
 , mNumTicksPartialUpdate(0)
-, mCollisionCache(stepData.unk & 1 ? rs_new(84) CCollisionCache(CAABox::Identity(), 1, 2, uid.value)
+, mCollisionCache(stepData.unk & 1 ? rs_new_line(84)
+                                         CCollisionCache(CAABox::Identity(), 1, 2, uid.value)
                                    : nullptr) {
   SetMass(moverData.mMass);
   MoveCollisionPrimitive(CVector3f::Zero());

@@ -2,7 +2,7 @@
 // G2MEAB .text 0x800F9BB4..0x800FA784 (end exclusive).
 // Complete native/helper inventory: 23 functions, all implemented. The TSignal1 template
 // functions (connect, list insert, emit, disconnect, connection) are instantiated here.
-// The two constructors allocate the rc_ptr count through NEW, so they reference "??(??)"
+// The two constructors allocate the rc_ptr count through rs_new, so they reference "??(??)"
 // where the binary has "rc_ptr.h(87) : ".
 
 #include "MetroidPrime/CDebugOption.hpp"

@@ -568,6 +568,13 @@ public:
   }
   // Guessed name. Set once a capture ends; main hands it to the frame capture.
   bool IsMovieCaptureFinished() const { return xA16C_; }
+  // Guessed names. The console's CAPTUREMOVIE starts a capture with the flag above set to its
+  // interlace argument, and restarts the frame number ScreenCapture.cpp counts in the file names.
+  void StartMovieCapture(bool interlaced) {
+    xA16B_ = true;
+    xA16C_ = interlaced;
+  }
+  void ResetMovieCaptureFrame() { xA180_ = 0; }
 
   // Guessed name. 0x80048C20: the player item of a powerup option (kDO_PowerBeam ..
   // kDO_ItemPercentage), -1 for any other option.

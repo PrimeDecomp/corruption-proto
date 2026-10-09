@@ -11,6 +11,9 @@ class CBBAInStream : public CInputStream {
 public:
   explicit CBBAInStream(const char* path);
   ~CBBAInStream();
+
+  // Guessed name. 0x8054498C: the bytes of the file not read yet.
+  uint GetRemainingBytes() const;
 };
 
 #endif // _CBBAINSTREAM

@@ -38,6 +38,9 @@ public:
   void DumpScriptLayers(CStateManager& mgr);
   // Echoes' name (0x80051A60); CStateManager's update calls it on every live area.
   void UpdateDynamicLayers(CStateManager& mgr);
+  // Guessed name. 0x80053624 reads the area's world lights again from the host
+  // ("c:\FIO\FRelight.game_lights"); the console's RELOADAREALIGHTS calls it on every live area.
+  void ReloadLights();
 
   // Echoes' names.
   enum EOcclusionState {

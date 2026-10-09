@@ -7,14 +7,20 @@
 #include "MetroidPrime/ConsoleCommands.hpp"
 
 #include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Audio/CAudioSoundEffect.hpp"
+#include "Kyoto/CFrameDelayedKiller.hpp"
 #include "Kyoto/CSimplePool.hpp"
+#include "Kyoto/Graphics/CModel.hpp"
+#include "Kyoto/Graphics/CTexture.hpp"
 #include "Kyoto/Math/CVector2f.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
 #include "Kyoto/SObjectTag.hpp"
 #include "Kyoto/Streams/CBBAInStream.hpp"
 #include "Kyoto/TToken.hpp"
 #include "Kyoto/Text/CStringTokenizer.hpp"
+#include "MetroidPrime/CActorLights.hpp"
+#include "MetroidPrime/CControllerRecorder.hpp"
 #include "MetroidPrime/CDisplayManager.hpp"
 #include "MetroidPrime/CEntityInfo.hpp"
 #include "MetroidPrime/CGameArea.hpp"
@@ -22,6 +28,8 @@
 #include "MetroidPrime/CInputGenerator.hpp"
 #include "MetroidPrime/CMFGame.hpp"
 #include "MetroidPrime/CMain.hpp"
+#include "MetroidPrime/CObjectList.hpp"
+#include "MetroidPrime/CRenderActor.hpp"
 #include "MetroidPrime/CScriptMsgUtils.hpp"
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerCallbackLists.hpp"
@@ -355,6 +363,60 @@ static void AdvanceFrame(const char*, const char*) {
   rs_debugger_printf("Advanced 1 frame.\n");
 }
 
+// Reads the lights of the live areas again from the host and makes every lit actor pick its
+// lights again.
+void ReloadAreaLights(const char*, const char*) {
+  if (sStateManager != nullptr) {
+    CWorld* world = sStateManager->ObjectManager().GetWorld();
+    for (CGameArea::CChainIterator it = world->ChainHead(CWorld::kC_Alive);
+         it != CWorld::AliveAreasEnd(); ++it) {
+      it->ReloadLights();
+    }
+
+    CObjectList& actors = sStateManager->ObjectManager().ObjectListById(kOL_RenderActor);
+    for (int i = actors.GetFirstObjectIndex(); i != -1; i = actors.GetNextObjectIndex(i)) {
+      CActorLights* lights = static_cast< CRenderActor* >(actors[i])->ActorLights();
+      if (lights != nullptr) {
+        lights->SetDirty();
+      }
+    }
+  }
+  gpfnWarningPrintf("Reloaded area lights.\n");
+}
+
+// Rebuilds the loaded textures and models the host serves from its files, in place.
+void ReloadNetworkAssets(const char*, const char*) {
+  CFrameDelayedKiller::StallAndFlushAllAllocations();
+  const rstl::vector< CBBASupport::SNetworkAsset >& assets = CBBASupport::GetNetworkAssets();
+  for (int i = 0; i < assets.size(); ++i) {
+    const CBBASupport::SNetworkAsset& asset = assets[i];
+    if (asset.mTag.type == 'TXTR') {
+      TToken< CTexture > texture = gpSimplePool->GetObj(asset.mTag);
+      if (texture.IsLoaded()) {
+        rs_debugger_printf("Rebuilding %s in ReloadNetworkAssets.\n", asset.mFilename.data());
+        CBBAInStream in(asset.mFilename.data());
+        CTexture* object = texture.GetT();
+        object->~CTexture();
+        new (object) CTexture(in, CTexture::kAM_Zero, CTexture::kBK_Zero);
+      }
+    } else if (asset.mTag.type == 'CMDL') {
+      TToken< CModel > model = gpSimplePool->GetObj(asset.mTag);
+      if (model.IsLoaded()) {
+        rs_debugger_printf("Rebuilding %s in ReloadNetworkAssets.\n", asset.mFilename.data());
+        CBBAInStream in(asset.mFilename.data());
+        const uint size = in.GetRemainingBytes();
+        rstl::auto_ptr< uchar > data = rstl::auto_ptr< uchar >(static_cast< uchar* >(CMemory::Alloc(
+            size, IAllocator::kHI_RoundUpLen, IAllocator::kSC_Unk1, IAllocator::kTP_Heap,
+            CCallStack(-1, "ConsoleCommands.cpp(558) : ", kUnknownType))));
+        in.Get(data.get(), size);
+        CModel* object = model.GetT();
+        object->~CModel();
+        new (object) CModel(data, size, *gpSimplePool);
+      }
+    }
+  }
+}
+
 void RefreshNetworkAssets(const char*, const char*) {
   rs_debugger_printf("Refreshing network loading assets.\n");
   CBBASupport::RefreshNetworkAssets();
@@ -363,6 +425,33 @@ void RefreshNetworkAssets(const char*, const char*) {
 static void Screenshot(const char*, const char*) {
   rs_debugger_printf("Taking screenshot.\n");
   gpMain->TakeScreenshot();
+}
+
+// Guessed name. The internal name of the area being entered.
+static rstl::string GetNextAreaName(CStateManager& mgr) {
+  CWorld* world = mgr.ObjectManager().World();
+  return world->GetArea(mgr.ObjectManager().GetNextAreaId())->IGetInternalAreaName();
+}
+
+// "<seconds> <interlaced>": captures every frame for that long into files named after the area,
+// or ends the capture already running.
+void CaptureMovie(const char*, const char* args) {
+  rs_debugger_printf("Continuous frame capture.\n");
+  CStringTokenizer tokenizer(args);
+  rstl::string seconds = tokenizer.ReadToken(nullptr, '"');
+  const float time = atof(seconds.data());
+  rstl::string interlacedText = tokenizer.ReadToken(nullptr, '"');
+  const bool interlaced = atoi(interlacedText.data()) != 0;
+  rs_debugger_printf("Capturing %f seconds %sinterlaced.\n", time, interlaced ? "" : "non-");
+  if (gpGameDebug->IsMovieCaptureRunning()) {
+    gpGameDebug->FinishMovieCapture();
+  } else if (sStateManager != nullptr) {
+    sInputGenerator->GetRecorder().SetCaptureMode(true);
+    gpGameDebug->SetMovieCaptureName(GetNextAreaName(*sStateManager));
+    gpGameDebug->ResetMovieCaptureFrame();
+    gpGameDebug->SetMovieCaptureTime(time);
+    gpGameDebug->StartMovieCapture(interlaced);
+  }
 }
 
 void TitleScreen(const char*, const char*) {

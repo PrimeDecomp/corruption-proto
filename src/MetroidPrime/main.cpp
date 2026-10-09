@@ -700,6 +700,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
         mAverageDrawTime = mDrawTimes.GetAverage().data();
         double idleTime =
             (1.f / 60.f - (tickTime + architecture->GetStopwatch2().GetElapsedTime())) - 0.00075;
+        // The "+ xtraCPU" streaming status modes hand a whole second to the async loaders.
         if (gpGameDebug->GetOptionInt(CGameDebug::kDO_StreamingStatus) > 2) {
           idleTime = 1.0;
         }

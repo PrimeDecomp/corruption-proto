@@ -364,13 +364,15 @@ public:
     kDO_LoadRELFilesOverBBA = 0x10A,   // Programmer, bool "Load REL Files over BBA"
     kDO_DebugMarkers = 0x10B,          // Programmer, bool "Debug Markers"
     kDO_ShowStreamingControl = 0x10C,  // Programmer, bool "Show Streaming Control"
-    kDO_StreamingStatus = 0x10D,       // Programmer, value "Streaming Status"
-    kDO_CPUAndGPUMetrics = 0x10E,      // Programmer, value "CPU and GPU Metrics": None/CPU/GPU/All
-    kDO_Bloom = 0x10F,                 // Renderer, value "Bloom": OFF/ON/DEBUG
-    kDO_ShowFramerate = 0x110,         // Renderer, bool "Show Framerate"
-    kDO_DrawRendererBuckets = 0x111,   // Renderer, bool "Draw Renderer Buckets"
-    kDO_DisableFog = 0x112,            // Renderer, bool "Disable Fog"
-    kDO_CameraFilters = 0x113,         // Renderer, value "Camera Filters"
+    // Programmer, value "Streaming Status": Off/Token Counts/Token Sizes(Slow)/Counts + xtraCPU/
+    // Sizes + xtraCPU
+    kDO_StreamingStatus = 0x10D,
+    kDO_CPUAndGPUMetrics = 0x10E,    // Programmer, value "CPU and GPU Metrics": None/CPU/GPU/All
+    kDO_Bloom = 0x10F,               // Renderer, value "Bloom": OFF/ON/DEBUG
+    kDO_ShowFramerate = 0x110,       // Renderer, bool "Show Framerate"
+    kDO_DrawRendererBuckets = 0x111, // Renderer, bool "Draw Renderer Buckets"
+    kDO_DisableFog = 0x112,          // Renderer, bool "Disable Fog"
+    kDO_CameraFilters = 0x113,       // Renderer, value "Camera Filters"
     kDO_PVS = 0x114,           // Renderer, value "PVS": OFF [Show All]/Enabled/Reversed/Actors Only
     kDO_ShowObjectPVS = 0x115, // Renderer, value "ShowObjectPVS"
     kDO_ShowLightPVS = 0x116,  // Renderer, value "ShowLightPVS"

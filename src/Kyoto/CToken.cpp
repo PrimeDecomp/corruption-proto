@@ -8,7 +8,7 @@ CToken::CToken(CObjectReference* reference) : mReference(reference), mLockHeld(f
 }
 
 CToken::CToken(IObj* object) {
-  mReference = new ("CToken.cpp(36) : ", 0) CObjectReference(rstl::auto_ptr< IObj >(object));
+  mReference = RS_NEW(36) CObjectReference(rstl::auto_ptr< IObj >(object));
   mLockHeld = false;
   mReference->AddReference();
   Lock();

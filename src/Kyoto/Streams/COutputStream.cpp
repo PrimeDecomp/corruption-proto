@@ -6,9 +6,8 @@ extern "C" void* memcpy(void* destination, const void* source, unsigned long len
 COutputStream::COutputStream(int bufferLength)
 : mUnwrittenLength(0)
 , mBufferLength(bufferLength)
-, mBuffer(bufferLength > 64
-              ? new ("COutputStream.cpp(22) : ", (const char*)0) unsigned char[bufferLength]
-              : &mScratch[32 - reinterpret_cast< unsigned long >(mScratch) % 31])
+, mBuffer(bufferLength > 64 ? RS_NEW(22) unsigned char[bufferLength]
+                            : &mScratch[32 - reinterpret_cast< unsigned long >(mScratch) % 31])
 , mWrittenBytes(0) {}
 
 COutputStream::~COutputStream() {

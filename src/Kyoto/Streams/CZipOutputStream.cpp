@@ -1,13 +1,13 @@
 #include "Kyoto/Streams/CZipOutputStream.hpp"
-#include "Kyoto/Streams/CZipSupport.hpp"
-#include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Streams/CZipSupport.hpp"
 
 CZipOutputStream::CZipOutputStream(COutputStream* output, int level)
 : COutputStream(1024)
 , mOutput(output)
 , mCompressedBytesWritten(0)
-, mStream(new ("CZipOutputStream.cpp(14) : ", (const char*)0) z_stream)
+, mStream(RS_NEW(14) z_stream)
 , mFinished(false) {
   mStream->zalloc = CZipSupport::Alloc;
   mStream->zfree = CZipSupport::Free;

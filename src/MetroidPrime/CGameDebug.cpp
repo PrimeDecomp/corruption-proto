@@ -1905,7 +1905,7 @@ void CGameDebug::AppendToLog(const char* text) {
     return;
   }
   if (mLogBuffer.null()) {
-    mLogBuffer = new ("CGameDebug.cpp(2539) : ", (const char*)0) char[kLogBufferSize];
+    mLogBuffer = RS_NEW(2539) char[kLogBufferSize];
   }
   char* out = mLogBuffer.get() + mLogSize;
   while (true) {
@@ -1914,7 +1914,7 @@ void CGameDebug::AppendToLog(const char* text) {
       rs_debugger_printf("Log buffer full!\n");
       DumpLog();
       if (mLogBuffer.null()) {
-        mLogBuffer = new ("CGameDebug.cpp(2554) : ", (const char*)0) char[kLogBufferSize];
+        mLogBuffer = RS_NEW(2554) char[kLogBufferSize];
       }
       out = mLogBuffer.get();
     }

@@ -676,7 +676,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
   }
   RAssert_SetDiagnosticPrintCallback(rs_debugger_printf);
   rstl::single_ptr< CGameGlobalObjects > globalObjects(
-      new ("Main.cpp(2351) : ", nullptr) CGameGlobalObjects(*mOsContext, *mMemorySys));
+      RS_NEW_IN("Main.cpp", 2351) CGameGlobalObjects(*mOsContext, *mMemorySys));
   mGameGlobalObjects = globalObjects.get();
   CStringTable::SetLanguage(GetLanguage());
   for (int i = 0; i < 4; ++i) {
@@ -701,7 +701,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
       showAudioTweaksStatus = true;
     }
     rstl::single_ptr< CGameArchitectureSupport > architecture(
-        new ("Main.cpp(2393) : ", nullptr) CGameArchitectureSupport(*mOsContext));
+        RS_NEW_IN("Main.cpp", 2393) CGameArchitectureSupport(*mOsContext));
     mArchSupport = architecture.get();
     srand(startupTimer.GetElapsedMicros());
     rs_debugger_printf("Beginning main loop...\n");
@@ -833,7 +833,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
         CGraphics::EndScene();
         CFrameDelayedKiller::StallAndFlushAllAllocations();
         architecture = nullptr;
-        architecture = new ("Main.cpp(2689) : ", nullptr) CGameArchitectureSupport(*mOsContext);
+        architecture = RS_NEW_IN("Main.cpp", 2689) CGameArchitectureSupport(*mOsContext);
         mArchSupport = architecture.get();
       }
       UpdateTweakDebugOptions();
@@ -926,12 +926,10 @@ CGameArchitectureSupport::CGameArchitectureSupport(COsContext& context)
   InitializeConsoleCommands(&mInputGenerator);
   rs_debugger_printf("Initializing IOWins...\n");
   gpIOWinManager = &mIoWinMgr;
-  mIoWinMgr.AddIOWin(new ("Main.cpp(1415) : ", nullptr) CMainFlow(), 0, 0);
-  mIoWinMgr.AddIOWin(new ("Main.cpp(1416) : ", nullptr) CConsoleOutputWindow(8, 5.f, 0.75f), 100,
-                     0);
-  mIoWinMgr.AddIOWin(new ("Main.cpp(1418) : ", nullptr) CAudioStateWin(), 100, -1);
-  mIoWinMgr.AddIOWin(new ("Main.cpp(1420) : ", nullptr)
-                         CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
+  mIoWinMgr.AddIOWin(RS_NEW_IN("Main.cpp", 1415) CMainFlow(), 0, 0);
+  mIoWinMgr.AddIOWin(RS_NEW_IN("Main.cpp", 1416) CConsoleOutputWindow(8, 5.f, 0.75f), 100, 0);
+  mIoWinMgr.AddIOWin(RS_NEW_IN("Main.cpp", 1418) CAudioStateWin(), 100, -1);
+  mIoWinMgr.AddIOWin(RS_NEW_IN("Main.cpp", 1420) CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
                      10000, 100000);
   gpGameState->GameOptions().EnsureOptions();
 }

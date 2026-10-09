@@ -48,7 +48,17 @@ inline void operator delete(void* ptr) { CMemory::Free(ptr); }
 inline void operator delete[](void* ptr) { CMemory::Free(ptr); }
 #define NEW new ("??(??)", nullptr)
 #define rs_new new ("\?\?(\?\?)", nullptr)
+// Allocations that record their source position. The original macros use __FILE__ and
+// __LINE__; the line is explicit here so the original line numbers survive in the strings.
+// The macro names are guessed.
+#define RS_NEW_STRINGIZE_IMPL(x) #x
+#define RS_NEW_STRINGIZE(x) RS_NEW_STRINGIZE_IMPL(x)
+#define RS_NEW(line) RS_NEW_IN(__FILE__, line)
+// Same, for sources whose original file name differs from ours (Main.cpp, DolphinCFont.cpp).
+#define RS_NEW_IN(file, line) new (file "(" RS_NEW_STRINGIZE(line) ") : ", nullptr)
 #else
+#define RS_NEW(line) new
+#define RS_NEW_IN(file, line) new
 __attribute__((weak)) void operator delete(void* ptr) { CMemory::Free(ptr); }
 __attribute__((weak)) void operator delete[](void* ptr) { CMemory::Free(ptr); }
 #define NEW new

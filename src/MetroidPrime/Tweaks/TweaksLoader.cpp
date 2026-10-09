@@ -94,7 +94,7 @@ void DecodeAnyTweak(uint instanceId, CInputStream& input) {
 
 void LoadTweaks(CInputStream& input) {
   if (static_cast< uint >(input.ReadInt32()) == 'NTWK' && input.ReadUint8() == 1) {
-    gpTweakLdrs = new ("TweaksLoader.cpp(3705) : ", nullptr) CTweakContents();
+    gpTweakLdrs = RS_NEW(3705) CTweakContents();
     int instanceCount = input.ReadInt32();
     while (instanceCount--) {
       const uint instanceType = input.ReadInt32();
@@ -133,33 +133,26 @@ void LoadTweaks(CInputStream& input) {
 }
 
 void CreateTweakGlobals() {
-  gpTweakAutoMapper =
-      new ("TweaksLoader.cpp(3764) : ", nullptr) CTweakAutoMapper(gpTweakLdrs->mAutoMapper);
-  gpTweakBall = new ("TweaksLoader.cpp(3765) : ", nullptr) CTweakBall(gpTweakLdrs->mBall);
-  gpTweakGame = new ("TweaksLoader.cpp(3766) : ", nullptr) CTweakGame(gpTweakLdrs->mGame);
-  gpTweakGui = new ("TweaksLoader.cpp(3767) : ", nullptr) CTweakGui(gpTweakLdrs->mGui);
-  gpTweakGuiColors =
-      new ("TweaksLoader.cpp(3768) : ", nullptr) CTweakGuiColors(gpTweakLdrs->mGuiColors);
-  gpTweakParticle =
-      new ("TweaksLoader.cpp(3769) : ", nullptr) CTweakParticle(gpTweakLdrs->mParticle);
-  gpTweakPlayer = new ("TweaksLoader.cpp(3770) : ", nullptr) CTweakPlayer(gpTweakLdrs->mPlayer);
-  gpTweakPlayerGun =
-      new ("TweaksLoader.cpp(3771) : ", nullptr) CTweakPlayerGun(gpTweakLdrs->mPlayerGun);
-  gpTweakPlayerRes =
-      new ("TweaksLoader.cpp(3772) : ", nullptr) CTweakPlayerRes(gpTweakLdrs->mPlayerRes);
-  gpTweakSlideShow =
-      new ("TweaksLoader.cpp(3773) : ", nullptr) CTweakSlideShow(gpTweakLdrs->mSlideShow);
-  gpTweakTargeting =
-      new ("TweaksLoader.cpp(3774) : ", nullptr) CTweakTargeting(gpTweakLdrs->mTargeting);
+  gpTweakAutoMapper = RS_NEW(3764) CTweakAutoMapper(gpTweakLdrs->mAutoMapper);
+  gpTweakBall = RS_NEW(3765) CTweakBall(gpTweakLdrs->mBall);
+  gpTweakGame = RS_NEW(3766) CTweakGame(gpTweakLdrs->mGame);
+  gpTweakGui = RS_NEW(3767) CTweakGui(gpTweakLdrs->mGui);
+  gpTweakGuiColors = RS_NEW(3768) CTweakGuiColors(gpTweakLdrs->mGuiColors);
+  gpTweakParticle = RS_NEW(3769) CTweakParticle(gpTweakLdrs->mParticle);
+  gpTweakPlayer = RS_NEW(3770) CTweakPlayer(gpTweakLdrs->mPlayer);
+  gpTweakPlayerGun = RS_NEW(3771) CTweakPlayerGun(gpTweakLdrs->mPlayerGun);
+  gpTweakPlayerRes = RS_NEW(3772) CTweakPlayerRes(gpTweakLdrs->mPlayerRes);
+  gpTweakSlideShow = RS_NEW(3773) CTweakSlideShow(gpTweakLdrs->mSlideShow);
+  gpTweakTargeting = RS_NEW(3774) CTweakTargeting(gpTweakLdrs->mTargeting);
 
   if (kControllerTypeChak == gpController->GetControllerType() ||
       kControllerTypeRevn == gpController->GetControllerType()) {
-    gpTweakPlayerControls = new ("TweaksLoader.cpp(3782) : ", nullptr)
-        CTweakPlayerControls(gpTweakLdrs->mPlayerControls.revolutionControls);
+    gpTweakPlayerControls =
+        RS_NEW(3782) CTweakPlayerControls(gpTweakLdrs->mPlayerControls.revolutionControls);
     rs_debugger_printf("Using REVOLUTION control tweaks\n");
   } else if (kControllerTypeCube == gpController->GetControllerType()) {
-    gpTweakPlayerControls = new ("TweaksLoader.cpp(3787) : ", nullptr)
-        CTweakPlayerControls(gpTweakLdrs->mPlayerControls.gamecubeControls);
+    gpTweakPlayerControls =
+        RS_NEW(3787) CTweakPlayerControls(gpTweakLdrs->mPlayerControls.gamecubeControls);
     rs_debugger_printf("Using GAMECUBE control tweaks\n");
   } else {
     RS_VERIFY_THROW(3791, false, false,

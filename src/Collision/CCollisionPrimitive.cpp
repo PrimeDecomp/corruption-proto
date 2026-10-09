@@ -55,7 +55,7 @@ CCollisionPrimitive::CCollisionPrimitive(const CMaterialList& list) : mMaterial(
 CCollisionPrimitive::~CCollisionPrimitive() {}
 
 void CCollisionPrimitive::InitBeginTypes() {
-  sCollisionTypeList = new ("CCollisionPrimitive.cpp(124) : ", (const char*)0) rstl::vector< Type >();
+  sCollisionTypeList = RS_NEW(124) rstl::vector< Type >();
   sCollisionTypeList->reserve(3);
   sTypesAdding = true;
   InternalColliders::AddTypes();
@@ -69,7 +69,7 @@ void CCollisionPrimitive::InitAddType(const Type& type) {
 
 void CCollisionPrimitive::InitEndTypes() {
   rstl::vector< Type > types = *sCollisionTypeList;
-  sCollisionTypeList = new ("CCollisionPrimitive.cpp(151) : ", (const char*)0) rstl::vector< Type >(types);
+  sCollisionTypeList = RS_NEW(151) rstl::vector< Type >(types);
   sNumTypes = types.size();
   sTypesAdding = false;
   sTypesAdded = true;
@@ -77,9 +77,9 @@ void CCollisionPrimitive::InitEndTypes() {
 
 void CCollisionPrimitive::InitBeginColliders() {
   int numColliders = sCollisionTypeList->size() * sCollisionTypeList->size();
-  sTableOfCollidables = new ("CCollisionPrimitive.cpp(169) : ", (const char*)0) ComparisonFunc[numColliders];
-  sTableOfBooleanCollidables = new ("CCollisionPrimitive.cpp(170) : ", (const char*)0) BooleanComparisonFunc[numColliders];
-  sTableOfMovingCollidables = new ("CCollisionPrimitive.cpp(171) : ", (const char*)0) MovingComparisonFunc[numColliders];
+  sTableOfCollidables = RS_NEW(169) ComparisonFunc[numColliders];
+  sTableOfBooleanCollidables = RS_NEW(170) BooleanComparisonFunc[numColliders];
+  sTableOfMovingCollidables = RS_NEW(171) MovingComparisonFunc[numColliders];
   memset(sTableOfCollidables.get(), 0, numColliders * sizeof(ComparisonFunc));
   memset(sTableOfBooleanCollidables.get(), 0, numColliders * sizeof(BooleanComparisonFunc));
   memset(sTableOfMovingCollidables.get(), 0, numColliders * sizeof(MovingComparisonFunc));
@@ -179,8 +179,7 @@ bool CCollisionPrimitive::InternalCollide(const CInternalCollisionStructure& col
   const CMaterialFilter& leftFilter = collision.GetLeft().GetFilter();
   const CMaterialFilter& rightFilter = collision.GetRight().GetFilter();
 
-  if (!leftFilter.Passes(rightPrim.GetMaterial()) ||
-      !rightFilter.Passes(leftPrim.GetMaterial())) {
+  if (!leftFilter.Passes(rightPrim.GetMaterial()) || !rightFilter.Passes(leftPrim.GetMaterial())) {
     return false;
   }
 
@@ -212,8 +211,7 @@ bool CCollisionPrimitive::InternalCollideMoving(const CInternalCollisionStructur
   const CMaterialFilter& leftFilter = collision.GetLeft().GetFilter();
   const CMaterialFilter& rightFilter = collision.GetRight().GetFilter();
 
-  if (!leftFilter.Passes(rightPrim.GetMaterial()) ||
-      !rightFilter.Passes(leftPrim.GetMaterial())) {
+  if (!leftFilter.Passes(rightPrim.GetMaterial()) || !rightFilter.Passes(leftPrim.GetMaterial())) {
     return false;
   }
 
@@ -244,8 +242,7 @@ bool CCollisionPrimitive::InternalCollideBoolean(const CInternalCollisionStructu
   const CMaterialFilter& leftFilter = collision.GetLeft().GetFilter();
   const CMaterialFilter& rightFilter = collision.GetRight().GetFilter();
 
-  if (!leftFilter.Passes(rightPrim.GetMaterial()) ||
-      !rightFilter.Passes(leftPrim.GetMaterial())) {
+  if (!leftFilter.Passes(rightPrim.GetMaterial()) || !rightFilter.Passes(leftPrim.GetMaterial())) {
     return false;
   }
 
@@ -318,8 +315,8 @@ void CCollisionPrimitive::InitAddMovingCollider(MovingComparisonFunc comp, const
 
 CRayCastResult CCollisionPrimitive::CastRay(const CVector3f& start, const CVector3f& direction,
                                             float length, const CTransform4f& transform) const {
-  return CastRayInternal(CInternalRayCastStructure(
-      start, direction, length, transform, CMaterialFilter::GetPassEverything()));
+  return CastRayInternal(CInternalRayCastStructure(start, direction, length, transform,
+                                                   CMaterialFilter::GetPassEverything()));
 }
 
 CRayCastResult CCollisionPrimitive::CastRay(const CVector3f& start, const CVector3f& direction,

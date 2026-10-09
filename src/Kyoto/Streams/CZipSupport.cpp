@@ -1,10 +1,10 @@
 #include "Kyoto/Streams/CZipSupport.hpp"
-#include "Kyoto/Streams/ZipTypes.hpp"
-#include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Streams/ZipTypes.hpp"
 
 void* CZipSupport::Alloc(void*, unsigned int count, unsigned int size) {
-  return new ("CZipSupport.cpp(19) : ", (const char*)0) unsigned char[count * size];
+  return RS_NEW(19) unsigned char[count * size];
 }
 
 void CZipSupport::Free(void*, void* memory) {

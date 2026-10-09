@@ -5,7 +5,7 @@
 
 class CAudioHandle {
 public:
-  CAudioHandle() : mID(0) {}
+  CAudioHandle(); // 0x80568720, out of line
   CAudioHandle(uint value);
 
   uint GetIndex() const { return mID & 0xFFF; }

@@ -3,8 +3,14 @@
 
 #include "types.h"
 
+#include "Kyoto/Audio/CAudioHandle.hpp"
+#include "Kyoto/Math/CAABox.hpp"
+#include "Kyoto/Math/CVector2i.hpp"
+#include "Kyoto/Math/CVector3f.hpp"
 #include "Kyoto/TToken.hpp"
+#include "MetroidPrime/TGameTypes.hpp"
 
+#include "rstl/pair.hpp"
 #include "rstl/reserved_vector.hpp"
 #include "rstl/vector.hpp"
 
@@ -19,22 +25,34 @@ struct CVectorFixed8_8 {
   short mZ;
 };
 
-// Echoes' class, 0x4C bytes, with an implicit destructor (CEnvFxManager.cpp emits the grid
-// vector's destructor, 0x80186148, and its element loop, 0x80186198). Only the three vectors at
-// the end are modelled; the dirty flag, position, extent and block state come first in Echoes.
+// Echoes' class and names, 0x4C bytes, with an implicit destructor (CEnvFxManager.cpp emits the
+// grid vector's destructor, 0x80186148, and its element loop, 0x80186198).
 class CEnvFxManagerGrid {
+public:
+  CEnvFxManagerGrid(const CVector2i& position, const CVector2i& extent,
+                    const rstl::vector< CVectorFixed8_8 >& initialParticles,
+                    int reserve); // 0x8018609C
+
 private:
-  uchar x0_[0x1C];
-  // Echoes' names.
+  bool mBlockDirty : 1;
+  CVector2i mPosition;              // 8.8 fixed point
+  CVector2i mExtent;                // 8.8 fixed point
+  rstl::pair< bool, float > mBlock; // Visibility and world-space blocking height
   rstl::vector< CVectorFixed8_8 > mParticles;
-  rstl::vector< float > mParticleLifetimes;
-  rstl::vector< int > mTrailFrames;
+  rstl::vector< float > mParticleLifetimes; // Guessed name (Echoes')
+  rstl::vector< int > mTrailFrames;         // Guessed name (Echoes')
+};
+CHECK_SIZEOF(CEnvFxManagerGrid, 0x4C)
+
+// Echoes' enum; only the value the constructor uses is listed.
+enum EEnvFxType {
+  kEFX_None,
 };
 
-// Minimal view (CEnvFxManager.cpp). CStateManager news one (0x1468 bytes). The members that have
-// destructors are placed from CStateManager.cpp's instance of the implicit destructor (0x802969AC)
-// and named after the resources the constructor (0x80185A98) loads into them; they follow
-// Echoes' order, with the rain sounds now held as CAUD tokens.
+// CEnvFxManager.cpp. CStateManager news one (0x1468 bytes). The layout is Echoes' with the changes
+// the constructor (0x80185A98) shows: the optional_object wrappers around the locked tokens are
+// gone, a single rain splash id replaces Echoes' four, the rain sounds are held as CAUD tokens
+// beside their audio handles, and Echoes' dark world particle texture is gone.
 class CEnvFxManager {
 public:
   CEnvFxManager();
@@ -43,19 +61,32 @@ public:
   void Cleanup();
 
 private:
-  uchar x0_[0x44];
-  TLockedToken< CTexture > mTxtrEnvGradient; // Echoes' name
+  // Echoes' names, except where noted.
+  CAABox mParticleBounds;
+  CVector3f mFocusCellPosition;
+  bool mEnableSplash;
+  float mFirstSnowForce;
+  int mLastBlockedGridIdx;
+  float mFxDensity;
+  float mTargetFxDensity;
+  float mMaxDensityDeltaSpeed;
+  float mRainSoundFade; // Guessed name (Echoes')
+  bool mSnowflakeTextureMipBlanked;
+  TLockedToken< CTexture > mTxtrEnvGradient;
   rstl::reserved_vector< CEnvFxManagerGrid, 64 > mGrids;
   float mBaseSplashRate;
-  TLockedToken< CGenDescription > mEnvRainSplash; // Echoes' name; "PART_EnvRainSplash"
-  uchar x1364_[0x136C - 0x1364];
+  TLockedToken< CGenDescription > mEnvRainSplash;
+  TUniqueId mEnvRainSplashId; // Guessed name, after Echoes' mEnvRainSplashIds
+  bool mRainSoundActive;
   TToken< CAudioSoundEffect > mRainLSound; // Guessed name; "CAUD_RainL"
   TToken< CAudioSoundEffect > mRainRSound; // Guessed name; "CAUD_RainR"
-  uchar x137C_[0x1388 - 0x137C];
-  TLockedToken< CTexture > mTxtrSnowFlake; // Echoes' name; "TXTR_SnowFlake"
-  uchar x1394_[0x1458 - 0x1394];
-  TLockedToken< CTexture > mUnderwaterFlake; // Echoes' name
-  uchar x1464_[4];
+  CAudioHandle mLeftRainSound;
+  CAudioHandle mRightRainSound;
+  bool mRainSoundsStopped; // Guessed name (Echoes')
+  TLockedToken< CTexture > mTxtrSnowFlake;
+  rstl::reserved_vector< CVector3f, 16 > mSnowZDeltas;
+  TLockedToken< CTexture > mUnderwaterFlake;
+  EEnvFxType mPreviousFxType; // Guessed name (Echoes')
 };
 CHECK_SIZEOF(CEnvFxManager, 0x1468)
 

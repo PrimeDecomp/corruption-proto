@@ -47,7 +47,6 @@
 // 0x8000E2AC +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E320 +0xD8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E3F8 +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x8000E41C +0x630: main memory metrics/debug text display; uses leading string-vector push-back helper
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
 // 0x8000FA0C +0xA8: retained emitted/native function; exact class/type/name unresolved
@@ -66,6 +65,7 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/LockedCache.hpp"
+#include "Kyoto/Animation/CCharAnimMemoryMetrics.hpp"
 #include "Kyoto/Audio/CAudioManager.hpp"
 #include "Kyoto/Audio/CDSPStreamManager.hpp"
 #include "Kyoto/Audio/CStreamAudioManager.hpp"
@@ -80,7 +80,9 @@
 #include "Kyoto/CPakFile.hpp"
 #include "Kyoto/CResFactory.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
+#include "Kyoto/Graphics/CModel.hpp"
 #include "Kyoto/Graphics/CTexture.hpp"
+#include "Kyoto/Graphics/GPUMemory.hpp"
 #include "Kyoto/Input/CControllerGamepadData.hpp"
 #include "Kyoto/Input/IController.hpp"
 #include "Kyoto/Math/CloseEnough.hpp"
@@ -112,6 +114,7 @@
 #include "MetroidPrime/CInGameTweakManager.hpp"
 #include "MetroidPrime/CMainFlow.hpp"
 #include "MetroidPrime/CMemoryCard.hpp"
+#include "MetroidPrime/CMemoryDrawEnum.hpp"
 #include "MetroidPrime/CSaveRegion.hpp"
 #include "MetroidPrime/CWorld.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
@@ -433,6 +436,93 @@ CMain::CMain(COsContext* context, CSaveRegion* saveRegion, CMemorySys* memorySys
 , mGameFrameDrawn(false)
 , mArchSupport(nullptr) {
   gpMain = this;
+}
+
+// Guessed name. The "Memory Metrics" option's lines: Basic (2) and BasicWithPeaks (3) print one
+// line of heap usage in megabytes against a 90 MB budget; Full draws the heap map and lists the
+// main heap, its users, the ARAM pools and the small and medium allocators in kilobytes. The
+// allocator's peaks are reset every 1800 frames.
+void PrintMemoryMetrics() {
+  static const float kMemoryBudget = 90.f;
+  static uint sFramesSinceReset = 0;
+  if (++sFramesSinceReset == 1800) {
+    sFramesSinceReset = 0;
+  }
+  const IAllocator::SMetrics& metrics = CMemory::GetMetrics(sFramesSinceReset == 0, false);
+  const CARAMManager::SPoolStatistics& otherPool = CARAMManager::GetPoolAllocationStatistics(0);
+  const CARAMManager::SPoolStatistics& audioPool = CARAMManager::GetPoolAllocationStatistics(1);
+
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_MemoryMetrics) >= 2) {
+    const uint statics = metrics.x4c_;
+    const float heapMegs = static_cast< float >(metrics.x10_ + statics) / 1048576.f;
+    const float secondaryMegs =
+        static_cast< float >(CTexture::sTotalAllocatedSecondaryMemory) / 1048576.f;
+    const float totalMegs = heapMegs + secondaryMegs;
+    if (gpGameDebug->GetOptionInt(CGameDebug::kDO_MemoryMetrics) == 2) {
+      gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+          ->AddMessage(CStringExtras::Format("%sMem: %3.2fm(%2.2fm) / %2.2fm",
+                                             totalMegs > kMemoryBudget ? "Warning! " : "",
+                                             totalMegs, heapMegs, kMemoryBudget));
+    } else {
+      const float peak0Megs = static_cast< float >(metrics.x20_ + statics) / 1048576.f;
+      const float peak1Megs = static_cast< float >(metrics.x1c_ + statics) / 1048576.f;
+      gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+          ->AddMessage(CStringExtras::Format("%sMem: %3.2f(%2.2f)/%3.2f/%3.2f/%2.2f",
+                                             totalMegs > kMemoryBudget ? "Warning! " : "",
+                                             totalMegs, heapMegs, peak0Megs + secondaryMegs,
+                                             peak1Megs + secondaryMegs, kMemoryBudget));
+    }
+    return;
+  }
+
+  CMemoryDrawEnum drawEnum(metrics);
+  drawEnum.Draw(18, 16, 16, 432);
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(
+          CBasics::Stringize("MRAM Used:%d LAB:%d Free:%d LFB:%d", metrics.x10_ / 1024,
+                             drawEnum.GetLargestAllocatedBlock() / 1024, metrics.mHeapSize2 / 1024,
+                             drawEnum.GetLargestFreeBlock() / 1024)));
+
+  const uint textures = CTexture::sTotalAllocatedMemory;
+  const uint models = CModel::GetTotalMemory();
+  const uint world = CMemoryDrawEnum::GetWorldMemory();
+  const uint animation = CCharAnimMemoryMetrics::GetTotalSize();
+  const uint statics = metrics.x4c_;
+  const uint fakeStatics = metrics.mFakeStatics;
+  const uint other = metrics.x10_ - (textures + models + world + animation + fakeStatics +
+                                     metrics.x50_ + metrics.mMediumTotalAllocated);
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(CBasics::Stringize("TEX:%d MDL:%d WLD:%d ANM:%d OTHR:%d",
+                                                   textures / 1024, models / 1024, world / 1024,
+                                                   animation / 1024, other / 1024)));
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(
+          rstl::string(CBasics::Stringize("STAT:%d FAKE:%d", statics / 1024, fakeStatics / 1024)));
+
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(CBasics::Stringize(
+          "ARAM Audio Used:%d Free:%d Peak:%d",
+          audioPool.mChunkSize * (audioPool.mNumChunks - audioPool.mFreeChunks) / 1024,
+          audioPool.mFreeChunks * audioPool.mChunkSize / 1024,
+          audioPool.mPeakChunks * audioPool.mChunkSize / 1024)));
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(CBasics::Stringize(
+          "ARAM Other Used:%d Free:%d Peak:%d",
+          otherPool.mChunkSize * (otherPool.mNumChunks - otherPool.mFreeChunks) / 1024,
+          otherPool.mFreeChunks * otherPool.mChunkSize / 1024,
+          otherPool.mPeakChunks * otherPool.mChunkSize / 1024)));
+
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(CBasics::Stringize(
+          "APF:%d SAP-Num:%d Used:%d Free:%d", metrics.x48_, metrics.mSmallNumAllocs,
+          metrics.mSmallAllocatedSize, metrics.mSmallRemainingSize)));
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(
+          CBasics::Stringize("MAP-Num:%d Used:%d Free:%d", metrics.mMediumNumAllocs,
+                             metrics.mMediumAllocatedSize, metrics.mMediumBlocksAvailable)));
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(
+          CBasics::Stringize("Skin Peak:%d", GPUMemory::GetPeakAllocatedAmount() / 1024)));
 }
 
 extern "C" void InvokeCMain(int argc, char** argv, COsContext* context, CSaveRegion* saveRegion,

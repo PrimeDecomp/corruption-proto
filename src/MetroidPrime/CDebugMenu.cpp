@@ -5,8 +5,10 @@
 // (0x80049F38, -1, -1, -1, 0, 1, 2, -1 into seven .sbss words) is the compiler-emitted one for
 // the TGameTypes.hpp ids.
 // Draw (0x800492C8) differs from the target in register allocation, and its model matrix call
-// goes through slot 0x40 instead of 0x3C: IRenderer.hpp has one virtual too many before
-// SetModelMatrix compared with the prototype's CCubeRenderer vtable (0x806E2180).
+// goes through slot 0x40 instead of 0x3C. Against the prototype's CCubeRenderer vtable
+// (0x806E2180), IRenderer.hpp declares one virtual too many between DrawSortedGeometry and
+// SetModelMatrix and one too few between SetModelMatrix and SetDepthReadWrite (slot 0x6C), so
+// only the slots in between are shifted.
 
 #include "MetroidPrime/CDebugMenu.hpp"
 
@@ -117,6 +119,10 @@ int CDebugMenu::GetLeftEdge() const { return mLeftEdge; }
 
 int CDebugMenu::GetRightEdge() const { return mRightEdge; }
 
+// Guessed names. The arrow glyphs framing the selected row.
+static const char sLeftArrow[] = "\x8D";
+static const char sRightArrow[] = "\x88";
+
 // Guessed name. A brightness between 0 and 0.5 that pulses over a 20 second period.
 static inline float GetPulse(float t) {
   const CAbsAngle angle =
@@ -125,7 +131,7 @@ static inline float GetPulse(float t) {
 }
 
 void CDebugMenu::Draw() {
-  static CColor sSelectedColor = CColor::Green();
+  static CColor sSelectedColor = CColor::Green(); // Guessed name
 
   const int fontSize = mFont.GetFontSize();
   const CViewport& viewport = CGraphics::GetViewport();
@@ -189,9 +195,9 @@ void CDebugMenu::Draw() {
       mFont.DrawString(title.data(), x + 2, y + 2, CColor::White());
       y -= halfRow;
     } else if (i == mSelection) {
-      mFont.DrawString("\x8D", x - fontSize, y, sSelectedColor);
+      mFont.DrawString(sLeftArrow, x - fontSize, y, sSelectedColor);
       mFont.DrawString(mItems[i].mLabel, x + 1, y - 1, sSelectedColor);
-      mFont.DrawString("\x88", x + fontSize * maxLength, y, sSelectedColor);
+      mFont.DrawString(sRightArrow, x + fontSize * maxLength, y, sSelectedColor);
     } else {
       mFont.DrawString(mItems[i].mLabel, x, y, mItems[i].mColor);
     }

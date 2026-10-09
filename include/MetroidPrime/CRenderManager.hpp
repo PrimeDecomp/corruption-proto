@@ -12,6 +12,13 @@ class CStateManager;
 // the state manager at +4.
 class CRenderManager {
 public:
+  // CStateManager deletes it through its first virtual function.
+  virtual ~CRenderManager();
+
+  // Guessed name. 0x802A9ECC advances the render clock at 0x77C (wrapped with fmod);
+  // CStateManager's update calls it while running.
+  void Update(float dt);
+
   // Guessed names. A signal at +0x604 that the world render pass emits with the state manager
   // after the opaque geometry; CActor draws its collision boxes from it. The argument type is
   // inferred: CActor's bridge for it is a different instantiation than its CStateManager& one.

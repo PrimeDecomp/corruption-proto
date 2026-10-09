@@ -25,7 +25,7 @@ CGuiWidget* CGuiCamera::Create(CGuiFrame* frame, CInputStream& in, CSimplePool* 
     const float aspect = in.ReadFloat();
     const float znear = in.ReadFloat();
     const float zfar = in.ReadFloat();
-    camera = rs_new CGuiCamera(parms, fov, aspect, znear, zfar);
+    camera = NEW CGuiCamera(parms, fov, aspect, znear, zfar);
   } else if (proj == kProjection_Orthographic) {
     const float left = in.ReadFloat();
     const float right = in.ReadFloat();
@@ -33,7 +33,7 @@ CGuiWidget* CGuiCamera::Create(CGuiFrame* frame, CInputStream& in, CSimplePool* 
     const float bottom = in.ReadFloat();
     const float znear = in.ReadFloat();
     const float zfar = in.ReadFloat();
-    camera = rs_new CGuiCamera(parms, left, right, top, bottom, znear, zfar);
+    camera = NEW CGuiCamera(parms, left, right, top, bottom, znear, zfar);
   }
 
   frame->SetFrameCamera(camera);

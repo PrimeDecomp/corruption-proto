@@ -79,6 +79,7 @@ public:
   // Guessed names.
   rstl::auto_ptr< IConnection > Connect(Functor functor);
   void Disconnect(iterator it) { mSlots.erase(it); }
+  // Name confirmed by Metroid Prime Remastered symbols.
   void Emit(A1 arg) const;
 
 private:

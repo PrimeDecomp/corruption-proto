@@ -43,7 +43,7 @@ void CTextExecuteBuffer::BeginBlock(int x, int y, int width, int height, bool im
                                     ETextDirection direction, EJustification justification,
                                     EVerticalJustification verticalJustification) {
   mImageBaseline = imageBaseline;
-  const rstl::ncrc_ptr< CInstruction > instruction = rs_new CBlockInstruction(
+  const rstl::ncrc_ptr< CInstruction > instruction = NEW CBlockInstruction(
       x, y, width, height, direction, justification, verticalJustification);
   mCurrentBlock = static_cast< CBlockInstruction* >(instruction.GetPtr());
   if (mState.IsFinishedLoading()) {
@@ -66,7 +66,7 @@ void CTextExecuteBuffer::EndBlock() {
 }
 
 void CTextExecuteBuffer::AddFont(const TToken< CRasterFont >& font) {
-  Add(rs_new CFontInstruction(font));
+  Add(NEW CFontInstruction(font));
   mState.SetFont(font);
   if (font.IsLoaded()) {
     if (mCurrentBlock) {
@@ -109,34 +109,34 @@ void CTextExecuteBuffer::AddImage(const CFontImageDef& image) {
     }
   }
 
-  const rstl::ncrc_ptr< CInstruction > instruction = rs_new CImageInstruction(image);
+  const rstl::ncrc_ptr< CInstruction > instruction = NEW CImageInstruction(image);
   Add(instruction);
 }
 
 void CTextExecuteBuffer::AddColor(EColorType type, const CTextColor& color) {
-  Add(rs_new CColorInstruction(type, color));
+  Add(NEW CColorInstruction(type, color));
 }
 
 void CTextExecuteBuffer::AddColorOverride(int index, const CTextColor& color) {
-  Add(rs_new CColorOverrideInstruction(index, color));
+  Add(NEW CColorOverrideInstruction(index, color));
 }
 
 void CTextExecuteBuffer::AddRemoveColorOverride(int index) {
-  Add(rs_new CRemoveColorOverrideInstruction(index));
+  Add(NEW CRemoveColorOverrideInstruction(index));
 }
 
 void CTextExecuteBuffer::AddLineSpacing(float spacing) {
-  Add(rs_new CLineSpacingInstruction(spacing));
+  Add(NEW CLineSpacingInstruction(spacing));
   mState.SetLineSpacing(spacing);
 }
 
 void CTextExecuteBuffer::AddLineExtraSpace(int spacing) {
-  Add(rs_new CLineExtraSpaceInstruction(spacing));
+  Add(NEW CLineExtraSpaceInstruction(spacing));
   mState.SetLineExtraSpace(spacing);
 }
 
 void CTextExecuteBuffer::AddCharacterExtraSpace(int spacing) {
-  Add(rs_new CCharacterExtraSpaceInstruction(spacing));
+  Add(NEW CCharacterExtraSpaceInstruction(spacing));
   mState.GetOptions().SetCharacterExtraSpace(spacing);
 }
 
@@ -155,12 +155,12 @@ void CTextExecuteBuffer::AddVerticalJustification(EVerticalJustification justifi
 }
 
 void CTextExecuteBuffer::AddPushState() {
-  Add(rs_new CPushStateInstruction());
+  Add(NEW CPushStateInstruction());
   mStateStack.push_front(mState);
 }
 
 void CTextExecuteBuffer::AddPopState() {
-  Add(rs_new CPopStateInstruction());
+  Add(NEW CPopStateInstruction());
   mState = mStateStack.front();
   mStateStack.pop_front();
   if (mCurrentLine->GetWidth() == 0) {
@@ -188,7 +188,7 @@ void CTextExecuteBuffer::TerminateLine(bool lastLine) {
 }
 
 void CTextExecuteBuffer::StartNewWord() {
-  mCurrentWord = Add(rs_new CWordInstruction());
+  mCurrentWord = Add(NEW CWordInstruction());
   mCurrentX = 0;
   mCurrentY = 0;
   mCurrentWordX = mCurrentLine->GetWidth();
@@ -200,7 +200,7 @@ void CTextExecuteBuffer::StartNewLine() {
   if (mCurrentLine) {
     TerminateLine(false);
   }
-  const rstl::ncrc_ptr< CInstruction > instruction = rs_new CLineInstruction(
+  const rstl::ncrc_ptr< CInstruction > instruction = NEW CLineInstruction(
       0, 0, 0, mState.GetJustification(), mState.GetVerticalJustification(), mImageBaseline);
   mCurrentWord = Add(instruction);
   mCurrentLine = static_cast< CLineInstruction* >(instruction.GetPtr());
@@ -219,11 +219,11 @@ void CTextExecuteBuffer::MoveWordLTR() {
   TerminateLineLTR(false);
 
   const rstl::ncrc_ptr< CInstruction > instruction =
-      rs_new CLineInstruction(1, mCurrentX, mCurrentY, mState.GetJustification(),
+      NEW CLineInstruction(1, mCurrentX, mCurrentY, mState.GetJustification(),
                               mState.GetVerticalJustification(), mImageBaseline);
   mCurrentLine = static_cast< CLineInstruction* >(instruction.GetPtr());
   mInstructions.insert(mCurrentWord, instruction);
-  mInstructions.insert(mCurrentWord, rs_new CWordInstruction());
+  mInstructions.insert(mCurrentWord, NEW CWordInstruction());
   mCurrentBlock->IncLines();
 }
 

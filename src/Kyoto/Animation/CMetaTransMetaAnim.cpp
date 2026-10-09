@@ -14,7 +14,7 @@ CMetaTransMetaAnim::VGetTransitionTree(const rstl::ncrc_ptr< CAnimTreeNode >& a,
                                        const CAnimSysContext& animSys) const {
   rstl::ncrc_ptr< CAnimTreeNode > animNode =
       mMetaAnim->GetAnimationTree(animSys, CMetaAnimTreeBuildOrders::NoSpecialOrders());
-  return rs_new CAnimTreeLoopIn(a, b, animNode, animSys,
+  return NEW CAnimTreeLoopIn(a, b, animNode, animSys,
                                 CAnimTreeLoopIn::CreatePrimitiveName(a, b, animNode));
 }
 

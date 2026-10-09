@@ -149,14 +149,14 @@ uint CAnimTreeSequence::VGetSoundPOIList(const CCharAnimTime& time, CSoundPOINod
 }
 
 rstl::ownership_transfer< IAnimReader > CAnimTreeSequence::VClone() const {
-  return rs_new CAnimTreeSequence(Cast(mChild->Clone()), mSequence, mAnimCtx, mCurIdx, mName,
+  return NEW CAnimTreeSequence(Cast(mChild->Clone()), mSequence, mAnimCtx, mCurIdx, mName,
                                   mFundamentals, mCurTime);
 }
 
 rstl::rc_ptr< CAnimTreeNode > CAnimTreeSequence::VGetBestUnblendedChild() const {
   rstl::rc_ptr< CAnimTreeNode > ch = mChild->GetBestUnblendedChild();
   if (ch)
-    return rs_new CAnimTreeSequence(Cast(ch->Clone()), mSequence, mAnimCtx, mCurIdx, mName,
+    return NEW CAnimTreeSequence(Cast(ch->Clone()), mSequence, mAnimCtx, mCurIdx, mName,
                                     mFundamentals, mCurTime);
   return ch;
 }

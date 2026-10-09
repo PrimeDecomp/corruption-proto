@@ -5,8 +5,10 @@
 
 #include "Kyoto/Graphics/CColor.hpp"
 #include "Kyoto/TSignal1.hpp"
+#include "MetroidPrime/CControllerRecorder.hpp"
 #include "MetroidPrime/CDebugMenu.hpp"
 #include "MetroidPrime/CDebugOption.hpp"
+#include "MetroidPrime/CIOWin.hpp"
 
 #include "rstl/auto_ptr.hpp"
 #include "rstl/construct.hpp"
@@ -17,6 +19,8 @@
 #include "rstl/string.hpp"
 #include "rstl/vector.hpp"
 
+class CFinalInput;
+class CPlayerState;
 class CStateManager;
 
 // The in-game debug options of the Corruption prototype (CGameDebug.cpp, "CGameDebug.cpp(NN) : "
@@ -91,7 +95,7 @@ public:
   // colon. Options 0x17..0x22 show the hyper mode tuning of the "Timer" type (CTweakPlayer getters
   // called with 0); 0x23..0x2E repeat it for the "Phazon Level" type (called with 1) and are drawn
   // in yellow. AddDebugOptions registers every index except 0x103, 0x104, 0x11E, 0x154, 0x15C,
-  // 0x15D and 0x160.
+  // 0x15D and 0x160; the Demo page (OpenMenu) registers 0x160.
   enum EDebugOption {
     kDO_GiveAllPowerupsCheat = 0x0,       // Cheats, bool "Give all powerups cheat"
     kDO_InvulnerableSamus = 0x1,          // Cheats, bool "Invulnerable Samus"
@@ -450,10 +454,10 @@ public:
     kDO_DebugCursorType = 0x15B,            // Revolution, value "Debug Cursor Type": None/2D/3D
     // 0x15C: not registered
     // 0x15D: not registered
-    kDO_LockAimingCursor = 0x15E, // Revolution, bool "Lock Aiming Cursor"
-    kDO_DPDDistance = 0x15F,      // Revolution, value "DPD distance"
-    // 0x160: not registered
-    kDO_HardMode = 0x161,                 // Game Rewards, bool "Hard Mode"
+    kDO_LockAimingCursor = 0x15E,   // Revolution, bool "Lock Aiming Cursor"
+    kDO_DPDDistance = 0x15F,        // Revolution, value "DPD distance"
+    kDO_MovieCaptureLength = 0x160, // Demo, value "Movie Capture Length"; registered by OpenMenu
+    kDO_HardMode = 0x161,           // Game Rewards, bool "Hard Mode"
     kDO_HardModeDamageMultiplier = 0x162, // Game Rewards, value "Hard Mode Damage Multiplier"
     kDO_HardModeWeaponMultiplier = 0x163, // Game Rewards, value "Hard Mode Weapon Multiplier"
     kDO_DebugSoundSystem = 0x164,         // Audio Debug, value "Debug Sound System"
@@ -535,6 +539,10 @@ public:
   void DumpLog();
   void FreeLog();
   void CloseMenu();
+  // Guessed names. 0x800466E4 builds the menu of the current category (the category list of the
+  // given page when no category is open) for the controller; 0x800451AC handles its commands.
+  void OpenMenu(int page, int controller);
+  CIOWin::EMessageReturn ProcessMenuInput(const CControlMapper& mapper, const CFinalInput& input);
   // Guessed name. main only handles the tweak load/save options while the menu is closed.
   bool IsMenuOpen() const { return mMenu.valid(); }
 
@@ -542,14 +550,21 @@ public:
   // remaining capture time that main counts down.
   void SetMovieCaptureTime(float time);
   const rstl::string& GetMovieCaptureName();
+  // Guessed name. Called by CControllerRecorder and a console command; strips the characters a
+  // host file name cannot hold and lets GetMovieCaptureName pick a new slot.
+  void SetMovieCaptureName(const rstl::string& name);
   // Guessed names. While a capture runs, the architecture tick runs fixed 1/60 s frames and
   // counts the time down ("Movie Capture Time Left = %f\n"), then ends the capture.
   bool IsMovieCaptureRunning() const { return xA16B_; }
   float GetMovieCaptureTime() const { return mMovieCaptureTime; }
+  // Guessed name. CStateManager::FrameBegin stores the render frame here.
+  void SetFrameIndex(int frame) { xA188_ = frame; }
   void FinishMovieCapture() {
     xA16B_ = false;
     xA16C_ = true;
   }
+  // Guessed name. Set once a capture ends; main hands it to the frame capture.
+  bool IsMovieCaptureFinished() const { return xA16C_; }
 
   // Guessed name. 0x80048C20: the player item of a powerup option (kDO_PowerBeam ..
   // kDO_ItemPercentage), -1 for any other option.
@@ -607,6 +622,14 @@ private:
 
   void InstallOption(const CDebugOption& option);
   void OnOptionChanged(CDebugOption* option);
+
+  // Guessed names. The menu label of an option ("<name>: ON", "<name>: 2 [named value]"), the
+  // label of a recorded demo, the powerup options read back from the player state and the
+  // "All Multiplayer Music/Maps Unlocked" cheats applied to the game rewards (0x80048A94).
+  static rstl::string GetOptionLabel(CDebugOption& option);
+  static rstl::string GetDemoLabel(const CControllerRecorder::SDemoInfo& demo);
+  void ReadPowerupOptions(CPlayerState* playerState);
+  static void ApplyRewardUnlocks();
 
   enum {
     kLogBufferSize = 0x200000,

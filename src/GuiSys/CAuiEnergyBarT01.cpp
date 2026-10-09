@@ -20,7 +20,7 @@ CGuiWidget* CAuiEnergyBarT01::Create(CGuiFrame* frame, CInputStream& in, CSimple
   CGuiWidgetParms parms = ReadWidgetHeader(frame, in);
   CAssetId tex(in);
 
-  CAuiEnergyBarT01* ret = rs_new CAuiEnergyBarT01(parms, sp, tex, true);
+  CAuiEnergyBarT01* ret = NEW CAuiEnergyBarT01(parms, sp, tex, true);
   ret->ParseBaseInfo(frame, in, parms, version);
   return ret;
 }

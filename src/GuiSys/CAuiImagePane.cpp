@@ -23,7 +23,7 @@ CGuiWidget* CAuiImagePane::Create(CGuiFrame* frame, CInputStream& in, CSimplePoo
   rstl::reserved_vector< CVector3f, 4 > coords(in);
   rstl::reserved_vector< CVector2f, 4 > uvs(in);
   CAuiImagePane* widget =
-      rs_new CAuiImagePane(parms, sp, kInvalidAssetId, kInvalidAssetId, coords, uvs, true);
+      NEW CAuiImagePane(parms, sp, kInvalidAssetId, kInvalidAssetId, coords, uvs, true);
   widget->ParseBaseInfo(frame, in, parms, version);
   return widget;
 }

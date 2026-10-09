@@ -5,8 +5,6 @@
 // Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x80298130 +0x20: owned native method/helper retained; exact source-level name unresolved
 // 0x80298150 +0x20: owned native method/helper retained; exact source-level name unresolved
-// 0x8029A72C +0xC80: state manager object constructor; original source61/70/75..89 (news nine
-//   CObjectList and five CObjectListSmall subclasses whose names are unknown)
 // 0x8029B6D8 +0x30: registered static initializer; .ctors 0x8065B964; seven SDA constants
 
 #include "MetroidPrime/CStateManagerObject.hpp"
@@ -21,6 +19,7 @@
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerCallbackLists.hpp"
 #include "MetroidPrime/CWorld.hpp"
+#include "MetroidPrime/GameObjectLists.hpp"
 
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/TCastTo.hpp"
@@ -48,13 +47,66 @@ class CScriptTrigger;
 class CScriptWaypoint;
 class CWeapon;
 
+// Echoes' CStateManager setup of the same members. The list ids are Echoes' indices; the small
+// lists are built dock first, as Echoes builds its filtered lists. Only the dynamic lists go into
+// the second views.
+CStateManagerObject::CStateManagerObject(
+    CStateManager& mgr, const rstl::ncrc_ptr< CStringPropertyManager >& stringProperties,
+    const rstl::ncrc_ptr< CScriptMailbox >& mailbox,
+    const rstl::ncrc_ptr< CMapWorldInfo >& mapWorldInfo)
+: mStateMgr(&mgr)
+, mLastUniqueId(0)
+, mObjectIndexArray(0)
+, mObjectLists(rstl::auto_ptr< CObjectList >())
+, mObjectListsSmall(rstl::auto_ptr< CObjectListSmall >())
+, mAllocatedObjectIndices(2048, false)
+, mScriptMsgs(rs_new(61) CScriptMsgQueue())
+, mWorld(nullptr)
+, mScriptObjectLoaderHelper(rs_new(70) CScriptObjectLoaderHelper())
+, mNextAreaId(0)
+, mPreviousAreaId(kInvalidAreaId)
+, mStringPropertyManager(stringProperties)
+, mMailbox(mailbox)
+, mMapWorldInfo(mapWorldInfo)
+, mPlayer(nullptr)
+, mDispatchingScriptMessages(false) {
+  mObjectLists[kOL_All] = rs_new(75) CObjectList(kOL_All, false);
+  mObjectLists[kOL_Actor] = rs_new(76) CActorList();
+  mObjectLists[kOL_RenderActor] = rs_new(77) CRenderActorList();
+  mObjectLists[kOL_PhysicsActor] = rs_new(78) CPhysicsActorList();
+  mObjectLists[kOL_GameLight] = rs_new(79) CGameLightList();
+  mObjectLists[kOL_ListeningAi] = rs_new(80) CListeningAiList();
+  mObjectLists[kOL_AiWaypoint] = rs_new(81) CAiWaypointList();
+  mObjectLists[kOL_Platform] = rs_new(82) CPlatformList();
+  mObjectLists[kOL_Trigger] = rs_new(83) CTriggerList();
+
+  mObjectListsSmall[kOLS_Dock] = rs_new(85) CDockListSmall();
+  mObjectListsSmall[kOLS_Door] = rs_new(86) CDoorListSmall();
+  mObjectListsSmall[kOLS_Type106] = rs_new(87) CType106ListSmall();
+  mObjectListsSmall[kOLS_GameCamera] = rs_new(88) CGameCameraListSmall();
+  mObjectListsSmall[kOLS_GrapplePoint] = rs_new(89) CGrapplePointListSmall();
+
+  for (int i = 0; i < mObjectLists.size(); ++i) {
+    CObjectList* list = mObjectLists[i].get();
+    if (list->IsDynamic()) {
+      mDynamicObjectLists.push_back(list);
+    }
+  }
+  for (int i = 0; i < mObjectListsSmall.size(); ++i) {
+    CObjectListSmall* list = mObjectListsSmall[i].get();
+    if (list->IsDynamic()) {
+      mDynamicObjectListsSmall.push_back(list);
+    }
+  }
+}
+
 CStateManagerObject::~CStateManagerObject() {}
 
 void CStateManagerObject::SetWorld(rstl::auto_ptr< CWorld > world) { mWorld = world.release(); }
 
 CWorld* CStateManagerObject::World() { return mWorld.get(); }
 
-const CWorld* CStateManagerObject::GetWorld() const { return mWorld.get(); }
+CWorld* CStateManagerObject::GetWorld() const { return mWorld.get(); }
 
 bool CStateManagerObject::HasWorld() const { return mWorld.get() != nullptr; }
 
@@ -219,7 +271,7 @@ void CStateManagerObject::UpdateObjectInLists(CEntity& entity) {
            mDynamicObjectListsSmall.begin();
        it != mDynamicObjectListsSmall.end(); ++it) {
     CObjectListSmall* list = *it;
-    bool contained = list->Contains(entity);
+    bool contained = list->IsObjectInList(&entity);
     if (contained && !list->IsQualified(entity)) {
       list->RemoveObject(entity);
     } else if (!contained) {
@@ -505,7 +557,7 @@ void CStateManagerObject::DispatchScriptMessages() {
           mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender), GetDebugName(sender),
           msg.GetSenderId().value & 0xFFFF, msg.GetState(), msg.GetMessage(), GetDebugId(target),
           GetDebugName(target), msg.GetTargetId().value & 0xFFFF));
-      CBBASupport_SendString(text, 0, nullptr);
+      CBBASupport::SendString(text, 0, nullptr);
     }
 
     CEntity* entity = ObjectById(msg.GetTargetId());
@@ -516,7 +568,7 @@ void CStateManagerObject::DispatchScriptMessages() {
                                              mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender),
                                              GetDebugName(sender), msg.GetState(), msg.GetMessage(),
                                              entity->GetX58().value, entity->GetName().data()));
-        CBBASupport_SendString(text, 0, nullptr);
+        CBBASupport::SendString(text, 0, nullptr);
       }
     }
 
@@ -546,7 +598,7 @@ void CStateManagerObject::SendScriptMsg(const CScriptMsg& msg) {
         mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender), GetDebugName(sender),
         msg.GetSenderId().value & 0xFFFF, msg.GetState(), msg.GetMessage(), GetDebugId(target),
         GetDebugName(target), msg.GetTargetId().value & 0xFFFF));
-    if (!CBBASupport_SendString(text, 0, nullptr)) {
+    if (!CBBASupport::SendString(text, 0, nullptr)) {
       rs_debugger_printf(text.data());
     }
   }

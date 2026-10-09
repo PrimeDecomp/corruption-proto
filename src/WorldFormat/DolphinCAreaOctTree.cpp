@@ -110,7 +110,7 @@ void CAreaOctTree::MakeFromMemory(void* buffer, uint bufferLength, CAreaOctTree*
   uint vertexCount = *vertexHeader;
   CVector3f* vertices = reinterpret_cast< CVector3f* >(vertexHeader + 1);
 
-  *treeOut = rs_new CAreaOctTree(bounds, treeType, static_cast< uchar* >(buffer), treeBuffer,
+  *treeOut = NEW CAreaOctTree(bounds, treeType, static_cast< uchar* >(buffer), treeBuffer,
                                  materialCount, vertexCount, edgeCount, triangleCount, materials,
                                  vertexMaterials, edgeMaterials, surfaceMaterials, edges,
                                  surfaceIndices, triangleAdjacency, vertices);

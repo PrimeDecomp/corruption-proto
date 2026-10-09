@@ -48,6 +48,60 @@ public:
   TEntitySignal& ObjectAdded() { return mObjectAdded; }
   TEntitySignal& ObjectRemoved() { return mObjectRemoved; }
   TEntitySignal& ActiveChanged() { return mActiveChanged; }
+  // Guessed names. CStateManager's destructor emits the first before anything else and the
+  // second once the objects are gone, before its members are destroyed.
+  TStateManagerSignal& StateManagerDestroying() { return x5b8_; }
+  TStateManagerSignal& StateManagerDestroyed() { return x5d0_; }
+
+  // Guessed names. The update emits these 46 in this order; each is named after the work it
+  // precedes (Pre) or follows (Post). Several are emitted back to back or only under the
+  // same condition as the work they surround.
+  TUpdateSignal& FrameStart() { return x0_; }
+  TUpdateSignal& PreMapWorldSphere() { return x18_; }
+  TUpdateSignal& PrePlayTime() { return x30_; }
+  TUpdateSignal& PreRenderClock() { return x48_; }
+  TUpdateSignal& PrePowerUps() { return x60_; }
+  TUpdateSignal& PrePreThink() { return x78_; }
+  TUpdateSignal& PreFluidPlanes() { return x90_; }
+  TUpdateSignal& PreSortedLists() { return xa8_; }
+  TUpdateSignal& PostSortedLists() { return xc0_; }
+  TUpdateSignal& PreMovePlatforms() { return xd8_; }
+  TUpdateSignal& PostMovePlatforms() { return xf0_; }
+  TUpdateSignal& PreMoveActors() { return x108_; }
+  TUpdateSignal& PostMoveActors() { return x120_; }
+  TUpdateSignal& PrePlayerInput() { return x138_; }
+  TUpdateSignal& PostPlayerInput() { return x150_; }
+  TUpdateSignal& PreMovePlayer() { return x168_; }
+  TUpdateSignal& PostMovePlayer() { return x180_; }
+  TUpdateSignal& PreSortedLists2() { return x198_; }
+  TUpdateSignal& PostSortedLists2() { return x1b0_; }
+  TUpdateSignal& PreTouch() { return x1c8_; }
+  TUpdateSignal& PostTouch() { return x1e0_; }
+  TUpdateSignal& PreThink() { return x1f8_; }
+  TUpdateSignal& PostThink() { return x210_; }
+  TUpdateSignal& PreGameplayChecks() { return x228_; }
+  TUpdateSignal& PreWorldUpdate() { return x240_; }
+  TUpdateSignal& PostWorldUpdate() { return x258_; }
+  TUpdateSignal& PreAreaSounds() { return x270_; }
+  TUpdateSignal& PostAreaSounds() { return x288_; }
+  TUpdateSignal& PreDocks() { return x2a0_; }
+  TUpdateSignal& PostDocks() { return x2b8_; }
+  TUpdateSignal& PreGameMode() { return x2d0_; }
+  TUpdateSignal& PostGameMode() { return x2e8_; }
+  TUpdateSignal& PreDispatch() { return x300_; }
+  TUpdateSignal& PostDispatch() { return x318_; }
+  TUpdateSignal& PreCameras() { return x330_; }
+  TUpdateSignal& PostCameras() { return x348_; }
+  TUpdateSignal& PreDispatch2() { return x360_; }
+  TUpdateSignal& PostDispatch2() { return x378_; }
+  TUpdateSignal& PrePostUpdatePlayer() { return x390_; }
+  TUpdateSignal& PostPostUpdatePlayer() { return x3a8_; }
+  TUpdateSignal& PreWorldState() { return x3c0_; }
+  TUpdateSignal& PostWorldState() { return x3d8_; }
+  TUpdateSignal& PreTravel() { return x3f0_; }
+  TUpdateSignal& PostTravel() { return x408_; }
+  TUpdateSignal& PreGraveyard() { return x420_; }
+  TUpdateSignal& PostGraveyard() { return x438_; }
 
 private:
   TUpdateSignal x0_;

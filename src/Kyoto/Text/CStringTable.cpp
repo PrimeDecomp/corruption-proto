@@ -69,7 +69,7 @@ void CStringTable::Load(CInputStream& in) {
   if (version != 0) {
     mNameCount = in.Get(TType< int >());
     uint namesSize = in.Get(TType< uint >());
-    mData = rs_new uchar[namesSize + size];
+    mData = NEW uchar[namesSize + size];
     mNames = reinterpret_cast< SStringName* >(mData.get());
     mStrings = reinterpret_cast< const wchar_t** >(mData.get() + namesSize);
     in.ReadBytes(mNames, namesSize);
@@ -81,7 +81,7 @@ void CStringTable::Load(CInputStream& in) {
 
   if (version == 0) {
     size = in.Get(TType< uint >());
-    mData = rs_new uchar[size];
+    mData = NEW uchar[size];
     mStrings = reinterpret_cast< const wchar_t** >(mData.get());
   }
   in.ReadBytes(mStrings, size);
@@ -128,5 +128,5 @@ CStringTable::SReloadData::~SReloadData() {}
 
 CFactoryFnReturn FStringTableFactory(const SObjectTag& tag, CInputStream& in,
                                      const CVParamTransfer& xfer) {
-  return rs_new CStringTable(in);
+  return NEW CStringTable(in);
 }

@@ -75,7 +75,7 @@ void CFBStreamedAnimReaderTotals::Allocate(uint channelCount) {
   const uint size =
       shortsSize + rotationFlagsSize + offsetFlagsSize + scaleFlagsSize + idsSize + floatsSize;
   const uint bufferSize = size + (4 - size % 4);
-  mBuffer = rs_new uchar[bufferSize];
+  mBuffer = NEW uchar[bufferSize];
   mBufferSize = bufferSize;
   CCharAnimMemoryMetrics::AddToTotalSize(mBufferSize, CCharAnimMemoryMetrics::kASS_Two);
   uint offset = 0;
@@ -268,7 +268,7 @@ CSegIdToIndexConverter::CSegIdToIndexConverter(const CFBStreamedAnimReaderTotals
 CFBStreamedAnimReader::CFBStreamedAnimReader(
     const TSubAnimTypeToken< CFBStreamedCompression >& source, CCharAnimTime time,
     const CAnimPOIData* poiData)
-: CAnimSourceReaderBase(rs_new TAnimSourceInfo< CFBStreamedCompression >(source), poiData)
+: CAnimSourceReaderBase(NEW TAnimSourceInfo< CFBStreamedCompression >(source), poiData)
 , mSource(source)
 , mSteadyStateInfo(mSource->GetSteadyStateAnimInfo())
 , mTotals(source)
@@ -282,7 +282,7 @@ CFBStreamedAnimReader::CFBStreamedAnimReader(
 CFBStreamedAnimReader::~CFBStreamedAnimReader() {}
 
 rstl::ownership_transfer< IAnimReader > CFBStreamedAnimReader::VClone() const {
-  return rs_new CFBStreamedAnimReader(mSource, mCurTime, mPOIData);
+  return NEW CFBStreamedAnimReader(mSource, mCurTime, mPOIData);
 }
 
 CCharAnimTime CFBStreamedAnimReader::VGetTimeRemaining() const {

@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include "rstl/single_ptr.hpp"
+#include "rstl/string.hpp"
 
 struct SLdrTweakGame;
 
@@ -16,6 +17,7 @@ public:
   bool GetMusicOnByDefault() const;
   float GetHardModeDamageMultiplier() const;
   float GetHardModeWeaponMultiplier() const;
+  rstl::string GetPakFile() const; // 0x802493AC
 
 private:
   const SLdrTweakGame* mData;

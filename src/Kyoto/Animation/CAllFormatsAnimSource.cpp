@@ -46,7 +46,7 @@ CFactoryFnReturn AnimSourceFactory(const SObjectTag& tag, CInputStream& in,
                                    const CVParamTransfer& param) {
   const rstl::rc_ptr< IVParamObj > obj = param.GetObj();
   IObjectStore* pool = static_cast< TObjOwnerParam< IObjectStore* >* >(obj.GetPtr())->GetData();
-  return rs_new CAllFormatsAnimSource(in, *pool, tag);
+  return NEW CAllFormatsAnimSource(in, *pool, tag);
 }
 
 rstl::ownership_transfer< IAnimReader >
@@ -54,12 +54,12 @@ CAllFormatsAnimSource::GetNewReader(const TLockedToken< CAllFormatsAnimSource >&
                                     const CCharAnimTime& time, const CAnimPOIData* poiData) {
   switch (tok->GetType()) {
   case CAnimFormatUnion::kF_AnimSource:
-    return rs_new CAnimSourceReader(TSubAnimTypeToken< CAnimSource >(tok), time, poiData);
+    return NEW CAnimSourceReader(TSubAnimTypeToken< CAnimSource >(tok), time, poiData);
   case CAnimFormatUnion::kF_FBStreamedCompression:
-    return rs_new CFBStreamedAnimReader(TSubAnimTypeToken< CFBStreamedCompression >(tok), time,
+    return NEW CFBStreamedAnimReader(TSubAnimTypeToken< CFBStreamedCompression >(tok), time,
                                         poiData);
   default:
-    return rs_new CFBStreamedAnimReader(TSubAnimTypeToken< CFBStreamedCompression >(tok), time,
+    return NEW CFBStreamedAnimReader(TSubAnimTypeToken< CFBStreamedCompression >(tok), time,
                                         poiData);
   }
 }

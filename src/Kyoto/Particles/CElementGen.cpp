@@ -770,7 +770,7 @@ CParticleGen* CElementGen::ConstructChildParticleSystem(
     if ((flags & kOSF_Two) && particleDescription->mOPTS) {
       return nullptr;
     }
-    CElementGen* particles = rs_new CElementGen(particleDescription, kMOT_Normal, flags);
+    CElementGen* particles = NEW CElementGen(particleDescription, kMOT_Normal, flags);
     particles->SetLeaveLightsEnabledForModelRender(modelsUseLights);
     child = particles;
     sSeed = backupSeed;
@@ -778,7 +778,7 @@ CParticleGen* CElementGen::ConstructChildParticleSystem(
   }
   case 'SWHC': {
     TToken< CSwooshDescription > swooshDescription(description);
-    child = rs_new CParticleSwoosh(swooshDescription, 0);
+    child = NEW CParticleSwoosh(swooshDescription, 0);
     break;
   }
   case 'ELSC': {
@@ -787,7 +787,7 @@ CParticleGen* CElementGen::ConstructChildParticleSystem(
       CParticleElectric::SetGlobalSeed(seed);
     }
     TToken< CElectricDescription > electricDescription(description);
-    child = rs_new CParticleElectric(electricDescription);
+    child = NEW CParticleElectric(electricDescription);
     CParticleElectric::SetGlobalSeed(backupSeed);
     break;
   }
@@ -797,7 +797,7 @@ CParticleGen* CElementGen::ConstructChildParticleSystem(
       CParticleSpawnSystem::SetGlobalSeed(seed);
     }
     TToken< CSpawnSystemDescription > spawnDescription(description);
-    child = rs_new CParticleSpawnSystem(spawnDescription, flags, modelsUseLights);
+    child = NEW CParticleSpawnSystem(spawnDescription, flags, modelsUseLights);
     CParticleSpawnSystem::SetGlobalSeed(backupSeed);
     break;
   }
@@ -807,7 +807,7 @@ CParticleGen* CElementGen::ConstructChildParticleSystem(
       CSortedParticleSystem::SetGlobalSeed(seed);
     }
     TToken< CSortedParticleSystemDescription > spawnDescription(description);
-    child = rs_new CSortedParticleSystem(spawnDescription, flags, modelsUseLights);
+    child = NEW CSortedParticleSystem(spawnDescription, flags, modelsUseLights);
     CSortedParticleSystem::SetGlobalSeed(backupSeed);
     break;
   }
@@ -913,7 +913,7 @@ void CElementGen::UpdateChildParticleSystems(double dt) {
   }
 
   if (mLoadedGenDesc->mSSWH && mPrevFrame != mCurFrame && mCurFrame == mSSSD) {
-    CParticleSwoosh* swoosh = rs_new CParticleSwoosh(*mLoadedGenDesc->mSSWH, 0);
+    CParticleSwoosh* swoosh = NEW CParticleSwoosh(*mLoadedGenDesc->mSSWH, 0);
     swoosh->SetGlobalTranslation(mGlobalTranslation);
     swoosh->SetGlobalScale(mGlobalScale);
     swoosh->SetLocalScale(mLocalScale);
@@ -925,7 +925,7 @@ void CElementGen::UpdateChildParticleSystems(double dt) {
   }
 
   if (mLoadedGenDesc->mSELC && mPrevFrame != mCurFrame && mCurFrame == mSESD) {
-    CParticleElectric* electric = rs_new CParticleElectric(*mLoadedGenDesc->mSELC);
+    CParticleElectric* electric = NEW CParticleElectric(*mLoadedGenDesc->mSELC);
     electric->SetGlobalTranslation(mGlobalTranslation);
     electric->SetGlobalScale(mGlobalScale);
     electric->SetLocalScale(mLocalScale);

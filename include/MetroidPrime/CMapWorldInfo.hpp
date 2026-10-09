@@ -10,6 +10,7 @@ public:
   ~CMapWorldInfo();
 
   bool IsAreaVisited(TAreaId areaId) const;          // 0x80119AA0
+  void SetIsMapped(TAreaId areaId, bool mapped);     // 0x8011A20C
   void SetAreaVisited(TAreaId areaId, bool visited); // 0x8011A30C
 };
 

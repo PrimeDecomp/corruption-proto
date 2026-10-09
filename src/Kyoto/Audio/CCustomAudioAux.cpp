@@ -53,9 +53,9 @@ static inline void PrepareProcessingState(SAuxEffectProcessingState& processing,
                                           AudioEffect* processor) {
   processing.mProcessor = processor;
   processing.mEffectDescriptor = processor->getAeffect();
-  processing.mLeftBuffer = rs_new float[kBufferSamples];
-  processing.mRightBuffer = rs_new float[kBufferSamples];
-  processing.mSurroundBuffer = rs_new float[kBufferSamples];
+  processing.mLeftBuffer = NEW float[kBufferSamples];
+  processing.mRightBuffer = NEW float[kBufferSamples];
+  processing.mSurroundBuffer = NEW float[kBufferSamples];
 }
 
 static inline bool ShutdownProcessingState(SAuxEffectProcessingState& processing) {
@@ -67,7 +67,7 @@ static inline bool ShutdownProcessingState(SAuxEffectProcessingState& processing
 }
 
 bool PrepareFlangerAux(SFlangerAuxParameters* parameters) {
-  AudioEffect* processor = rs_new CFlanger(CustomAuxAudioMaster);
+  AudioEffect* processor = NEW CFlanger(CustomAuxAudioMaster);
   PrepareProcessingState(parameters->mProcessing, processor);
   processor->setParameter(0, parameters->mDelay);
   processor->setParameter(7, parameters->mDelayPhase);
@@ -85,7 +85,7 @@ bool ShutdownFlangerAux(SFlangerAuxParameters* parameters) {
 }
 
 bool PrepareBitcrusherAux(SBitcrusherAuxParameters* parameters) {
-  AudioEffect* processor = rs_new CBitcrusher(CustomAuxAudioMaster);
+  AudioEffect* processor = NEW CBitcrusher(CustomAuxAudioMaster);
   PrepareProcessingState(parameters->mProcessing, processor);
   processor->setParameter(0, parameters->mDistortionType);
   processor->setParameter(1, parameters->mGain);
@@ -99,7 +99,7 @@ bool ShutdownBitcrusherAux(SBitcrusherAuxParameters* parameters) {
 }
 
 bool PreparePhaserAux(SPhaserAuxParameters* parameters) {
-  AudioEffect* processor = rs_new CPhaser(CustomAuxAudioMaster);
+  AudioEffect* processor = NEW CPhaser(CustomAuxAudioMaster);
   PrepareProcessingState(parameters->mProcessing, processor);
   processor->setParameter(0, parameters->mFrequency);
   processor->setParameter(1, parameters->mFeedback);

@@ -150,7 +150,7 @@ CModel::CModel(const rstl::auto_ptr< uchar >& data, int length, IObjectStore& st
     mSurfaces.push_back_unsafe(MemoryFromPartData(dataCur, secSizeCur));
   }
 
-  mModelInstance = rs_new CCubeModel(
+  mModelInstance = NEW CCubeModel(
       &mSurfaces, &mMatSets.front().mTextures, mMatSets.front().mData, positions, normals,
       vtxColors, floatUvs, shortUvs, *reinterpret_cast< const CAABox* >(dataPtr + 0xc),
       visorFlags ? 1 : 0, true, -1);
@@ -264,7 +264,7 @@ CFactoryFnReturn FModelFactory(const SObjectTag& tag, const rstl::auto_ptr< ucha
   rstl::rc_ptr< IVParamObj > obj = xfer.GetObj();
   CSimplePool* pool = static_cast< TObjOwnerParam< CSimplePool* >* >(obj.GetPtr())->GetData();
   GXInvalidateVtxCache();
-  return rs_new CModel(ptr, len, *pool);
+  return NEW CModel(ptr, len, *pool);
 }
 
 const float* CModel::GetPositions() const {
@@ -367,7 +367,7 @@ void CModel::RemapData(uchar* data) {
   }
 
   mModelInstance =
-      rs_new CCubeModel(&mSurfaces, &mMatSets.front().mTextures, mMatSets.front().mData, positions,
+      NEW CCubeModel(&mSurfaces, &mMatSets.front().mTextures, mMatSets.front().mData, positions,
                         normals, colors, uvs, packedUvs, bounds, flags, texturesLoaded, index);
   UpdateLastFrame();
 }

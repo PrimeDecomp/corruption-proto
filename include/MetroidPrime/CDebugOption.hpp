@@ -56,6 +56,22 @@ public:
   // string vector at 0x38 once per frame.
   float GetValue() const { return mValue; }
   void ClearMessages() { x38_.clear(); }
+  // Guessed name. CStateManager's update adds its "State Manager Numbers" lines; emitted in
+  // main.cpp (0x8000586C). The capacity doubles (from at least 1) until the message fits.
+  void AddMessage(const rstl::string& message) {
+    const int needed = x38_.size() + 1;
+    if (needed > x38_.capacity()) {
+      int capacity = x38_.capacity() * 2;
+      if (capacity < 1) {
+        capacity = 1;
+      }
+      while (capacity < needed) {
+        capacity *= 2;
+      }
+      x38_.reserve(capacity);
+    }
+    x38_.push_back(message);
+  }
   // Guessed names. CGameDebug draws the messages gathered this frame with this font scale.
   float GetMessageScale() const { return x34_; }
   const rstl::vector< rstl::string >& GetMessages() const { return x38_; }
@@ -63,6 +79,12 @@ public:
   // Guessed names (see the constructors).
   int GetCategory() const { return x0_; }
   int GetIndex() const { return x4_; }
+  // Guessed names. Read by CGameDebug's menu (labels, value steps and row colors).
+  const rstl::string& GetName() const { return mName; }
+  float GetMin() const { return mMin; }
+  float GetMax() const { return mMax; }
+  float GetStep() const { return mStep; }
+  const CColor& GetColor() const { return mColor; }
 
 private:
   int x0_; // Category

@@ -35,7 +35,7 @@ CWeaponDescription* CProjectileWeaponDataFactory::CreateGeneratorDescription(CIn
     return nullptr;
   }
 
-  CWeaponDescription* desc = rs_new CWeaponDescription();
+  CWeaponDescription* desc = NEW CWeaponDescription();
   CreateWPSM(desc, in, pool);
   return desc;
 }

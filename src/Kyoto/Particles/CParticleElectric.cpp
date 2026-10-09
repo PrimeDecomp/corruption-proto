@@ -78,7 +78,7 @@ CParticleElectric::CParticleElectric(TToken< CElectricDescription > desc)
   if (mElecDesc->mSSWH) {
     mHaveSSWH = true;
     for (int i = 0; i < mSCNT; ++i) {
-      mSwooshGenerators.push_back(rs_new CParticleSwoosh(mElecDesc->mSSWH->GetToken(), mSSEG));
+      mSwooshGenerators.push_back(NEW CParticleSwoosh(mElecDesc->mSSWH->GetToken(), mSSEG));
       CParticleSwoosh& swoosh = *mSwooshGenerators.back();
       const int count = swoosh.GetSwooshCount();
       for (int j = 0; j < count; ++j) {
@@ -96,7 +96,7 @@ CParticleElectric::CParticleElectric(TToken< CElectricDescription > desc)
     mHaveGPSM = true;
     mGPSMGenerators.reserve(mSCNT);
     for (int i = 0; i < mSCNT; ++i) {
-      mGPSMGenerators.push_back_unsafe(rs_new CElementGen(mElecDesc->mGPSM->GetToken()));
+      mGPSMGenerators.push_back_unsafe(NEW CElementGen(mElecDesc->mGPSM->GetToken()));
       mGPSMGenerators.back()->SetParticleEmission(false);
     }
   }
@@ -104,14 +104,14 @@ CParticleElectric::CParticleElectric(TToken< CElectricDescription > desc)
     mHaveEPSM = true;
     mEPSMGenerators.reserve(mSCNT);
     for (int i = 0; i < mSCNT; ++i) {
-      mEPSMGenerators.push_back_unsafe(rs_new CElementGen(mElecDesc->mEPSM->GetToken()));
+      mEPSMGenerators.push_back_unsafe(NEW CElementGen(mElecDesc->mEPSM->GetToken()));
       mEPSMGenerators.back()->SetParticleEmission(false);
     }
   }
   if (mElecDesc->mLWD1 || mElecDesc->mLWD2 || mElecDesc->mLWD3) {
     mHaveLWD = true;
     for (int i = 0; i < mSCNT; ++i) {
-      mLineManagers.push_back(rs_new CLineManager);
+      mLineManagers.push_back(NEW CLineManager);
     }
   }
 }

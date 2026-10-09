@@ -54,7 +54,7 @@ CToken CSimplePool::GetObj(const SObjectTag& tag, const CVParamTransfer& xfer) {
   }
 
   CObjectReference* ref =
-      rs_new CObjectReference(*this, rstl::auto_ptr< IObj >(nullptr), tag, xfer);
+      NEW CObjectReference(*this, rstl::auto_ptr< IObj >(nullptr), tag, xfer);
   ResourceMap::value_type item(tag, ref);
   mResources.insert(item);
   return CToken(ref);
@@ -73,5 +73,5 @@ CSimplePool::~CSimplePool() {
 
 CSimplePool::CSimplePool(IFactory& factory)
 : mFactory(&factory), mParamXfr(CVParamTransfer::Null()) {
-  mParamXfr = CVParamTransfer(rs_new TObjOwnerParam< IObjectStore* >(this));
+  mParamXfr = CVParamTransfer(NEW TObjOwnerParam< IObjectStore* >(this));
 }

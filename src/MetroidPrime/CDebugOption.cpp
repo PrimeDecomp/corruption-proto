@@ -2,7 +2,7 @@
 // G2MEAB .text 0x800F9BB4..0x800FA784 (end exclusive).
 // Complete native/helper inventory: 23 functions, all implemented. The TSignal1 template
 // functions (connect, list insert, emit, disconnect, connection) are instantiated here.
-// The two constructors allocate the rc_ptr count through rs_new, so they reference "??(??)"
+// The two constructors allocate the rc_ptr count through NEW, so they reference "??(??)"
 // where the binary has "rc_ptr.h(87) : ".
 
 #include "MetroidPrime/CDebugOption.hpp"
@@ -19,7 +19,7 @@ CDebugOption::CDebugOption(int a, int b, const rstl::string& name, float value, 
 , mMax(max)
 , mStep(step)
 , mColor(color)
-, mValueSignal(new ("CDebugOption.cpp(34) : ", (const char*)0) ValueSignal())
+, mValueSignal(rs_new(34) ValueSignal())
 , x34_(0.9f)
 , mChoices(nullptr) {}
 
@@ -32,7 +32,7 @@ CDebugOption::CDebugOption(int a, int b, const rstl::string& name, bool value, c
 , mMax(1.f)
 , mStep(1.f)
 , mColor(color)
-, mValueSignal(new ("CDebugOption.cpp(55) : ", (const char*)0) ValueSignal())
+, mValueSignal(rs_new(55) ValueSignal())
 , x34_(0.9f)
 , mChoices(nullptr) {}
 
@@ -48,11 +48,10 @@ CDebugOption::~CDebugOption() {
 
 void CDebugOption::AddChoice(const rstl::string& name, float value) {
   if (mChoices == nullptr) {
-    mChoices =
-        new ("CDebugOption.cpp(78) : ", (const char*)0) rstl::vector< SChoice* >(20, nullptr);
+    mChoices = rs_new(78) rstl::vector< SChoice* >(20, nullptr);
     mChoices->clear();
   }
-  mChoices->push_back(new ("CDebugOption.cpp(82) : ", (const char*)0) SChoice(name, value));
+  mChoices->push_back(rs_new(82) SChoice(name, value));
 }
 
 // Returns the name of the choice whose value is exactly `value`, or null when the option has

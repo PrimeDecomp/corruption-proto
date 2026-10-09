@@ -46,10 +46,6 @@
 // 0x80007218 +0x230: retained emitted/native function; exact class/type/name unresolved
 // 0x80007448 +0x60: retained emitted/native function; exact class/type/name unresolved
 // 0x800074A8 +0x31C: CMain::UpdateTweakDebugOptions (guessed name); tweak load/save debug options 51..54
-// 0x800077C4 +0x16C: UpdateScreenCapture (guessed name); safe frame, screenshot and movie capture
-// 0x80007930 +0x6C: retained emitted/native function; exact class/type/name unresolved
-// 0x8000799C +0x138: retained emitted/native function; exact class/type/name unresolved
-// 0x80007C94 +0x1CC: retained emitted/native function; exact class/type/name unresolved
 // 0x80007E60 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AB0 +0x48: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AF8 +0x220: retained emitted/native function; exact class/type/name unresolved
@@ -86,7 +82,6 @@
 // 0x8000B308 +0xB0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B3B8 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B444 +0x118: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B69C +0xCC: retained emitted/native function; exact class/type/name unresolved
 // 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
 // 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
 // 0x8000C218 +0xBC: CGameGlobalObjects LoadStringTable; STRG_Main token ownership
@@ -102,8 +97,6 @@
 // 0x8000E320 +0xD8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E3F8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E41C +0x630: main memory metrics/debug text display; uses leading string-vector push-back helper
-// 0x8000EFBC +0x268: main safe-frame debug rendering; four screen-edge quads
-// 0x8000F224 +0x84: BBA message callback, directly registered by InitializeSubsystems through local C834 adapter
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
 // 0x8000F658 +0x124: emitted TOneStatic global-objects operator delete
@@ -130,6 +123,7 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/LockedCache.hpp"
+#include "Kyoto/Audio/CAudioManager.hpp"
 #include "Kyoto/Audio/CDSPStreamManager.hpp"
 #include "Kyoto/Audio/CStreamAudioManager.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
@@ -140,11 +134,13 @@
 #include "Kyoto/CDvdFile.hpp"
 #include "Kyoto/CFrameDelayedKiller.hpp"
 #include "Kyoto/CMemoryCardSys.hpp"
+#include "Kyoto/CPakFile.hpp"
 #include "Kyoto/CResFactory.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Input/CControllerGamepadData.hpp"
 #include "Kyoto/Input/IController.hpp"
 #include "Kyoto/Math/CloseEnough.hpp"
+#include "Kyoto/Network/CBBASupport.hpp"
 #include "Kyoto/Particles/CElementGen.hpp"
 #include "Kyoto/Streams/CBitStreamReader.hpp"
 #include "Kyoto/Streams/CBitStreamWriter.hpp"
@@ -167,12 +163,15 @@
 #include "MetroidPrime/CGameProfiler.hpp"
 #include "MetroidPrime/CInGameTweakManager.hpp"
 #include "MetroidPrime/CMainFlow.hpp"
+#include "MetroidPrime/CMemoryCard.hpp"
 #include "MetroidPrime/CSaveRegion.hpp"
 #include "MetroidPrime/CWorld.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
+#include "MetroidPrime/ScreenCapture.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CWorldTransManager.hpp"
+#include "MetroidPrime/Tweaks/CTweakGame.hpp"
 #include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 
 #include "rstl/auto_ptr.hpp"
@@ -232,18 +231,9 @@
 // - The class has no Draw or PreloadAudio: RsMain draws through the IOWin manager directly, and
 //   CMain::UpdateGPMetrics selects GX performance counters from kDO_DrawTimeInfo.
 
-extern "C" int CBBASupport_InitializeBBA(int);
-extern "C" void
-CBBASupport_RegisterStringMessageCallback(int,
-                                          const TFunctor2< int, const rstl::string& >& callback);
-extern "C" void CBBASupport_Shutdown();
-extern "C" void CAudioManager_Shutdown();
 void FreeTweaks();
 extern "C" void RAssert_SetDiagnosticPrintCallback(void (*callback)(const char* format, ...));
-extern "C" void CAudioManager_Update(float dt);
-extern "C" void CBBASupport_PollMessages();
 extern "C" void CTexture_SetBindCount(int count);
-extern "C" void CAudioManager_InitializeWithMemoryCallbacks(int, int);
 // Guessed name. CGameAllocator accumulates its allocation time here (OSGetTick deltas).
 extern uint gAllocationTicks;
 
@@ -324,24 +314,14 @@ static const SGPPerf1Metric sGPPerf1Metrics[] = {
 };
 static const int kNumGPPerf1Metrics = sizeof(sGPPerf1Metrics) / sizeof(sGPPerf1Metrics[0]);
 extern IController* gpController;
-class CMemoryCard;
-extern CMemoryCard* gpMemoryCard;
 
 extern bool sProgressiveModePrompt; // Echoes name; the second bit of the save region.
-
-// Guessed. Owns the screenshot capture buffer between frames. The object belongs to
-// ScreenCapture.cpp, whose functions 0x8020B4D0/0x8020B4E0/0x8020B534 test, free and allocate
-// the buffer at 0x4 and reset the counter at 0x8.
-struct SScreenshotState {
-  SScreenshotState() : x8_(0) {}
-
-  rstl::auto_ptr< uchar > x0_buffer;
-  uint x8_;
-};
 
 // Guessed name. Draws the safe frame on request of a debug option, takes the screenshot
 // requested through sTakeScreenshot or a debug option, and runs the movie capture.
 void UpdateScreenCapture(SScreenshotState& state);
+// Guessed name. Shades the screen border outside the 576x416 title-safe area.
+void DrawSafeFrame();
 
 // Guessed name. A named CGameProfiler section that RsMain keeps open around a frame; the
 // section is closed around EndScene and when it goes out of scope.
@@ -406,9 +386,54 @@ public:
   }
 };
 
-// Guessed name. Prints "Received bba command!" when a debug option is set and forwards the
-// command text to the console-command interpreter. Not implemented yet (0x8000F224).
-void ReceiveBBACommand(int, const rstl::string& command);
+// Guessed name. Prints the command when "Show BBA Messages" is set and forwards it to the
+// console-command interpreter.
+void ReceiveBBACommand(int, const rstl::string& command) {
+  if (gpGameDebug->IsOptionSet(CGameDebug::kDO_ShowBBAMessages)) {
+    rs_debugger_printf("Received bba command!\n%s\n", command.data());
+  }
+  ExecuteConsoleCommand(command.data());
+}
+
+void DrawSafeFrame() {
+  CGraphics::SetOrtho(-320.f, 320.f, 240.f, -240.f, -1.f, 1.f);
+  CGraphics::SetViewPointMatrix(CTransform4f::Identity());
+  gpRender->SetModelMatrix(CTransform4f::Identity());
+  gpRender->SetBlendMode_AlphaBlended();
+  gpRender->SetDepthReadWrite(false, false);
+  // Top, bottom, left and right bands, each 32 pixels wide.
+  for (int i = 0; i < 4; ++i) {
+    float left = -320.f;
+    float right = 320.f;
+    float bottom = -240.f;
+    float top = 240.f;
+    switch (i) {
+    case 0:
+      left += 32.f;
+      right -= 32.f;
+      bottom = 208.f;
+      break;
+    case 1:
+      left += 32.f;
+      right -= 32.f;
+      top = -208.f;
+      break;
+    case 2:
+      right = -288.f;
+      break;
+    case 3:
+      left = 288.f;
+      break;
+    }
+    gpRender->BeginTriangleStrip(4);
+    gpRender->PrimColor(CColor::White().WithAlphaOf(0.6f));
+    gpRender->PrimVertex(CVector3f(left, 0.f, top));
+    gpRender->PrimVertex(CVector3f(left, 0.f, bottom));
+    gpRender->PrimVertex(CVector3f(right, 0.f, top));
+    gpRender->PrimVertex(CVector3f(right, 0.f, bottom));
+    gpRender->EndPrimitive();
+  }
+}
 
 extern "C" void* __sys_alloc(const size_t len) {
   return CMemory::Alloc(len, IAllocator::kHI_None, IAllocator::kSC_Unk1, IAllocator::kTP_Heap,
@@ -491,12 +516,12 @@ void CMain::InitializeSubsystems() {
   CDecalManager::Initialize();
   CDamageVulnerability::Initialize();
   CFrameDelayedKiller::Initialize();
-  if (CBBASupport_InitializeBBA(0)) {
+  if (CBBASupport::InitializeBBA(0)) {
     printf("*************************\n");
     printf("BBA initialization error!\n");
     printf("*************************\n");
   }
-  CBBASupport_RegisterStringMessageCallback(
+  CBBASupport::RegisterStringMessageCallback(
       0, TStaticCallback2< int, const rstl::string& >::Make(ReceiveBBACommand));
   allocate_profiler(4);
 }
@@ -507,9 +532,9 @@ void CMain::ShutdownSubsystems() {
   CDecalManager::ShutDown();
   CElementGen::ShutDown();
   CAnimData::FreeCache();
-  CAudioManager_Shutdown();
+  CAudioManager::Shutdown();
   FreeTweaks();
-  CBBASupport_Shutdown();
+  CBBASupport::Shutdown();
   ShutdownConsoleCommands();
   CWorld::ClearLockedTokens();
   CDamageVulnerability::Shutdown();
@@ -517,14 +542,16 @@ void CMain::ShutdownSubsystems() {
   OSThread* thread = OSGetCurrentThread();
   uchar* stackEnd =
       reinterpret_cast< uchar* >((reinterpret_cast< uint >(thread->stackEnd) + 0x3ff) & ~0x3ff);
+  uchar* stackBase = thread->stackBase;
+
   uchar* ptr = stackEnd + 0x400;
-  for (; ptr < thread->stackBase - 0x2000; ptr += sizeof(uint)) {
+  for (; ptr < stackBase - 0x2000; ptr += sizeof(uint)) {
     if (*reinterpret_cast< uint* >(ptr) != UNUSED_STACK_VAL) {
       break;
     }
   }
   // The top 0x2000 bytes are never painted, so they count as used.
-  const int used = (thread->stackBase - 0x2000 - ptr) + 0x2000;
+  const int used = static_cast< int >(stackBase - 0x2000 - ptr) + 0x2000;
   OSReport("Stack usage: %d bytes (%dk)\n", used, static_cast< uint >(used) / 1024);
 }
 
@@ -645,6 +672,77 @@ bool CMain::CheckReset() {
   return false;
 }
 
+// Unlike Echoes the universe pak is added first, and each world pak found is reported.
+void CMain::AddWorldPaks() {
+  gpResourceFactory->GetResLoader().AddPakFileAsync(rstl::string_l("UniverseArea"), false, false);
+  rstl::string basePath = gpTweakGame->GetPakFile();
+  for (int i = 0; i < 16; ++i) {
+    rstl::string pak =
+        basePath + (i == 0 ? rstl::string_l("") : rstl::string(CBasics::Stringize("%d", i)));
+    if (CDvdFile::FileExists((pak + rstl::string_l(".pak")).data())) {
+      rs_debugger_printf("Adding WorldPak %s.pak\n", pak.data());
+      gpResourceFactory->GetResLoader().AddPakFileAsync(pak, false, true);
+    }
+  }
+}
+
+// The scan-text debugger needs every world loaded, so it keeps all world paks ready.
+void CMain::EnsureWorldPakReady(CAssetId id) {
+  if (gpGameDebug->IsOptionSet(CGameDebug::kDO_ScanTextDebugger)) {
+    return;
+  }
+  CResLoader& loader = gpResourceFactory->GetResLoader();
+  for (int i = 0; i < loader.GetPakCount(); ++i) {
+    bool stash = true;
+    CPakFile& pak = *loader.GetPakFile(i);
+    if (!pak.IsWorldPak()) {
+      continue;
+    }
+    const rstl::vector< rstl::pair< rstl::string, SObjectTag > > names =
+        pak.GetStringToObjectList();
+    for (rstl::vector< rstl::pair< rstl::string, SObjectTag > >::const_iterator it = names.begin();
+         it != names.end(); ++it) {
+      if (it->second.id == id) {
+        stash = false;
+      }
+    }
+    if (stash) {
+      pak.sub_80323554();
+    } else {
+      pak.EnsureWorldPakReady();
+    }
+  }
+}
+
+void CMain::EnsureWorldPaksReady() {
+  CResLoader& loader = gpResourceFactory->GetResLoader();
+  for (int i = 0; i < loader.GetPakCount(); ++i) {
+    CPakFile& pak = *loader.GetPakFile(i);
+    if (pak.IsWorldPak()) {
+      pak.EnsureWorldPakReady();
+    }
+  }
+}
+
+void UpdateScreenCapture(SScreenshotState& state) {
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ShowSafeFrame) != 0) {
+    DrawSafeFrame();
+  }
+  if (sTakeScreenshot ||
+      (!gpGameDebug->IsMenuOpen() &&
+       gpGameDebug->GetOption(CGameDebug::kDO_DumpScreenShot) != nullptr &&
+       gpGameDebug->GetOptionInt(CGameDebug::kDO_DumpScreenShot) == 1)) {
+    gpGameDebug->SetOptionValue(CGameDebug::kDO_DumpScreenShot, 0.f);
+    sTakeScreenshot = false;
+    DumpScreenShot(false, nullptr);
+  }
+  if (gpGameDebug->IsMovieCaptureRunning()) {
+    state.UpdateMovieCapture(gpGameDebug->IsMovieCaptureFinished());
+  } else if (state.IsEmpty()) {
+    state.Clear();
+  }
+}
+
 // The Audio category's tweak load/save options; only the audio tweaks are handled here. Each is
 // requested by setting it to 1 and acknowledged by resetting it to 0, and only while the debug
 // menu is closed.
@@ -683,7 +781,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
   }
   RAssert_SetDiagnosticPrintCallback(rs_debugger_printf);
   rstl::single_ptr< CGameGlobalObjects > globalObjects(
-      new ("Main.cpp(2351) : ", nullptr) CGameGlobalObjects(*mOsContext, *mMemorySys));
+      rs_new_in("Main.cpp", 2351) CGameGlobalObjects(*mOsContext, *mMemorySys));
   mGameGlobalObjects = globalObjects.get();
   CStringTable::SetLanguage(GetLanguage());
   for (int i = 0; i < 4; ++i) {
@@ -708,7 +806,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
       showAudioTweaksStatus = true;
     }
     rstl::single_ptr< CGameArchitectureSupport > architecture(
-        new ("Main.cpp(2393) : ", nullptr) CGameArchitectureSupport(*mOsContext));
+        rs_new_in("Main.cpp", 2393) CGameArchitectureSupport(*mOsContext));
     mArchSupport = architecture.get();
     srand(startupTimer.GetElapsedMicros());
     rs_debugger_printf("Beginning main loop...\n");
@@ -817,7 +915,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
       x70_frameCallbacks.x78_postUpdate.Emit();
       gpGameDebug->GetOption(CGameDebug::kDO_GenericMsgs)->ClearMessages();
       gpGameDebug->GetOption(CGameDebug::kDO_ShowFramerate)->ClearMessages();
-      CAudioManager_Update(1.f / 60.f);
+      CAudioManager::Update(1.f / 60.f);
       if (CheckTerminate()) {
         gpGameState->AudioGroups().clear();
         break;
@@ -840,7 +938,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
         CGraphics::EndScene();
         CFrameDelayedKiller::StallAndFlushAllAllocations();
         architecture = nullptr;
-        architecture = new ("Main.cpp(2689) : ", nullptr) CGameArchitectureSupport(*mOsContext);
+        architecture = rs_new_in("Main.cpp", 2689) CGameArchitectureSupport(*mOsContext);
         mArchSupport = architecture.get();
       }
       UpdateTweakDebugOptions();
@@ -926,19 +1024,17 @@ CGameArchitectureSupport::CGameArchitectureSupport(COsContext& context)
 , mPreviousTickRemainder(0.f) {
   gpScanTextDebugManager = &mScanTextDebugManager;
   CDSPStreamManager::Initialize();
-  CAudioManager_InitializeWithMemoryCallbacks(0, 0x600000);
+  CAudioManager::InitializeWithMemoryCallbacks(0, 0x600000);
   gpMain->SetMaxSpeed(false);
   gpMain->ResetGameState();
   gpGameDebug->CloseMenu();
   InitializeConsoleCommands(&mInputGenerator);
   rs_debugger_printf("Initializing IOWins...\n");
   gpIOWinManager = &mIoWinMgr;
-  mIoWinMgr.AddIOWin(new ("Main.cpp(1415) : ", nullptr) CMainFlow(), 0, 0);
-  mIoWinMgr.AddIOWin(new ("Main.cpp(1416) : ", nullptr) CConsoleOutputWindow(8, 5.f, 0.75f), 100,
-                     0);
-  mIoWinMgr.AddIOWin(new ("Main.cpp(1418) : ", nullptr) CAudioStateWin(), 100, -1);
-  mIoWinMgr.AddIOWin(new ("Main.cpp(1420) : ", nullptr)
-                         CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
+  mIoWinMgr.AddIOWin(rs_new_in("Main.cpp", 1415) CMainFlow(), 0, 0);
+  mIoWinMgr.AddIOWin(rs_new_in("Main.cpp", 1416) CConsoleOutputWindow(8, 5.f, 0.75f), 100, 0);
+  mIoWinMgr.AddIOWin(rs_new_in("Main.cpp", 1418) CAudioStateWin(), 100, -1);
+  mIoWinMgr.AddIOWin(rs_new_in("Main.cpp", 1420) CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
                      10000, 100000);
   gpGameState->GameOptions().EnsureOptions();
 }
@@ -969,7 +1065,7 @@ bool CGameArchitectureSupport::UpdateTicks() {
   gpMain->FrameCallbacks().x0_preTick.Emit();
 
   bool keepLooping = true;
-  CBBASupport_PollMessages();
+  CBBASupport::PollMessages();
   if (gpGameDebug->IsMovieCaptureRunning()) {
     // Movie capture runs exactly one fixed tick per drawn frame.
     mTickRemainder = 1.f / 60.f;
@@ -1032,6 +1128,22 @@ void CGameArchitectureSupport::Update() {
   gpGameState->WorldTransitionManager()->TouchModels();
   mArchQueue.Push(MakeMsg::CreateFrameEnd(kAMT_Game, mGameFrameCount));
   mIoWinMgr.PumpMessages(mArchQueue);
+}
+
+// Same as Echoes.
+void CMain::MemoryCardInitializePump() {
+  if (gpMemoryCard != nullptr) {
+    return;
+  }
+  if (mGameGlobalObjects->MemoryCard().get() == nullptr) {
+    mGameGlobalObjects->MemoryCard() = rs_new_in("Main.cpp", 1681) CMemoryCard();
+  }
+  CMemoryCard* card = mGameGlobalObjects->MemoryCard().get();
+  if (card->InitializePump()) {
+    gpMemoryCard = card;
+    gpGameState->SystemOptions().InitializeMemoryState();
+    gpGameState->InitializeMemoryStates();
+  }
 }
 
 // The "DrawTime Info" option picks one counter of each GX performance group (its value modulo

@@ -46,13 +46,22 @@ inline void* operator new(size_t n, void* ptr) { return ptr; };
 #ifdef __MWERKS__
 inline void operator delete(void* ptr) { CMemory::Free(ptr); }
 inline void operator delete[](void* ptr) { CMemory::Free(ptr); }
-#define NEW new ("??(??)", nullptr)
-#define rs_new new ("\?\?(\?\?)", nullptr)
+// Allocations without a source position ("??(??)", escaped so it is not read as trigraphs).
+#define NEW new ("\?\?(\?\?)", nullptr)
+// Allocations that record their source position, as Prime's and Echoes' rs_new does with
+// __FILE__ and __LINE__. The line is explicit here so the original line numbers survive in the
+// strings.
+#define RS_NEW_STRINGIZE_IMPL(x) #x
+#define RS_NEW_STRINGIZE(x) RS_NEW_STRINGIZE_IMPL(x)
+#define rs_new(line) rs_new_in(__FILE__, line)
+// Same, for sources whose original file name differs from ours (Main.cpp, DolphinCFont.cpp).
+#define rs_new_in(file, line) new (file "(" RS_NEW_STRINGIZE(line) ") : ", nullptr)
 #else
 __attribute__((weak)) void operator delete(void* ptr) { CMemory::Free(ptr); }
 __attribute__((weak)) void operator delete[](void* ptr) { CMemory::Free(ptr); }
 #define NEW new
-#define rs_new new
+#define rs_new(line) new
+#define rs_new_in(file, line) new
 #endif
 
 #endif // _CMEMORY

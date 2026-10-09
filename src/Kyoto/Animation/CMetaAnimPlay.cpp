@@ -20,7 +20,7 @@ CMetaAnimPlay::VGetAnimationTree(const CAnimSysContext& animSys,
   const int animIdx = mPrimitive.GetAnimDatabaseIndex();
   rstl::ownership_transfer< IAnimReader > reader =
       CAllFormatsAnimSource::GetNewReader(anim, mStartTime, animSys.GetEventData(animIdx));
-  return rs_new CAnimTreeAnimReaderContainer(reader, mPrimitive.GetName(), animIdx);
+  return NEW CAnimTreeAnimReaderContainer(reader, mPrimitive.GetName(), animIdx);
 }
 
 void CMetaAnimPlay::GetUniquePrimitives(rstl::set< CPrimitive >& primsOut) const {

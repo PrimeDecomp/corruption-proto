@@ -6,8 +6,8 @@
 
 #include "types.h"
 
-#include "Kyoto/Audio/CAudioSys.hpp"
 #include "Kyoto/Audio/CAudioHandle.hpp"
+#include "Kyoto/Audio/CAudioSys.hpp"
 #include "rstl/auto_ptr.hpp"
 #include "rstl/pair.hpp"
 #include "rstl/reserved_vector.hpp"
@@ -202,6 +202,12 @@ public:
   static const int kAllAreas;
 
   static void Initialize(); // Guessed name
+  // Guessed names. CMain starts the audio system with these arguments (0 and 0x600000);
+  // Corruption's manager sits on FMOD and hands it memory callbacks (0x80569A6C).
+  static void InitializeWithMemoryCallbacks(int, int);
+  // Guessed name. 0x80568760 stores one of the debug switches CGameDebug drives: 0 mutes the
+  // audio ("Enable Audio" off), 1 turns on the sound system debug display.
+  static void SetDebugOption(int option, bool enabled);
   static void Shutdown();
   static void StopAndRemoveAllEmitters();
   static void Update(float dt);
@@ -234,6 +240,18 @@ public:
   static void SetChannel(ESfxChannels channel);
   static ESfxChannels GetChannel();
   static void KillAll(ESfxChannels channel);
+  // Guessed names. Corruption's FMOD-side counterparts of Echoes' CSfxManager channels: a
+  // current voice context (0x8079B680) that every voice in the pool (0x8078EF10, 0x70-byte
+  // voices) is tagged with. CStateManager::SetGameState uses them where Echoes calls
+  // GetChannel/KillAll/SetChannel, but the values differ: 1 while the game runs, 2 while it is
+  // soft-paused; the pause screen and the player GUI select 0. Switching from 0 to 1 stops
+  // context 0 and resumes context 1, switching from 1 to 0 pauses context 1, and any other
+  // switch stops every voice.
+  static int GetVoiceContext();
+  static void SetVoiceContext(int context);
+  static void SetContextPaused(int context, bool paused);
+  static void StopContextVoices(int context);
+  static void StopAllVoices();
   static void TurnOnChannel(ESfxChannels channel);
   static void TurnOffChannel(ESfxChannels channel);
   static void AddListener(ESfxChannels channel, const CVector3f& position,

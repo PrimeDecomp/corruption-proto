@@ -110,7 +110,7 @@ SAdvancementResults CAnimTreeTransition::VAdvanceView(const CCharAnimTime& time)
 }
 
 rstl::ownership_transfer< IAnimReader > CAnimTreeTransition::VClone() const {
-  return rs_new CAnimTreeTransition(CharacterSpaceBlend(), Cast(mA->VClone()), Cast(mB->VClone()),
+  return NEW CAnimTreeTransition(CharacterSpaceBlend(), Cast(mA->VClone()), Cast(mB->VClone()),
                                     mTransDur, mTimeInTrans, mRunA, mLoopA, GetBlendRoot(), mName,
                                     mInitialized);
 }

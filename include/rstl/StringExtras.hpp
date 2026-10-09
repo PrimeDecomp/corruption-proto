@@ -13,6 +13,9 @@ public:
   static rstl::string ConvertToLowerCase(const rstl::string& str);
   static rstl::string CreatePrefix(const rstl::string& str, int count);
   static rstl::string CreateFromInteger(int v);
+  // 0x80505D30, named by the demo map (CreateFromReal__13CStringExtrasFfi): "%.<precision>f"
+  // with the precision clamped to 0..12.
+  static rstl::string CreateFromReal(float v, int precision);
   // Guessed name: the inverse of CreateFromInteger; asserts kException_NotInt on bad input.
   static int ConvertToInteger(const rstl::string& str);
   static rstl::string ConvertToANSI(const rstl::wstring& str);

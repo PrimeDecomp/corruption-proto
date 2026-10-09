@@ -36,7 +36,7 @@ CDecalDescription* CDecalDataFactory::CreateGeneratorDescription(CInputStream& i
     return nullptr;
   }
 
-  CDecalDescription* desc = rs_new CDecalDescription();
+  CDecalDescription* desc = NEW CDecalDescription();
   CreateDPSM(desc, in, pool);
   return desc;
 }

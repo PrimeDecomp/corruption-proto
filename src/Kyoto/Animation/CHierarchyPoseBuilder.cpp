@@ -5,7 +5,7 @@
 CHierarchyPoseBuilder::CHierarchyPoseBuilder(const CLayoutDescription& layout, bool animatedScale)
 : mLayoutDesc(layout)
 , mTreeMap(layout.GetNumSegments())
-, mScales(animatedScale ? rstl::auto_ptr< ScaleMap >(rs_new ScaleMap(layout.GetNumSegments()))
+, mScales(animatedScale ? rstl::auto_ptr< ScaleMap >(NEW ScaleMap(layout.GetNumSegments()))
                         : rstl::auto_ptr< ScaleMap >()) {
   TToken< CCharLayoutInfo > layoutToken = layout.ScaledLayout();
   const CCharLayoutInfo& layoutInfo = **layoutToken;

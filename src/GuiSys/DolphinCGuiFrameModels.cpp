@@ -58,7 +58,7 @@ CGuiFrameModelDatabase::CGuiFrameModelDatabase(CInputStream& in, CSimplePool* po
         surfaces.push_back_unsafe(MemoryFromPartData(dataCur, sectionSizeCur));
       }
 
-      const rstl::auto_ptr< CCubeModel > model(rs_new CCubeModel(pool, &surfaces, materialData,
+      const rstl::auto_ptr< CCubeModel > model(NEW CCubeModel(pool, &surfaces, materialData,
                                                                  positions, normals, colors, uvs,
                                                                  CAABox::Identity(), 0, true, i));
       mModels[i] = model;

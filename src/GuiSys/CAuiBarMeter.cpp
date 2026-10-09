@@ -43,7 +43,7 @@ CGuiWidget* CAuiBarMeter::Create(CGuiFrame* frame, CInputStream& in, CSimplePool
   rstl::reserved_vector< CVector3f, 4 > coords(in);
   rstl::reserved_vector< CVector2f, 4 > uvs(in);
   CAssetId textureId(in);
-  CAuiBarMeter* widget = rs_new CAuiBarMeter(parms, pool, textureId, coords, uvs, true);
+  CAuiBarMeter* widget = NEW CAuiBarMeter(parms, pool, textureId, coords, uvs, true);
   widget->ParseBaseInfo(frame, in, parms, version);
   return widget;
 }

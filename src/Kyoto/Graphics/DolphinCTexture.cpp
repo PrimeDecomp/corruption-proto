@@ -70,7 +70,7 @@ CTexture::CTexture(CInputStream& in, EAutoMipmap automip, EBlackKey blackKey)
   mHeight = in.ReadUint16();
   mNumMips = in.ReadInt32();
   if (IsCITextureFormat(mTexelFormat)) {
-    mGraphicsPalette = rs_new CGraphicsPalette(in);
+    mGraphicsPalette = NEW CGraphicsPalette(in);
   }
   mBitsPerPixel = TexelFormatBitsPerPixel(mTexelFormat);
   InitBitmapBuffers(mTexelFormat, mWidth, mHeight, mNumMips);
@@ -187,14 +187,14 @@ void CTexture::LoadMipLevel(int mip, GXTexMapID tex, EClampMode clamp) const {
 void CTexture::UnloadBitmapData(const CAssetId& textureId) const {
   if (!mBitmapReloader.null()) {
     bool loadToARAM = mBitmapReloader->GetShouldBeInARAM();
-    mBitmapReloader = rs_new CDumpedBitmapDataReloader(textureId, mMemoryAllocated, loadToARAM);
+    mBitmapReloader = NEW CDumpedBitmapDataReloader(textureId, mMemoryAllocated, loadToARAM);
   } else {
     bool complete = mARAMToken.GetStatus() == CARAMToken::kS_Zero ||
                     mARAMToken.GetStatus() == CARAMToken::kS_Two ||
                     mARAMToken.GetStatus() == CARAMToken::kS_Five;
 
     mARAMToken = CARAMToken();
-    mBitmapReloader = rs_new CDumpedBitmapDataReloader(textureId, mMemoryAllocated, complete);
+    mBitmapReloader = NEW CDumpedBitmapDataReloader(textureId, mMemoryAllocated, complete);
     mCanLoadObj = true;
   }
 }
@@ -437,7 +437,7 @@ void CTexture::UnLock() {
 
 CFactoryFnReturn FTextureFactory(const SObjectTag& tag, CInputStream& in,
                                  const CVParamTransfer& xfer) {
-  return rs_new CTexture(in, CTexture::kAM_Zero, CTexture::kBK_Zero);
+  return NEW CTexture(in, CTexture::kAM_Zero, CTexture::kBK_Zero);
 }
 
 const void* CTexture::GetConstBitMapData(const int mip) const {

@@ -41,7 +41,7 @@ rstl::auto_ptr< CPVSAreaSet > CPVSAreaSet::MakeAreaSet(const char* data, int len
   data += in.GetReadPosition();
   const char* const lightLeaves = data + numActors * 4;
   const char* const octreeData = lightLeaves + lightIndexCount * leafSize;
-  return rstl::auto_ptr< CPVSAreaSet >(rs_new CPVSAreaSet(numFeatures, numLights, num2ndLights,
+  return rstl::auto_ptr< CPVSAreaSet >(NEW CPVSAreaSet(numFeatures, numLights, num2ndLights,
                                                           numActors, leafSize, lightIndexCount,
                                                           data, lightLeaves, octreeData));
 }

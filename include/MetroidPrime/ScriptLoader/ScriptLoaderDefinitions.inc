@@ -71,7 +71,7 @@ void LoadTypedefDamageInfo(SLdrDamageInfo& sldrThis, CInputStream& input) {
         sldrThis.dI_WeaponType = 15;
         break;
       default:
-        CBBASupport_Printf("Unknown enum hash 0x%08x for DI_WeaponType in DamageInfo loader.\n",
+        CBBASupport::Printf("Unknown enum hash 0x%08x for DI_WeaponType in DamageInfo loader.\n",
                            value);
         break;
       }
@@ -90,7 +90,7 @@ void LoadTypedefDamageInfo(SLdrDamageInfo& sldrThis, CInputStream& input) {
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in DamageInfo loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in DamageInfo loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -124,7 +124,7 @@ void LoadTypedefGuiWidgetProperties(SLdrGuiWidgetProperties& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in GuiWidgetProperties loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in GuiWidgetProperties loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -153,7 +153,7 @@ void LoadTypedefHealthInfo(SLdrHealthInfo& sldrThis, CInputStream& input) {
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in HealthInfo loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in HealthInfo loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -175,7 +175,7 @@ void LoadTypedefScannableParameters(SLdrScannableParameters& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in ScannableParameters loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in ScannableParameters loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -197,7 +197,7 @@ void LoadTypedefSplineType(SLdrSplineType& sldrThis, CInputStream& input) {
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in SplineType loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in SplineType loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -239,13 +239,13 @@ void LoadTypedefPathType(SLdrPathType& sldrThis, CInputStream& input) {
         sldrThis.curvature = 6;
         break;
       default:
-        CBBASupport_Printf("Unknown enum hash 0x%08x for Curvature in PathType loader.\n", value);
+        CBBASupport::Printf("Unknown enum hash 0x%08x for Curvature in PathType loader.\n", value);
         break;
       }
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in PathType loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in PathType loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -289,7 +289,7 @@ void LoadTypedefTDamageInfo(SLdrTDamageInfo& sldrThis, CInputStream& input) {
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TDamageInfo loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TDamageInfo loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -333,7 +333,7 @@ void LoadTypedefTGunResources(SLdrTGunResources& sldrThis, CInputStream& input) 
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TGunResources loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TGunResources loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -397,7 +397,7 @@ void LoadTypedefTIcon_Configurations(SLdrTIcon_Configurations& sldrThis, CInputS
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TIcon_Configurations loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TIcon_Configurations loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -431,7 +431,7 @@ void LoadTypedefTweakBall_Misc(SLdrTweakBall_Misc& sldrThis, CInputStream& input
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_Misc loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_Misc loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -690,7 +690,7 @@ void LoadTypedefTweakBall_Movement(SLdrTweakBall_Movement& sldrThis, CInputStrea
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_Movement loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_Movement loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -735,7 +735,7 @@ void LoadTypedefTweakGame_CoinLimitChoices(SLdrTweakGame_CoinLimitChoices& sldrT
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGame_CoinLimitChoices loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGame_CoinLimitChoices loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -781,7 +781,7 @@ void LoadTypedefTweakGame_FragLimitChoices(SLdrTweakGame_FragLimitChoices& sldrT
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGame_FragLimitChoices loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGame_FragLimitChoices loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -827,7 +827,7 @@ void LoadTypedefTweakGame_TimeLimitChoices(SLdrTweakGame_TimeLimitChoices& sldrT
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGame_TimeLimitChoices loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGame_TimeLimitChoices loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -887,7 +887,7 @@ void LoadTypedefTweakGui_MovieVolumes(SLdrTweakGui_MovieVolumes& sldrThis, CInpu
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGui_MovieVolumes loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGui_MovieVolumes loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -917,7 +917,7 @@ void LoadTypedefTweakGui_ScannableObjectDownloadTimes(
       break;
     }
     default:
-      CBBASupport_Printf(
+      CBBASupport::Printf(
           "Unknown property 0x%08x in TweakGui_ScannableObjectDownloadTimes loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -953,7 +953,7 @@ void LoadTypedefTweakPlayerGun_Holstering(SLdrTweakPlayerGun_Holstering& sldrThi
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayerGun_Holstering loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayerGun_Holstering loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -1033,7 +1033,7 @@ void LoadTypedefTweakPlayerGun_Misc(SLdrTweakPlayerGun_Misc& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayerGun_Misc loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayerGun_Misc loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -1073,7 +1073,7 @@ void LoadTypedefTweakPlayerGun_Position(SLdrTweakPlayerGun_Position& sldrThis,
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayerGun_Position loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayerGun_Position loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -1119,7 +1119,7 @@ void LoadTypedefTweakPlayerGun_RicochetDamage_Factor(
       break;
     }
     default:
-      CBBASupport_Printf(
+      CBBASupport::Printf(
           "Unknown property 0x%08x in TweakPlayerGun_RicochetDamage_Factor loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -1223,7 +1223,7 @@ void LoadTypedefTweakPlayerRes_AutoMapperIcons(SLdrTweakPlayerRes_AutoMapperIcon
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayerRes_AutoMapperIcons loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayerRes_AutoMapperIcons loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -1435,7 +1435,7 @@ void LoadTypedefTweakPlayerRes_MapScreenIcons(SLdrTweakPlayerRes_MapScreenIcons&
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayerRes_MapScreenIcons loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayerRes_MapScreenIcons loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -1555,7 +1555,7 @@ void LoadTypedefTweakPlayer_AimStuff(SLdrTweakPlayer_AimStuff& sldrThis, CInputS
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_AimStuff loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_AimStuff loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -1599,7 +1599,7 @@ void LoadTypedefTweakPlayer_Collision(SLdrTweakPlayer_Collision& sldrThis, CInpu
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_Collision loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_Collision loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -1633,7 +1633,7 @@ void LoadTypedefTweakPlayer_Frozen(SLdrTweakPlayer_Frozen& sldrThis, CInputStrea
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_Frozen loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_Frozen loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -1673,7 +1673,7 @@ void LoadTypedefTweakPlayer_GrappleBeam(SLdrTweakPlayer_GrappleBeam& sldrThis,
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_GrappleBeam loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_GrappleBeam loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -1757,7 +1757,7 @@ void LoadTypedefTweakPlayer_HyperMode(SLdrTweakPlayer_HyperMode& sldrThis, CInpu
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_HyperMode loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_HyperMode loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -1851,7 +1851,7 @@ void LoadTypedefTweakPlayer_Misc(SLdrTweakPlayer_Misc& sldrThis, CInputStream& i
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_Misc loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_Misc loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2250,7 +2250,7 @@ void LoadTypedefTweakPlayer_Motion(SLdrTweakPlayer_Motion& sldrThis, CInputStrea
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_Motion loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_Motion loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2519,7 +2519,7 @@ void LoadTypedefTweakPlayer_Orbit(SLdrTweakPlayer_Orbit& sldrThis, CInputStream&
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_Orbit loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_Orbit loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2573,7 +2573,7 @@ void LoadTypedefTweakPlayer_ScanVisor(SLdrTweakPlayer_ScanVisor& sldrThis, CInpu
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_ScanVisor loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_ScanVisor loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2612,7 +2612,7 @@ void LoadTypedefTweakPlayer_Shield(SLdrTweakPlayer_Shield& sldrThis, CInputStrea
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_Shield loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_Shield loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2647,7 +2647,7 @@ void LoadTypedefTweakPlayer_SuitDamageReduction(SLdrTweakPlayer_SuitDamageReduct
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_SuitDamageReduction loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_SuitDamageReduction loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -2682,7 +2682,7 @@ void LoadTypedefWeaponVulnerability(SLdrWeaponVulnerability& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in WeaponVulnerability loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in WeaponVulnerability loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2709,7 +2709,7 @@ void LoadTypedefCameraShakerEnvelope(SLdrCameraShakerEnvelope& sldrThis, CInputS
         sldrThis.shakeShape = 1;
         break;
       default:
-        CBBASupport_Printf(
+        CBBASupport::Printf(
             "Unknown enum hash 0x%08x for ShakeShape in CameraShakerEnvelope loader.\n", value);
         break;
       }
@@ -2724,7 +2724,7 @@ void LoadTypedefCameraShakerEnvelope(SLdrCameraShakerEnvelope& sldrThis, CInputS
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in CameraShakerEnvelope loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in CameraShakerEnvelope loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2775,7 +2775,7 @@ void LoadTypedefCameraShakerData(SLdrCameraShakerData& sldrThis, CInputStream& i
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in CameraShakerData loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in CameraShakerData loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2892,7 +2892,7 @@ void LoadTypedefDamageVulnerability(SLdrDamageVulnerability& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in DamageVulnerability loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in DamageVulnerability loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -2986,7 +2986,7 @@ void LoadTypedefLightParameters(SLdrLightParameters& sldrThis, CInputStream& inp
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in LightParameters loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in LightParameters loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -3046,7 +3046,7 @@ void LoadTypedefPlatformMotionProperties(SLdrPlatformMotionProperties& sldrThis,
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in PlatformMotionProperties loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in PlatformMotionProperties loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -3107,7 +3107,7 @@ void LoadTypedefTBallTransitionResources(SLdrTBallTransitionResources& sldrThis,
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TBallTransitionResources loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TBallTransitionResources loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -3139,7 +3139,7 @@ void LoadTypedefTWeaponDamage(SLdrTWeaponDamage& sldrThis, CInputStream& input) 
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TWeaponDamage loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TWeaponDamage loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -3226,7 +3226,7 @@ void LoadTypedefTextProperties(SLdrTextProperties& sldrThis, CInputStream& input
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TextProperties loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TextProperties loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -3276,7 +3276,7 @@ void LoadTypedefTriggerInfo(SLdrTriggerInfo& sldrThis, CInputStream& input) {
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TriggerInfo loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TriggerInfo loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -3718,7 +3718,7 @@ void LoadTypedefTweakAutoMapper_Base(SLdrTweakAutoMapper_Base& sldrThis, CInputS
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakAutoMapper_Base loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakAutoMapper_Base loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -3809,7 +3809,7 @@ void LoadTypedefTweakAutoMapper_DoorColors(SLdrTweakAutoMapper_DoorColors& sldrT
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakAutoMapper_DoorColors loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakAutoMapper_DoorColors loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -3901,7 +3901,7 @@ void LoadTypedefTweakBall_BoostBall(SLdrTweakBall_BoostBall& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_BoostBall loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_BoostBall loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -4158,7 +4158,7 @@ void LoadTypedefTweakBall_Camera(SLdrTweakBall_Camera& sldrThis, CInputStream& i
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_Camera loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_Camera loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -4180,7 +4180,7 @@ void LoadTypedefTweakBall_CannonBall(SLdrTweakBall_CannonBall& sldrThis, CInputS
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_CannonBall loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_CannonBall loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -4212,7 +4212,7 @@ void LoadTypedefTweakBall_DeathBall(SLdrTweakBall_DeathBall& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_DeathBall loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_DeathBall loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -4314,7 +4314,7 @@ void LoadTypedefTweakBall_ScrewAttack(SLdrTweakBall_ScrewAttack& sldrThis, CInpu
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_ScrewAttack loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_ScrewAttack loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -4346,7 +4346,7 @@ void LoadTypedefTweakBall_PhazonBall(SLdrTweakBall_PhazonBall& sldrThis, CInputS
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_PhazonBall loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_PhazonBall loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -4373,7 +4373,7 @@ void LoadTypedefTweakBall_IceBall(SLdrTweakBall_IceBall& sldrThis, CInputStream&
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_IceBall loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_IceBall loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -4405,7 +4405,7 @@ void LoadTypedefTweakBall_FireBall(SLdrTweakBall_FireBall& sldrThis, CInputStrea
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakBall_FireBall loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakBall_FireBall loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -4520,7 +4520,7 @@ void LoadTypedefTweakGuiColors_HUDColorsTypedef(SLdrTweakGuiColors_HUDColorsType
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGuiColors_HUDColorsTypedef loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGuiColors_HUDColorsTypedef loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -5573,7 +5573,7 @@ void LoadTypedefTweakGuiColors_Misc(SLdrTweakGuiColors_Misc& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGuiColors_Misc loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGuiColors_Misc loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -5653,7 +5653,7 @@ void LoadTypedefTweakGuiColors_Multiplayer(SLdrTweakGuiColors_Multiplayer& sldrT
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGuiColors_Multiplayer loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGuiColors_Multiplayer loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -5703,7 +5703,7 @@ void LoadTypedefTweakGuiColors_TurretHudTypedef(SLdrTweakGuiColors_TurretHudType
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGuiColors_TurretHudTypedef loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGuiColors_TurretHudTypedef loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -5792,7 +5792,7 @@ void LoadTypedefTweakGui_Completion(SLdrTweakGui_Completion& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGui_Completion loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGui_Completion loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -5856,7 +5856,7 @@ void LoadTypedefTweakGui_Credits(SLdrTweakGui_Credits& sldrThis, CInputStream& i
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGui_Credits loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGui_Credits loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -5936,7 +5936,7 @@ void LoadTypedefTweakGui_HudColorTypedef(SLdrTweakGui_HudColorTypedef& sldrThis,
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGui_HudColorTypedef loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGui_HudColorTypedef loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -6367,7 +6367,7 @@ void LoadTypedefTweakGui_LogBook(SLdrTweakGui_LogBook& sldrThis, CInputStream& i
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGui_LogBook loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGui_LogBook loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -7211,7 +7211,7 @@ void LoadTypedefTweakGui_Misc(SLdrTweakGui_Misc& sldrThis, CInputStream& input) 
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGui_Misc loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGui_Misc loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -7330,7 +7330,7 @@ void LoadTypedefTweakGui_ScanVisor(SLdrTweakGui_ScanVisor& sldrThis, CInputStrea
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGui_ScanVisor loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGui_ScanVisor loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -7361,7 +7361,7 @@ void LoadTypedefTweakGui_VisorColorSchemeTypedef(SLdrTweakGui_VisorColorSchemeTy
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakGui_VisorColorSchemeTypedef loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakGui_VisorColorSchemeTypedef loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7393,7 +7393,7 @@ void LoadTypedefTweakPlayerGun_Arm_Position(SLdrTweakPlayerGun_Arm_Position& sld
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayerGun_Arm_Position loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayerGun_Arm_Position loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7435,7 +7435,7 @@ void LoadTypedefTweakPlayerGun_Beam_Misc(SLdrTweakPlayerGun_Beam_Misc& sldrThis,
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayerGun_Beam_Misc loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayerGun_Beam_Misc loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7484,7 +7484,7 @@ void LoadTypedefTweakPlayer_DarkWorld(SLdrTweakPlayer_DarkWorld& sldrThis, CInpu
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_DarkWorld loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_DarkWorld loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -7555,7 +7555,7 @@ void LoadTypedefTweakPlayer_FirstPersonCamera(SLdrTweakPlayer_FirstPersonCamera&
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_FirstPersonCamera loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_FirstPersonCamera loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7654,7 +7654,7 @@ void LoadTypedefTweakPlayer_Grapple(SLdrTweakPlayer_Grapple& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayer_Grapple loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayer_Grapple loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -7715,7 +7715,7 @@ void LoadTypedefTweakTargeting_Charge_Gauge(SLdrTweakTargeting_Charge_Gauge& sld
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakTargeting_Charge_Gauge loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakTargeting_Charge_Gauge loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7766,7 +7766,7 @@ void LoadTypedefTweakTargeting_LockDagger(SLdrTweakTargeting_LockDagger& sldrThi
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakTargeting_LockDagger loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakTargeting_LockDagger loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7802,7 +7802,7 @@ void LoadTypedefTweakTargeting_LockFire(SLdrTweakTargeting_LockFire& sldrThis,
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakTargeting_LockFire loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakTargeting_LockFire loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7849,7 +7849,7 @@ void LoadTypedefTweakTargeting_OuterBeamIcon(SLdrTweakTargeting_OuterBeamIcon& s
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakTargeting_OuterBeamIcon loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in TweakTargeting_OuterBeamIcon loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7899,7 +7899,7 @@ void LoadTypedefTweakTargeting_Scan(SLdrTweakTargeting_Scan& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakTargeting_Scan loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakTargeting_Scan loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -7930,7 +7930,7 @@ void LoadTypedefTweakTargeting_VulnerabilityIndicator(
       break;
     }
     default:
-      CBBASupport_Printf(
+      CBBASupport::Printf(
           "Unknown property 0x%08x in TweakTargeting_VulnerabilityIndicator loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -7960,7 +7960,7 @@ void LoadTypedefVisorParameters(SLdrVisorParameters& sldrThis, CInputStream& inp
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in VisorParameters loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in VisorParameters loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8064,7 +8064,7 @@ void LoadTypedefActorParameters(SLdrActorParameters& sldrThis, CInputStream& inp
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in ActorParameters loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in ActorParameters loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8102,7 +8102,7 @@ void LoadTypedefEditorProperties(SLdrEditorProperties& sldrThis, CInputStream& i
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in EditorProperties loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in EditorProperties loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8166,7 +8166,7 @@ void LoadTypedefShockWaveInfo(SLdrShockWaveInfo& sldrThis, CInputStream& input) 
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in ShockWaveInfo loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in ShockWaveInfo loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8198,7 +8198,7 @@ void LoadTypedefTBeamInfo(SLdrTBeamInfo& sldrThis, CInputStream& input) {
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TBeamInfo loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TBeamInfo loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8289,7 +8289,7 @@ void LoadTypedefTweakPlayerGun_Weapons(SLdrTweakPlayerGun_Weapons& sldrThis, CIn
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in TweakPlayerGun_Weapons loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in TweakPlayerGun_Weapons loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8338,7 +8338,7 @@ void LoadTypedefSpringConvergence(SLdrSpringConvergence& sldrThis, CInputStream&
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in SpringConvergence loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in SpringConvergence loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8370,7 +8370,7 @@ void LoadTypedefPIDConvergence(SLdrPIDConvergence& sldrThis, CInputStream& input
         sldrThis.pIDType = 1;
         break;
       default:
-        CBBASupport_Printf("Unknown enum hash 0x%08x for PIDType in PIDConvergence loader.\n",
+        CBBASupport::Printf("Unknown enum hash 0x%08x for PIDType in PIDConvergence loader.\n",
                            value);
         break;
       }
@@ -8389,7 +8389,7 @@ void LoadTypedefPIDConvergence(SLdrPIDConvergence& sldrThis, CInputStream& input
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in PIDConvergence loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in PIDConvergence loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8423,7 +8423,7 @@ void LoadTypedefVelocityConvergence(SLdrVelocityConvergence& sldrThis, CInputStr
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in VelocityConvergence loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in VelocityConvergence loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8450,7 +8450,7 @@ void LoadTypedefProportionalConvergence(SLdrProportionalConvergence& sldrThis,
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in ProportionalConvergence loader.\n",
+      CBBASupport::Printf("Unknown property 0x%08x in ProportionalConvergence loader.\n",
                          propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
@@ -8489,7 +8489,7 @@ void LoadTypedefConvergence(SLdrConvergence& sldrThis, CInputStream& input) {
         sldrThis.convergenceType = 4;
         break;
       default:
-        CBBASupport_Printf("Unknown enum hash 0x%08x for ConvergenceType in Convergence loader.\n",
+        CBBASupport::Printf("Unknown enum hash 0x%08x for ConvergenceType in Convergence loader.\n",
                            value);
         break;
       }
@@ -8512,7 +8512,7 @@ void LoadTypedefConvergence(SLdrConvergence& sldrThis, CInputStream& input) {
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in Convergence loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in Convergence loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }
@@ -8622,7 +8622,7 @@ void LoadTypedefPlasmaBeamInfo(SLdrPlasmaBeamInfo& sldrThis, CInputStream& input
       break;
     }
     default:
-      CBBASupport_Printf("Unknown property 0x%08x in PlasmaBeamInfo loader.\n", propertyId);
+      CBBASupport::Printf("Unknown property 0x%08x in PlasmaBeamInfo loader.\n", propertyId);
       input.ReadBytes(nullptr, propertySize);
       break;
     }

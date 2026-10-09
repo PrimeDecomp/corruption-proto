@@ -14,4 +14,13 @@ class CInputGenerator;
 // commands; called from the CGameArchitectureSupport constructor.
 void InitializeConsoleCommands(CInputGenerator* inputGenerator);
 
+class CStateManager;
+// Guessed name (0x80209C44). Remembers the state manager and, when it is not null, registers the
+// commands that need it; called from the CStateManager constructor.
+void InitializeStateManagerConsoleCommands(CStateManager* mgr);
+
+// Guessed name (0x8020A138). Upper-cases the first word of the line, looks it up in the static
+// command table and calls its handler with the rest; prints the command list when unknown.
+void ExecuteConsoleCommand(const char* command);
+
 #endif // _CONSOLECOMMANDS

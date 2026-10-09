@@ -26,7 +26,7 @@ public:
     }
   }
 
-  void Emit() const; // Guessed name, as in TSignal1
+  void Emit() const; // Name confirmed by Metroid Prime Remastered symbols
 
 private:
   rstl::list< SSlot > mSlots;

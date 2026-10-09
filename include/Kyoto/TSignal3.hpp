@@ -30,7 +30,7 @@ public:
     }
   }
 
-  void Emit(A1 a1, A2 a2, A3 a3) const; // Guessed name, as in TSignal1
+  void Emit(A1 a1, A2 a2, A3 a3) const; // Name confirmed by Metroid Prime Remastered symbols
 
 private:
   SlotList mSlots;

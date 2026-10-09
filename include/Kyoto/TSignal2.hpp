@@ -30,7 +30,7 @@ public:
     }
   }
 
-  void Emit(A1 a1, A2 a2) const; // Guessed name
+  void Emit(A1 a1, A2 a2) const; // Name confirmed by Metroid Prime Remastered symbols
 
 private:
   SlotList mSlots;

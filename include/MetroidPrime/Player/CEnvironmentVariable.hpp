@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-// Minimal view after Echoes (where the class name is guessed). A named integer kept between its
-// minimum and maximum; the prototype's functions live in CGameState.cpp.
+// Guessed name (Echoes' guess). Minimal view: a named integer kept between its minimum and
+// maximum; the prototype's functions live in CGameState.cpp.
 class CEnvironmentVariable {
 public:
   int GetValue() const { return mValue; }

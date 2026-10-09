@@ -103,7 +103,6 @@
 // 0x8000E3F8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E41C +0x630: main memory metrics/debug text display; uses leading string-vector push-back helper
 // 0x8000EFBC +0x268: main safe-frame debug rendering; four screen-edge quads
-// 0x8000F224 +0x84: BBA message callback, directly registered by InitializeSubsystems through local C834 adapter
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
 // 0x8000F658 +0x124: emitted TOneStatic global-objects operator delete
@@ -399,9 +398,14 @@ public:
   }
 };
 
-// Guessed name. Prints "Received bba command!" when a debug option is set and forwards the
-// command text to the console-command interpreter. Not implemented yet (0x8000F224).
-void ReceiveBBACommand(int, const rstl::string& command);
+// Guessed name. Prints the command when "Show BBA Messages" is set and forwards it to the
+// console-command interpreter.
+void ReceiveBBACommand(int, const rstl::string& command) {
+  if (gpGameDebug->IsOptionSet(CGameDebug::kDO_ShowBBAMessages)) {
+    rs_debugger_printf("Received bba command!\n%s\n", command.data());
+  }
+  ExecuteConsoleCommand(command.data());
+}
 
 extern "C" void* __sys_alloc(const size_t len) {
   return CMemory::Alloc(len, IAllocator::kHI_None, IAllocator::kSC_Unk1, IAllocator::kTP_Heap,

@@ -163,7 +163,7 @@ void* CAudioSys::mAICallback = nullptr;
 
 const rstl::string CAudioSys::mpDefaultInvalidString(rstl::string_l("NULL"));
 
-void* DoMalloc(size_t len) { return NEW char[len]; }
+void* DoMalloc(size_t len) { return rs_new char[len]; }
 
 void DoFree(void* ptr) {
   if (!ptr) {
@@ -198,10 +198,10 @@ CAudioSys::CAudioSys(const uchar numVoices, const uchar numMusic, const uchar nu
   sndAddStudioInput(0, &input2);
   DTKInit();
 
-  mpDVDTrackDB = NEW rstl::map< rstl::string, rstl::ncrc_ptr< CTrkData > >();
-  mpEmitterDB = NEW rstl::vector< CEmitterData >(maxNumEmitters, CEmitterData(),
+  mpDVDTrackDB = rs_new rstl::map< rstl::string, rstl::ncrc_ptr< CTrkData > >();
+  mpEmitterDB = rs_new rstl::vector< CEmitterData >(maxNumEmitters, CEmitterData(),
                                                     rstl::rmemory_allocator());
-  mpListener = NEW SND_LISTENER;
+  mpListener = rs_new SND_LISTENER;
   mIsListenerActive = false;
   mMaxNumEmitters = maxNumEmitters;
 
@@ -276,7 +276,7 @@ int CAudioSys::TrkQueueTrack(const rstl::string& name, void (*callback)(u32),
 
   rstl::ncrc_ptr< CTrkData > trk = FindTrack(name);
   if (!trk.GetPtr()) {
-    CTrkData* data = NEW CTrkData(name);
+    CTrkData* data = rs_new CTrkData(name);
     rstl::ncrc_ptr< CTrkData > newTrk(data);
     mpDVDTrackDB->insert(rstl::pair< rstl::string, rstl::ncrc_ptr< CTrkData > >(name, newTrk));
     return DTKQueueTrack(newTrk->GetFileName(), newTrk->GetTrack(), eventMask, callback);

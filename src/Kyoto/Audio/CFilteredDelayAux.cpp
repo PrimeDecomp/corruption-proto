@@ -26,7 +26,7 @@ void PrepareFilteredDelayAux(SFilteredDelayAuxParameters* parameters) {
   }
 
   for (int channel = 0; channel < 3; ++channel) {
-    parameters->mDelayBuffers[channel] = NEW s32[parameters->mBlockCounts[channel] * 160];
+    parameters->mDelayBuffers[channel] = rs_new s32[parameters->mBlockCounts[channel] * 160];
   }
 
   for (int channel = 0; channel < 3; ++channel) {

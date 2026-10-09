@@ -152,6 +152,8 @@ void CGameDebug::AddOptionChoice(int index, const char* name, float value) {
   mOptions[index]->AddChoice(rstl::string_l(name), value);
 }
 
+// The callers pass CGameState::GetPlayerState() (Echoes name; 0x80159C8C returns the pointer at
+// 0x20).
 void CGameDebug::ReadPowerupOptions(CPlayerState* playerState) {
   for (int i = kDO_PowerBeam; i <= kDO_ItemPercentage; ++i) {
     mOptions[i].data().SetValue(playerState->GetItemAmount(

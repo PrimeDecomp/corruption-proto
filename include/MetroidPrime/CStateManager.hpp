@@ -14,6 +14,21 @@ class CStateManagerObject;
 // Only the fields with evidence are laid out. The size comes from CMFGameLoader, which allocates
 // the manager through TOneStatic<CStateManager>'s operator new (0x8021A380) and asserts a
 // 0x220-byte limit there.
+//
+// Unlike Echoes' monolithic class (0x1C00+ bytes), Corruption's manager is a 0x220-byte hub
+// whose state lives in separately allocated objects:
+// - CStateManagerObject (0x4): the entity database. Object lists, unique ids, the script message
+//   queue and its delivery, the world, the graveyard, the editor-id map, the mailbox, the
+//   map-world info and the player. Callers across the DOL reach it through the pointer and its
+//   out-of-line getters instead of inline CStateManager accessors.
+// - CStateManagerCallbackLists (0x0): 63 signals. Instead of calling each subsystem in turn, the
+//   update emits 46 per-phase signals with the frame time, CRenderManager emits two groups of
+//   render signals, and CStateManagerObject fires the entity added/removed/active signals. The
+//   destructor emits the 0x5B8 signal first.
+// - CStateManagerCollision (0x8): the collision and near-list work.
+// - CRenderManager (0x18): the drawing (Echoes' DrawWorld family).
+// What stays here is the frame driver (FrameBegin, the update and its profiling), the damage and
+// knock-back rules, area changes for actors, world setup and the memory callbacks.
 class CStateManager {
 public:
   CStateManagerObject& ObjectManager() { return *mObjectManager; } // Guessed name
@@ -32,6 +47,12 @@ public:
   // Prime's name. The update (0x80292E9C) seeds CDecal and CProjectileWeapon with it and bumps
   // it at the end; the script message logs print it.
   uint GetUpdateFrameIndex() const { return mUpdateFrameIdx; }
+
+  // Echoes' names, in Echoes' order. The constructor installs the callback with CMemory; unlike
+  // Echoes, it first reports the last and current areas.
+  void SwapOutTexturesToARAM(int, uint);
+  static const bool MemoryAllocatorAllocationFailedCallback(const void* context, uint size);
+  bool SwapOutAllPossibleMemory();
 
 private:
   // The constructor news each of these (0x5E8, 0x1138 and 0x1C038 bytes); their constructors live

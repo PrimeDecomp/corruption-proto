@@ -82,25 +82,25 @@ CProjectileWeapon::CProjectileWeapon(const TToken< CWeaponDescription >& descrip
   mAPSO = mWeaponDesc->mAPSO;
 
   if (mWeaponDesc->mAPSM) {
-    mAPSMGen = rs_new CElementGen(*mWeaponDesc->mAPSM, CElementGen::kMOT_Normal,
+    mAPSMGen = NEW CElementGen(*mWeaponDesc->mAPSM, CElementGen::kMOT_Normal,
                                   (mFlags & 1) ? CElementGen::kOSF_Two : CElementGen::kOSF_One);
     mAPSMGen->SetGlobalScale(scale);
   }
   if (mWeaponDesc->mAPS2) {
-    mAPS2Gen = rs_new CElementGen(*mWeaponDesc->mAPS2, CElementGen::kMOT_Normal,
+    mAPS2Gen = NEW CElementGen(*mWeaponDesc->mAPS2, CElementGen::kMOT_Normal,
                                   (mFlags & 1) ? CElementGen::kOSF_Two : CElementGen::kOSF_One);
     mAPS2Gen->SetGlobalScale(scale);
   }
   if (mWeaponDesc->mASW1) {
-    mSwoosh1 = rs_new CParticleSwoosh(*mWeaponDesc->mASW1, 0);
+    mSwoosh1 = NEW CParticleSwoosh(*mWeaponDesc->mASW1, 0);
     mSwoosh1->SetGlobalScale(scale);
   }
   if (mWeaponDesc->mASW2) {
-    mSwoosh2 = rs_new CParticleSwoosh(*mWeaponDesc->mASW2, 0);
+    mSwoosh2 = NEW CParticleSwoosh(*mWeaponDesc->mASW2, 0);
     mSwoosh2->SetGlobalScale(scale);
   }
   if (mWeaponDesc->mASW3) {
-    mSwoosh3 = rs_new CParticleSwoosh(*mWeaponDesc->mASW3, 0);
+    mSwoosh3 = NEW CParticleSwoosh(*mWeaponDesc->mASW3, 0);
     mSwoosh3->SetGlobalScale(scale);
   }
 

@@ -55,7 +55,7 @@ CCollisionPrimitive::CCollisionPrimitive(const CMaterialList& list) : mMaterial(
 CCollisionPrimitive::~CCollisionPrimitive() {}
 
 void CCollisionPrimitive::InitBeginTypes() {
-  sCollisionTypeList = RS_NEW(124) rstl::vector< Type >();
+  sCollisionTypeList = rs_new(124) rstl::vector< Type >();
   sCollisionTypeList->reserve(3);
   sTypesAdding = true;
   InternalColliders::AddTypes();
@@ -69,7 +69,7 @@ void CCollisionPrimitive::InitAddType(const Type& type) {
 
 void CCollisionPrimitive::InitEndTypes() {
   rstl::vector< Type > types = *sCollisionTypeList;
-  sCollisionTypeList = RS_NEW(151) rstl::vector< Type >(types);
+  sCollisionTypeList = rs_new(151) rstl::vector< Type >(types);
   sNumTypes = types.size();
   sTypesAdding = false;
   sTypesAdded = true;
@@ -77,9 +77,9 @@ void CCollisionPrimitive::InitEndTypes() {
 
 void CCollisionPrimitive::InitBeginColliders() {
   int numColliders = sCollisionTypeList->size() * sCollisionTypeList->size();
-  sTableOfCollidables = RS_NEW(169) ComparisonFunc[numColliders];
-  sTableOfBooleanCollidables = RS_NEW(170) BooleanComparisonFunc[numColliders];
-  sTableOfMovingCollidables = RS_NEW(171) MovingComparisonFunc[numColliders];
+  sTableOfCollidables = rs_new(169) ComparisonFunc[numColliders];
+  sTableOfBooleanCollidables = rs_new(170) BooleanComparisonFunc[numColliders];
+  sTableOfMovingCollidables = rs_new(171) MovingComparisonFunc[numColliders];
   memset(sTableOfCollidables.get(), 0, numColliders * sizeof(ComparisonFunc));
   memset(sTableOfBooleanCollidables.get(), 0, numColliders * sizeof(BooleanComparisonFunc));
   memset(sTableOfMovingCollidables.get(), 0, numColliders * sizeof(MovingComparisonFunc));

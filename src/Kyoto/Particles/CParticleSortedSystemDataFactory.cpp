@@ -27,7 +27,7 @@ CParticleSortedSystemDataFactory::CreateGeneratorDescription(CInputStream& in, C
   if (classId != 'SRSM') {
     return nullptr;
   }
-  CSortedParticleSystemDescription* desc = rs_new CSortedParticleSystemDescription();
+  CSortedParticleSystemDescription* desc = NEW CSortedParticleSystemDescription();
   CreateSRSM(desc, in, pool);
   return desc;
 }
@@ -43,7 +43,7 @@ bool CParticleSortedSystemDataFactory::CreateSRSM(CSortedParticleSystemDescripti
     case 'SPWN': {
       const FourCC childId = CParticleDataFactory::GetClassID(in);
       if (childId == 'CNST') {
-        desc->mSPWN = rs_new CSpawnSystemKeyframeData(in);
+        desc->mSPWN = NEW CSpawnSystemKeyframeData(in);
         desc->mSPWN->LoadAllSpawnedSystemTokens(pool);
       }
       break;

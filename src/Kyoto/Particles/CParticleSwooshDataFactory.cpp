@@ -29,7 +29,7 @@ CSwooshDescription* CParticleSwooshDataFactory::CreateGeneratorDescription(CInpu
   if (classId != 'SWSH') {
     return nullptr;
   }
-  CSwooshDescription* desc = rs_new CSwooshDescription();
+  CSwooshDescription* desc = NEW CSwooshDescription();
   CreateWPSM(desc, in, pool);
   return desc;
 }

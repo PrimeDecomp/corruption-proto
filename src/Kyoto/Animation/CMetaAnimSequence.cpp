@@ -25,7 +25,7 @@ CMetaAnimSequence::VGetAnimationTree(const CAnimSysContext& animSys,
     names.push_back_unsafe(tree->GetPrimitiveName());
     ++it;
   }
-  return rs_new CAnimTreeSequence(mSequence, animSys,
+  return NEW CAnimTreeSequence(mSequence, animSys,
                                   CAnimTreeSequence::CreatePrimitiveName(names));
 }
 

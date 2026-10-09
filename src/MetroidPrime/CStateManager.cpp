@@ -144,18 +144,18 @@ CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& str
                              const rstl::ncrc_ptr< CMapWorldInfo >& mapWorldInfo,
                              const rstl::ncrc_ptr< CWorldTransManager >& worldTransManager,
                              const rstl::ncrc_ptr< CWorldLayerState >& worldLayerState)
-: mCallbackLists(RS_NEW(206) CStateManagerCallbackLists())
-, mObjectManager(RS_NEW(215) CStateManagerObject(*this, stringProperties, mailbox, mapWorldInfo))
-, mCollision(RS_NEW(216) CStateManagerCollision(*this, *mObjectManager))
+: mCallbackLists(rs_new(206) CStateManagerCallbackLists())
+, mObjectManager(rs_new(215) CStateManagerObject(*this, stringProperties, mailbox, mapWorldInfo))
+, mCollision(rs_new(216) CStateManagerCollision(*this, *mObjectManager))
 , mArchQueue(nullptr)
 , mDisplayManager(nullptr)
 , mRenderManager(nullptr)
 , x128_(kInvalidUniqueId)
-, mWeaponMgr(RS_NEW(226) CWeaponMgr())
-, mFluidPlaneManager(RS_NEW(227) CFluidPlaneManager())
-, mEnvFxManager(RS_NEW(228) CEnvFxManager())
-, mActorModelParticles(RS_NEW(229) CActorModelParticles())
-, mAssetFactory(RS_NEW(217) CStateManagerAssetFactory(*this))
+, mWeaponMgr(rs_new(226) CWeaponMgr())
+, mFluidPlaneManager(rs_new(227) CFluidPlaneManager())
+, mEnvFxManager(rs_new(228) CEnvFxManager())
+, mActorModelParticles(rs_new(229) CActorModelParticles())
+, mAssetFactory(rs_new(217) CStateManagerAssetFactory(*this))
 , mAudioGroupDependencies(static_cast< CDependencyGroup* >(nullptr))
 , mWorldTransManager(worldTransManager)
 , mCurrentWorldLayerState(worldLayerState)
@@ -203,13 +203,13 @@ CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& str
 , mPhazonEnragedSlowdownCurve(gpSimplePool->GetObj("PhazonEnragedSlowdownUSER")) {
   rs_debugger_printf("Game type is %s\n",
                      SObjectTag::Type2Text(gpGameState->GetGameMode().GetGameType()));
-  mRumbleManager = RS_NEW(299) CRumbleManager(kIOP_Player1);
+  mRumbleManager = rs_new(299) CRumbleManager(kIOP_Player1);
   gpGameState->SetQueuedScriptMsgEnabled(true);
   InitializeStateManagerConsoleCommands(this);
   CMemory::SetOutOfMemoryCallback(MemoryAllocatorAllocationFailedCallback, this);
   mShadowTex.Lock();
-  sProfileCountersA = RS_NEW(367) rstl::map< rstl::string, CGameProfileStats::SStats >();
-  sProfileCountersB = RS_NEW(368) rstl::map< rstl::string, SProfileCountersB >();
+  sProfileCountersA = rs_new(367) rstl::map< rstl::string, CGameProfileStats::SStats >();
+  sProfileCountersB = rs_new(368) rstl::map< rstl::string, SProfileCountersB >();
 }
 
 // 0x80296220. Echoes' teardown: every object except the players and cameras is sent a delete

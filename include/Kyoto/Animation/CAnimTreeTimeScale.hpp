@@ -10,7 +10,7 @@ public:
   CAnimTreeTimeScale(const rstl::ncrc_ptr< CAnimTreeNode >& node, float scale,
                      const rstl::string& name)
   : CAnimTreeSingleChild(node, name)
-  , mTimeScale(rs_new CConstantAnimationTimeScale(scale))
+  , mTimeScale(NEW CConstantAnimationTimeScale(scale))
   , mCurAccelTime(0.f)
   , mTargetAccelTime(CCharAnimTime::Infinity())
   , mInitialTime(CCharAnimTime::ZeroFlat()) {}

@@ -13,7 +13,7 @@ CGuiWidget* CAuiMeter::Create(CGuiFrame* frame, CInputStream& in, CSimplePool* p
   const bool noRoundUp = in.ReadBool();
   const int maxCapacity = in.ReadInt32();
   const int workerCount = in.ReadInt32();
-  CGuiWidget* widget = rs_new CAuiMeter(parms, noRoundUp, maxCapacity, workerCount);
+  CGuiWidget* widget = NEW CAuiMeter(parms, noRoundUp, maxCapacity, workerCount);
   widget->ParseBaseInfo(frame, in, parms, version);
   return widget;
 }

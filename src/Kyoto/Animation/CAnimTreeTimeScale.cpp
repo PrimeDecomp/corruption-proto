@@ -65,14 +65,14 @@ CSteadyStateAnimInfo CAnimTreeTimeScale::VGetSteadyStateAnimInfo() const {
 }
 
 rstl::ownership_transfer< IAnimReader > CAnimTreeTimeScale::VClone() const {
-  return rs_new CAnimTreeTimeScale(Cast(mChild->Clone()), mTimeScale->Clone(), mCurAccelTime,
+  return NEW CAnimTreeTimeScale(Cast(mChild->Clone()), mTimeScale->Clone(), mCurAccelTime,
                                    mTargetAccelTime, mInitialTime, mName);
 }
 
 rstl::rc_ptr< CAnimTreeNode > CAnimTreeTimeScale::VGetBestUnblendedChild() const {
   rstl::rc_ptr< CAnimTreeNode > child = mChild->GetBestUnblendedChild();
   if (child) {
-    return rs_new CAnimTreeTimeScale(Cast(child->Clone()), mTimeScale->Clone(), mCurAccelTime,
+    return NEW CAnimTreeTimeScale(Cast(child->Clone()), mTimeScale->Clone(), mCurAccelTime,
                                      mTargetAccelTime, mInitialTime, mName);
   }
   return child;
@@ -159,7 +159,7 @@ CParticleData::EParentedMode CAnimTreeTimeScale::VGetParticlePOIState(uint nameH
 rstl::optional_object< rstl::ownership_transfer< IAnimReader > > CAnimTreeTimeScale::VSimplified() {
   rstl::optional_object< rstl::ownership_transfer< IAnimReader > > simp = mChild->Simplified();
   if (simp) {
-    return rstl::ownership_transfer< IAnimReader >(rs_new CAnimTreeTimeScale(
+    return rstl::ownership_transfer< IAnimReader >(NEW CAnimTreeTimeScale(
         Cast(*simp), mTimeScale->Clone(), mCurAccelTime, mTargetAccelTime, mInitialTime, mName));
   }
   if (mCurAccelTime == mTargetAccelTime) {

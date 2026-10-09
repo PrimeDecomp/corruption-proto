@@ -4,7 +4,7 @@
 #include "Kyoto/Streams/ZipTypes.hpp"
 
 void* CZipSupport::Alloc(void*, unsigned int count, unsigned int size) {
-  return RS_NEW(19) unsigned char[count * size];
+  return rs_new(19) unsigned char[count * size];
 }
 
 void CZipSupport::Free(void*, void* memory) {

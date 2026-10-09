@@ -2,7 +2,7 @@
 
 CAnimSourceReader::CAnimSourceReader(const TSubAnimTypeToken< CAnimSource >& source,
                                      const CCharAnimTime& time, const CAnimPOIData* poiData)
-: CAnimSourceReaderBase(rs_new CAnimSourceInfo(source), poiData)
+: CAnimSourceReaderBase(NEW CAnimSourceInfo(source), poiData)
 , mSource(source)
 , mSteadyStateInfo(mSource->GetSteadyStateAnimInfo(time)) {
   PostConstruct(time);
@@ -91,7 +91,7 @@ void CAnimSourceReader::VGetJointData_Linear(const CCharLayoutInfo& layout,
 }
 
 rstl::ownership_transfer< IAnimReader > CAnimSourceReader::VClone() const {
-  return rs_new CAnimSourceReader(mSource, mPOIData, mCurTime, mSteadyStateInfo, mPassedBoolCount,
+  return NEW CAnimSourceReader(mSource, mPOIData, mCurTime, mSteadyStateInfo, mPassedBoolCount,
                                   mPassedIntCount, mPassedParticleCount, mPassedSoundCount,
                                   mBoolStates, mInt32States, mParticleStates);
 }

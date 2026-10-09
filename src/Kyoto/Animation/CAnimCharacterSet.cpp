@@ -8,5 +8,5 @@ CAnimCharacterSet::CAnimCharacterSet(CInputStream& in)
 
 CFactoryFnReturn FAnimCharacterSet(const SObjectTag& tag, CInputStream& in,
                                    const CVParamTransfer& xfer) {
-  return rs_new CAnimCharacterSet(in);
+  return NEW CAnimCharacterSet(in);
 }

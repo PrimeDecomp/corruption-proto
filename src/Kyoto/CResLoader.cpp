@@ -204,7 +204,7 @@ CBufferedDvdRequest* CResLoader::LoadResourceAsync(const SObjectTag& tag) {
           static_cast< uchar* >(CMemory::Alloc(size, IAllocator::kHI_RoundUpLen)));
       CDvdRequest* request =
           curPak->DvdFile().AsyncSeekRead(buffer.get(), size, kSO_Set, info->GetOffset());
-      return rs_new CBufferedDvdRequest(nullptr, request, buffer.release());
+      return NEW CBufferedDvdRequest(nullptr, request, buffer.release());
     }
     it = AddGroupCache(&curPak->DvdFile(), info->GetOffset(), groupedSize + info->GetSize());
   }
@@ -225,13 +225,13 @@ CInputStream* CResLoader::LoadNewResourceSync(const SObjectTag& tag, char* extBu
   void* dest = extBuf ? extBuf : CMemory::Alloc(len, IAllocator::kHI_RoundUpLen);
 
   curPak->DvdFile().SyncSeekRead(dest, len, kSO_Set, info->GetOffset());
-  rstl::auto_ptr< CInputStream > input(rs_new CMemoryInStream(
+  rstl::auto_ptr< CInputStream > input(NEW CMemoryInStream(
       dest, info->GetSize(),
       extBuf == nullptr ? CMemoryInStream::kOS_Owned : CMemoryInStream::kOS_NotOwned));
 
   if (info->IsCompressed()) {
     const int length = input->ReadInt32();
-    return rs_new CLZOInputStream(input, info->GetSize() - input->GetReadPosition(), length);
+    return NEW CLZOInputStream(input, info->GetSize() - input->GetReadPosition(), length);
   }
 
   return input.release();
@@ -240,11 +240,11 @@ CInputStream* CResLoader::LoadNewResourceSync(const SObjectTag& tag, char* extBu
 CInputStream* CResLoader::LoadResourceFromMemorySync(const SObjectTag& tag, const void* extBuf) {
   FindResourceForLoad(tag);
   const CPakFile::CResInfo* info = mCachedResInfo;
-  rstl::auto_ptr< CInputStream > input(rs_new CMemoryInStream(extBuf, info->GetSize()));
+  rstl::auto_ptr< CInputStream > input(NEW CMemoryInStream(extBuf, info->GetSize()));
 
   if (info->IsCompressed()) {
     const int length = input->ReadInt32();
-    return rs_new CLZOInputStream(input, info->GetSize() - input->GetReadPosition(), length);
+    return NEW CLZOInputStream(input, info->GetSize() - input->GetReadPosition(), length);
   }
 
   return input.release();
@@ -264,7 +264,7 @@ void CResLoader::AddPakFileAsync(const rstl::string& filePath, bool a, bool b) {
   const rstl::string pathWithExt(filePath + ".pak");
 
   if (CDvdFile::FileExists(pathWithExt.data())) {
-    mPakLoadingList.push_back(rs_new CPakFile(pathWithExt, a, b));
+    mPakLoadingList.push_back(NEW CPakFile(pathWithExt, a, b));
   }
 }
 

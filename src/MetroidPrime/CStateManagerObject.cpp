@@ -60,9 +60,9 @@ CStateManagerObject::CStateManagerObject(
 , mObjectLists(rstl::auto_ptr< CObjectList >())
 , mObjectListsSmall(rstl::auto_ptr< CObjectListSmall >())
 , mAllocatedObjectIndices(2048, false)
-, mScriptMsgs(RS_NEW(61) CScriptMsgQueue())
+, mScriptMsgs(rs_new(61) CScriptMsgQueue())
 , mWorld(nullptr)
-, mScriptObjectLoaderHelper(RS_NEW(70) CScriptObjectLoaderHelper())
+, mScriptObjectLoaderHelper(rs_new(70) CScriptObjectLoaderHelper())
 , mNextAreaId(0)
 , mPreviousAreaId(kInvalidAreaId)
 , mStringPropertyManager(stringProperties)
@@ -70,21 +70,21 @@ CStateManagerObject::CStateManagerObject(
 , mMapWorldInfo(mapWorldInfo)
 , mPlayer(nullptr)
 , mDispatchingScriptMessages(false) {
-  mObjectLists[kOL_All] = RS_NEW(75) CObjectList(kOL_All, false);
-  mObjectLists[kOL_Actor] = RS_NEW(76) CActorList();
-  mObjectLists[kOL_RenderActor] = RS_NEW(77) CRenderActorList();
-  mObjectLists[kOL_PhysicsActor] = RS_NEW(78) CPhysicsActorList();
-  mObjectLists[kOL_GameLight] = RS_NEW(79) CGameLightList();
-  mObjectLists[kOL_ListeningAi] = RS_NEW(80) CListeningAiList();
-  mObjectLists[kOL_AiWaypoint] = RS_NEW(81) CAiWaypointList();
-  mObjectLists[kOL_Platform] = RS_NEW(82) CPlatformList();
-  mObjectLists[kOL_Trigger] = RS_NEW(83) CTriggerList();
+  mObjectLists[kOL_All] = rs_new(75) CObjectList(kOL_All, false);
+  mObjectLists[kOL_Actor] = rs_new(76) CActorList();
+  mObjectLists[kOL_RenderActor] = rs_new(77) CRenderActorList();
+  mObjectLists[kOL_PhysicsActor] = rs_new(78) CPhysicsActorList();
+  mObjectLists[kOL_GameLight] = rs_new(79) CGameLightList();
+  mObjectLists[kOL_ListeningAi] = rs_new(80) CListeningAiList();
+  mObjectLists[kOL_AiWaypoint] = rs_new(81) CAiWaypointList();
+  mObjectLists[kOL_Platform] = rs_new(82) CPlatformList();
+  mObjectLists[kOL_Trigger] = rs_new(83) CTriggerList();
 
-  mObjectListsSmall[kOLS_Dock] = RS_NEW(85) CDockListSmall();
-  mObjectListsSmall[kOLS_Door] = RS_NEW(86) CDoorListSmall();
-  mObjectListsSmall[kOLS_Type106] = RS_NEW(87) CType106ListSmall();
-  mObjectListsSmall[kOLS_GameCamera] = RS_NEW(88) CGameCameraListSmall();
-  mObjectListsSmall[kOLS_GrapplePoint] = RS_NEW(89) CGrapplePointListSmall();
+  mObjectListsSmall[kOLS_Dock] = rs_new(85) CDockListSmall();
+  mObjectListsSmall[kOLS_Door] = rs_new(86) CDoorListSmall();
+  mObjectListsSmall[kOLS_Type106] = rs_new(87) CType106ListSmall();
+  mObjectListsSmall[kOLS_GameCamera] = rs_new(88) CGameCameraListSmall();
+  mObjectListsSmall[kOLS_GrapplePoint] = rs_new(89) CGrapplePointListSmall();
 
   for (int i = 0; i < mObjectLists.size(); ++i) {
     CObjectList* list = mObjectLists[i].get();

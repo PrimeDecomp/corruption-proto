@@ -26,7 +26,7 @@ CElectricDescription* CParticleElectricDataFactory::CreateGeneratorDescription(C
   if (classId != 'ELSM') {
     return nullptr;
   }
-  CElectricDescription* desc = rs_new CElectricDescription();
+  CElectricDescription* desc = NEW CElectricDescription();
   CreateELSM(desc, in, pool);
   LoadELSMTokens(desc);
   return desc;

@@ -20,7 +20,7 @@ template < typename T >
 class rc_ptr {
 public:
   rc_ptr() : mPtr(nullptr), mRefCount(&CRefData::sNull.mRefCount) { ++*mRefCount; }
-  rc_ptr(const T* ptr) : mPtr(ptr), mRefCount(rs_new int(1)) {}
+  rc_ptr(const T* ptr) : mPtr(ptr), mRefCount(NEW int(1)) {}
   rc_ptr(const rc_ptr& other) : mPtr(other.mPtr), mRefCount(other.mRefCount) { ++*mRefCount; }
   template < typename U >
   explicit rc_ptr(const rc_ptr< U >& other)
@@ -45,7 +45,7 @@ public:
     const T* base = ptr;
     ReleaseData();
     mPtr = base;
-    mRefCount = rs_new int(1);
+    mRefCount = NEW int(1);
   }
   void ReleaseData();
   void reset() {

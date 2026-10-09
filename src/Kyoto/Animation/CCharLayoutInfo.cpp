@@ -5,7 +5,7 @@
 #include "rstl/StringExtras.hpp"
 
 CFactoryFnReturn FCharLayoutInfo(const SObjectTag& tag, CInputStream& in, const CVParamTransfer&) {
-  return rs_new CCharLayoutInfo(in);
+  return NEW CCharLayoutInfo(in);
 }
 
 CCharLayoutNode::CCharLayoutNode(CInputStream& in)
@@ -13,7 +13,7 @@ CCharLayoutNode::CCharLayoutNode(CInputStream& in)
 
 CCharLayoutInfo::CCharLayoutInfo(CInputStream& in)
 : mNodes(rstl::ownership_transfer< TSegIdMap< CCharLayoutNode > >(
-      rs_new TSegIdMap< CCharLayoutNode >(in)))
+      NEW TSegIdMap< CCharLayoutNode >(in)))
 , mSegIdList(in)
 , mNameMap(in) {
   InitializeLinearData();

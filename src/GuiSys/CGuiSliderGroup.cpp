@@ -18,7 +18,7 @@ CGuiWidget* CGuiSliderGroup::Create(CGuiFrame* frame, CInputStream& in, CSimpleP
   in.ReadFloat();
   in.ReadFloat();
 
-  CGuiWidget* widget = rs_new CGuiSliderGroup(parms, 0.f, 255.f, 0.f, 8.f);
+  CGuiWidget* widget = NEW CGuiSliderGroup(parms, 0.f, 255.f, 0.f, 8.f);
   widget->ParseBaseInfo(frame, in, parms, version);
   return widget;
 }

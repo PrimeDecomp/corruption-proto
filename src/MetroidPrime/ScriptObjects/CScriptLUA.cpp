@@ -473,7 +473,7 @@ void CScriptLUA::Think(float dt, CStateManager& mgr) {
 CEntity* LoadLUAScript(CStateManager& mgr, CInputStream& input, CEntityInfo& info) {
   SLdrLUAScript sldrThis;
 #include "MetroidPrime/ScriptLoader/SLdrLUAScript.inc"
-  return RS_NEW(1191) CScriptLUA(
+  return rs_new(1191) CScriptLUA(
       mgr.ObjectManager().AllocateUniqueId(), sldrThis.editorProperties.name,
       LdrToEntityInfo(info, sldrThis.editorProperties), LdrToTransform4f(sldrThis.editorProperties),
       sldrThis.unknown_0xed4a2787, sldrThis.unknown_0x9facea01, sldrThis.unknown_0xea46b664,

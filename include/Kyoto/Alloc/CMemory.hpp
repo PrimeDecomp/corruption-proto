@@ -46,23 +46,22 @@ inline void* operator new(size_t n, void* ptr) { return ptr; };
 #ifdef __MWERKS__
 inline void operator delete(void* ptr) { CMemory::Free(ptr); }
 inline void operator delete[](void* ptr) { CMemory::Free(ptr); }
-#define NEW new ("??(??)", nullptr)
-#define rs_new new ("\?\?(\?\?)", nullptr)
-// Allocations that record their source position. The original macros use __FILE__ and
-// __LINE__; the line is explicit here so the original line numbers survive in the strings.
-// The macro names are guessed.
+// Allocations without a source position ("??(??)", escaped so it is not read as trigraphs).
+#define NEW new ("\?\?(\?\?)", nullptr)
+// Allocations that record their source position, as Prime's and Echoes' rs_new does with
+// __FILE__ and __LINE__. The line is explicit here so the original line numbers survive in the
+// strings.
 #define RS_NEW_STRINGIZE_IMPL(x) #x
 #define RS_NEW_STRINGIZE(x) RS_NEW_STRINGIZE_IMPL(x)
-#define RS_NEW(line) RS_NEW_IN(__FILE__, line)
+#define rs_new(line) rs_new_in(__FILE__, line)
 // Same, for sources whose original file name differs from ours (Main.cpp, DolphinCFont.cpp).
-#define RS_NEW_IN(file, line) new (file "(" RS_NEW_STRINGIZE(line) ") : ", nullptr)
+#define rs_new_in(file, line) new (file "(" RS_NEW_STRINGIZE(line) ") : ", nullptr)
 #else
-#define RS_NEW(line) new
-#define RS_NEW_IN(file, line) new
 __attribute__((weak)) void operator delete(void* ptr) { CMemory::Free(ptr); }
 __attribute__((weak)) void operator delete[](void* ptr) { CMemory::Free(ptr); }
 #define NEW new
-#define rs_new new
+#define rs_new(line) new
+#define rs_new_in(file, line) new
 #endif
 
 #endif // _CMEMORY

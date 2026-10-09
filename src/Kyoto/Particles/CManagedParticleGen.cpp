@@ -105,27 +105,27 @@ void CManagedParticleGen::CreateGenerator() {
   switch (mTag.type) {
   case 'PART': {
     TLockedToken< CGenDescription > desc(mEffect);
-    gen = rs_new CElementGen(desc, CElementGen::kMOT_Normal, CElementGen::kOSF_One);
+    gen = NEW CElementGen(desc, CElementGen::kMOT_Normal, CElementGen::kOSF_One);
     break;
   }
   case 'SWHC': {
     TToken< CSwooshDescription > desc(mEffect);
-    gen = rs_new CParticleSwoosh(desc, 0);
+    gen = NEW CParticleSwoosh(desc, 0);
     break;
   }
   case 'ELSC': {
     TToken< CElectricDescription > desc(mEffect);
-    gen = rs_new CParticleElectric(desc);
+    gen = NEW CParticleElectric(desc);
     break;
   }
   case 'SPSC': {
     TToken< CSpawnSystemDescription > desc(mEffect);
-    gen = rs_new CParticleSpawnSystem(desc, CElementGen::kOSF_One, false);
+    gen = NEW CParticleSpawnSystem(desc, CElementGen::kOSF_One, false);
     break;
   }
   case 'SRSC': {
     TToken< CSortedParticleSystemDescription > desc(mEffect);
-    gen = rs_new CSortedParticleSystem(desc, CElementGen::kOSF_One, false);
+    gen = NEW CSortedParticleSystem(desc, CElementGen::kOSF_One, false);
     break;
   }
   default:

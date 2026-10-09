@@ -27,7 +27,7 @@ void CLookaheadRes::RequestHasDied() {
 rstl::auto_ptr< CBufferedDvdRequest > CLookaheadRes::MakeRequest(uint offset) {
   ++mReferenceCount;
   return rstl::auto_ptr< CBufferedDvdRequest >(
-      rs_new CBufferedDvdRequest(this, mRequest.get(), mBuffer.get() + (offset - mOffset)));
+      NEW CBufferedDvdRequest(this, mRequest.get(), mBuffer.get() + (offset - mOffset)));
 }
 
 bool CLookaheadRes::Contains(const CDvdFile* file, uint offset, uint size) const {

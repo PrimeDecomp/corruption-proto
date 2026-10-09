@@ -30,12 +30,12 @@ void CTextRenderBuffer::GetNextAvailablePalette() const {
   }
   if (mNextPalette < mPalettes.size()) {
     mPalettes[mNextPalette] = SFontPalette(
-        kFM_None, rs_new CGraphicsPalette(kPF_RGB5A3, 16), rs_new CGraphicsPalette(kPF_RGB5A3, 16),
-        rs_new CGraphicsPalette(kPF_RGB5A3, 16), rs_new CGraphicsPalette(kPF_RGB5A3, 16));
+        kFM_None, NEW CGraphicsPalette(kPF_RGB5A3, 16), NEW CGraphicsPalette(kPF_RGB5A3, 16),
+        NEW CGraphicsPalette(kPF_RGB5A3, 16), NEW CGraphicsPalette(kPF_RGB5A3, 16));
   } else {
     mPalettes.push_back(SFontPalette(
-        kFM_None, rs_new CGraphicsPalette(kPF_RGB5A3, 16), rs_new CGraphicsPalette(kPF_RGB5A3, 16),
-        rs_new CGraphicsPalette(kPF_RGB5A3, 16), rs_new CGraphicsPalette(kPF_RGB5A3, 16)));
+        kFM_None, NEW CGraphicsPalette(kPF_RGB5A3, 16), NEW CGraphicsPalette(kPF_RGB5A3, 16),
+        NEW CGraphicsPalette(kPF_RGB5A3, 16), NEW CGraphicsPalette(kPF_RGB5A3, 16)));
   }
   ++mNextPalette;
 }

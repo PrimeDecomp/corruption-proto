@@ -72,7 +72,7 @@ CGuiFrame::CGuiFrame(CInputStream& in, CSimplePool* pool)
 , mRootWidget(nullptr)
 , mCamera(nullptr)
 , mLights(rstl::vector< CGuiLight* >(8, static_cast< CGuiLight* >(nullptr)))
-, mModelDatabase(rs_new CGuiFrameModelDatabase(in, pool))
+, mModelDatabase(NEW CGuiFrameModelDatabase(in, pool))
 , mLoaded(false) {
   LoadWidgetsInGame(in, pool, mVersion);
 }
@@ -296,5 +296,5 @@ CGuiFrame* CGuiFrameLoader::CreateFrame() {
     return nullptr;
   }
   CMemoryInStream in(mBuffer.get(), mBufferLength);
-  return rs_new CGuiFrame(in, mPool);
+  return NEW CGuiFrame(in, mPool);
 }

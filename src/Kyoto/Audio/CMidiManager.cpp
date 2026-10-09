@@ -119,10 +119,10 @@ CMidiManager::CMidiData::CMidiData(CInputStream& in)
   mGroupId = in.ReadInt32();
   mAgscId = CAssetId(in);
   int len = in.ReadInt32();
-  mData = rs_new uchar[len];
+  mData = NEW uchar[len];
   in.Get(mData.get(), len);
 }
 
 CFactoryFnReturn FMidiDataFactory(const SObjectTag& tag, CInputStream& in, const CVParamTransfer&) {
-  return rs_new CMidiManager::CMidiData(in);
+  return NEW CMidiManager::CMidiData(in);
 }

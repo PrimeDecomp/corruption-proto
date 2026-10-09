@@ -112,8 +112,14 @@ private:
   }
 };
 
+// Inline by default. CActor.cpp defines RSTL_DONT_INLINE_RESERVED_VECTOR: its SetFluidList calls
+// an out-of-line copy (0x800358A4), while making it non-inline everywhere changes main.cpp's
+// implicit CGameState::SPreviousGameResults assignment.
 template < typename T, int N >
-inline reserved_vector< T, N >& reserved_vector< T, N >::operator=(const reserved_vector& other) {
+#ifndef RSTL_DONT_INLINE_RESERVED_VECTOR
+inline
+#endif
+    reserved_vector< T, N >& reserved_vector< T, N >::operator=(const reserved_vector& other) {
   if (this != &other) {
     destroy_elements();
     uninitialized_copy(other.data(), other.data() + other.size(), data());

@@ -38,6 +38,9 @@ public:
   // Game bindings registered as Lua globals under their own names.
   int Print(lua_State* L);
   int GetObjectId(lua_State* L);
+  int GetObjectName(lua_State* L);
+  int GetObjectActive(lua_State* L);
+  int RandomRange(lua_State* L);
 
   void OnGlobalEvent(const rstl::string& event, const rstl::string& value); // Guessed name
   void RunScript(const char* buffer, int size, const char* name);           // Guessed name

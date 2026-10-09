@@ -1,0 +1,66 @@
+#ifndef _CGAMESTATE
+#define _CGAMESTATE
+
+#include "types.h"
+
+#include "Kyoto/CToken.hpp"
+#include "MetroidPrime/Player/CGameOptions.hpp"
+
+#include "rstl/rc_ptr.hpp"
+#include "rstl/reserved_vector.hpp"
+#include "rstl/vector.hpp"
+
+class CBitStreamReader;
+class CWorldTransManager;
+class CBitStreamWriter;
+
+// Minimal view of the prototype's CGameState for main.cpp; only the members main touches are
+// placed, the rest is padding. Nested types and accessor names follow Echoes.
+class CGameState {
+public:
+  struct SPlayerResult {
+    SPlayerResult()
+    : mPlayerSelection(0), mScore(0), mDeaths(0), xc_(false), mRumbleEnabled(false) {}
+
+    uint mPlayerSelection;
+    int mScore;
+    int mDeaths;
+    bool xc_;
+    bool mRumbleEnabled;
+  };
+
+  struct SPreviousGameResults {
+    SPreviousGameResults()
+    : mGameMode(0), mShowResults(false), x8_(0), mPlayerCount(0), mPlayers(4, SPlayerResult()) {}
+    explicit SPreviousGameResults(CBitStreamReader& in);
+    void PutTo(CBitStreamWriter& out) const;
+
+    uint mGameMode;
+    bool mShowResults;
+    int x8_;
+    int mPlayerCount;
+    rstl::reserved_vector< SPlayerResult, 4 > mPlayers;
+  };
+
+  CGameOptions& GameOptions() { return mGameOptions; }
+  SPreviousGameResults& PreviousGameResults() { return mPreviousGameResults; } // Guessed name
+  rstl::vector< CToken >& AudioGroups() { return mAudioGroups; }               // Guessed name
+  // Out of line (0x80159C7C); returns the rc_ptr at 0x28. Echoes' name.
+  rstl::rc_ptr< CWorldTransManager >& WorldTransitionManager();
+  // Echoes names. The hard mode flag is the first bit of the byte at 0x308.
+  bool GetHardModeEnabled() const { return mHardMode; }
+  void SetHardMode(bool hardMode); // 0x80159C38
+
+private:
+  uchar x0_[0x68];
+  CGameOptions mGameOptions;
+  uchar xc4_[0xdc];
+  SPreviousGameResults mPreviousGameResults;
+  rstl::vector< CToken > mAudioGroups;
+  uchar x204_[0x104];
+  bool mHardMode : 1;
+};
+
+extern CGameState* gpGameState;
+
+#endif // _CGAMESTATE

@@ -507,7 +507,7 @@ config.libs = [
         Object(NonMatching, "Dolphin/os/OSThread.c"),
         Object(NonMatching, "Dolphin/os/OSTime.c"),
         Object(NonMatching, "Dolphin/os/__ppc_eabi_init.cpp", extra_cflags=["-lang=c"]),
-        Object(NonMatching, "Dolphin/pad/PadFallback.c"),
+        Object(Matching, "Dolphin/pad/PadFallback.c"),
     ]),
     DolphinLib("ETH", [
         Object(NonMatching, "Dolphin/eth/eth.c"),
@@ -1484,7 +1484,7 @@ config.libs = [
         Object(NonMatching, "MetroidPrime/ScriptObjects/CScriptAITaskPoint.cpp"),
         Object(NonMatching, "MetroidPrime/Factories/CStateManagerAssetFactory.cpp"),
         Object(NonMatching, "MetroidPrime/Enemies/CFriendly.cpp"),
-        Object(NonMatching, "MetroidPrime/CStateManagerCallbackLists.cpp"),
+        Object(Matching, "MetroidPrime/CStateManagerCallbackLists.cpp"),
         Object(NonMatching, "MetroidPrime/ScriptObjects/CScriptPhysicsDebris.cpp"),
         Object(NonMatching, "MetroidPrime/BodyState/CAnimationAlignmentHelper.cpp"),
         Object(NonMatching, "MetroidPrime/CGameAreaIterator.cpp"),

@@ -13,7 +13,7 @@
 // 0x802A2C60 +0x480: owned native method/helper retained; exact source-level name unresolved
 // 0x802A30E0 +0x54: owned native method/helper retained; exact source-level name unresolved
 // 0x802A3134 +0x54: owned native method/helper retained; exact source-level name unresolved
-// 0x802A3188 +0x8: owned native method/helper retained; exact source-level name unresolved
+// 0x802A3188 +0x8: IsDebugCameraActive (guessed name), the flag at 0x124
 // 0x802A3190 +0x110: owned native method/helper retained; exact source-level name unresolved
 // 0x802A32A0 +0x70: owned native method/helper retained; exact source-level name unresolved
 // 0x802A3310 +0xC4: owned native method/helper retained; exact source-level name unresolved

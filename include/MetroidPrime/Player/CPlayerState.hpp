@@ -5,6 +5,8 @@
 
 #include "rstl/reserved_vector.hpp"
 
+class CStateManager;
+
 // Minimal view of the prototype's CPlayerState. The item numbering differs from Echoes (see
 // CGameDebug::GetPlayerItemForOption) and is not mapped yet.
 class CPlayerState {
@@ -28,11 +30,18 @@ public:
 
   // Echoes name. 0x800898FC: the capacity column of the 0xC byte item table at 0x80665200.
   static int GetPowerUpMaxValue(EItemType type);
+  // Guessed name. 0x800898E8: the name column of the same table; the console's SHOWINVENTORY
+  // prints it.
+  static const char* GetItemName(EItemType type);
   int GetItemAmount(EItemType type, bool respectFieldToQuery = true) const; // Echoes; 0x80088830
   void AddPowerUp(EItemType type, int delta);  // Echoes name; 0x80088B34, clamps the capacity
   void IncrPickUp(EItemType type, int amount); // Echoes name; 0x8008898C
+  // Guessed name, after the "Give all powerups cheat" option that has CStateManager call it
+  // (0x80087EA8): fills every item flagged in the item table; the manager is unused.
+  void GiveAllPowerUps(CStateManager& mgr);
   // Echoes' name. The first bit of the byte at 0x0; CStateManager's escape timer checks it.
   bool IsPlayerAlive() const { return mAlive; }
+  void SetPlayerAlive(bool alive) { mAlive = alive; } // Echoes' name
 
 private:
   bool mAlive : 1; // Echoes' name

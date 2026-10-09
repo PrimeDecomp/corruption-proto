@@ -36,6 +36,9 @@ class TFunctor0 {
 public:
   typedef void (*Functor)(const void* object, const void* method);
 
+  TFunctor0(Functor functor, const void* object, const void* method, int size)
+  : mFunctor(functor), mObject(object), mMethod(method, size) {}
+
   void operator()() const { mFunctor(mObject, mMethod.GetMethodPointer()); }
 
 private:
@@ -62,6 +65,55 @@ private:
   Functor mFunctor;
   const void* mObject;
   CMethodPtrStore mMethod;
+};
+
+// Guessed names, following TNonStaticCallback1: the bridge of a functor that calls a free
+// function, whose pointer is stored in place of the member pointer (ConsoleCommands.cpp).
+class TStaticCallback0 {
+public:
+  typedef void (*FunctionPtr)();
+
+  static void Function(const void* object, const void* method) {
+    FunctionPtr callback;
+    memcpy(&callback, method, sizeof(callback));
+    callback();
+  }
+};
+
+class TFunctor0FromFunction {
+public:
+  typedef void (*FunctionPtr)();
+
+  static TFunctor0 Make(FunctionPtr function) {
+    char functionData[sizeof(function)];
+    memcpy(functionData, &function, sizeof(function));
+    return TFunctor0(TStaticCallback0::Function, nullptr, functionData, sizeof(function));
+  }
+};
+
+template < typename P1 >
+class TStaticCallback1 {
+public:
+  typedef void (*FunctionPtr)(P1);
+
+  static void Function(const void* object, const void* method, P1 p1) {
+    FunctionPtr callback;
+    memcpy(&callback, method, sizeof(callback));
+    callback(p1);
+  }
+};
+
+template < typename P1 >
+class TFunctor1FromFunction {
+public:
+  typedef void (*FunctionPtr)(P1);
+
+  static TFunctor1< P1 > Make(FunctionPtr function) {
+    char functionData[sizeof(function)];
+    memcpy(functionData, &function, sizeof(function));
+    return TFunctor1< P1 >(TStaticCallback1< P1 >::Function, nullptr, functionData,
+                           sizeof(function));
+  }
 };
 
 // Prime-correlated names; the Echoes bridge forwards one argument through a member pointer.

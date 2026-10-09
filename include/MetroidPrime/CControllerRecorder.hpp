@@ -20,6 +20,13 @@ public:
   float GetGameSpeed() const { return mGameSpeed; }
   bool GetStepFrame() const { return mStepFrame; }
   void ClearStepFrame(); // 0x8012124C
+  // Guessed names. The console's ADVANCEFRAME sets the step flag (0x80121260) and GAMESPEED sets
+  // the speed, printing "Game Speed %.2f" when it changes (0x80121680).
+  void SetStepFrame();
+  void SetGameSpeed(float speed);
+  // Guessed name. 0x80121450: switches the console window, the video filter and the game speed
+  // for a movie capture and back, and starts the capture; the console's CAPTUREMOVIE passes true.
+  void SetCaptureMode(bool capture);
 
   // Guessed name. 0x801239B8 builds a capture name from the state manager (0x801236F8) and
   // hands it to CGameDebug (0x8003C9B0); CStateManager's update calls it while a movie capture

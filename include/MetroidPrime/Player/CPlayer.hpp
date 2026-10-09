@@ -5,6 +5,8 @@
 
 #include "MetroidPrime/CPhysicsActor.hpp"
 
+class CFinalInput;
+
 // Minimal declaration; Echoes' hierarchy. The layout past CPhysicsActor is not modelled except for
 // the death time, which CStateManager's update and Think read.
 class CPlayer : public CPhysicsActor {
@@ -19,6 +21,9 @@ public:
   // is dead.
   void DoThink(float dt, CStateManager& mgr);
   void DoPreThink(float dt, CStateManager& mgr);
+  // Echoes' name and signature (0x800184D8). CStateManager::ProcessPlayerInput passes it the
+  // frame's input outside cinematics.
+  void ProcessInput(const CFinalInput& input, CStateManager& mgr);
 
 private:
   uchar x2E0_[0x304C - 0x2E0];

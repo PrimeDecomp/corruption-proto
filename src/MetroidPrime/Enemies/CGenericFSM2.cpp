@@ -10,7 +10,7 @@
 // 0x8028ADC8 +0x58: owned native method/helper retained; exact source-level name unresolved
 // 0x8028AE20 +0x58: owned native method/helper retained; exact source-level name unresolved
 // 0x8028AE78 +0x58: owned native method/helper retained; exact source-level name unresolved
-// 0x8028AED0 +0x8: owned native method/helper retained; exact source-level name unresolved
+// 0x8028AED0 +0x8: CGenericFSM2State::IsInitialized (guessed name), byte 0x58
 // 0x8028AED8 +0x13C: owned native method/helper retained; exact source-level name unresolved
 // 0x8028B014 +0x70: owned native method/helper retained; exact source-level name unresolved
 // 0x8028B084 +0x154: owned native method/helper retained; exact source-level name unresolved

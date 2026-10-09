@@ -13,6 +13,8 @@ class CScriptWater : public CActor {
 public:
   // Echoes' name. The world-space surface plane, facing up at the height stored at 0x188 (Echoes
   // reads the top of the trigger bounds). CActor.cpp emits it (0x80036F50).
+  // Guessed name. Echoes' TestBombHittingWater reads the top of the trigger bounds instead.
+  float GetSurfaceHeight() const { return x188_; }
   CPlane GetWRSurfacePlane() const {
     return CPlane(x188_, CUnitVector3f(0.f, 0.f, 1.f, CUnitVector3f::kN_Yes));
   }

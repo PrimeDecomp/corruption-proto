@@ -26,6 +26,8 @@ char* strncat(char* dest, const char* src, size_t n);
 char* strerror(int error);
 int strcoll(const char* lhs, const char* rhs);
 char* strstr(const char* str, const char* sub);
+char* strtok(char* str, const char* delimiters);
+int stricmp(const char* s1, const char* s2);
 char* strpbrk(const char* str, const char* accept);
 void* memchr(const void* ptr, int ch, size_t n);
 size_t strspn(const char* str, const char* accept);

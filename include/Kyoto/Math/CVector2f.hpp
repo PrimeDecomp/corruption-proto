@@ -6,9 +6,9 @@
 #include "types.h"
 
 class CVector2f {
+public:
   static const CVector2f skZeroVector;
 
-public:
   CVector2f(float x, float y);
   CVector2f(CInputStream& in) : mX(in.ReadFloat()), mY(in.ReadFloat()) {}
 

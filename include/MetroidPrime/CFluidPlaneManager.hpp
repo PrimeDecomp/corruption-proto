@@ -8,6 +8,9 @@
 
 #include "rstl/reserved_vector.hpp"
 
+class CScriptWater;
+class CStateManager;
+
 // Minimal view (CFluidPlaneManager.cpp). CStateManager news one (0x11C bytes, Echoes' size); its
 // destructor, inlined into CStateManager's, only walks the splash records, so the layout is
 // Echoes'.
@@ -40,6 +43,9 @@ public:
 
   CFluidPlaneManager();  // 0x800F7A3C
   void Update(float dt); // Echoes' name; 0x800F79C8
+  // Echoes' name (0x800F7350). The last flag is new; CStateManager's bomb test passes false.
+  void CreateSplash(TUniqueId splasher, CStateManager& mgr, const CScriptWater& water,
+                    const CVector3f& pos, float factor, bool sfx, bool x_);
 
   static CFluidProfile sProfile; // 0x8078178C
 

@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include "Kyoto/TToken.hpp"
+#include "MetroidPrime/CObjectTagToFilenameMapping.hpp"
 
 #include "rstl/single_ptr.hpp"
 #include "rstl/string.hpp"
@@ -22,17 +23,8 @@ public:
   void Update(float dt);   // 0x8020C1C0
 
 private:
-  // 0x20-byte entries holding a string at 0xC.
-  struct SEntry {
-    uchar x0_[0xc];
-    rstl::string xc_;
-    uint x1c_;
-  };
-  struct SEntryList {
-    rstl::vector< SEntry > x0_entries;
-  };
-
-  rstl::single_ptr< SEntryList > x0_;
+  // Built over the simple pool's referenced tags (rs_new at 0x8020BA98).
+  rstl::single_ptr< CObjectTagToFilenameMapping > x0_;
   // The manager reads 0x10-byte entries (two 64-bit asset ids) from here, but the destructor
   // is the one shared with CMain's leading vector, so the element type is left as uint.
   rstl::vector< uint > x4_;

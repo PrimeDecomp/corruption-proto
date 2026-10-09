@@ -7,14 +7,11 @@
 //   x212 bit 0x40 is set; reseeds the randoms ("Random() called when not deterministic"). The
 //   update calls it outside cinematics.
 // 0x8028F5A0 +0x60: owned native method/helper retained; exact source-level name unresolved
-// 0x8028F600 +0x5C: calls 0x80051A60 (CGameArea) with the manager on every area; the update
-//   calls it after the world update, like Echoes' UpdateDynamicLayers
 // 0x8028F770 +0xC4: owned native method/helper retained; exact source-level name unresolved
 // 0x802901B0 +0xC: owned native method/helper retained; exact source-level name unresolved
 // 0x802901BC +0x40: owned native method/helper retained; exact source-level name unresolved
 // 0x802901FC +0x34: owned native method/helper retained; exact source-level name unresolved
 // 0x80290230 +0x498: player debug text ("P|..", "Vel|..", movement/surface)
-// 0x802906C8 +0x190: SetActorAreaId(CActor&, TAreaId) (Echoes' name)
 // 0x80290858 +0x58: owned native method/helper retained; exact source-level name unresolved
 // 0x802908B0 +0x28: owned native method/helper retained; exact source-level name unresolved
 // 0x802908D8 +0x50: owned native method/helper retained; exact source-level name unresolved
@@ -26,27 +23,19 @@
 // 0x8029127C +0x2E4: owned native method/helper retained; exact source-level name unresolved
 // 0x80291560 +0x198: owned native method/helper retained; exact source-level name unresolved
 // 0x802916F8 +0x34C: owned native method/helper retained; exact source-level name unresolved
-// 0x80291A44 +0x128: TestBombHittingWater (Echoes' name)
 // 0x80291B6C +0x5E0: unconfirmed; like Echoes' ApplyLocalDamage (position, direction, damagee,
 //   ids, CDamageInfo); the update's "Kill Player" option calls it with 10000 damage
 // 0x8029214C +0x198: owned native method/helper retained; exact source-level name unresolved
 // 0x802922E4 +0x15C: owned native method/helper retained; exact source-level name unresolved
-// 0x80292440 +0xE0: KillPlayer(float, TUniqueId, TUniqueId) (Echoes' guessed name)
 // 0x80292520 +0xA4: owned native method/helper retained; exact source-level name unresolved
 // 0x802925C4 +0x4CC: owned native method/helper retained; exact source-level name unresolved
-// 0x80292B40 +0x108: unconfirmed; looks like Echoes' UpdateAreaSounds
 // 0x80292C48 +0x34: owned native method/helper retained; exact source-level name unresolved
-// 0x80292C7C +0xD4: player input step of the update (like Echoes' ProcessPlayerInput)
 // 0x80292D50 +0x14C: owned native method/helper retained; exact source-level name unresolved
 // 0x80294264 +0xFC: vector push_back of the 0x1C-byte stat entries (vector.h(482) assert)
 // 0x802943E4 +0x60: owned native method/helper retained; exact source-level name unresolved
 // 0x80294444 +0x7C: TSignal2<CStateManager&, float>::Emit
 // 0x80294748 +0x248: memory/timing debug text ("LOW MEMORY: area ..")
-// 0x80294990 +0x338: Echoes' Think(float); also takes the update's CGameProfileStats
-// 0x80294CC8 +0x64: CObjectList's implicit copy constructor; Think copies the whole list
 // 0x80294EA4 +0x304: unconfirmed; looks like Echoes' CrossTouchActors
-// 0x802951A8 +0x164: object list check ("ENTITY INDEX MISMATCH")
-// 0x8029530C +0x138: recalculates the map world sphere
 // 0x80295680 +0x738: world setup like Echoes' InitializeState; calls SetWorld
 // 0x80295DB8 +0x2F8: player spawn ("Invalid transform in Spawn Point")
 // 0x802960B0 +0x170: creates the render manager and the player
@@ -95,7 +84,9 @@
 #include "MetroidPrime/CFluidPlaneManager.hpp"
 #include "MetroidPrime/CGameArea.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
+#include "MetroidPrime/CGamePortalArea.hpp"
 #include "MetroidPrime/CMain.hpp"
+#include "MetroidPrime/CMapWorld.hpp"
 #include "MetroidPrime/CMapWorldInfo.hpp"
 #include "MetroidPrime/CMemoryCard.hpp"
 #include "MetroidPrime/CObjectListSmall.hpp"
@@ -114,6 +105,8 @@
 #include "MetroidPrime/Cameras/CCinematicCamera.hpp"
 #include "MetroidPrime/Cameras/CGameCamera.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
+#include "MetroidPrime/Enemies/CGenericFSM2.hpp"
+#include "MetroidPrime/Enemies/CPatterned.hpp"
 #include "MetroidPrime/HUD/CHUDMemoParms.hpp"
 #include "MetroidPrime/HUD/CSamusHud.hpp"
 #include "MetroidPrime/Player/CGameMode.hpp"
@@ -123,7 +116,9 @@
 #include "MetroidPrime/ScriptObjects/CScriptCinematicCamera.hpp"
 #include "MetroidPrime/ScriptObjects/CScriptEffect.hpp"
 #include "MetroidPrime/ScriptObjects/CScriptSpecialFunction.hpp"
+#include "MetroidPrime/ScriptObjects/CScriptWater.hpp"
 #include "MetroidPrime/TCastTo.hpp"
+#include "MetroidPrime/Weapons/CWeapon.hpp"
 #include "MetroidPrime/Weapons/WeaponTypes.hpp"
 #include "Weapons/CDecal.hpp"
 #include "Weapons/CProjectileWeapon.hpp"
@@ -135,6 +130,9 @@
 #include "rstl/vector.hpp"
 
 #include <float.h>
+
+// Echoes' name and values (0x8079F448): how deep a bomb and a power bomb still splash.
+static const float skBombUnderwaterRanges[2] = {2.f, 4.f};
 
 CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& stringProperties,
                              const rstl::ncrc_ptr< CScriptMailbox >& mailbox,
@@ -325,6 +323,52 @@ bool CStateManager::SwapOutAllPossibleMemory() {
   return true;
 }
 
+// 0x8029530C. Not in Echoes. Recalculates the map world's sphere whenever "Map Cheat Enabled"
+// changes, and while the debug camera is active pauses the game when "Debug Camera" is 2.
+void CStateManager::UpdateMapWorldSphere() {
+  static bool sMapCheatEnabled = false; // Guessed name
+  const bool mapCheatEnabled = gpGameDebug->GetOptionInt(CGameDebug::kDO_MapCheatEnabled) == 1;
+  if (mapCheatEnabled != sMapCheatEnabled) {
+    CStateManagerObject& objectManager = *mObjectManager;
+    const CMapWorld* mapWorld = objectManager.GetWorld()->GetMapWorld();
+    mapWorld->RecalculateWorldSphere(*objectManager.GetMapWorldInfo(), *objectManager.World());
+    sMapCheatEnabled = mapCheatEnabled;
+  }
+  if (mDisplayManager->IsDebugCameraActive()) {
+    if (gpGameDebug->GetOptionValue(CGameDebug::kDO_DebugCamera) == 2.f) {
+      mGameState = kGS_Paused;
+    } else {
+      mGameState = kGS_Running;
+    }
+  }
+}
+
+// 0x802951A8. Not in Echoes. The "Dump script object" option prints every object of the list
+// with its unique id, once, and reports objects whose list index differs from their id.
+void CStateManager::CheckEntityIndices() {
+  CObjectList& allList = mObjectManager->ObjectListById(0);
+  if (gpGameDebug->GetOptionValue(CGameDebug::kDO_DumpScriptObject)) {
+    gpGameDebug->GetOption(CGameDebug::kDO_DumpScriptObject)->SetValue(0.f);
+    rs_debugger_printf("\n\n--------------------------------------------------\n\n");
+    for (int i = allList.GetFirstObjectIndex(); i != -1; i = allList.GetNextObjectIndex(i)) {
+      CEntity* entity = allList[i];
+      if (entity == nullptr) {
+        continue;
+      }
+      const int index = entity->GetUniqueId().value & 0xFFFF;
+      if (i != index) {
+        rs_debugger_printf("ENTITY INDEX MISMATCH %d != %d\n", index, i);
+      }
+      if (entity != nullptr) {
+        rs_debugger_printf("%4d(%2d) %s\n", entity->GetUniqueId().value & 0xFFFF,
+                           entity->GetUniqueId().value >> 16, entity->GetName().data());
+      } else {
+        rs_debugger_printf("%4d MISSING\n", i);
+      }
+    }
+  }
+}
+
 // 0x80294D2C. Echoes' ThinkEntity also thinks the entity's think-after objects first (unless
 // skipThinkAfter is set), at most once per update frame, and times the think in the update's
 // statistics. The walk restarts whenever the list changes, and stops if the entity is deleted.
@@ -363,6 +407,68 @@ void CStateManager::ThinkEntity(float dt, CEntity& entity, int skipThinkAfter,
   mObjectManager->DispatchScriptMessages();
   entity.x40_ = mUpdateFrameIdx;
   stats.EndEntity(entity);
+}
+
+// 0x80294990. Echoes' Think, over a copy of the object list (its implicit copy constructor is
+// emitted at 0x80294CC8), with a single player. The prototype dispatches the queued script
+// messages first, asks the AI itself whether it should update (Echoes' ShouldUpdatePatterned),
+// and kills every active AI while "Kill All AIs" is set, the way the update's "Kill Player" option
+// kills the player.
+//
+// The target calls the const casts (TCastToConstPtr<CScriptEffect> and <CPatterned>) and then
+// thinks and damages through their results; the mutable casts are used here instead, so only
+// those two call targets differ.
+void CStateManager::Think(float dt, CGameProfileStats& stats) {
+  if (mObjectManager->GetPlayer()->GetDeathTime() > 0.f) {
+    mObjectManager->Player()->DoThink(dt, *this);
+    return;
+  }
+
+  CObjectList allList(mObjectManager->ObjectListById(0));
+  if (mGameState == kGS_SoftPaused) {
+    for (int i = allList.GetFirstObjectIndex(); i != -1; i = allList.GetNextObjectIndex(i)) {
+      CScriptEffect* effect = TCastToPtr< CScriptEffect >(allList[i]);
+      if (effect != nullptr) {
+        effect->Think(dt, *this);
+      }
+    }
+  } else {
+    mObjectManager->DispatchScriptMessages();
+    CPatterned* patterned;
+    for (int i = allList.GetFirstObjectIndex(); i != -1;) {
+      CEntity* entity = allList[i];
+      i = allList.GetNextObjectIndex(i);
+      if (entity == nullptr || (!entity->GetUpdateDuringCinematicSkip() && gpMain->IsMaxSpeed())) {
+        continue;
+      }
+
+      if (!entity->GetUpdateWhileOccluded() && entity->GetCurrentAreaId() != kInvalidAreaId) {
+        const CGameArea& area = *mObjectManager->World()->Area(entity->GetCurrentAreaId());
+        const float occludedTime = area.IsLoaded() ? area.GetPostConstructed()->mOccludedTime : 0.f;
+        if (occludedTime > 5.f) {
+          continue;
+        }
+      }
+
+      patterned = TCastToPtr< CPatterned >(entity);
+      if (patterned != nullptr && !patterned->ShouldUpdate(*this)) {
+        continue;
+      }
+      if (patterned != nullptr && patterned->IsAiActive() == true &&
+          patterned->GetStateMachineState()->IsInitialized() &&
+          gpGameDebug->IsOptionSet(CGameDebug::kDO_KillAllAIs) == true) {
+        ApplyLocalDamage(patterned->GetTranslation(), CVector3f::Zero(), *patterned, 10000.f,
+                         kInvalidUniqueId, patterned->GetUniqueId(),
+                         CDamageInfo(CWeaponMode(kWT_DebugKill), 10000.f, false, false,
+                                     kInvalidAssetId, kInvalidAssetId, kInvalidAssetId, 0.f, 0.f),
+                         false);
+      }
+
+      if (TCastToConstPtr< CGameCamera >(entity) == nullptr) {
+        ThinkEntity(dt, *entity, 0, stats);
+      }
+    }
+  }
 }
 
 // 0x802945D0. Unlike Echoes, the camera manager first starts a pending cinematic, and there is a
@@ -763,6 +869,38 @@ void CStateManager::Update(float inputDt, CArchitectureQueue& queue) {
   mArchQueue = nullptr;
 }
 
+// 0x80292C7C. Prime's body (the player takes the frame's input), skipped at maximum speed and
+// during cinematics; the input step also applies the "Give all powerups cheat" option once.
+void CStateManager::ProcessPlayerInput() {
+  if (!gpMain->IsMaxSpeed()) {
+    if (!mDisplayManager->IsCinematicActive()) {
+      mObjectManager->Player()->ProcessInput(mFinalInput, *this);
+    }
+    if (gpGameDebug->GetOptionValue(CGameDebug::kDO_GiveAllPowerupsCheat)) {
+      gpGameState->GetPlayerState()->GiveAllPowerUps(*this);
+      gpGameDebug->SetOptionValue(CGameDebug::kDO_GiveAllPowerupsCheat, 0.f);
+    }
+  }
+}
+
+// 0x80292B40. Unlike Echoes, it also collects the live areas that are not visible and hands both
+// sets to the audio manager.
+void CStateManager::UpdateAreaSounds() {
+  rstl::reserved_vector< int, 16 > visibleAreas;
+  rstl::reserved_vector< int, 16 > otherAreas;
+  otherAreas.clear();
+  for (CGameArea::CChainIterator area = mObjectManager->GetWorld()->ChainHead(CWorld::kC_Alive);
+       area != mObjectManager->GetWorld()->GetAliveAreasEnd(); ++area) {
+    if (area->GetOcclusionState() == CGameArea::kOS_Visible) {
+      visibleAreas.push_back(area->GetId().Value());
+    } else {
+      otherAreas.push_back(area->GetId().Value());
+    }
+  }
+  CAudioManager::UpdateVoiceIdSets(mObjectManager->GetNextAreaId().Value(), visibleAreas,
+                                   otherAreas);
+}
+
 // 0x80292A90. Unlike Echoes, it only tells the item depletion objects; there is no HUD memo, and
 // the player is unused.
 void CStateManager::DisplayAlertAboutOutOfAmmo(const CPlayer& player,
@@ -772,6 +910,83 @@ void CStateManager::DisplayAlertAboutOutOfAmmo(const CPlayer& player,
     CScriptSpecialFunction* const special = TCastToPtr< CScriptSpecialFunction >((*allList)[i]);
     if (special != nullptr && special->GetFunction() == CScriptSpecialFunction::kSF_ItemDepletion) {
       special->OnItemDepleted(*this, type);
+    }
+  }
+}
+
+// 0x80292440. Echoes' body for a single player; the game's voices are stopped through the audio
+// manager.
+void CStateManager::KillPlayer(float previousHealth, TUniqueId victim, TUniqueId killer) {
+  if (TCastToConstPtr< CPlayer >(mObjectManager->ObjectById(victim)) != nullptr) {
+    gpGameState->GetPlayerState()->SetPlayerAlive(false);
+
+    if (previousHealth >= 0.f) {
+      const CGameState& gameState = *gpGameState;
+      CGameMode& gameMode = gameState.GetGameMode();
+      gameMode.OnPlayerKilled(*this, victim, killer);
+    }
+
+    CAudioManager::StopAllVoices();
+    CStreamAudioManager::FadeOutSoftwareAudio(CStreamAudioManager::kSC_Default, 0.5f);
+  }
+}
+
+// 0x80291A44. Echoes' body; the splash takes one more flag, and the water's surface height stands
+// in for the top of its trigger bounds.
+void CStateManager::TestBombHittingWater(const CActor& source, const CVector3f& position,
+                                         CActor& damagee) {
+  int index = 0;
+  if (const CWeapon* weapon = TCastToConstPtr< CWeapon >(source)) {
+    const int attributes = weapon->GetAttribField();
+    if ((attributes & (CWeapon::kPA_TriggerBomb | CWeapon::kPA_PowerBombs)) != 0) {
+      if ((attributes & CWeapon::kPA_PowerBombs) != 0) {
+        index = 1;
+      }
+      if (CScriptWater* const water = TCastToPtr< CScriptWater >(damagee)) {
+        const CVector3f hitPosition(position.GetX(), position.GetY(), water->GetSurfaceHeight());
+        const float depth = -water->GetWRSurfacePlane().GetHeight(position);
+        if (depth <= skBombUnderwaterRanges[index] && depth > 0.f) {
+          const float splashFactor = 1.f - depth / skBombUnderwaterRanges[index];
+          if (index == 0) {
+            mFluidPlaneManager->CreateSplash(source.GetUniqueId(), *this, *water, hitPosition,
+                                             splashFactor, true, false);
+          }
+        }
+      }
+    }
+  }
+}
+
+// 0x802906C8. Echoes' body, except that the new area is looked up through the asserting
+// GetArea, and an unloaded new area or an actor already in its list is reported.
+void CStateManager::SetActorAreaId(CActor& actor, const TAreaId area) {
+  const int oldArea = actor.GetCurrentAreaId().Value();
+  if (oldArea != area.Value()) {
+    CWorld* world = mObjectManager->GetWorld();
+    if (oldArea != kInvalidAreaId.Value()) {
+      CGameArea* oldAreaObject = world->Area(actor.GetCurrentAreaId());
+      if (oldAreaObject->GetPhase() > CGameArea::kP_FinishScriptObjects) {
+        oldAreaObject->ObjectList()->RemoveObject(actor.GetUniqueId());
+        if (oldAreaObject->PostConstructed()->mPortalArea.get() != nullptr) {
+          oldAreaObject->PostConstructed()->mPortalArea->RemoveActor(actor.GetUniqueId());
+        }
+      }
+    }
+
+    actor.SetCurrentAreaId(area);
+    if (area != kInvalidAreaId) {
+      CGameArea* newAreaObject = world->GetArea(area);
+      if (!newAreaObject->IsLoaded()) {
+        gpfnWarningPrintf("BUG: Trying to move actor %s to unloaded area %d\n",
+                          actor.GetName().data(), area.Value());
+        rs_debugger_printf("BUG: Trying to move actor %s to unloaded area %d\n",
+                           actor.GetName().data(), area.Value());
+      } else if (newAreaObject->GetObjectList()->GetObjectById(actor.GetUniqueId()) != nullptr) {
+        rs_debugger_printf("Moving from area %d to area %d and it already exists?!\n", oldArea,
+                           area.Value());
+      } else {
+        newAreaObject->ObjectList()->AddObject(actor);
+      }
     }
   }
 }
@@ -970,6 +1185,14 @@ void CStateManager::QueueMessage(int frameCount, CAssetId msg, float f1) {
   mPausedHudMemoFrameCount = frameCount;
   mPausedHudMemoAssetId = msg;
   mQueuedHudMemoDismissalDelay = f1;
+}
+
+// 0x8028F600. Echoes' body.
+void CStateManager::UpdateDynamicLayers() {
+  for (CGameArea::CChainIterator it = mObjectManager->GetWorld()->ChainHead(CWorld::kC_Alive);
+       it != CWorld::AliveAreasEnd(); ++it) {
+    it->UpdateDynamicLayers(*this);
+  }
 }
 
 // 0x8028F584

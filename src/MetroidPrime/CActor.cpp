@@ -1,9 +1,8 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// G2MEAB prototype NonMatching translation unit.
 // Existing configured G2MEAB .text: 0x80034B04..0x80037424 (72 retained native functions).
 // Preserve all native methods, emitted helpers and the existing initializer registration.
 // Existing source-family name retained; historical helper ownership and inlining remain inferred.
 // Current corrected boundaries and complete native inventory are recorded externally.
-// No declarations, matching claims or compiler-setting conclusions are supplied.
 //
 // Deferred inlining emits functions in reverse source order. Not implemented yet:
 // 0x80037158 +0x30: static initializer for seven TU-local SDA constants (.ctors 0x8065B500)

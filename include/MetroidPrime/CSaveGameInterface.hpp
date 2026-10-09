@@ -3,6 +3,8 @@
 
 #include "types.h"
 
+#include "MetroidPrime/CIOWin.hpp"
+
 // Echoes' enum.
 enum ESaveContext { kSC_FrontEnd, kSC_InGame };
 
@@ -14,6 +16,14 @@ public:
   // the game state's card serial.
   CSaveGameInterface(ESaveContext saveContext, u64 cardSerial);
   ~CSaveGameInterface();
+
+  // Echoes' accessor. CStateManager::DeleteSaveGameScreen reads it at +0x80.
+  CIOWin::EMessageReturn GetMessageReturn() const { return mMessageReturn; }
+
+private:
+  uchar x0_[0x80];
+  CIOWin::EMessageReturn mMessageReturn;
+  uchar x84_[0xb0 - 0x84];
 };
 
 #endif // _CSAVEGAMEINTERFACE

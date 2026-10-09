@@ -190,6 +190,8 @@ public:
 
   // Echoes' name and signature. Unlike Echoes there is no multiplayer check.
   void DeferStateTransition(EStateManagerTransition t);
+  void CreateFrontEndSaveGameScreen(); // Guessed name
+  void DeleteSaveGameScreen();
 
   // Echoes' names and signatures, unless noted.
   // Unlike Echoes, the "all keys found" memos also play a jingle.
@@ -322,7 +324,7 @@ private:
   bool x210_24_ : 1; // CMFGame checks it after the update
   bool x210_25_ : 1;
   bool mInMapScreen : 1;   // Echoes' name; the update dismisses the displayed hint and clears it
-  bool x210_27_ : 1;       // Set when the save-game screen is deleted (0x8028F834)
+  bool mInSaveUI : 1;      // Echoes' name; DeleteSaveGameScreen sets it
   bool mLogEndOfFrame : 1; // Guessed name. The update prints "END OF FRAME" and clears it.
   bool x210_29_ : 1;
   bool x210_30_ : 1;

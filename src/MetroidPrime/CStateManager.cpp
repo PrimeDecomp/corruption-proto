@@ -10,9 +10,6 @@
 // 0x8028F600 +0x5C: calls 0x80051A60 (CGameArea) with the manager on every area; the update
 //   calls it after the world update, like Echoes' UpdateDynamicLayers
 // 0x8028F770 +0xC4: owned native method/helper retained; exact source-level name unresolved
-// 0x8028F834 +0x58: Echoes' DeleteSaveGameScreen (x210 bit 0x10 from the screen's +0x80)
-// 0x8028F88C +0x78: creates the save-game screen (CStateManager.cpp(3736), 0xB0 bytes)
-// 0x8028FE38 +0x200: Echoes' UpdateHintState(float)
 // 0x802901B0 +0xC: owned native method/helper retained; exact source-level name unresolved
 // 0x802901BC +0x40: owned native method/helper retained; exact source-level name unresolved
 // 0x802901FC +0x34: owned native method/helper retained; exact source-level name unresolved
@@ -100,6 +97,8 @@
 #include "MetroidPrime/CGameArea.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/CMain.hpp"
+#include "MetroidPrime/CMapWorldInfo.hpp"
+#include "MetroidPrime/CMemoryCard.hpp"
 #include "MetroidPrime/CObjectListSmall.hpp"
 #include "MetroidPrime/CRedundantHintManager.hpp"
 #include "MetroidPrime/CRenderManager.hpp"
@@ -116,6 +115,8 @@
 #include "MetroidPrime/Cameras/CCinematicCamera.hpp"
 #include "MetroidPrime/Cameras/CGameCamera.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
+#include "MetroidPrime/HUD/CHUDMemoParms.hpp"
+#include "MetroidPrime/HUD/CSamusHud.hpp"
 #include "MetroidPrime/Player/CGameMode.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CPlayer.hpp"
@@ -187,7 +188,7 @@ CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& str
 , x210_24_(false)
 , x210_25_(true)
 , mInMapScreen(false)
-, x210_27_(false)
+, mInSaveUI(false)
 , mLogEndOfFrame(false)
 , x210_29_(false)
 , x210_30_(false)
@@ -761,6 +762,49 @@ void CStateManager::UpdateEscapeSequenceTimer(float dt) {
   }
 }
 
+// 0x8028FE38. Echoes' body; the hint period is still three seconds (Echoes'
+// CGameHintInfo::skHintTextTime).
+void CStateManager::UpdateHintState(float dt) {
+  CRedundantHintManager& hintOptions = gpGameState->HintOptions();
+  hintOptions.Update(dt, *this);
+
+  int nextHintIdx = -1;
+  int hintPeriods = -1;
+  const CRedundantHintManager::SHintState* currentHint = hintOptions.GetCurrentDisplayedHint();
+  if (currentHint != nullptr) {
+    const CGameHintInfo::CGameHint& nextHint =
+        gpMemoryCard->GetHints()[hintOptions.GetNextHintIdx()];
+    const rstl::vector< CGameHintInfo::SHintLocation >& locations = nextHint.GetLocations();
+    for (int i = 0; i < static_cast< int >(locations.size()); ++i) {
+      const CGameHintInfo::SHintLocation& location = locations[i];
+      const int areaId = location.mAreaId.Value();
+      const CAssetId worldId = location.mMlvlId;
+      CWorldState& worldState = gpGameState->StateForWorld(worldId);
+      rstl::rc_ptr< CMapWorldInfo > mapWorldInfo = worldState.MapWorldInfo();
+      mapWorldInfo->SetIsMapped(TAreaId(areaId), true);
+    }
+
+    if (currentHint->mTime < nextHint.GetTextTime()) {
+      nextHintIdx = hintOptions.GetNextHintIdx();
+      hintPeriods = static_cast< int >(currentHint->mTime / 3.f);
+    }
+  }
+
+  if (nextHintIdx != mHintIdx || hintPeriods != static_cast< int >(mHintPeriods)) {
+    if (nextHintIdx == -1) {
+      CSamusHud::DisplayHudMemo(rstl::wstring_l(L""),
+                                CHUDMemoParms(0.f, true, true, true, 15, true));
+    } else {
+      const CAssetId stringId = gpMemoryCard->GetHints()[nextHintIdx].GetStringId();
+      CSamusHud::DeferHintMemo(stringId, hintPeriods,
+                               CHUDMemoParms(0.f, true, false, true, 15, true));
+    }
+
+    mHintIdx = nextHintIdx;
+    mHintPeriods = hintPeriods;
+  }
+}
+
 // 0x8028FD50
 void CStateManager::AddWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType type) {
   mWeaponMgr->IncrCount(owner, type);
@@ -808,7 +852,7 @@ void CStateManager::DeferStateTransition(EStateManagerTransition t) {
     mObjectManager->GetWorld()->SetLoadPauseState(true);
     mDeferredTransition = t;
     if (mDeferredTransition == kSMT_SaveGame) {
-      mSaveGameScreen = rs_new(3736) CSaveGameInterface(kSC_InGame, gpGameState->GetCardSerial());
+      mSaveGameScreen = rs_new(3699) CSaveGameInterface(kSC_InGame, gpGameState->GetCardSerial());
     }
   }
 }
@@ -827,6 +871,18 @@ void CStateManager::ShowPausedHUDMemo(CAssetId strg, float time) {
                                            0.01f, 0x41, true);
   }
   DeferStateTransition(kSMT_MessageScreen);
+}
+
+// 0x8028F88C. Guessed name. The front-end UI script object builds the save-game screen through
+// it, so unlike DeferStateTransition's it runs in the front-end context.
+void CStateManager::CreateFrontEndSaveGameScreen() {
+  mSaveGameScreen = rs_new(3736) CSaveGameInterface(kSC_FrontEnd, gpGameState->GetCardSerial());
+}
+
+// 0x8028F834
+void CStateManager::DeleteSaveGameScreen() {
+  mInSaveUI = mSaveGameScreen->GetMessageReturn() == CIOWin::kMR_Exit;
+  mSaveGameScreen = nullptr;
 }
 
 // 0x8028F68C. Unlike Echoes there is a single rumble manager, and the soft pause has its own

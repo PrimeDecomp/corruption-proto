@@ -14,6 +14,7 @@
 #include "rstl/vector.hpp"
 
 class CBitStreamReader;
+class CMapWorldInfo;
 class CGameMode;
 class CPlayerState;
 class CWorldTransManager;
@@ -22,7 +23,8 @@ class CBitStreamWriter;
 // Minimal view of Echoes' per-world state (CGameState.cpp). Echoes' name.
 class CWorldState {
 public:
-  void SetAreaId(TAreaId areaId); // 0x8015D190; stores it at 0x8
+  void SetAreaId(TAreaId areaId);                // 0x8015D190; stores it at 0x8
+  rstl::rc_ptr< CMapWorldInfo >& MapWorldInfo(); // 0x8015D1CC; the member at 0x1C
 };
 
 // Minimal view of the prototype's CGameState for main.cpp; only the members main touches are
@@ -67,6 +69,7 @@ public:
   void SetEscapeTime(float time); // 0x80159C48
   // Echoes' name. 0x80159D20 looks up the state of the world id at 0x0.
   CWorldState& CurrentWorldState();
+  CWorldState& StateForWorld(CAssetId worldId); // 0x80159D60
   // Echoes' name for its CHintOptions, which this class replaces.
   CRedundantHintManager& HintOptions() { return mHintOptions; }
   SPreviousGameResults& PreviousGameResults() { return mPreviousGameResults; } // Guessed name

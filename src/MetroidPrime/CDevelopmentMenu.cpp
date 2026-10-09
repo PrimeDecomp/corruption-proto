@@ -45,6 +45,7 @@ void CDevelopmentMenu::SEntry::AddChoice(const SChoice& choice) {
   mChoices.push_back(choice);
 }
 
+// The first entry is never activated (the check is > 0, not >= 0). SEntry::Activate is empty.
 void CDevelopmentMenu::ActivateSelection() {
   if (mSelection > 0 && mSelection < mEntries.size()) {
     mEntries[mSelection].Activate();

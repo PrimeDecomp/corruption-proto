@@ -21,8 +21,8 @@ rstl::vector< SConnection > CEntity::NullConnectionList;
 CEntityInfo CEntity::NullEntityInfo =
     CEntityInfo(kInvalidAreaId, NullConnectionList, true, kInvalidEditorId);
 
-CEntityInfo::CEntityInfo(TAreaId aid, const rstl::vector< SConnection >& connections,
-                         bool isActive, TEditorId eid, TEditorId x1c)
+CEntityInfo::CEntityInfo(TAreaId aid, const rstl::vector< SConnection >& connections, bool isActive,
+                         TEditorId eid, TEditorId x1c)
 : mAreaId(aid)
 , mConnections(connections)
 , mEditorId(eid)
@@ -63,8 +63,8 @@ void CEntity::AcceptScriptMsg(CStateManager& mgr, const CScriptMsg& msg) {
     break;
   case kSM_ToggleActive: {
     EScriptObjectMessage next = GetActive() ? kSM_Deactivate : kSM_Activate;
-    AcceptScriptMsg(mgr, CScriptMsg(next, msg.GetSenderId(), msg.GetTargetId(),
-                                    msg.GetOriginator(), msg.GetState()));
+    AcceptScriptMsg(mgr, CScriptMsg(next, msg.GetSenderId(), msg.GetTargetId(), msg.GetOriginator(),
+                                    msg.GetState()));
     break;
   }
   case kSM_Delete:
@@ -87,13 +87,11 @@ void CEntity::AcceptScriptMsg(CStateManager& mgr, const CScriptMsg& msg) {
 
 // Echoes passes a sender id; the prototype forwards a whole originator into every message.
 void CEntity::SendScriptMsgs(EScriptObjectState state, CStateManager& mgr,
-                             const SScriptMsgOriginator& originator,
-                             EScriptObjectMessage skipMsg) {
+                             const SScriptMsgOriginator& originator, EScriptObjectMessage skipMsg) {
   for (rstl::vector< SConnection >::const_iterator it = mConnections.begin();
        it != mConnections.end(); ++it) {
     if (it->state == state && it->msg != skipMsg) {
-      CStateManagerObject::TIdListResult search =
-          mgr.ObjectManager().GetIdListForScript(it->objId);
+      CStateManagerObject::TIdListResult search = mgr.ObjectManager().GetIdListForScript(it->objId);
       for (CStateManagerObject::TIdList::const_iterator current = search.first;
            current != search.second; ++current) {
         mgr.ObjectManager().SendScriptMsg(
@@ -286,7 +284,7 @@ TUniqueId CEntity::FindConnectedObject(const CStateManager& mgr, EScriptObjectSt
     if ((state == kSS_InvalidState || state == it->state) &&
         (msg == kSM_Invalid || msg == it->msg)) {
       CStateManagerObject::TIdListResult ids = mgr.ObjectManager().GetIdListForScript(it->objId);
-      if (!(ids.first == ids.second)) {
+      if (ids.first != ids.second) {
         return ids.first->second;
       }
     }
@@ -339,27 +337,23 @@ SScriptObjectRef CEntity::GetAttachedObjectRef(EScriptObjectState state) const {
   return SScriptObjectRef(kInvalidEditorId, kInvalidUniqueId);
 }
 
-// The think-order lists grow on demand, unlike rstl::vector's push_back on this platform.
-static inline void PushBackGrowing(rstl::vector< TUniqueId >& list, TUniqueId uid) {
-  int size = list.size() + 1;
-  if (size > list.capacity()) {
-    int capacity = list.capacity() * 2;
-    if (capacity < 4) {
-      capacity = 4;
-    }
-    while (capacity < size) {
-      capacity *= 2;
-    }
-    list.reserve(capacity);
-  }
-  list.push_back(uid);
-}
-
+// The think-order lists grow on demand; rstl::vector's push_back only asserts on this platform.
 void CEntity::AddThinkBefore(CStateManager& mgr, TUniqueId uid) {
   CEntity* entity = TCastToPtr< CEntity >(mgr.ObjectManager().ObjectById(uid));
   if (entity != nullptr) {
     entity->AddThinkAfter(mgr, GetUniqueId());
-    PushBackGrowing(x30_, uid);
+    int size = x30_.size() + 1;
+    if (size > x30_.capacity()) {
+      int capacity = x30_.capacity() * 2;
+      if (capacity < 4) {
+        capacity = 4;
+      }
+      while (capacity < size) {
+        capacity *= 2;
+      }
+      x30_.reserve(capacity);
+    }
+    x30_.push_back(uid);
   }
 }
 
@@ -374,7 +368,18 @@ void CEntity::ClearThinkBefore(CStateManager& mgr) {
 }
 
 void CEntity::AddThinkAfter(CStateManager& mgr, TUniqueId uid) {
-  PushBackGrowing(x20_, uid);
+  int size = x20_.size() + 1;
+  if (size > x20_.capacity()) {
+    int capacity = x20_.capacity() * 2;
+    if (capacity < 4) {
+      capacity = 4;
+    }
+    while (capacity < size) {
+      capacity *= 2;
+    }
+    x20_.reserve(capacity);
+  }
+  x20_.push_back(uid);
   x54_10_ = true;
 }
 

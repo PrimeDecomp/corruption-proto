@@ -7,8 +7,6 @@
 //   ":*?\"<>|\\/\n\t%" with a find_first_of(const char*) that rstl::string lacks)
 // 0x8003CA84 +0xD8: emitted string find helper used by movie name sanitization
 // 0x8003CB5C +0x80: emitted string iterator search helper
-// 0x80042698 +0x163C: apply debug-option state to engine systems
-// 0x80043CD4 +0x14D8: populate debug-option values from engine/tweak state
 // 0x800451AC +0x880: debug menu input and selected option handling
 // 0x80045A2C +0xD8: debug menu/timing update
 // 0x80045B04 +0x33C: debug text/menu rendering with CFont and log appenders
@@ -48,9 +46,11 @@
 
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Audio/CStreamAudioManager.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
 #include "Kyoto/Basics/COsContext.hpp"
 #include "Kyoto/CDvdFile.hpp"
+#include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
 #include "MetroidPrime/CConsoleOutputWindow.hpp"
 #include "MetroidPrime/CMain.hpp"
@@ -208,6 +208,245 @@ void KPADSetObjInterval(float interval);
 inline float GetPowerUpMax(int option) {
   return CPlayerState::GetPowerUpMaxValue(
       static_cast< CPlayerState::EItemType >(CGameDebug::GetPlayerItemForOption(option)));
+}
+
+// Guessed names. More engine switches the options read and write.
+extern bool gLoadRELFilesOverBBA;
+extern int gFrozenJostleCount;
+// Set when the options are first applied; its owner is not split yet.
+extern bool lbl_80796EC8;
+// CElementGen.cpp's flag that stops particles from rendering.
+extern bool lbl_8079B3D9;
+
+extern "C" void SelectMaterialTevHandler(int mode);
+
+// Guessed name. Reads the tweaks and engine switches back into their options.
+void CGameDebug::ReadEngineState() {
+  // Orbit and player switches
+  SetOptionValue(kDO_AutoAim, gAutoAim);
+  SetOptionValue(kDO_AutoAimAtOrbitedObject, gAutoAimAtOrbitedObject);
+  SetOptionValue(kDO_FreeLookPreventsOrbitMovement, gFreeLookPreventsOrbitMovement);
+  SetOptionValue(kDO_ShowReflection, gShowReflection);
+  SetOptionValue(kDO_DamageForcesBallTransition, gDamageForcesBallTransition);
+  SetOptionValue(kDO_DamageBreaksOrbit, gDamageBreaksOrbit);
+  SetOptionValue(kDO_BoostBreaksOrbit, gBoostBreaksOrbit);
+  SetOptionValue(kDO_MorphballBreaksLockon, gMorphballBreaksLockon);
+  SetOptionValue(kDO_DoubleDashBreaksOrbit, gDoubleDashBreaksOrbit);
+  SetOptionValue(kDO_WidescreenBallmode, gWidescreenBallMode);
+  SetOptionValue(kDO_PVS, gPVSMode);
+  SetOptionValue(kDO_FaceReflectMode, gFaceReflectMode);
+  SetOptionValue(kDO_WaterEnable, gWaterEnable);
+  SetOptionValue(kDO_WaterProfile, gWaterProfile);
+  SetOptionValue(kDO_WaterFogOverWater, gWaterFogOverWater);
+
+  // Player tweaks
+  SetOptionValue(kDO_NormalTurnFactor, static_cast< int >(gpTweakPlayer->GetNormalTurnFactor()));
+  SetOptionValue(kDO_FreeLookTurnFactor,
+                 static_cast< int >(gpTweakPlayer->GetFreeLookTurnFactor()));
+  SetOptionValue(kDO_GrappleDistance, gpTweakPlayer->GetGrappleDistance());
+  SetOptionValue(kDO_GrappleBeamLength, gpTweakPlayer->GetGrappleBeamLength());
+  SetOptionValue(kDO_GrappleSwingTime, gpTweakPlayer->GetGrappleSwingTime());
+  SetOptionValue(kDO_GrappleMaxVelocity, gpTweakPlayer->GetGrappleMaxVelocity());
+  SetOptionValue(kDO_GrapplePullCloseDistance, gpTweakPlayer->GetGrapplePullCloseDistance());
+  SetOptionValue(kDO_GrapplePullDampenDistance, gpTweakPlayer->GetGrapplePullDampenDistance());
+  SetOptionValue(kDO_GrapplePullVelocity, gpTweakPlayer->GetGrapplePullVelocity());
+  SetOptionValue(kDO_GrappleTurnRate, gpTweakPlayer->GetGrappleTurnRate());
+  SetOptionValue(kDO_GrappleJumpForce, gpTweakPlayer->GetGrappleJumpForce());
+  SetOptionValue(kDO_GrappleHoldOrbitButton, gpTweakPlayer->GetGrappleHoldOrbitButton());
+  SetOptionValue(kDO_GrappleTurnControlsReversed, gpTweakPlayer->GetGrappleTurnControlsReversed());
+  SetOptionValue(kDO_GrappleControlScheme, gpTweakPlayer->GetGrappleControlScheme());
+  SetOptionValue(kDO_ScanFreezesGame, gpTweakPlayer->GetScanFreezesGame());
+  SetOptionValue(kDO_ScanRequiresLineOfSight, gpTweakPlayer->GetScanLineOfSight());
+  SetOptionValue(kDO_ShieldAllowsMovement, gpTweakPlayer->GetShieldAllowsMotion());
+  SetOptionValue(kDO_DashEnabled, gpTweakPlayer->GetOrbitDash());
+  SetOptionValue(kDO_UsesTapHold, gpTweakPlayer->GetOrbitDashUsesTap());
+  SetOptionValue(kDO_TapTime, gpTweakPlayer->GetOrbitDashTapTime());
+  SetOptionValue(kDO_StickXAxisThreshold, gpTweakPlayer->GetOrbitDashStickThreshold());
+  SetOptionValue(kDO_DoubleJumpImpulse, gpTweakPlayer->GetOrbitDashDoubleJumpImpulse());
+  SetOptionValue(kDO_VerticalDoubleJumpAccel, gpTweakPlayer->GetOrbitDashVerticalDoubleJumpAccel());
+  SetOptionValue(kDO_HorizDoubleJumpAccel, gpTweakPlayer->GetOrbitDashHorizontalDoubleJumpAccel());
+
+  // HUD tweaks
+  SetOptionValue(kDO_EnableHud, gpTweakGui->GetEnableHud());
+  SetOptionValue(kDO_EnableTargeting, gpTweakGui->GetEnableTargeting());
+  SetOptionValue(kDO_EnableAutoMapper, gpTweakGui->GetEnableAutoMapper());
+  SetOptionValue(kDO_RadarMode, gpTweakGui->GetRadarMode());
+  SetOptionValue(kDO_HUDCameraFOV, gpTweakGui->GetHudCameraFov());
+  SetOptionValue(kDO_HUDCameraY, gpTweakGui->GetHudCameraY());
+  SetOptionValue(kDO_HUDCameraZ, gpTweakGui->GetHudCameraZ());
+  SetOptionValue(kDO_FaceReflectionWidth, gpTweakGui->GetFaceReflectionWidth());
+  SetOptionValue(kDO_FaceReflectionHeight, gpTweakGui->GetFaceReflectionHeight());
+  SetOptionValue(kDO_FaceReflectionPositionY, gpTweakGui->GetFaceReflectionPositionY());
+  SetOptionValue(kDO_FaceReflectionPositionZ, gpTweakGui->GetFaceReflectionPositionZ());
+  SetOptionValue(kDO_FaceReflectionAspectRatio, gpTweakGui->GetFaceReflectionAspectRatio());
+  SetOptionValue(kDO_ShowOrbitPoint, gpTweakTargeting->GetShowOrbitPoint());
+
+  // Other engine state
+  SetOptionValue(kDO_PowerupSuckDistance, gPowerupSuckDistance);
+  SetOptionValue(kDO_HardMode, gpGameState->GetHardModeEnabled());
+  SetOptionValue(kDO_LoadRELFilesOverBBA, gLoadRELFilesOverBBA);
+  SetOptionValue(kDO_FrozenJostleCount, gFrozenJostleCount);
+  SetOptionValue(kDO_Brightness, CGraphics::GetBrightness());
+  SetOptionValue(kDO_MinimumShakeAmplitude, gMinimumShakeAmplitude);
+  if (gpGameState != nullptr) {
+    CGameOptions& options = gpGameState->GameOptions();
+    SetOptionValue(kDO_SfxMasterVolume, options.GetSfxVolume().mValue);
+    SetOptionValue(kDO_MusicMasterVolume, options.GetMusicVolume().mValue);
+  }
+
+  // Hyper mode tuning of the "Timer" type, then of the "Phazon Level" type
+  SetOptionValue(kDO_HyperModeType, gpTweakPlayer->GetHyperModeType());
+  SetOptionValue(kDO_HyperModeInvulnerablePhazonLoss,
+                 gpTweakPlayer->GetHyperModeInvulnerablePhazonLoss(0));
+  SetOptionValue(kDO_HyperModeInvulnerableTime, gpTweakPlayer->GetHyperModeInvulnerableTime(0));
+  SetOptionValue(kDO_HyperModeCorruptionTime, gpTweakPlayer->GetHyperModeCorruptionTime(0));
+  SetOptionValue(kDO_HyperModeConstantCorruptionRate,
+                 gpTweakPlayer->GetHyperModeConstantCorruptionRate(0));
+  SetOptionValue(kDO_HyperModeCorruptionRate, gpTweakPlayer->GetHyperModeCorruptionRate(0));
+  SetOptionValue(kDO_HyperModePhazonLevel, gpTweakPlayer->GetHyperModePhazonLevel(0));
+  SetOptionValue(kDO_HyperModePhazonCapacity, gpTweakPlayer->GetHyperModePhazonCapacity(0));
+  SetOptionValue(kDO_HyperModeDangerPercentage, gpTweakPlayer->GetHyperModeDangerPercentage(0));
+  SetOptionValue(kDO_HyperModeBeamLossAmount, gpTweakPlayer->GetHyperModeBeamLossAmount(0));
+  SetOptionValue(kDO_HyperModeMissileLossAmount, gpTweakPlayer->GetHyperModeMissileLossAmount(0));
+  SetOptionValue(kDO_HyperModePhazonBallRate, gpTweakPlayer->GetHyperModePhazonBallRate(0));
+  SetOptionValue(kDO_HyperModeDamageMultiplier, gpTweakPlayer->GetHyperModeDamageMultiplier(0));
+  SetOptionValue(kDO_HyperModeInvulnerablePhazonLoss2,
+                 gpTweakPlayer->GetHyperModeInvulnerablePhazonLoss(1));
+  SetOptionValue(kDO_HyperModeInvulnerableTime2, gpTweakPlayer->GetHyperModeInvulnerableTime(1));
+  SetOptionValue(kDO_HyperModeCorruptionTime2, gpTweakPlayer->GetHyperModeCorruptionTime(1));
+  SetOptionValue(kDO_HyperModeConstantCorruptionRate2,
+                 gpTweakPlayer->GetHyperModeConstantCorruptionRate(1));
+  SetOptionValue(kDO_HyperModeCorruptionRate2, gpTweakPlayer->GetHyperModeCorruptionRate(1));
+  SetOptionValue(kDO_HyperModePhazonLevel2, gpTweakPlayer->GetHyperModePhazonLevel(1));
+  SetOptionValue(kDO_HyperModePhazonCapacity2, gpTweakPlayer->GetHyperModePhazonCapacity(1));
+  SetOptionValue(kDO_HyperModeDangerPercentage2, gpTweakPlayer->GetHyperModeDangerPercentage(1));
+  SetOptionValue(kDO_HyperModeBeamLossAmount2, gpTweakPlayer->GetHyperModeBeamLossAmount(1));
+  SetOptionValue(kDO_HyperModeMissileLossAmount2, gpTweakPlayer->GetHyperModeMissileLossAmount(1));
+  SetOptionValue(kDO_HyperModePhazonBallRate2, gpTweakPlayer->GetHyperModePhazonBallRate(1));
+  SetOptionValue(kDO_HyperModeDamageMultiplier2, gpTweakPlayer->GetHyperModeDamageMultiplier(1));
+
+  // Revolution controls
+  SetOptionValue(kDO_FreeLookGun, gpTweakPlayer->GetRevFreeLookGun());
+  SetOptionValue(kDO_OrbitLockGun, gpTweakPlayer->GetRevOrbitLockGun());
+  SetOptionValue(kDO_OrbitTagObjects, gpTweakPlayer->GetRevOrbitTagObjects());
+  SetOptionValue(kDO_LockAimingCursor, gpTweakPlayer->GetRevLockCursor());
+}
+
+// With deferred inlining the inliner's total size budget is read at the end of the file; past the
+// default, none of ApplyOptions' ~110 option reads are inlined, while the binary inlines them all.
+#pragma inline_max_total_size(100000)
+
+// Guessed name. Applies the options to the tweaks and engine switches.
+void CGameDebug::ApplyOptions() {
+  lbl_80796EC8 = true;
+  CStreamAudioManager::SetMusicUnmute(IsOptionSet(kDO_MusicOnOff));
+  gpGameState->GameOptions().SetSoundMode(GetOptionInt(kDO_SoundMode), false);
+
+  // Orbit and player switches
+  gAutoAim = IsOptionSet(kDO_AutoAim);
+  gAutoAimAtOrbitedObject = IsOptionSet(kDO_AutoAimAtOrbitedObject);
+  gFreeLookPreventsOrbitMovement = IsOptionSet(kDO_FreeLookPreventsOrbitMovement);
+  gShowReflection = IsOptionSet(kDO_ShowReflection);
+  gDamageForcesBallTransition = GetOptionValue(kDO_DamageForcesBallTransition);
+  gDamageBreaksOrbit = GetOptionValue(kDO_DamageBreaksOrbit);
+  gBoostBreaksOrbit = IsOptionSet(kDO_BoostBreaksOrbit);
+  gMorphballBreaksLockon = GetOptionInt(kDO_MorphballBreaksLockon);
+  gDoubleDashBreaksOrbit = IsOptionSet(kDO_DoubleDashBreaksOrbit);
+  gWidescreenBallMode = IsOptionSet(kDO_WidescreenBallmode);
+  gPVSMode = GetOptionInt(kDO_PVS);
+  gFaceReflectMode = GetOptionInt(kDO_FaceReflectMode);
+  gWaterEnable = IsOptionSet(kDO_WaterEnable);
+  gWaterProfile = IsOptionSet(kDO_WaterProfile);
+  gWaterFogOverWater = IsOptionSet(kDO_WaterFogOverWater);
+
+  // Player tweaks
+  gpTweakPlayer->SetNormalTurnFactor(GetOptionValue(kDO_NormalTurnFactor));
+  gpTweakPlayer->SetFreeLookTurnFactor(GetOptionValue(kDO_FreeLookTurnFactor));
+  gpTweakPlayer->SetGrappleDistance(GetOptionValue(kDO_GrappleDistance));
+  gpTweakPlayer->SetGrappleBeamLength(GetOptionValue(kDO_GrappleBeamLength));
+  gpTweakPlayer->SetGrappleSwingTime(GetOptionValue(kDO_GrappleSwingTime));
+  gpTweakPlayer->SetGrappleMaxVelocity(GetOptionValue(kDO_GrappleMaxVelocity));
+  gpTweakPlayer->SetGrapplePullCloseDistance(GetOptionValue(kDO_GrapplePullCloseDistance));
+  gpTweakPlayer->SetGrapplePullDampenDistance(GetOptionValue(kDO_GrapplePullDampenDistance));
+  gpTweakPlayer->SetGrapplePullVelocity(GetOptionValue(kDO_GrapplePullVelocity));
+  gpTweakPlayer->SetGrappleTurnRate(GetOptionValue(kDO_GrappleTurnRate));
+  gpTweakPlayer->SetGrappleJumpForce(GetOptionValue(kDO_GrappleJumpForce));
+  gpTweakPlayer->SetGrappleHoldOrbitButton(IsOptionSet(kDO_GrappleHoldOrbitButton));
+  gpTweakPlayer->SetGrappleTurnControlsReversed(IsOptionSet(kDO_GrappleTurnControlsReversed));
+  gpTweakPlayer->SetGrappleControlScheme(GetOptionInt(kDO_GrappleControlScheme));
+  gpTweakPlayer->SetScanFreezesGame(IsOptionSet(kDO_ScanFreezesGame));
+  gpTweakPlayer->SetScanLineOfSight(IsOptionSet(kDO_ScanRequiresLineOfSight));
+  gpTweakPlayer->SetShieldAllowsMotion(IsOptionSet(kDO_ShieldAllowsMovement));
+  gpTweakPlayer->SetOrbitDash(IsOptionSet(kDO_DashEnabled));
+  gpTweakPlayer->SetOrbitDashUsesTap(IsOptionSet(kDO_UsesTapHold));
+  gpTweakPlayer->SetOrbitDashTapTime(GetOptionValue(kDO_TapTime));
+  gpTweakPlayer->SetOrbitDashStickThreshold(GetOptionValue(kDO_StickXAxisThreshold));
+  gpTweakPlayer->SetOrbitDashDoubleJumpImpulse(GetOptionValue(kDO_DoubleJumpImpulse));
+  gpTweakPlayer->SetOrbitDashVerticalDoubleJumpAccel(GetOptionValue(kDO_VerticalDoubleJumpAccel));
+  gpTweakPlayer->SetOrbitDashHorizontalDoubleJumpAccel(GetOptionValue(kDO_HorizDoubleJumpAccel));
+
+  // HUD tweaks; "HUD Camera FOV" is not applied back
+  gpTweakGui->SetEnableHud(GetOptionInt(kDO_EnableHud));
+  gpTweakGui->SetEnableTargeting(GetOptionInt(kDO_EnableTargeting));
+  gpTweakGui->SetEnableAutoMapper(GetOptionInt(kDO_EnableAutoMapper));
+  gpTweakGui->SetRadarMode(GetOptionInt(kDO_RadarMode));
+  gpTweakGui->SetEnableVisors(GetOptionInt(kDO_EnableVisors));
+  gpTweakGui->SetHudCameraY(GetOptionInt(kDO_HUDCameraY));
+  gpTweakGui->SetHudCameraZ(GetOptionInt(kDO_HUDCameraZ));
+  gpTweakGui->SetFaceReflectionWidth(GetOptionInt(kDO_FaceReflectionWidth));
+  gpTweakGui->SetFaceReflectionHeight(GetOptionInt(kDO_FaceReflectionHeight));
+  gpTweakGui->SetFaceReflectionPositionY(GetOptionInt(kDO_FaceReflectionPositionY));
+  gpTweakGui->SetFaceReflectionPositionZ(GetOptionInt(kDO_FaceReflectionPositionZ));
+  gpTweakGui->SetFaceReflectionAspectRatio(GetOptionInt(kDO_FaceReflectionAspectRatio));
+  gpTweakTargeting->SetShowOrbitPoint(IsOptionSet(kDO_ShowOrbitPoint));
+
+  // Hyper mode tuning of the "Timer" type, then of the "Phazon Level" type
+  gpTweakPlayer->SetHyperModeType(GetOptionInt(kDO_HyperModeType));
+  gpTweakPlayer->SetHyperModeInvulnerablePhazonLoss(
+      0, IsOptionSet(kDO_HyperModeInvulnerablePhazonLoss));
+  gpTweakPlayer->SetHyperModeInvulnerableTime(0, GetOptionValue(kDO_HyperModeInvulnerableTime));
+  gpTweakPlayer->SetHyperModeCorruptionTime(0, GetOptionValue(kDO_HyperModeCorruptionTime));
+  gpTweakPlayer->SetHyperModeConstantCorruptionRate(
+      0, IsOptionSet(kDO_HyperModeConstantCorruptionRate));
+  gpTweakPlayer->SetHyperModeCorruptionRate(0, GetOptionValue(kDO_HyperModeCorruptionRate));
+  gpTweakPlayer->SetHyperModePhazonLevel(0, GetOptionValue(kDO_HyperModePhazonLevel));
+  gpTweakPlayer->SetHyperModePhazonCapacity(0, GetOptionValue(kDO_HyperModePhazonCapacity));
+  gpTweakPlayer->SetHyperModeDangerPercentage(0, GetOptionValue(kDO_HyperModeDangerPercentage));
+  gpTweakPlayer->SetHyperModeBeamLossAmount(0, GetOptionValue(kDO_HyperModeBeamLossAmount));
+  gpTweakPlayer->SetHyperModeMissileLossAmount(0, GetOptionValue(kDO_HyperModeMissileLossAmount));
+  gpTweakPlayer->SetHyperModePhazonBallRate(0, GetOptionValue(kDO_HyperModePhazonBallRate));
+  gpTweakPlayer->SetHyperModeDamageMultiplier(0, GetOptionValue(kDO_HyperModeDamageMultiplier));
+  gpTweakPlayer->SetHyperModeInvulnerablePhazonLoss(
+      1, IsOptionSet(kDO_HyperModeInvulnerablePhazonLoss2));
+  gpTweakPlayer->SetHyperModeInvulnerableTime(1, GetOptionValue(kDO_HyperModeInvulnerableTime2));
+  gpTweakPlayer->SetHyperModeCorruptionTime(1, GetOptionValue(kDO_HyperModeCorruptionTime2));
+  gpTweakPlayer->SetHyperModeConstantCorruptionRate(
+      1, IsOptionSet(kDO_HyperModeConstantCorruptionRate2));
+  gpTweakPlayer->SetHyperModeCorruptionRate(1, GetOptionValue(kDO_HyperModeCorruptionRate2));
+  gpTweakPlayer->SetHyperModePhazonLevel(1, GetOptionValue(kDO_HyperModePhazonLevel2));
+  gpTweakPlayer->SetHyperModePhazonCapacity(1, GetOptionValue(kDO_HyperModePhazonCapacity2));
+  gpTweakPlayer->SetHyperModeDangerPercentage(1, GetOptionValue(kDO_HyperModeDangerPercentage2));
+  gpTweakPlayer->SetHyperModeBeamLossAmount(1, GetOptionValue(kDO_HyperModeBeamLossAmount2));
+  gpTweakPlayer->SetHyperModeMissileLossAmount(1, GetOptionValue(kDO_HyperModeMissileLossAmount2));
+  gpTweakPlayer->SetHyperModePhazonBallRate(1, GetOptionValue(kDO_HyperModePhazonBallRate2));
+  gpTweakPlayer->SetHyperModeDamageMultiplier(1, GetOptionValue(kDO_HyperModeDamageMultiplier2));
+
+  // Revolution controls
+  gpTweakPlayer->SetRevFreeLookGun(IsOptionSet(kDO_FreeLookGun));
+  gpTweakPlayer->SetRevOrbitLockGun(IsOptionSet(kDO_OrbitLockGun));
+  gpTweakPlayer->SetRevOrbitTagObjects(IsOptionSet(kDO_OrbitTagObjects));
+  gpTweakPlayer->SetRevLockCursor(IsOptionSet(kDO_LockAimingCursor));
+  KPADSetObjInterval(GetOptionValue(kDO_DPDDistance));
+
+  // Other engine state
+  gPowerupSuckDistance = GetOptionValue(kDO_PowerupSuckDistance);
+  gpGameState->SetHardMode(IsOptionSet(kDO_HardMode));
+  gLoadRELFilesOverBBA = IsOptionSet(kDO_LoadRELFilesOverBBA);
+  gFrozenJostleCount = GetOptionInt(kDO_FrozenJostleCount);
+  CGraphics::SetBrightness(GetOptionValue(kDO_Brightness));
+  gMinimumShakeAmplitude = GetOptionValue(kDO_MinimumShakeAmplitude);
+  lbl_8079B3D9 = !IsOptionSet(kDO_RenderParticles);
+  SelectMaterialTevHandler(GetOptionInt(kDO_PerPolyDebugging));
 }
 
 // Registers every option in its category, in the order of the binary. The headings name the

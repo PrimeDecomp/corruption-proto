@@ -35,8 +35,8 @@ class CStateManager;
 //   per-option TSignal1<CStateManager&> once per frame (DispatchChangedOptions, called by
 //   CMFGame). Actors and other objects subscribe with ConnectOption; CActor uses it for
 //   "Draw Object Collision Boxes".
-// - Two engine sync passes (not implemented): 0x80043CD4 reads tweak and engine state into the
-//   options and 0x80042698 applies the options back to the engine.
+// - Two engine sync passes: ReadEngineState (0x80043CD4) reads tweak and engine state into the
+//   options and ApplyOptions (0x80042698) applies the options back to the engine.
 // - A CDebugMenu based browser: a category list and one page per category, with per-category
 //   selection memory, driven by the CControlMapper debug menu commands (0x800451AC, not
 //   implemented) and drawn with the debug font (0x80045B04, 0x80045E40).
@@ -491,6 +491,18 @@ public:
       option->SetValue(value);
     }
   }
+  void SetOptionValue(int index, bool value) {
+    CDebugOption* option = GetOption(index);
+    if (option != nullptr) {
+      option->SetValue(value ? 1.f : 0.f);
+    }
+  }
+  void SetOptionValue(int index, int value) {
+    CDebugOption* option = GetOption(index);
+    if (option != nullptr) {
+      option->SetValue(static_cast< float >(value));
+    }
+  }
 
   // Guessed names. Register an option in its slot (the first registration wins) and add a named
   // value to an option. The color defaults to white.
@@ -503,6 +515,10 @@ public:
                  float step, const CColor& color);
   void AddOptionChoice(int index, const char* name, float value);
   void AddDebugOptions();
+  // Guessed names. 0x80043CD4 reads the tweaks and engine switches into their options and
+  // 0x80042698 applies the options back.
+  void ReadEngineState();
+  void ApplyOptions();
 
   // Guessed names. Emits the signal of every option changed since the last call.
   void DispatchChangedOptions(CStateManager& mgr);

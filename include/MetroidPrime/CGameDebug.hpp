@@ -519,6 +519,8 @@ public:
   // 0x80042698 applies the options back.
   void ReadEngineState();
   void ApplyOptions();
+  // Guessed name. 0x80045B04, called by main after drawing the frame.
+  void Draw();
 
   // Guessed names. Emits the signal of every option changed since the last call.
   void DispatchChangedOptions(CStateManager& mgr);
@@ -573,6 +575,34 @@ private:
     uchar mData[N * sizeof(T)];
   };
 
+  // Guessed names. A piece of a debug message line (0x38 bytes): text, a bar ("[BAR ...]") or
+  // the colour of the bars that follow ("[BC ...]").
+  struct STextSegment {
+    enum EType {
+      kT_Text,
+      kT_Bar,
+      kT_BarColor,
+    };
+
+    enum {
+      kTextSize = 0x28,
+    };
+
+    EType mType;
+    char mText[kTextSize];
+    int mWidth;
+    int mFill;   // The filled part of a bar
+    uint mColor; // RGBA
+  };
+  enum {
+    kMaxTextSegments = 20,
+  };
+
+  static int ParseTagValues(const char** cursor, int* values, int maxCount);
+  static const char* ParseBarTag(const char* text, int* fill, int* size);
+  static const char* ParseColorTag(const char* text, CColor* color);
+  static void DrawTaggedText(const CFont& font, const char* text, int y, CColor color);
+
   void InstallOption(const CDebugOption& option);
   void OnOptionChanged(CDebugOption* option);
 
@@ -604,7 +634,7 @@ private:
   rstl::string mMovieCaptureName;
   int xA180_;
   float mMovieCaptureTime;
-  int xA188_;
+  int xA188_; // Printed as the frame number of the logged debug messages
   rstl::single_ptr< char > mLogBuffer;
   int mLogSize;
   bool mLogFileCreated; // Later dumps append to C:\FIO\debuglog.txt

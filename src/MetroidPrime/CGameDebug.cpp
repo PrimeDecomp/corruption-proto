@@ -9,11 +9,6 @@
 // 0x8003CB5C +0x80: emitted string iterator search helper
 // 0x800451AC +0x880: debug menu input and selected option handling
 // 0x80045A2C +0xD8: debug menu/timing update
-// 0x80045B04 +0x33C: debug text/menu rendering with CFont and log appenders
-// 0x80045E40 +0x5F8: debug text drawing helper
-// 0x80046438 +0x154: retained native/emitted helper; exact historical name/type unresolved
-// 0x8004658C +0xB4: retained native/emitted helper; exact historical name/type unresolved
-// 0x80046640 +0xA4: retained native/emitted helper; exact historical name/type unresolved
 // 0x800466E4 +0xD58: debug menu construction from category/options; vector.h assertion482
 // 0x8004743C +0x48: retained native/emitted helper; exact historical name/type unresolved
 // 0x80047484 +0xA8: retained native/emitted helper; exact historical name/type unresolved
@@ -52,6 +47,8 @@
 #include "Kyoto/CDvdFile.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
+#include "Kyoto/Text/CFont.hpp"
+#include "MetaRender/CCubeRenderer.hpp"
 #include "MetroidPrime/CConsoleOutputWindow.hpp"
 #include "MetroidPrime/CMain.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
@@ -65,6 +62,14 @@
 #include "rstl/math.hpp"
 
 #include <string.h>
+
+// Guessed names. The tags a debug message line may embed (see DrawTaggedText).
+const char* gDebugBarTag = "[BAR ";
+const char* gDebugBarColorTag = "[BC ";
+
+// Guessed names. The debug font arrow glyphs pointing to the other page of the category list.
+const char kNextPageArrow[] = "\x8D";
+const char kPreviousPageArrow[] = "\x88";
 
 int CGameDebug::GetPlayerItemForOption(int index) {
   switch (index) {
@@ -219,6 +224,226 @@ extern bool lbl_80796EC8;
 extern bool lbl_8079B3D9;
 
 extern "C" void SelectMaterialTevHandler(int mode);
+
+// The earlier of two positions in a string, as a reference like CMath::Min.
+inline const char* const& EarlierOf(const char* const& a, const char* const& b) {
+  return a < b ? a : b;
+}
+
+// Guessed name. Reads the space separated decimal values of a tag up to its closing ']' into
+// values (at most maxCount of them) and moves the cursor past the tag. Returns the number of
+// values read, or 0 for a malformed tag.
+int CGameDebug::ParseTagValues(const char** cursor, int* values, int maxCount) {
+  int count = 0;
+  const char* text = *cursor;
+  while (*text != ']') {
+    int value = 0;
+    while (*text != ' ' && *text != ']') {
+      char c = *text;
+      if (c >= '0' && c <= '9') {
+        value = value * 10 + (c - '0');
+      } else {
+        return 0;
+      }
+      ++text;
+    }
+    if (count == maxCount) {
+      return 0;
+    }
+    *values++ = value;
+    ++count;
+    if (*text == ' ') {
+      ++text;
+    }
+  }
+  *cursor = text + 1;
+  return count;
+}
+
+// Guessed name. Parses "[BAR <fill> <size>]"; a single value is both the fill and the size.
+// Returns the text after the tag, or null for a malformed tag.
+const char* CGameDebug::ParseBarTag(const char* text, int* fill, int* size) {
+  const char* cursor = text + strlen(gDebugBarTag);
+  int values[2] = {0, 0};
+  int count = ParseTagValues(&cursor, values, 2);
+  if (count == 1) {
+    *fill = values[0];
+    *size = values[0];
+  } else if (count == 2) {
+    *fill = values[0];
+    *size = values[1];
+  } else {
+    return nullptr;
+  }
+  return cursor;
+}
+
+// Guessed name. Parses "[BC <r> <g> <b> [<a>]]" (alpha defaults to 192) into the colour of the
+// bars that follow. Returns the text after the tag, or null for a malformed tag.
+const char* CGameDebug::ParseColorTag(const char* text, CColor* color) {
+  const char* cursor = text + strlen(gDebugBarColorTag);
+  int values[4] = {0, 0, 0, 192};
+  int count = ParseTagValues(&cursor, values, 4);
+  if (count == 3 || count == 4) {
+    uchar r = CMath::Clamp(0, values[0], 255);
+    uchar g = CMath::Clamp(0, values[1], 255);
+    uchar b = CMath::Clamp(0, values[2], 255);
+    uchar a = CMath::Clamp(0, values[3], 255);
+    *color = CColor(r, g, b, a);
+    return cursor;
+  }
+  return nullptr;
+}
+
+// Guessed name. Draws a debug message line right aligned. The line may embed "[BAR ...]" bars,
+// drawn as a filled and a dimmed part, and "[BC ...]" colour changes for the bars that follow.
+void CGameDebug::DrawTaggedText(const CFont& font, const char* text, int y, CColor color) {
+  const int right = CGraphics::GetViewport().mWidth - 18;
+  if (strstr(text, "[") == nullptr) {
+    font.DrawString(text, right - font.StringWidth(text), y, color);
+    return;
+  }
+
+  rstl::reserved_vector< STextSegment, kMaxTextSegments > segments;
+  const char* cursor = text;
+  while (*cursor != '\0' && segments.size() < kMaxTextSegments) {
+    if (strncmp(cursor, gDebugBarTag, strlen(gDebugBarTag)) == 0) {
+      int fill = 0;
+      int size = 0;
+      const char* next = ParseBarTag(cursor, &fill, &size);
+      if (next != nullptr) {
+        cursor = next;
+        STextSegment segment;
+        segment.mType = STextSegment::kT_Bar;
+        segment.mWidth = size;
+        segment.mFill = rstl::min_val(fill, size);
+        segment.mColor = CColor::Black().GetColor_u32();
+        segments.push_back(segment);
+        continue;
+      }
+    } else if (strncmp(cursor, gDebugBarColorTag, strlen(gDebugBarColorTag)) == 0) {
+      CColor barColor = CColor::Black();
+      const char* next = ParseColorTag(cursor, &barColor);
+      if (next != nullptr) {
+        cursor = next;
+        STextSegment segment;
+        segment.mType = STextSegment::kT_BarColor;
+        segment.mWidth = 0;
+        segment.mColor = barColor.GetColor_u32();
+        segments.push_back(segment);
+        continue;
+      }
+    }
+
+    // Plain text up to the next tag.
+    const char* tag = *cursor != '\0' ? strstr(cursor + 1, "[") : nullptr;
+    const char* end = EarlierOf(cursor + STextSegment::kTextSize - 1,
+                                tag == nullptr ? cursor + strlen(cursor) : tag);
+    STextSegment segment;
+    segment.mType = STextSegment::kT_Text;
+    segment.mFill = 0;
+    segment.mColor = CColor::Black().GetColor_u32();
+    int length = end - cursor;
+    strncpy(segment.mText, cursor, length);
+    segment.mText[length] = '\0';
+    segment.mWidth = font.StringWidth(segment.mText);
+    segments.push_back(segment);
+    cursor = end;
+  }
+
+  int width = 0;
+  for (int i = 0; i < segments.size(); ++i) {
+    width += segments[i].mWidth;
+  }
+
+  int x = right - width;
+  CColor barColor = color.WithAlphaOf(0.75f);
+  int barY = y + 2;
+  for (int i = 0; i < segments.size(); ++i) {
+    const STextSegment& segment = segments[i];
+    switch (segment.mType) {
+    case STextSegment::kT_Text:
+      font.DrawString(segment.mText, x, y, color);
+      break;
+    case STextSegment::kT_Bar:
+      CGraphics::Render2D(nullptr, x, barY, segment.mFill, font.GetFontSize() - 4, barColor);
+      CGraphics::Render2D(nullptr, x + segment.mFill, barY, segment.mWidth - segment.mFill,
+                          font.GetFontSize() - 4, barColor.WithAlphaModulatedBy(0.5f));
+      break;
+    case STextSegment::kT_BarColor:
+      barColor = segment.mColor;
+      break;
+    }
+    x += segment.mWidth;
+  }
+}
+
+// Guessed name. Draws the debug messages the options gathered this frame from the bottom of the
+// screen up (top down when xA16A_ is set), logging them with the frame number in "Log" mode,
+// then the debug menu and, on the category list, the arrow to the other page.
+void CGameDebug::Draw() {
+  gpRender->SetDepthReadWrite(false, false);
+  CGraphics::SetDepthRange(0.f, 1.f);
+  const int& screenHeight = CGraphics::GetViewport().mHeight;
+  int y = screenHeight;
+  bool firstLine = true;
+
+  int messageMode = GetOptionInt(kDO_DebugMessagesEnabled);
+  if (gpGameDebug->IsOptionSet(kDO_AITraceViewMode)) {
+    messageMode = 0;
+  }
+  if (messageMode > 0) {
+    CColor color = gpGameDebug->GetDebugMessageColor();
+    bool frameLogged = false;
+    for (int i = 0; i < mOptions.size(); ++i) {
+      if (!mOptions[i]) {
+        continue;
+      }
+      const CDebugOption& option = mOptions[i].data();
+      if (option.GetIndex() == kDO_GenericMsgs && option.GetValue() == 0.f) {
+        continue;
+      }
+      CFont font(option.GetMessageScale());
+      if (firstLine) {
+        y -= font.GetFontSize();
+        firstLine = false;
+      }
+      const rstl::vector< rstl::string >& messages = option.GetMessages();
+      if (messageMode > 1 && messages.size() != 0 && !frameLogged) {
+        frameLogged = true;
+        AppendToLog(CBasics::Stringize("@Frame %06d\r\n", xA188_));
+      }
+      for (rstl::vector< rstl::string >::const_iterator it = messages.begin(); it != messages.end();
+           ++it) {
+        y -= font.GetFontSize();
+        DrawTaggedText(font, it->data(), xA16A_ ? screenHeight - y - font.GetFontSize() : y, color);
+        if (messageMode > 1) {
+          AppendToLog(it->data());
+          AppendToLog("\r\n");
+        }
+      }
+    }
+  }
+
+  if (mMenu) {
+    mMenu.data().Draw();
+  }
+  if (mMenu.valid() == true && xA154_currentCategory == 0) {
+    CFont font(2.f);
+    int height = screenHeight;
+    switch (x9FE8_menuPage) {
+    case 0:
+      font.DrawString(kNextPageArrow, mMenu.data().GetRightEdge() + 30, height / 2,
+                      CColor::White());
+      break;
+    case 1:
+      font.DrawString(kPreviousPageArrow, mMenu.data().GetLeftEdge() - 50, height / 2,
+                      CColor::White());
+      break;
+    }
+  }
+  gpRender->SetDepthReadWrite(true, true);
+}
 
 // Guessed name. Reads the tweaks and engine switches back into their options.
 void CGameDebug::ReadEngineState() {

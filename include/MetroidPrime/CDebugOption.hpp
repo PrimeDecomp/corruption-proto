@@ -56,6 +56,9 @@ public:
   // string vector at 0x38 once per frame.
   float GetValue() const { return mValue; }
   void ClearMessages() { x38_.clear(); }
+  // Guessed names. CGameDebug draws the messages gathered this frame with this font scale.
+  float GetMessageScale() const { return x34_; }
+  const rstl::vector< rstl::string >& GetMessages() const { return x38_; }
 
   // Guessed names (see the constructors).
   int GetCategory() const { return x0_; }

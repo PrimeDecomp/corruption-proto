@@ -8,4 +8,7 @@ class CEntity;
 template < class T >
 T* TCastToPtr(CEntity* p);
 
+template < class T >
+const T* TCastToConstPtr(const CEntity* p);
+
 #endif // _TCASTTO

@@ -7,25 +7,41 @@
 // Deferred inlining emits functions in reverse source order. Not implemented yet:
 // 0x80037158 +0x30: static initializer for seven TU-local SDA constants (.ctors 0x8065B500)
 // 0x80037188..0x800373C0: token-list helpers (not CActor methods)
-// 0x80036D08, 0x80036E58..0x8003705C: fluid-list sort and the fluid height compare
-// 0x800369C8 / 0x800368E8: Virtual5C, draws the touch bounds
+// 0x80036D08, 0x80036E58..0x8003705C: rstl::sort over the fluid list with Echoes'
+//   CFluidHeightCompare (by-value ids, const GetObjectById, TCastToConstPtr<CScriptWater>), and
+//   CScriptWater::GetWRSurfacePlane (0x80036F50, a z-up plane at CScriptWater+0x188). Only
+//   SetInFluid instantiates them.
+// 0x800369C8 / 0x800368E8: DrawTouchBounds and the helper it forwards to; needs CGameDebug
 // 0x80036804, 0x800367E4: square-root helpers
-// 0x800367BC: GetDamageVulnerability(), returns the normal vulnerability (0x800E1588)
-// 0x80036618 / 0x80036478: Virtual3C, sends the damage states
 // 0x80035998 / 0x80035B18: AcceptScriptMsg and its delegate thunk
 // 0x80035880: string copy from +0x88 (not a CActor method)
 // 0x800358A4: reserved_vector<TUniqueId, 4>::operator=, out of line with a constructing copy;
 //   the shared rstl header inlines it, so SetFluidList does not match yet
-// 0x8003527C / 0x80035208 / 0x8003516C: SetInFluid, reserved_vector erase, RemoveInvalidFluidIds
-// 0x80034B04..0x80034FFC: sound playback, Virtual74 and signal-connection helpers
+// 0x8003527C: SetInFluid. Beyond the Echoes logic it prints "'%s' in area '%s' has just
+//   entered/exited ..." and "BUG THIS! Fluid list for '%s' is full ..." when a CGameDebug
+//   option (gpGameDebug+0x6134) is above 1, so it waits for CGameDebug.
+// 0x80034D20 / 0x80034D8C / 0x80034FFC: UpdateTouchBoundsDrawing, the helper that connects
+//   DrawTouchBounds to the draw signal at CStateManager+0x18 into 0xF0, and the delegate thunk;
+//   they need CGameDebug (option at gpGameDebug+0x4C94)
 
 #include "MetroidPrime/CActor.hpp"
 
+#include "MetroidPrime/CDamageInfo.hpp"
+#include "MetroidPrime/CDamageVulnerability.hpp"
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerObject.hpp"
+#include "MetroidPrime/TCastTo.hpp"
 
+#include "Kyoto/Audio/CAudioSoundEffect.hpp"
+#include "Kyoto/CSimplePool.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Math/CAbsAngle.hpp"
+#include "Kyoto/TToken.hpp"
+
+#include "rstl/algorithm.hpp"
+
+// TypesMatch id 0x5A, whose vtable (lbl_806B3AC8) starts with a function in CScriptWater.cpp.
+class CScriptWater;
 
 // As in Echoes, the solid material comes from a variable rather than a constant.
 static EMaterialTypes SolidMaterial = kMT_Solid;
@@ -51,7 +67,7 @@ CActor::CActor(TUniqueId uid, const rstl::string& name, const CEntityInfo& info,
 CActor::~CActor() {}
 
 // Fades between red and green over a ten second cycle.
-CColor CActor::Virtual78() const {
+CColor CActor::GetTouchBoundsColor() const {
   const float t = CMath::ModF(CGraphics::GetSecondsMod900(), 10.f) / 10.f;
   const float green =
       (1.f + static_cast< float >(sin(CAbsAngle::FromDegrees(360.f * t).AsRadians()))) / 2.f;
@@ -60,9 +76,102 @@ CColor CActor::Virtual78() const {
 
 CHealthInfo* CActor::HealthInfo() { return nullptr; }
 
+const CDamageVulnerability* CActor::GetDamageVulnerability() const {
+  return &CDamageVulnerability::NormalVulnerabilty();
+}
+
 const CDamageVulnerability* CActor::GetDamageVulnerability(const CVector3f&, const CVector3f&,
                                                            const CDamageInfo&) const {
   return GetDamageVulnerability();
+}
+
+void CActor::NotifyDamage(CStateManager& mgr, TUniqueId sender, int, const CDamageInfo& info,
+                          bool damaged) {
+  if (damaged) {
+    SendScriptMsgs(kSS_Damage, mgr, SScriptMsgOriginator(kInvalidUniqueId), kSM_Invalid);
+    mgr.ObjectManager().SendScriptMsg(this, sender, kSM_Damage,
+                                      SScriptMsgOriginator(kInvalidUniqueId));
+  } else {
+    SendScriptMsgs(kSS_ResistedDamage, mgr, SScriptMsgOriginator(kInvalidUniqueId), kSM_Invalid);
+    mgr.ObjectManager().SendScriptMsg(this, sender, kSM_ResistedDamage,
+                                      SScriptMsgOriginator(kInvalidUniqueId));
+  }
+  SendWeaponDamageState(mgr, info, damaged);
+}
+
+// The states are not in CScriptLUA's name table, so they are spelled as FourCCs. Weapon types
+// 13 and 14 share 'DBAI'.
+void CActor::SendWeaponDamageState(CStateManager& mgr, const CDamageInfo& info, bool damaged) {
+  if (!damaged) {
+    return;
+  }
+  int state = kSS_InvalidState;
+  switch (info.GetWeaponType()) {
+  case 0:
+    state = 'DPWR';
+    break;
+  case 1:
+    state = 'DPLS';
+    break;
+  case 2:
+    state = 'DNOV';
+    break;
+  case 3:
+    state = 'DPHZ';
+    break;
+  case 4:
+    state = 'DMIS';
+    break;
+  case 5:
+    state = 'DIMS';
+    break;
+  case 6:
+    state = 'DPMS';
+    break;
+  case 7:
+    state = 'DBMB';
+    break;
+  case 8:
+    state = 'DGUP';
+    break;
+  case 9:
+    state = 'DPGR';
+    break;
+  case 10:
+    state = 'DBAL';
+    break;
+  case 11:
+    state = 'DPZB';
+    break;
+  case 12:
+    state = 'DSCW';
+    break;
+  case 13:
+    state = 'DBAI';
+    break;
+  case 14:
+    state = 'DBAI';
+    break;
+  case 15:
+    state = 'DUNS';
+    break;
+  case 16:
+    state = 'DPWT';
+    break;
+  case 17:
+    state = 'DLAV';
+    break;
+  case 18:
+    state = 'DHOT';
+    break;
+  case 19:
+    state = 'DCLD';
+    break;
+  }
+  if (state != kSS_InvalidState) {
+    SendScriptMsgs(static_cast< EScriptObjectState >(state), mgr,
+                   SScriptMsgOriginator(kInvalidUniqueId), kSM_Invalid);
+  }
 }
 
 rstl::optional_object< CAABox > CActor::GetTouchBounds() const {
@@ -206,6 +315,17 @@ void CActor::ClearFluidList(CStateManager&) {
   mFluidIdsChanged = false;
 }
 
+void CActor::RemoveInvalidFluidIds(CStateManager& mgr) {
+  rstl::reserved_vector< TUniqueId, 4 >::iterator it = mFluidIds.begin();
+  while (it != mFluidIds.end()) {
+    if (!TCastToConstPtr< CScriptWater >(mgr.ObjectManager().GetObjectById(*it))) {
+      it = mFluidIds.erase(it);
+    } else {
+      ++it;
+    }
+  }
+}
+
 void CActor::SetTranslation(const CVector3f& vec) {
   mTransform.SetTranslation(vec);
   mPosition = vec;
@@ -230,4 +350,20 @@ void CActor::SetTransform(const CTransform4f& xf) {
   mTransform = xf;
   mPosition = xf.GetTranslation();
   SetTransformDirty();
+}
+
+CAudioHandle CActor::PlayPannedSoundEffect(CAssetId id, float volume, float pan) {
+  if (id != kInvalidAssetId) {
+    TLockedToken< CAudioSoundEffect > sound(gpSimplePool->GetObj(SObjectTag('CAUD', id)));
+    return sound->PlayPanned(GetCurrentAreaId().Value(), volume, pan);
+  }
+  return CAudioHandle();
+}
+
+CAudioHandle CActor::PlaySoundEffect(CAssetId id, float volume) {
+  if (id != kInvalidAssetId) {
+    TLockedToken< CAudioSoundEffect > sound(gpSimplePool->GetObj(SObjectTag('CAUD', id)));
+    return sound->PlaySpatial(GetCurrentAreaId().Value(), GetTranslation(), volume);
+  }
+  return CAudioHandle();
 }

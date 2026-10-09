@@ -7,6 +7,8 @@
 
 #include "Collision/CMaterialFilter.hpp"
 #include "Collision/CMaterialList.hpp"
+#include "Kyoto/Audio/CAudioHandle.hpp"
+#include "Kyoto/CAssetId.hpp"
 #include "Kyoto/Graphics/CColor.hpp"
 #include "Kyoto/Math/CAABox.hpp"
 #include "Kyoto/Math/CTransform4f.hpp"
@@ -55,9 +57,10 @@ public:
   virtual const CDamageVulnerability* GetDamageVulnerability() const; // 0x34
   virtual const CDamageVulnerability* GetDamageVulnerability(const CVector3f&, const CVector3f&,
                                                              const CDamageInfo&) const; // 0x38
-  // 0x3C: sends 'DAMG'/'XDMG' or 'RESD'/'XRDG' depending on its last argument.
-  virtual void Virtual3C(CStateManager& mgr, TUniqueId sender, int, const CDamageInfo& info,
-                         bool damaged);
+  // Guessed name. 0x3C: sends the Damage or ResistedDamage state, the matching XDMG/XRDG
+  // message to the attacker and then a per-weapon damage state.
+  virtual void NotifyDamage(CStateManager& mgr, TUniqueId sender, int, const CDamageInfo& info,
+                            bool damaged);
   virtual rstl::optional_object< CAABox > GetTouchBounds() const;                   // 0x40
   virtual void Touch(CActor& other, CStateManager& mgr);                            // 0x44
   virtual CVector3f GetOrbitPosition(const CStateManager& mgr) const;               // 0x48
@@ -67,18 +70,21 @@ public:
   virtual EWeaponCollisionResponseTypes GetCollisionResponseType(const CVector3f&, const CVector3f&,
                                                                  const CWeaponMode&,
                                                                  int) const; // 0x58
-  // 0x5C: draws the touch bounds in Virtual78's color. Virtual74 connects it (pointer to member
-  // lbl_806B229C) to a draw signal in 0xF0 while a debug option is set.
-  virtual void Virtual5C();
+  // Guessed name. 0x5C: forwards to a non-virtual helper (0x800369C8) that, while a CGameDebug
+  // option is set, draws the touch bounds in GetTouchBoundsColor's color.
+  // UpdateTouchBoundsDrawing connects it (pointer to member lbl_806B229C) to a draw signal in 0xF0.
+  virtual void DrawTouchBounds();
   virtual void Virtual60();                                    // 0x60, empty
   virtual void Virtual64();                                    // 0x64, weak, returns 0
   virtual void Virtual68();                                    // 0x68, weak, empty
   virtual void Virtual6C();                                    // 0x6C, weak, empty
   virtual CVector3f Virtual70(const CStateManager& mgr) const; // 0x70, weak, GetAimPosition(mgr, 0)
-  // 0x74: AcceptScriptMsg subscribes it (pointer to member lbl_806B2290) to CGameDebug option
-  // 0xF5 into 0xE8 and then calls it.
-  virtual void Virtual74(CStateManager& mgr);
-  virtual CColor Virtual78() const; // 0x78, pulsing debug color
+  // Guessed name. 0x74: connects DrawTouchBounds to the draw signal while a CGameDebug option is
+  // set and disconnects it otherwise. AcceptScriptMsg subscribes it (pointer to member
+  // lbl_806B2290) to CGameDebug option 0xF5 into 0xE8 and then calls it.
+  virtual void UpdateTouchBoundsDrawing(CStateManager& mgr);
+  // Guessed name. 0x78: only DrawTouchBounds uses this pulsing color.
+  virtual CColor GetTouchBoundsColor() const;
   // Guessed name. 0x7C: empty here; called after every material change so subclasses can react.
   virtual void MaterialChanged();
 
@@ -115,8 +121,17 @@ public:
   TUniqueId InFluidId() const;
   const rstl::reserved_vector< TUniqueId, 4 >& GetFluidList() const;
   void SetFluidList(const rstl::reserved_vector< TUniqueId, 4 >& fluids);
+  void RemoveInvalidFluidIds(CStateManager& mgr);
+
+  // Guessed names. Play a CAUD sound effect at the actor's position, or panned without a
+  // position; an invalid asset id gives an invalid handle.
+  CAudioHandle PlaySoundEffect(CAssetId id, float volume);
+  CAudioHandle PlayPannedSoundEffect(CAssetId id, float volume, float pan);
 
 private:
+  // Guessed name. 0x80036478: after NotifyDamage, sends a state that names the weapon type.
+  void SendWeaponDamageState(CStateManager& mgr, const CDamageInfo& info, bool damaged);
+
   CTransform4f mTransform;                         // 0x5C
   CVector3f mPosition;                             // 0x8C, copy of the transform's translation
   CMaterialList mMaterial;                         // 0x98

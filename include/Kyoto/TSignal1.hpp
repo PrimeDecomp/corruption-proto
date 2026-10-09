@@ -67,6 +67,7 @@ public:
 
   typedef rstl::list< SSlot > SlotList;
   typedef typename SlotList::iterator iterator;
+  typedef typename SlotList::const_iterator const_iterator;
   typedef TConnection< TSignal1, iterator > Connection;
 
   ~TSignal1() {
@@ -78,7 +79,7 @@ public:
   // Guessed names.
   rstl::auto_ptr< IConnection > Connect(Functor functor);
   void Disconnect(iterator it) { mSlots.erase(it); }
-  void Emit(A1 arg);
+  void Emit(A1 arg) const;
 
 private:
   SlotList mSlots;
@@ -94,11 +95,13 @@ rstl::auto_ptr< IConnection > TSignal1< A1 >::Connect(Functor functor) {
 
 // The iterator steps past each listener before calling it.
 template < typename A1 >
-void TSignal1< A1 >::Emit(A1 arg) {
-  iterator end = mSlots.end();
-  iterator it = mSlots.begin();
+void TSignal1< A1 >::Emit(A1 arg) const {
+  const_iterator end = mSlots.end();
+  const_iterator it = mSlots.begin();
   while (it != end) {
-    (it++)->mFunctor(arg);
+    const_iterator slot = it;
+    ++it;
+    slot->mFunctor(arg);
   }
 }
 

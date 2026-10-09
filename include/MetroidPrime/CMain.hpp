@@ -5,7 +5,7 @@
 
 #include "Kyoto/Streams/CStreamPreloadedToken.hpp"
 #include "Kyoto/TReservedAverage.hpp"
-#include "Kyoto/TSignal.hpp"
+#include "Kyoto/TSignal0.hpp"
 
 #include "rstl/list.hpp"
 #include "rstl/reserved_vector.hpp"

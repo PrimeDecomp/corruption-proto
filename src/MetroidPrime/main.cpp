@@ -698,7 +698,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
       if (drawFrame) {
         gpRender->BeginScene();
         architecture->GetIOWinManager().Draw();
-        x70_frameCallbacks.x48_preDraw();
+        x70_frameCallbacks.x48_preDraw.Emit();
         DrawDebugMetrics(tickTime, architecture->GetStopwatch2());
         fn_803E7CE4();
         fn_800077C4(screenshot);
@@ -729,9 +729,9 @@ int CMain::RsMain(int argc, const char* const* argv) {
       } else {
         gpResourceFactory->AsyncIdle(1000000, false);
       }
-      x70_frameCallbacks.x60_postDraw();
+      x70_frameCallbacks.x60_postDraw.Emit();
       architecture->Update();
-      x70_frameCallbacks.x78_postUpdate();
+      x70_frameCallbacks.x78_postUpdate.Emit();
       GetDebugOption(147)->ClearMessages();
       GetDebugOption(272)->ClearMessages();
       CAudioManager_Update(1.f / 60.f);

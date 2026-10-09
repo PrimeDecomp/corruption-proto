@@ -14,7 +14,6 @@
 // 0x8028F88C +0x78: creates the save-game screen (CStateManager.cpp(3736), 0xB0 bytes)
 // 0x8028F904 +0x1AC: Echoes' ShowPausedHUDMemo; the update calls it when the queued memo is due
 // 0x8028FAB0 +0xD4: owned native method/helper retained; exact source-level name unresolved
-// 0x8028FB84 +0xE4: Echoes' SkipCinematic (the special-function id at 0x1A4); CMFGame calls it
 // 0x8028FE38 +0x200: Echoes' UpdateHintState(float)
 // 0x802901B0 +0xC: owned native method/helper retained; exact source-level name unresolved
 // 0x802901BC +0x40: owned native method/helper retained; exact source-level name unresolved
@@ -47,7 +46,6 @@
 // 0x80294264 +0xFC: vector push_back of the 0x1C-byte stat entries (vector.h(482) assert)
 // 0x802943E4 +0x60: owned native method/helper retained; exact source-level name unresolved
 // 0x80294444 +0x7C: TSignal2<CStateManager&, float>::Emit
-// 0x802945D0 +0x178: Echoes' PreThinkObjects(float)
 // 0x80294748 +0x248: memory/timing debug text ("LOW MEMORY: area ..")
 // 0x80294990 +0x338: Echoes' Think(float); also takes the update's CGameProfileStats
 // 0x80294CC8 +0x64: owned native method/helper retained; exact source-level name unresolved
@@ -277,7 +275,8 @@ void CStateManager::FrameBegin(int frame) {
     if (mDisplayManager->IsCinematicActive()) {
       if (mCinematicGlitchFrames != 0 && mCinematicGlitchFrames <= 3) {
         const CScriptCinematicCamera* cinematic = TCastToConstPtr< CScriptCinematicCamera >(
-            mObjectManager->GetObjectById(mDisplayManager->PlayerCameraManager()
+            mObjectManager->GetObjectById(GetDisplayManager()
+                                              .PlayerCameraManager()
                                               ->GetCinematicCamera()
                                               ->GetCinematicObjectId()));
         if (cinematic != nullptr) {
@@ -324,6 +323,33 @@ bool CStateManager::SwapOutAllPossibleMemory() {
   CARAMManager::WaitForAllDMAsToComplete();
   CARAMToken::UpdateAllDMAs();
   return true;
+}
+
+// 0x802945D0. Unlike Echoes, the camera manager first starts a pending cinematic, and there is a
+// single player.
+void CStateManager::PreThinkObjects(float dt) {
+  mDisplayManager->PlayerCameraManager()->StartPendingCinematic(*this);
+  if (mObjectManager->GetPlayer()->GetDeathTime() > 0.f) {
+    mObjectManager->Player()->DoPreThink(dt, *this);
+    return;
+  }
+
+  CObjectList* allList = &mObjectManager->ObjectListById(0);
+  if (mGameState == kGS_SoftPaused) {
+    for (int i = allList->GetFirstObjectIndex(); i != -1; i = allList->GetNextObjectIndex(i)) {
+      CEntity* entity = (*allList)[i];
+      if (TCastToConstPtr< CScriptEffect >(entity) != nullptr) {
+        entity->PreThink(dt, *this);
+      }
+    }
+  } else {
+    for (int i = allList->GetFirstObjectIndex(); i != -1; i = allList->GetNextObjectIndex(i)) {
+      CEntity* entity = (*allList)[i];
+      if (entity != nullptr && TCastToConstPtr< CGameCamera >(entity) == nullptr) {
+        entity->PreThink(dt, *this);
+      }
+    }
+  }
 }
 
 // 0x80294588. Unlike Echoes, there is a single player.
@@ -745,6 +771,30 @@ void CStateManager::AddWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType t
 void CStateManager::RemoveWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType type) {
   mWeaponMgr->DecrCount(owner, type);
   mWeaponRemoved.Emit(*this, weapon);
+}
+
+// 0x8028FB84. As in Echoes, the special function's own skip runs with the generator available.
+int CStateManager::SpecialSkipCinematic() {
+  int result = 0;
+  if (mSpecialFunctionId != kInvalidUniqueId) {
+    CEntity* entity = mObjectManager->ObjectById(TUniqueId(mSpecialFunctionId));
+    if (entity == nullptr) {
+      SetSkipCinematicSpecialFunction(kInvalidUniqueId);
+    } else if (CScriptSpecialFunction* special = TCastToPtr< CScriptSpecialFunction >(entity)) {
+      const bool randomWasAvailable = mRandomAvailable;
+      mRandomAvailable = true;
+
+      if (special->GetFunction() == CScriptSpecialFunction::kSF_CinematicSkip) {
+        mDisplayManager->PlayerCameraManager()->StopCinematics(*this);
+        result = 1;
+      } else {
+        result = 2;
+      }
+      special->SkipCinematic(*this);
+      mRandomAvailable = randomWasAvailable;
+    }
+  }
+  return result;
 }
 
 // 0x8028F68C. Unlike Echoes there is a single rumble manager, and the soft pause has its own

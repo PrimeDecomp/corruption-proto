@@ -114,6 +114,9 @@ public:
   const CStateManagerObject& ObjectManager() const { return *mObjectManager; }
   CStateManagerCallbackLists& CallbackLists() { return *mCallbackLists; } // Guessed name
   CRenderManager* RenderManager() { return mRenderManager.get(); }        // Guessed name
+  // Guessed name. The readers reach the display manager through it, so they get its const
+  // camera-manager getter (0x802A34D0); FrameBegin does.
+  const CDisplayManager& GetDisplayManager() const { return *mDisplayManager; }
   // CScriptLUA's RandomRange (0x802B5C24) inlines this warning before using the generator.
   CRandom16* Random() {
     if (!mRandomAvailable) {
@@ -123,6 +126,8 @@ public:
     return &mRandom;
   }
   bool IsRandomAvailable() const { return mRandomAvailable; }
+  // Echoes' name; SpecialSkipCinematic inlines it.
+  void SetSkipCinematicSpecialFunction(TUniqueId id) { mSpecialFunctionId = id; }
   // Prime's name. The update (0x80292E9C) seeds CDecal and CProjectileWeapon with it and bumps
   // it at the end; the script message logs print it.
   uint GetUpdateFrameIndex() const { return mUpdateFrameIdx; }
@@ -168,6 +173,9 @@ public:
   // Echoes' name and signature. Like Echoes, it pauses the world's loading during the soft pause
   // and turns the rumble off; the CAudioManager voice context replaces Echoes' sfx channel.
   void SetGameState(EGameState state);
+  // Echoes' name. CMFGame calls it; 1 when the cinematic was skipped through the camera manager,
+  // 2 when the special function handled it, 0 without one.
+  int SpecialSkipCinematic();
 
   // Echoes' names and signatures, unless noted.
   void ShowPausedHUDMemo(CAssetId strg, float time);

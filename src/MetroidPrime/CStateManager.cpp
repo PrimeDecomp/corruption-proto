@@ -74,12 +74,6 @@
 // 0x80295DB8 +0x2F8: player spawn ("Invalid transform in Spawn Point")
 // 0x802960B0 +0x170: creates the render manager and the player
 // 0x80296D58 +0x74: destructor of the map behind sProfileCountersB
-// 0x80296F90 +0x558: state manager constructor; direct target original source206..368. Takes
-//   CStateManagerObject's three arguments and two rc_ptrs (0x148, 0x150).
-// 0x802974E8 +0x88: TToken<CDependencyGroup>(CDependencyGroup*) for the empty audio-group token
-// 0x80297570 +0x90: owned native method/helper retained; exact source-level name unresolved
-// 0x80297600 +0x54: owned native method/helper retained; exact source-level name unresolved
-// 0x80297654 +0x90: owned native method/helper retained; exact source-level name unresolved
 // 0x80297808 +0x1EC: owned native method/helper retained; exact source-level name unresolved
 // 0x802979F4 +0xC8: owned native method/helper retained; exact source-level name unresolved
 // 0x80297ABC +0xBC: owned native method/helper retained; exact source-level name unresolved
@@ -96,7 +90,10 @@
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/CARAMManager.hpp"
 #include "Kyoto/CARAMToken.hpp"
+#include "Kyoto/CDependencyGroup.hpp"
 #include "Kyoto/CFrameDelayedKiller.hpp"
+#include "Kyoto/CSimplePool.hpp"
+#include "Kyoto/SObjectTag.hpp"
 #include "MetroidPrime/CActorModelParticles.hpp"
 #include "MetroidPrime/CDisplayManager.hpp"
 #include "MetroidPrime/CEnvFxManager.hpp"
@@ -112,9 +109,89 @@
 #include "MetroidPrime/CStateManagerObject.hpp"
 #include "MetroidPrime/CWorldLayerState.hpp"
 #include "MetroidPrime/Cameras/CGameCamera.hpp"
+#include "MetroidPrime/ConsoleCommands.hpp"
+#include "MetroidPrime/Player/CGameMode.hpp"
+#include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CPlayer.hpp"
 #include "MetroidPrime/Player/CWorldTransManager.hpp"
 #include "MetroidPrime/TCastTo.hpp"
+
+CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& stringProperties,
+                             const rstl::ncrc_ptr< CScriptMailbox >& mailbox,
+                             const rstl::ncrc_ptr< CMapWorldInfo >& mapWorldInfo,
+                             const rstl::ncrc_ptr< CWorldTransManager >& worldTransManager,
+                             const rstl::ncrc_ptr< CWorldLayerState >& worldLayerState)
+: mCallbackLists(new ("CStateManager.cpp(206) : ", (const char*)0) CStateManagerCallbackLists())
+, mObjectManager(new ("CStateManager.cpp(215) : ", (const char*)0)
+                     CStateManagerObject(*this, stringProperties, mailbox, mapWorldInfo))
+, mCollision(new ("CStateManager.cpp(216) : ", (const char*)0)
+                 CStateManagerCollision(*this, *mObjectManager))
+, mArchQueue(nullptr)
+, mDisplayManager(nullptr)
+, mRenderManager(nullptr)
+, x128_(kInvalidUniqueId)
+, mWeaponMgr(new ("CStateManager.cpp(226) : ", (const char*)0) CWeaponMgr())
+, mFluidPlaneManager(new ("CStateManager.cpp(227) : ", (const char*)0) CFluidPlaneManager())
+, mEnvFxManager(new ("CStateManager.cpp(228) : ", (const char*)0) CEnvFxManager())
+, mActorModelParticles(new ("CStateManager.cpp(229) : ", (const char*)0) CActorModelParticles())
+, mAssetFactory(new ("CStateManager.cpp(217) : ", (const char*)0) CStateManagerAssetFactory(*this))
+, mAudioGroupDependencies(static_cast< CDependencyGroup* >(nullptr))
+, mWorldTransManager(worldTransManager)
+, mCurrentWorldLayerState(worldLayerState)
+, mSaveGameScreen(nullptr)
+, mUpdateFrameIdx(0)
+, mShadowTex(gpSimplePool->GetObj("DefaultShadow"))
+, mRandom(0)
+, mRandomAvailable(false)
+, mGameState(kGS_Running)
+, mInitPhase(0)
+, mHintIdx(-1)
+, mHintPeriods(0)
+, mPauseHudMessage(kInvalidAssetId)
+, mEscapeTotalTime(0.f)
+, mCurTimeMod900(0.f)
+, mBossId(kInvalidUniqueId)
+, mBossHealth(0.f)
+, mBossLanguageTableIndex(0)
+, mSpecialFunctionId(kInvalidUniqueId)
+, mPlayerActorHead(kInvalidUniqueId)
+, mHudMessageTime(0.f)
+, mRenderFrameIndex(0)
+, mCinematicGlitchFrames(0)
+, mHudMessageFrameCount(0)
+, mPausedHudMemoFrameCount(-1)
+, mPausedHudMemoAssetId(kInvalidAssetId)
+, mQueuedHudMemoDismissalDelay(0.f)
+, mMapTeleportWorldId(kInvalidAssetId)
+, mDeferredTransition(0)
+, mPlayerLineOfSightPairs(0)
+, mNextPlayerLineOfSightPair(0)
+, x210_24_(false)
+, x210_25_(true)
+, mInMapScreen(false)
+, x210_27_(false)
+, mLogEndOfFrame(false)
+, x210_29_(false)
+, x210_30_(false)
+, mTearingDown(false)
+, x211_24_(false)
+, mLightAmmoDepletedPlayers(0)
+, mDarkAmmoDepletedPlayers(0)
+, mPhazonEnragedSlowdown(false)
+, mPhazonEnragedSlowdownTime(0.f)
+, mPhazonEnragedSlowdownCurve(gpSimplePool->GetObj("PhazonEnragedSlowdownUSER")) {
+  rs_debugger_printf("Game type is %s\n",
+                     SObjectTag::Type2Text(gpGameState->GetGameMode().GetGameType()));
+  mRumbleManager = new ("CStateManager.cpp(299) : ", (const char*)0) CRumbleManager(kIOP_Player1);
+  gpGameState->SetQueuedScriptMsgEnabled(true);
+  InitializeStateManagerConsoleCommands(this);
+  CMemory::SetOutOfMemoryCallback(MemoryAllocatorAllocationFailedCallback, this);
+  mShadowTex.Lock();
+  sProfileCountersA = new ("CStateManager.cpp(367) : ", (const char*)0)
+      rstl::map< rstl::string, SProfileCountersA >();
+  sProfileCountersB = new ("CStateManager.cpp(368) : ", (const char*)0)
+      rstl::map< rstl::string, SProfileCountersB >();
+}
 
 // 0x80296220. Echoes' teardown: every object except the players and cameras is sent a delete
 // message, then removed and deleted; then the cameras (from a copy of the camera list) and the

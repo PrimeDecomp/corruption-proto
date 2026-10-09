@@ -5,12 +5,14 @@
 
 #include "Kyoto/CToken.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
+#include "MetroidPrime/TGameTypes.hpp"
 
 #include "rstl/rc_ptr.hpp"
 #include "rstl/reserved_vector.hpp"
 #include "rstl/vector.hpp"
 
 class CBitStreamReader;
+class CGameMode;
 class CWorldTransManager;
 class CBitStreamWriter;
 
@@ -50,6 +52,11 @@ public:
   // Echoes names. The hard mode flag is the first bit of the byte at 0x308.
   bool GetHardModeEnabled() const { return mHardMode; }
   void SetHardMode(bool hardMode); // 0x80159C38
+  // Echoes' names. Both return the game mode owned through the rstl::auto_ptr at 0x198; Echoes
+  // emits the mutable one first.
+  CGameMode& GetGameMode();                                                           // 0x80159BB0
+  CGameMode& GetGameMode() const;                                                     // 0x80159BB8
+  void SetQueuedScriptMsgEnabled(bool enabled) { mQueuedScriptMsgEnabled = enabled; } // Guessed
 
 private:
   uchar x0_[0x68];
@@ -59,6 +66,12 @@ private:
   rstl::vector< CToken > mAudioGroups;
   uchar x204_[0x104];
   bool mHardMode : 1;
+  // Guessed names. A script message queued for the object with an editor id: a console command
+  // (0x80209600) stores both and clears the flag, CStateManager's constructor sets the flag, and
+  // the update sends the message while the flag is set, then resets both to invalid.
+  TEditorId mQueuedScriptMsgTarget;
+  int mQueuedScriptMsg;         // An EScriptObjectMessage
+  bool mQueuedScriptMsgEnabled; // 0x314
 };
 
 extern CGameState* gpGameState;

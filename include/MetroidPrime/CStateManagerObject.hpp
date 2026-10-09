@@ -50,6 +50,12 @@ public:
   typedef rstl::multimap< TEditorId, TUniqueId > TIdList;
   typedef rstl::pair< TIdList::const_iterator, TIdList::const_iterator > TIdListResult;
 
+  // 0x8029A72C. CStateManager passes itself and the first three of its own constructor's
+  // arguments, which are kept at 0x1118, 0x1120 and 0x1128.
+  CStateManagerObject(CStateManager& mgr,
+                      const rstl::ncrc_ptr< CStringPropertyManager >& stringProperties,
+                      const rstl::ncrc_ptr< CScriptMailbox >& mailbox,
+                      const rstl::ncrc_ptr< CMapWorldInfo >& mapWorldInfo);
   // The destructor (0x8029A4E0) is the implicit member teardown, in reverse declaration order.
   ~CStateManagerObject();
 

@@ -6,6 +6,7 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/CAssetId.hpp"
 #include "Kyoto/CRandom16.hpp"
+#include "Kyoto/Input/CFinalInput.hpp"
 #include "Kyoto/TOneStatic.hpp"
 #include "Kyoto/TSignal2.hpp"
 #include "Kyoto/TSignal3.hpp"
@@ -24,9 +25,12 @@ class CDependencyGroup;
 class CDisplayManager;
 class CEnvFxManager;
 class CFluidPlaneManager;
+class CMapWorldInfo;
 class CRenderManager;
 class CRumbleManager;
 class CSaveGameInterface;
+class CScriptMailbox;
+class CStringPropertyManager;
 class CStateManagerAssetFactory;
 class CStateManagerCallbackLists;
 class CStateManagerCollision;
@@ -115,6 +119,16 @@ public:
   // it at the end; the script message logs print it.
   uint GetUpdateFrameIndex() const { return mUpdateFrameIdx; }
 
+  // 0x80296F90. CMFGameLoader (0x80219CF8) builds it. The first three arguments go to
+  // CStateManagerObject; the last two are kept here. Like Echoes, it builds the managers it owns,
+  // the shadow token and the generator, then installs the out-of-memory callback; unlike Echoes,
+  // it also prints the game type, news the rumble manager, enables the game state's queued script
+  // message, hands itself to the console commands and news the two profile-counter tables.
+  CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& stringProperties,
+                const rstl::ncrc_ptr< CScriptMailbox >& mailbox,
+                const rstl::ncrc_ptr< CMapWorldInfo >& mapWorldInfo,
+                const rstl::ncrc_ptr< CWorldTransManager >& worldTransManager,
+                const rstl::ncrc_ptr< CWorldLayerState >& worldLayerState);
   // 0x80296220. Emits the 0x5B8 signal, sets mTearingDown, stops the rumble, cleans up EnvFx,
   // deletes every object (players and cameras last), frees the profile-stat tables and emits the
   // 0x5D0 signal before the members go.
@@ -173,9 +187,11 @@ private:
   // Echoes keeps one per player. The constructor news it (0x48 bytes) but the destructor only
   // stops it and never deletes it.
   CRumbleManager* mRumbleManager;
-  // A CFinalInput (built with CFinalInput_Construct). The prototype's input is 0x108 bytes; the
-  // CFinalInput header still describes Prime's 0x2C-byte layout.
-  uchar x20_finalInput[0x108];
+  // Echoes keeps the frame's input here too. The prototype's CFinalInput is 0x108 bytes (its
+  // default constructor, 0x8051A8AC, builds arrays up to +0x6C); the header still describes
+  // Prime's 0x2C-byte layout, so the rest is padding.
+  CFinalInput mFinalInput;
+  uchar x4C_[0x108 - sizeof(CFinalInput)];
   TUniqueId x128_; // Initialized to kInvalidUniqueId
   // Echoes' names. Echoes keeps these in one CStateManagerContainer; here each one is newed
   // (0x14, 0x11C, 0x1468 and 0x140 bytes, CStateManager.cpp lines 226..229).

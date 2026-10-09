@@ -41,19 +41,20 @@ CObjectListSmall::~CObjectListSmall() {}
 bool CObjectListSmall::IsQualified(const CEntity& entity) const { return true; }
 
 // 0x8026265C
-bool CObjectListSmall::Contains(const CEntity& entity) const {
-  return rstl::find(mList.begin(), mList.end(), &entity) != mList.end();
+bool CObjectListSmall::IsObjectInList(const CEntity* object) const {
+  return rstl::find(mList.begin(), mList.end(), object) != mList.end();
 }
 
 // 0x80262294
-void CObjectListSmall::AddObject(CEntity& entity) {
-  bool notInList = Contains(entity) == false;
+// Names from the assert string.
+void CObjectListSmall::AddObject(CEntity& object) {
+  bool notInList = IsObjectInList(&object) == NULL;
   if (notInList == false) {
     RS_VERIFY_FAILURE(41, "IsObjectInList( &object ) == NULL", "false",
                       "Object in list already when being added");
   }
-  if (IsQualified(entity)) {
-    mList.insert(&entity);
+  if (IsQualified(object)) {
+    mList.insert(&object);
   }
 }
 

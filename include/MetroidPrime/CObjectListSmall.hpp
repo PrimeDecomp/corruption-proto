@@ -265,10 +265,10 @@ public:
   virtual bool IsQualified(const CEntity& entity) const; // The base one returns true.
 
   // Echoes' CFilteredObjectList names.
-  void RemoveObject(TUniqueId uid);           // 0x80261F60
-  void RemoveObject(CEntity& entity);         // 0x8026214C
-  void AddObject(CEntity& entity);            // 0x80262294
-  bool Contains(const CEntity& entity) const; // 0x8026265C
+  void RemoveObject(TUniqueId uid);                 // 0x80261F60
+  void RemoveObject(CEntity& entity);               // 0x8026214C
+  void AddObject(CEntity& object);                  // 0x80262294
+  bool IsObjectInList(const CEntity* object) const; // 0x8026265C
 
   // Guessed names. CStateManager's destructor walks a copy of the camera list.
   TList::const_iterator begin() const { return mList.begin(); }

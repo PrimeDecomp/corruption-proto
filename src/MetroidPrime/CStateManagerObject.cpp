@@ -219,7 +219,7 @@ void CStateManagerObject::UpdateObjectInLists(CEntity& entity) {
            mDynamicObjectListsSmall.begin();
        it != mDynamicObjectListsSmall.end(); ++it) {
     CObjectListSmall* list = *it;
-    bool contained = list->Contains(entity);
+    bool contained = list->IsObjectInList(&entity);
     if (contained && !list->IsQualified(entity)) {
       list->RemoveObject(entity);
     } else if (!contained) {

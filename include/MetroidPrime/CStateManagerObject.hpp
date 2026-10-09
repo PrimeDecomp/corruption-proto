@@ -64,6 +64,8 @@ public:
 
   // Echoes' message sends, moved here from CStateManager. The convenience overloads now take the
   // whole originator instead of Echoes' single actor id, and a list overload sends to each id.
+  // Unlike Echoes, the queueing and the delivery are traced through the CGameDebug "Scripting"
+  // options ("ScriptDebug ..." lines sent over the broadband adapter).
   void SendScriptMsg(const CScriptMsg& msg); // 0x802983C8
   void SendScriptMsg(CEntity* target, TUniqueId sender, EScriptObjectMessage msg,
                      const SScriptMsgOriginator& originator);
@@ -142,6 +144,20 @@ public:
 private:
   const CObjectList& GetAllObjectList() const { return *mObjectLists[0]; } // Guessed name
 
+  // Echoes' name. Delivers every queued message; a kSM_Delete message then buries its target.
+  void DispatchScriptMessages(); // 0x80298594
+
+  // Guessed names. The "Script msg Debugger" filter (0x802989A0): whether a delivered message is
+  // logged, given the Sender/Target/Type/Exclude Type/State/Exclude State choices. The
+  // matchers take the option's value: 0 matches anything, otherwise it indexes a fixed table.
+  static bool ShouldLogScriptMsg(const CEntity* target, const CEntity* sender,
+                                 const CScriptMsg& msg);
+  static bool MatchesScriptMsgState(EScriptObjectState state, int choice);   // 0x80298E88
+  static bool MatchesScriptMsgMessage(EScriptObjectMessage msg, int choice); // 0x80298F34
+  // 0x80298FF8, not implemented: a switch over 17 choices, each one a TCastToConstPtr of the
+  // entity (choice 1 is CActor; the other casts in TypesMatch.cpp are not identified yet).
+  static bool MatchesScriptMsgEntity(const CEntity* entity, int choice);
+
   CStateManager* mStateMgr;
   ushort mLastUniqueId; // Named by the "mLastUniqueId != startId" assert.
   // Echoes' name. The constructor fills all 0x800 slots with zero.
@@ -170,8 +186,8 @@ private:
   rstl::ncrc_ptr< CScriptMailbox > mMailbox;
   rstl::ncrc_ptr< CMapWorldInfo > mMapWorldInfo;
   CPlayer* mPlayer;
-  // Set around the deferred message pump (0x80298594), which only runs when it is clear.
-  bool x1134_24_ : 1;
+  // Echoes' name. Set around the pump that SendScriptMsg runs once more than 0x80 messages wait.
+  bool mDispatchingScriptMessages : 1;
 };
 CHECK_SIZEOF(CStateManagerObject, 0x1138)
 

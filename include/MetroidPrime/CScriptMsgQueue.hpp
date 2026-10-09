@@ -14,6 +14,8 @@ public:
   void Push(const CScriptMsg& msg); // Guessed name; asserts "Overflow in ScriptMsgQueue"
   CScriptMsg Pop();                 // Named by its "Pop from empty queue" assert
   int Size() const;                 // Guessed name
+  // Echoes' ScriptMsgArray::empty; the message pump (0x80298594) inlines it.
+  bool empty() const { return mHead == mTail; }
 
 private:
   CScriptMsg mMsgs[kCapacity];

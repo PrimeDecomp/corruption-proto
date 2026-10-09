@@ -5,15 +5,8 @@
 // Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x80298130 +0x20: owned native method/helper retained; exact source-level name unresolved
 // 0x80298150 +0x20: owned native method/helper retained; exact source-level name unresolved
-// 0x802983C8 +0x1CC: Echoes' SendScriptMsg(const CScriptMsg&) shape: appends to the
-//   CScriptMsgQueue and pumps it past 0x80 entries (blocked on the CGameDebug "ScriptDebug"
-//   option block)
-// 0x80298594 +0x390: Echoes' DispatchScriptMessages shape: drains the CScriptMsgQueue at 0x10D8
-//   (same debug block)
-// 0x802989A0 +0x4E8: owned native method/helper retained; exact source-level name unresolved
-// 0x80298E88 +0xAC: owned native method/helper retained; exact source-level name unresolved
-// 0x80298F34 +0xC4: owned native method/helper retained; exact source-level name unresolved
-// 0x80298FF8 +0x188: owned native method/helper retained; exact source-level name unresolved
+// 0x80298FF8 +0x188: MatchesScriptMsgEntity (see the header): a 17-way switch of TypesMatch.cpp
+//   casts that are not identified yet
 // 0x8029A46C +0x74: world setter: takes an rstl::auto_ptr<CWorld>& and releases it into mWorld
 // 0x8029A72C +0xC80: state manager object constructor; original source61/70/75..89 (news nine
 //   CObjectList and five CObjectListSmall subclasses whose names are unknown)
@@ -32,7 +25,14 @@
 #include "MetroidPrime/CStateManagerCallbackLists.hpp"
 #include "MetroidPrime/CWorld.hpp"
 
+#include "MetroidPrime/CGameDebug.hpp"
+
 #include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/Basics/CBasics.hpp"
+#include "Kyoto/Network/CBBASupport.hpp"
+
+#include "rstl/algorithm.hpp"
+#include "rstl/string.hpp"
 
 CStateManagerObject::~CStateManagerObject() {}
 
@@ -280,6 +280,224 @@ void CStateManagerObject::AddToGraveyard(CEntity* entity) {
   }
 
   mGraveyard.back().push_back(entity);
+}
+
+// The choices of "Script msg Type" and "Script msg Exclude Type"; 0 (any) is never looked up.
+bool CStateManagerObject::MatchesScriptMsgMessage(EScriptObjectMessage msg, int choice) {
+  const EScriptObjectMessage messages[] = {
+      kSM_Invalid,   kSM_Action,       kSM_Activate,    kSM_Deactivate,  kSM_Increment,
+      kSM_Decrement, kSM_Start,        kSM_Stop,        kSM_SetToZero,   kSM_Entered,
+      kSM_Damage,    kSM_EnteredFluid, kSM_ExitedFluid, kSM_InsideFluid,
+  };
+  if (choice == 0) {
+    return true;
+  }
+  if (choice < ARRAY_SIZE(messages)) {
+    return messages[choice] == msg;
+  }
+  return false;
+}
+
+// The choices of "Script msg State" and "Script msg Exclude State".
+bool CStateManagerObject::MatchesScriptMsgState(EScriptObjectState state, int choice) {
+  const EScriptObjectState states[] = {
+      kSS_InvalidState, kSS_Active, kSS_Arrived, kSS_Damage,     kSS_Dead,
+      kSS_Entered,      kSS_Exited, kSS_Inside,  kSS_MaxReached, kSS_Zero,
+  };
+  if (choice == 0) {
+    return true;
+  }
+  if (choice < ARRAY_SIZE(states)) {
+    return states[choice] == state;
+  }
+  return false;
+}
+
+// Guessed names. The messages that "Script msg Debugger" leaves out below a given level: level 1
+// skips both lists, level 2 only the second, frequent one, and higher levels log everything.
+struct SScriptMsgList {
+  const EScriptObjectMessage* mMessages;
+  int mCount;
+};
+
+static const EScriptObjectMessage skDamageMessages[] = {
+    kSM_Damage,
+    kSM_ResistedDamage,
+    kSM_ReflectedDamage,
+};
+
+static const EScriptObjectMessage skFrequentMessages[] = {
+    kSM_Landed,
+    kSM_LandedOnStaticGround,
+    kSM_Entered,
+    kSM_Clear,
+    kSM_OffGround,
+    kSM_OnIce,
+    kSM_OnOrganic,
+    kSM_OnDirt,
+    kSM_HitObject,
+    kSM_OnPlatform,
+    kSM_Falling,
+    kSM_WorldLoaded,
+    kSM_EnteredFluid,
+    kSM_InsideFluid,
+    kSM_ExitedFluid,
+    kSM_Launching,
+    kSM_AcidOnVisor,
+    kSM_InShrubbery,
+    kSM_EnteredPhazonPool,
+    kSM_InsidePhazonPool,
+    kSM_ExitedPhazonPool,
+    kSM_AIUpdateDisabled,
+    kSM_InternalMessage0,
+    kSM_InternalMessage1,
+    kSM_InternalMessage2,
+    kSM_InternalMessage3,
+    kSM_InternalMessage4,
+    kSM_InternalMessage5,
+    kSM_InternalMessage6,
+    kSM_InternalMessage7,
+    kSM_InternalMessage8,
+    kSM_InternalMessage9,
+};
+
+static const SScriptMsgList skQuietScriptMsgs[] = {
+    {skDamageMessages, ARRAY_SIZE(skDamageMessages)},
+    {skFrequentMessages, ARRAY_SIZE(skFrequentMessages)},
+};
+
+bool CStateManagerObject::ShouldLogScriptMsg(const CEntity* target, const CEntity* sender,
+                                             const CScriptMsg& msg) {
+  const int level = gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgDebugger);
+  if (level == 0) {
+    return false;
+  }
+
+  const EScriptObjectMessage message = msg.GetMessage();
+  for (int i = 0; i < ARRAY_SIZE(skQuietScriptMsgs); ++i) {
+    if (level <= i + 1) {
+      const EScriptObjectMessage* end =
+          skQuietScriptMsgs[i].mMessages + skQuietScriptMsgs[i].mCount;
+      if (rstl::find(skQuietScriptMsgs[i].mMessages, end, message) != end) {
+        return false;
+      }
+    }
+  }
+
+  // Inactive objects only log the messages that can wake them up.
+  if (!target->GetActive() && msg.GetMessage() != kSM_Activate &&
+      msg.GetMessage() != kSM_Increment) {
+    return false;
+  }
+  if (msg.GetMessage() == kSM_Delete && sender == nullptr) {
+    return false;
+  }
+
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgSender) != 0 &&
+      !MatchesScriptMsgEntity(sender, gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgSender))) {
+    return false;
+  }
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgTarget) != 0 &&
+      !MatchesScriptMsgEntity(target, gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgTarget))) {
+    return false;
+  }
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgType) != 0 &&
+      !MatchesScriptMsgMessage(msg.GetMessage(),
+                               gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgType))) {
+    return false;
+  }
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgExcludeType) != 0 &&
+      MatchesScriptMsgMessage(msg.GetMessage(),
+                              gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgExcludeType))) {
+    return false;
+  }
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgState) != 0 &&
+      !MatchesScriptMsgState(msg.GetState(),
+                             gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgState))) {
+    return false;
+  }
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgExcludeState) != 0 &&
+      MatchesScriptMsgState(msg.GetState(),
+                            gpGameDebug->GetOptionInt(CGameDebug::kDO_ScriptMsgExcludeState))) {
+    return false;
+  }
+  return true;
+}
+
+// The name and the CEntity word at 0x58 that the "ScriptDebug" lines print for a message's
+// sender and target; the object may be gone.
+static inline const char* GetDebugName(const CEntity* entity) {
+  return entity != nullptr ? entity->GetName().data() : "UNKNOWN";
+}
+
+static inline uint GetDebugId(const CEntity* entity) {
+  return entity != nullptr ? entity->GetX58().value : -1;
+}
+
+void CStateManagerObject::DispatchScriptMessages() {
+  while (!mScriptMsgs->empty()) {
+    CScriptMsg msg = mScriptMsgs->Pop();
+
+    if (gpGameDebug->IsOptionSet(CGameDebug::kDO_LogScriptMessageQueue)) {
+      const CEntity* sender = GetObjectById(msg.GetSenderId());
+      const CEntity* target = GetObjectById(msg.GetTargetId());
+      rstl::string text(CBasics::Stringize(
+          "ScriptDebug %d 0x%x \"%s[%d] - OUT\" 0x%x 0x%x 0x%x \"%s[%d]\"\n",
+          mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender), GetDebugName(sender),
+          msg.GetSenderId().value & 0xFFFF, msg.GetState(), msg.GetMessage(), GetDebugId(target),
+          GetDebugName(target), msg.GetTargetId().value & 0xFFFF));
+      CBBASupport_SendString(text, 0, nullptr);
+    }
+
+    CEntity* entity = ObjectById(msg.GetTargetId());
+    if (entity != nullptr && gpGameDebug->IsOptionSet(CGameDebug::kDO_ScriptMsgDebugger)) {
+      const CEntity* sender = GetObjectById(msg.GetSenderId());
+      if (ShouldLogScriptMsg(entity, sender, msg)) {
+        rstl::string text(CBasics::Stringize("ScriptDebug %d 0x%x \"%s\" 0x%x 0x%x 0x%x \"%s\"\n",
+                                             mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender),
+                                             GetDebugName(sender), msg.GetState(), msg.GetMessage(),
+                                             entity->GetX58().value, entity->GetName().data()));
+        CBBASupport_SendString(text, 0, nullptr);
+      }
+    }
+
+    if (entity != nullptr) {
+      const bool wasActive = entity->GetActive();
+      entity->AcceptScriptMsg(*mStateMgr, msg);
+      if (wasActive != entity->GetActive()) {
+        mStateMgr->CallbackLists().ActiveChanged().Emit(*mStateMgr, *entity);
+      }
+
+      if (msg.GetMessage() == kSM_Delete) {
+        AddToGraveyard(entity);
+        RemoveObject(entity->GetUniqueId());
+      }
+    }
+  }
+}
+
+// Unlike Echoes, the message can first be logged, falling back to the debugger output when the
+// broadband adapter is not connected.
+void CStateManagerObject::SendScriptMsg(const CScriptMsg& msg) {
+  if (gpGameDebug->IsOptionSet(CGameDebug::kDO_LogScriptMessageQueue)) {
+    const CEntity* sender = GetObjectById(msg.GetSenderId());
+    const CEntity* target = GetObjectById(msg.GetTargetId());
+    rstl::string text(CBasics::Stringize(
+        "ScriptDebug %d 0x%x \"%s[%d] - IN\" 0x%x 0x%x 0x%x \"%s[%d]\"\n",
+        mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender), GetDebugName(sender),
+        msg.GetSenderId().value & 0xFFFF, msg.GetState(), msg.GetMessage(), GetDebugId(target),
+        GetDebugName(target), msg.GetTargetId().value & 0xFFFF));
+    if (!CBBASupport_SendString(text, 0, nullptr)) {
+      rs_debugger_printf(text.data());
+    }
+  }
+
+  mScriptMsgs->Push(msg);
+  if (mScriptMsgs->Size() > 0x80 && !mDispatchingScriptMessages) {
+    mDispatchingScriptMessages = true;
+    DispatchScriptMessages();
+    mDispatchingScriptMessages = false;
+  }
 }
 
 void CStateManagerObject::DeliverScriptMsg(const CScriptMsg& msg) {

@@ -29,6 +29,9 @@ public:
     return &mRandom;
   }
   bool IsRandomAvailable() const { return mRandomAvailable; }
+  // Prime's name. The update (0x80292E9C) seeds CDecal and CProjectileWeapon with it and bumps
+  // it at the end; the script message logs print it.
+  uint GetUpdateFrameIndex() const { return mUpdateFrameIdx; }
 
 private:
   // The constructor news each of these (0x5E8, 0x1138 and 0x1C038 bytes); their constructors live
@@ -41,7 +44,9 @@ private:
   // Guessed name. CStateManager.cpp news this (0x780 bytes; the constructor 0x802AA5F4 is in
   // CRenderManager.cpp and keeps the state manager at +4).
   CRenderManager* mRenderManager;
-  uchar x1c_[0x16C - 0x1C];
+  uchar x1c_[0x15C - 0x1C];
+  uint mUpdateFrameIdx; // Prime's name
+  uchar x160_[0x16C - 0x160];
   // Echoes' names. As in Echoes, the constructor builds the "DefaultShadow" token at 0x160, then
   // seeds this with 0 and clears the flag.
   CRandom16 mRandom;

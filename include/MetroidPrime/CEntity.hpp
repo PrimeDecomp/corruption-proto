@@ -81,6 +81,8 @@ public:
   const rstl::vector< SConnection >& GetConnectionList() const { return mConnections; }
   bool GetActive() const { return mActive; }
   uint GetCastFlags() const { return mCastFlags; }
+  // The script message logs (CStateManagerObject.cpp) print it next to the name, as 0x%x.
+  TEditorId GetX58() const { return x58_; }
 
   static rstl::vector< SConnection > NullConnectionList;
   static CEntityInfo NullEntityInfo;

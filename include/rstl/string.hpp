@@ -164,6 +164,7 @@ public:
   int find(const _CharTp* other, int pos = 0, int count = -1) const;
   int find(_CharTp ch, int pos = 0) const;
   int find_first_of(const basic_string& other, int pos = 0) const;
+  int find_first_of(const _CharTp* other, int pos = 0, int count = -1) const;
   const_iterator position_iterator(int pos) const;
   pair< const_iterator, const_iterator > range_iterator(int pos, int count) const;
   basic_string substr(int pos = 0, int count = -1) const;
@@ -200,6 +201,25 @@ inline int basic_string< _CharTp, Traits, Alloc >::find_first_of(const basic_str
                                                                  int pos) const {
   pos = get_real_pos_for_begin(pos);
   const int found = internal_search_of(begin() + pos, end(), other.begin(), other.end());
+  int result = found + pos;
+  if (found == -1) {
+    result = found;
+  }
+  return result;
+}
+
+// Emitted out of line in CGameDebug (0x8003CA84), like find(const _CharTp*, int, int).
+template < typename _CharTp, typename Traits, typename Alloc >
+int basic_string< _CharTp, Traits, Alloc >::find_first_of(const _CharTp* other, int pos,
+                                                          int count) const {
+  pos = get_real_pos_for_begin(pos);
+  int length = 0;
+  const _CharTp* end = other;
+  while ((count == -1 || length < count) && *end != Traits::eos()) {
+    ++length;
+    ++end;
+  }
+  const int found = internal_search_of(begin() + pos, this->end(), other, end);
   int result = found + pos;
   if (found == -1) {
     result = found;

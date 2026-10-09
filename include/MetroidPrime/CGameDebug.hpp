@@ -542,6 +542,9 @@ public:
   // remaining capture time that main counts down.
   void SetMovieCaptureTime(float time);
   const rstl::string& GetMovieCaptureName();
+  // Guessed name. Called by CControllerRecorder and a console command; strips the characters a
+  // host file name cannot hold and lets GetMovieCaptureName pick a new slot.
+  void SetMovieCaptureName(const rstl::string& name);
   // Guessed names. While a capture runs, the architecture tick runs fixed 1/60 s frames and
   // counts the time down ("Movie Capture Time Left = %f\n"), then ends the capture.
   bool IsMovieCaptureRunning() const { return xA16B_; }

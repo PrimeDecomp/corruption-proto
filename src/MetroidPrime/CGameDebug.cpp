@@ -1511,6 +1511,20 @@ void CGameDebug::AddDebugOptions() {
 }
 #pragma pop
 
+void CGameDebug::SetMovieCaptureName(const rstl::string& name) {
+  mMovieCaptureNameChosen = false;
+  mMovieCaptureName = name;
+  const char* invalidChars = ":*?\"<>|\\/\n\t%";
+  for (int pos = mMovieCaptureName.find_first_of(invalidChars); pos != -1;
+       pos = mMovieCaptureName.find_first_of(invalidChars)) {
+    mMovieCaptureName.erase(pos, 1);
+  }
+  xA180_ = 0;
+  if (mMovieCaptureName.size() != 0) {
+    rs_debugger_printf("Movie Capture Name \"%s\"\n", mMovieCaptureName.data());
+  }
+}
+
 // Picks the first "<name>_NNN_" prefix (NNN < 100) whose first movie file does not exist on the
 // host yet. The name is cleared when every slot is taken.
 const rstl::string& CGameDebug::GetMovieCaptureName() {

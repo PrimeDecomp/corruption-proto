@@ -28,6 +28,15 @@ struct IArchitectureMessageParm {
   virtual ~IArchitectureMessageParm() {}
 };
 
+// Minimal declaration; the timer tick parameter (Decode.cpp).
+class CArchMsgParmReal32 : public IArchitectureMessageParm {
+public:
+  float GetReal() const { return mVal; }
+
+private:
+  float mVal;
+};
+
 class CArchitectureMessage {
 public:
   CArchitectureMessage(EArchMsgTarget target, int type,
@@ -43,5 +52,9 @@ private:
   EArchMsgType mType;
   rstl::rc_ptr< IArchitectureMessageParm > mParm;
 };
+
+namespace MakeMsg {
+const CArchMsgParmReal32& GetParmTimerTick(const CArchitectureMessage& msg);
+} // namespace MakeMsg
 
 #endif // _CARCHITECTUREMESSAGE

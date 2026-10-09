@@ -3,13 +3,19 @@
 // Complete native/helper inventory: 14 functions; implementation remains pending.
 // Boundary evidence is retained outside this repository in the agent workflow.
 // Not yet implemented:
-// 0x800DD180 Draw: also draws a "(DVD) (ARAM)" busy status line; depends on unnamed CGameDebug
-//   option state (0x8003BF38, object+0x2CB4) and an unnamed CDvdFile busy flag.
-// 0x800DD3B8 OnMessage: needs MakeMsg::GetParmTimerTick / CArchMsgParmReal32 (Decode.cpp).
 // 0x800DDABC static initializer: seven SDA constants (-1,-1,-1,0,1,2,-1) from a shared header.
 #include "MetroidPrime/CConsoleOutputWindow.hpp"
 
+#include "MetroidPrime/CArchitectureMessage.hpp"
+#include "MetroidPrime/CGameDebug.hpp"
+
+#include "Kyoto/CDvdFile.hpp"
+#include "Kyoto/Graphics/CGraphics.hpp"
+
 #include "rstl/math.hpp"
+
+#include "dolphin/ar.h"
+#include "dolphin/dvd.h"
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -84,9 +90,62 @@ void CConsoleOutputWindow::NewLine() {
   AddChar(' ');
 }
 
+CIOWin::EMessageReturn CConsoleOutputWindow::OnMessage(const CArchitectureMessage& msg,
+                                                       CArchitectureQueue&) {
+  switch (msg.GetType()) {
+  case kAM_UserInput:
+    return kMR_Normal;
+  case kAM_TimerTick:
+    Update(MakeMsg::GetParmTimerTick(msg).GetReal());
+    return kMR_Normal;
+  default:
+    return kMR_Normal;
+  }
+}
+
 void CConsoleOutputWindow::Update(float dt) {
   for (int i = 0; i < mLines.size(); ++i) {
     mLineTimers[i] = rstl::max_val(0.f, mLineTimers[i] - dt);
+  }
+}
+
+// Unlike Echoes, G2MEAB draws in the "Debug Message Color" debug option colour, tests the line
+// timer before drawing the newest line, and adds a DVD/ARAM activity indicator at the bottom.
+void CConsoleOutputWindow::Draw() const {
+  int row = 0;
+  const int startIndex = (mLineIndex - 1 + mLines.size()) % mLines.size();
+  int index = startIndex;
+  const CColor color = gpGameDebug->GetDebugMessageColor();
+  CGraphics::SetDepthRange(0.f, 1.f);
+  CGraphics::SetBlendMode(kBM_Blend, kBF_SrcAlpha, kBF_InvSrcAlpha, kLO_Clear);
+
+  if (startIndex >= 0 && startIndex < mLines.size()) {
+    const int lineCount = mLines.size();
+    while (mLineTimers[index] > 0.f && row < lineCount) {
+      mFont.DrawString(mLines[index].c_str(), 18, row * (mFont.GetFontSize() + 2) + 12, color);
+      index = (index - 1 + lineCount) % lineCount;
+      ++row;
+    }
+  }
+
+  const int driveStatus = DVDGetDriveStatus();
+  const u32 aramStatus = ARGetDMAStatus();
+  const char* activity = nullptr;
+  if (driveStatus == DVD_STATE_BUSY) {
+    CDvdFile::mDvdActivity = true;
+  }
+  if (CDvdFile::mDvdActivity && aramStatus != 0) {
+    activity = "(DVD) (ARAM)";
+  } else if (CDvdFile::mDvdActivity) {
+    activity = "(DVD)";
+  } else if (aramStatus != 0) {
+    activity = "(ARAM)";
+  }
+  CDvdFile::mDvdActivity = false;
+
+  if (activity != nullptr && gpGameDebug->IsOptionSet(CGameDebug::kDO_DebugMessagesEnabled)) {
+    mFont.DrawString(activity, 18, CGraphics::GetViewport().mHeight - mFont.GetFontSize() * 2,
+                     color);
   }
 }
 

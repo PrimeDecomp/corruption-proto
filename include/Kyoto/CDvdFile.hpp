@@ -43,6 +43,10 @@ public:
   static void ARAMARAMXferCallback(u32 addr);
   static void internalCallback(s32, DVDFileInfo*);
 
+  // Guessed name. 0x8079B4E5: set by the DVD read callbacks (and by CConsoleOutputWindow while the
+  // drive is busy); the console window shows "(DVD)" and clears it every frame.
+  static bool mDvdActivity;
+
 private:
   int mFileEntry;
   uchar* mARAMBuffer;

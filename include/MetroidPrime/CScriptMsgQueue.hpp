@@ -11,6 +11,9 @@ class CScriptMsgQueue {
 public:
   enum { kCapacity = 0xC0 };
 
+  // Inlined into CStateManagerObject's constructor.
+  CScriptMsgQueue() : mHead(0), mTail(0) {}
+
   void Push(const CScriptMsg& msg); // Guessed name; asserts "Overflow in ScriptMsgQueue"
   CScriptMsg Pop();                 // Named by its "Pop from empty queue" assert
   int Size() const;                 // Guessed name

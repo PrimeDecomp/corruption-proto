@@ -264,6 +264,14 @@ CHECK_SIZEOF(SScriptMsgOriginator, 0x10)
 
 class CScriptMsg {
 public:
+  // Echoes' default message. Weak; CScriptTimer.cpp emits the first instance (0x8008A6E8), which
+  // CScriptMsgQueue's constructor builds its ring with.
+  CScriptMsg()
+  : mSenderId(kInvalidUniqueId)
+  , mTargetId(kInvalidUniqueId)
+  , mOriginator(kInvalidUniqueId)
+  , mMsg(kSM_Invalid)
+  , mState(kSS_InvalidState) {}
   // Emitted out of line in CEntity.cpp (0x800327A8) and called from most script objects.
   // Unlike Echoes, it takes the message first and the state last.
   CScriptMsg(EScriptObjectMessage msg, TUniqueId sender, TUniqueId target,

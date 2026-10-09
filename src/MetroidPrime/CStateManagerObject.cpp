@@ -5,8 +5,6 @@
 // Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x80298130 +0x20: owned native method/helper retained; exact source-level name unresolved
 // 0x80298150 +0x20: owned native method/helper retained; exact source-level name unresolved
-// 0x8029A72C +0xC80: state manager object constructor; original source61/70/75..89 (news nine
-//   CObjectList and five CObjectListSmall subclasses whose names are unknown)
 // 0x8029B6D8 +0x30: registered static initializer; .ctors 0x8065B964; seven SDA constants
 
 #include "MetroidPrime/CStateManagerObject.hpp"
@@ -21,6 +19,7 @@
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerCallbackLists.hpp"
 #include "MetroidPrime/CWorld.hpp"
+#include "MetroidPrime/GameObjectLists.hpp"
 
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/TCastTo.hpp"
@@ -47,6 +46,72 @@ class CScriptSound;
 class CScriptTrigger;
 class CScriptWaypoint;
 class CWeapon;
+
+// Echoes' CStateManager setup of the same members. The list ids are Echoes' indices; the small
+// lists are built dock first, as Echoes builds its filtered lists. Only the dynamic lists go into
+// the second views.
+CStateManagerObject::CStateManagerObject(
+    CStateManager& mgr, const rstl::ncrc_ptr< CStringPropertyManager >& stringProperties,
+    const rstl::ncrc_ptr< CScriptMailbox >& mailbox,
+    const rstl::ncrc_ptr< CMapWorldInfo >& mapWorldInfo)
+: mStateMgr(&mgr)
+, mLastUniqueId(0)
+, mObjectIndexArray(0)
+, mObjectLists(rstl::auto_ptr< CObjectList >())
+, mObjectListsSmall(rstl::auto_ptr< CObjectListSmall >())
+, mAllocatedObjectIndices(2048, false)
+, mScriptMsgs(new ("CStateManagerObject.cpp(61) : ", (const char*)0) CScriptMsgQueue())
+, mWorld(nullptr)
+, mScriptObjectLoaderHelper(new ("CStateManagerObject.cpp(70) : ", (const char*)0)
+                                CScriptObjectLoaderHelper())
+, mNextAreaId(0)
+, mPreviousAreaId(kInvalidAreaId)
+, mStringPropertyManager(stringProperties)
+, mMailbox(mailbox)
+, mMapWorldInfo(mapWorldInfo)
+, mPlayer(nullptr)
+, mDispatchingScriptMessages(false) {
+  mObjectLists[kOL_All] =
+      new ("CStateManagerObject.cpp(75) : ", (const char*)0) CObjectList(kOL_All, false);
+  mObjectLists[kOL_Actor] = new ("CStateManagerObject.cpp(76) : ", (const char*)0) CActorList();
+  mObjectLists[kOL_RenderActor] =
+      new ("CStateManagerObject.cpp(77) : ", (const char*)0) CRenderActorList();
+  mObjectLists[kOL_PhysicsActor] =
+      new ("CStateManagerObject.cpp(78) : ", (const char*)0) CPhysicsActorList();
+  mObjectLists[kOL_GameLight] =
+      new ("CStateManagerObject.cpp(79) : ", (const char*)0) CGameLightList();
+  mObjectLists[kOL_ListeningAi] =
+      new ("CStateManagerObject.cpp(80) : ", (const char*)0) CListeningAiList();
+  mObjectLists[kOL_AiWaypoint] =
+      new ("CStateManagerObject.cpp(81) : ", (const char*)0) CAiWaypointList();
+  mObjectLists[kOL_Platform] =
+      new ("CStateManagerObject.cpp(82) : ", (const char*)0) CPlatformList();
+  mObjectLists[kOL_Trigger] = new ("CStateManagerObject.cpp(83) : ", (const char*)0) CTriggerList();
+
+  mObjectListsSmall[kOLS_Dock] =
+      new ("CStateManagerObject.cpp(85) : ", (const char*)0) CDockListSmall();
+  mObjectListsSmall[kOLS_Door] =
+      new ("CStateManagerObject.cpp(86) : ", (const char*)0) CDoorListSmall();
+  mObjectListsSmall[kOLS_Type106] =
+      new ("CStateManagerObject.cpp(87) : ", (const char*)0) CType106ListSmall();
+  mObjectListsSmall[kOLS_GameCamera] =
+      new ("CStateManagerObject.cpp(88) : ", (const char*)0) CGameCameraListSmall();
+  mObjectListsSmall[kOLS_GrapplePoint] =
+      new ("CStateManagerObject.cpp(89) : ", (const char*)0) CGrapplePointListSmall();
+
+  for (int i = 0; i < mObjectLists.size(); ++i) {
+    CObjectList* list = mObjectLists[i].get();
+    if (list->IsDynamic()) {
+      mDynamicObjectLists.push_back(list);
+    }
+  }
+  for (int i = 0; i < mObjectListsSmall.size(); ++i) {
+    CObjectListSmall* list = mObjectListsSmall[i].get();
+    if (list->IsDynamic()) {
+      mDynamicObjectListsSmall.push_back(list);
+    }
+  }
+}
 
 CStateManagerObject::~CStateManagerObject() {}
 

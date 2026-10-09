@@ -203,38 +203,59 @@ enum EScriptObjectMessage {
   kSM_Invalid = -1,
 };
 
+// Guessed name. The script reference a connection targets: the editor id from the layer data,
+// plus a unique id that CEntity::ResolveInstanceConnections fills in for generated objects.
+// CStateManagerObject's lookups (0x802995E8, 0x80299408) take the pair by reference and use the
+// unique id directly when it is valid, falling back to the editor id map otherwise.
+struct SScriptObjectRef {
+  TEditorId mEditorId;
+  TUniqueId mUniqueId;
+
+  SScriptObjectRef(TEditorId editorId, TUniqueId uniqueId)
+  : mEditorId(editorId), mUniqueId(uniqueId) {}
+};
+CHECK_SIZEOF(SScriptObjectRef, 0x8)
+
 struct SConnection {
   EScriptObjectState state;
   EScriptObjectMessage msg;
-  TEditorId objId;
-  int xc_;
+  SScriptObjectRef objId;
 };
 CHECK_SIZEOF(SConnection, 0x10)
 
 // Layout from the CEntity constructor, which reads each field once.
 class CEntityInfo {
 public:
+  // Echoes' constructor with one more argument. Every caller passes a -1 temporary for it, so
+  // it is a 4-byte class type; TEditorId is a guess.
+  CEntityInfo(TAreaId aid, const rstl::vector< SConnection >& connections, bool isActive,
+              TEditorId eid, TEditorId x1c = TEditorId(-1));
+
   TAreaId GetAreaId() const { return mAreaId; }
   const rstl::vector< SConnection >& GetConnectionList() const { return mConnections; }
   TEditorId GetEditorId() const { return mEditorId; }
   bool GetActive() const { return mActive; }
+  // Echoes' names; the constructor sets both and CEntity copies them into its own flags.
+  bool GetUpdateWhileOccluded() const { return mUpdateWhileOccluded; }
+  bool GetUpdateDuringCinematicSkip() const { return mUpdateDuringCinematicSkip; }
+  TEditorId GetX1C() const { return x1c_; }
 
 private:
   TAreaId mAreaId;
   rstl::vector< SConnection > mConnections;
   TEditorId mEditorId;
   bool mActive : 1;
-  // Echoes names these UpdateWhileOccluded and UpdateDuringCinematicSkip; CEntity copies
-  // both into its own flags.
-  bool x18_25_ : 1;
-  bool x18_26_ : 1;
-  int x1c_;
+  bool mUpdateWhileOccluded : 1;       // Echoes' name
+  bool mUpdateDuringCinematicSkip : 1; // Echoes' name
+  TEditorId x1c_;
 };
 CHECK_SIZEOF(CEntityInfo, 0x20)
 
-// Guessed name. CScriptMsg embeds this at 0x8; its constructor stores the originator id, a
-// -1 word and a default CVParamTransfer.
+// Guessed name. CScriptMsg embeds this at 0x8; its constructor (0x8002B340) stores the
+// originator id, a -1 word and a default CVParamTransfer.
 struct SScriptMsgOriginator {
+  SScriptMsgOriginator(TUniqueId id);
+
   TUniqueId mId;
   int x4_;
   CVParamTransfer x8_;
@@ -243,6 +264,12 @@ CHECK_SIZEOF(SScriptMsgOriginator, 0x10)
 
 class CScriptMsg {
 public:
+  // Emitted out of line in CEntity.cpp (0x800327A8) and called from most script objects.
+  // Unlike Echoes, it takes the message first and the state last.
+  CScriptMsg(EScriptObjectMessage msg, TUniqueId sender, TUniqueId target,
+             const SScriptMsgOriginator& originator, EScriptObjectState state)
+  : mSenderId(sender), mTargetId(target), mOriginator(originator), mMsg(msg), mState(state) {}
+
   TUniqueId GetSenderId() const { return mSenderId; }
   TUniqueId GetTargetId() const { return mTargetId; }
   const SScriptMsgOriginator& GetOriginator() const { return mOriginator; }

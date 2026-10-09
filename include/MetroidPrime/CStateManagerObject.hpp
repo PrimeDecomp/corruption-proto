@@ -23,6 +23,7 @@ class CScriptMsgQueue;
 class CScriptObjectLoaderHelper;
 class CStateManager;
 class CWorld;
+struct SScriptObjectRef;
 
 // Guessed name: the repo's inferred split name for the unit whose methods (0x80308934, which
 // inserts and notifies, and 0x80308C04, which looks up) receive the pointer held at 0x1118.
@@ -55,6 +56,13 @@ public:
   // first list directly; GetObjectById goes through the const overload.
   CEntity* ObjectById(TUniqueId uid);
   const CEntity* GetObjectById(TUniqueId uid) const;
+
+  // Echoes' message send, moved here from CStateManager.
+  void SendScriptMsg(const CScriptMsg& msg); // 0x802983C8
+  // Overloads of the editor-id lookups below that take the whole connection reference and use
+  // its cached unique id directly when it is valid.
+  TUniqueId GetIdForScript(const SScriptObjectRef& ref) const;         // 0x80299408
+  TIdListResult GetIdListForScript(const SScriptObjectRef& ref) const; // 0x802995E8
 
   // Guessed names. The const getter's result feeds the lookup (0x80308C04) and the mutable one's
   // feeds the insert (0x80308934); the getter at 0x80298190 is emitted before 0x80298198.

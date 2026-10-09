@@ -29,6 +29,11 @@ public:
   // Guessed name. Set by the recorder's profiling switch (0x80121A14); main keeps the GX
   // performance counters running while it is set.
   static bool sProfiling;
+  // Guessed names. Store the latest CPU and GPU draw time (0x80121274, 0x80121280) in the
+  // profiling statistics the recorder prints as "CpuDrawTime..." and "GpuDrawTime...". The
+  // statistics hold doubles; whether the parameter is float or double is not provable.
+  static void SetCpuDrawTime(double time);
+  static void SetGpuDrawTime(double time);
 
   // Guessed names. A demo file found on the host (0x78 bytes): its file name, the header read
   // from the file and the length in seconds computed from the file size. CGameDebug's "Demo" page

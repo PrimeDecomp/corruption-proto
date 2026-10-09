@@ -19,6 +19,16 @@ public:
     kDMAPrio_Six,
   };
 
+  // Guessed names. The usage of one ARAM pool in chunks (0x805107B4 hands out pool 0, the
+  // general pool, or 1, the audio pool).
+  struct SPoolStatistics {
+    uint mChunkSize;
+    uint mNumChunks;
+    uint mFreeChunks;
+    uint mPeakChunks;
+  };
+  static SPoolStatistics GetPoolAllocationStatistics(int pool);
+
   static bool Initialize(uint chunkSize, uint size, uint secondChunkSize);
   static void Shutdown();
   static void* Alloc(uint len, int pool = 0);

@@ -58,6 +58,8 @@ class CEnvFxManager {
 public:
   CEnvFxManager();
 
+  static void Initialize(); // Echoes' name; 0x80184790, called from CGameGlobalObjects
+
   void Update(float dt, CStateManager& mgr); // Echoes' name; 0x80183F40
 
   // Echoes' name (0x80184738); CStateManager's destructor calls it.

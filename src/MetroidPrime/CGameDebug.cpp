@@ -141,7 +141,7 @@ void CGameDebug::ApplyRewardUnlocks() {
 
 CGameDebug::CGameDebug()
 : mOptions(kDO_Count, rstl::optional_object< CDebugOption >())
-, mOptionConnections(kDO_Count, rstl::auto_ptr< IConnection >())
+, mOptionConnections(0)
 , mOptionSignals(0)
 , mCategorySelection(kC_Count, 0)
 , x9FE8_menuPage(-1)

@@ -3,44 +3,15 @@
 // Source identity: asserted Main.cpp; established reference path is lower-case main.cpp.
 // Remaining emitted/native helper inventory (implemented functions are removed):
 // clang-format off
-// 0x8000586C +0x120: emitted vector<string> push-back helper used by main memory diagnostics; vector.h assertion line482
 // 0x8000598C +0x64: retained emitted/native function; exact class/type/name unresolved
 // 0x800059F0 +0xAC: retained emitted/native function; exact class/type/name unresolved
 // 0x80005A9C +0x104: retained emitted/native function; exact class/type/name unresolved
 // 0x80005BA0 +0x50: retained emitted/native function; exact class/type/name unresolved
 // 0x80005C94 +0x150: retained emitted/native function; exact class/type/name unresolved
 // 0x80005DE4 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x80005E68 +0x1CC: retained emitted/native function; exact class/type/name unresolved
-// 0x800062E0 +0xC: retained emitted/native function; exact class/type/name unresolved
-// 0x800062EC +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x8000633C +0xB8: retained emitted/native function; exact class/type/name unresolved
-// 0x800063F4 +0xC: retained emitted/native function; exact class/type/name unresolved
-// 0x80006400 +0x40: retained emitted/native function; exact class/type/name unresolved
-// 0x80006440 +0x30: retained emitted/native function; exact class/type/name unresolved
-// 0x80006470 +0xC8: retained emitted/native function; exact class/type/name unresolved
-// 0x80006538 +0x5C: retained emitted/native function; exact class/type/name unresolved
-// 0x80006594 +0x60: retained emitted/native function; exact class/type/name unresolved
-// 0x800065F4 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x80006648 +0x104: retained emitted/native function; exact class/type/name unresolved
-// 0x8000674C +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x8000679C +0x60: retained emitted/native function; exact class/type/name unresolved
-// 0x800067FC +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x8000681C +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x80006840 +0x44: retained emitted/native function; exact class/type/name unresolved
-// 0x80006884 +0x68: retained emitted/native function; exact class/type/name unresolved
-// 0x800068EC +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x8000690C +0x28: retained emitted/native function; exact class/type/name unresolved
-// 0x800069E0 +0xE4: retained emitted/native function; exact class/type/name unresolved
-// 0x80006AC4 +0x150: retained emitted/native function; exact class/type/name unresolved
-// 0x80006C14 +0x64: retained emitted/native function; exact class/type/name unresolved
-// 0x80006C78 +0x58: retained emitted/native function; exact class/type/name unresolved
-// 0x80006CD0 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x80006D44 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x80006D98 +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80006DE8 +0x150: retained emitted/native function; exact class/type/name unresolved
-// 0x80006F38 +0x40: retained emitted/native function; exact class/type/name unresolved
-// 0x80006F78 +0x30: retained emitted/native function; exact class/type/name unresolved
-// 0x80006FA8 +0xA8: retained emitted/native function; exact class/type/name unresolved
+// 0x80006884 +0x68: rstl uninitialized copy of vector<uchar> for reserved_vector<vector<uchar>,3>'s copy (our rstl inlines it)
+// 0x800068EC +0x20: rstl construct<vector<uchar>> called from the copy above
+// 0x8000690C +0x28: its placement-new impl (null check, then vector<uchar>'s copy constructor)
 // 0x80007050 +0xF8: retained emitted/native function; exact class/type/name unresolved
 // 0x80007148 +0xD0: retained emitted/native function; exact class/type/name unresolved
 // 0x80007218 +0x230: retained emitted/native function; exact class/type/name unresolved
@@ -48,47 +19,22 @@
 // 0x800074A8 +0x31C: CMain::UpdateTweakDebugOptions (guessed name); tweak load/save debug options 51..54
 // 0x80007E60 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AB0 +0x48: retained emitted/native function; exact class/type/name unresolved
-// 0x80008AF8 +0x220: retained emitted/native function; exact class/type/name unresolved
-// 0x80008D18 +0x174: retained emitted/native function; exact class/type/name unresolved
-// 0x80008E8C +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80008EDC +0x60: retained emitted/native function; exact class/type/name unresolved
-// 0x80008F3C +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x80008F5C +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x80008F80 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000900C +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x80009080 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x800090DC +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x800090FC +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x80009120 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x80009194 +0x94: retained emitted/native function; exact class/type/name unresolved
 // 0x80009228 +0x84: retained emitted/native function; exact class/type/name unresolved
-// 0x800092AC +0xA4: retained emitted/native function; exact class/type/name unresolved
-// 0x80009350 +0x58: retained emitted/native function; exact class/type/name unresolved
-// 0x800093A8 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x800093FC +0x84: retained emitted/native function; exact class/type/name unresolved
-// 0x80009480 +0x38: retained emitted/native function; exact class/type/name unresolved
-// 0x800094B8 +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80009508 +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x80009528 +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x8000954C +0x80: retained emitted/native function; exact class/type/name unresolved
 // 0x80009888 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x80009F08 +0x7C0: retained emitted/native function; exact class/type/name unresolved
-// 0x8000A6C8 +0xC4: retained emitted/native function; exact class/type/name unresolved
-// 0x8000A8DC +0x868: retained emitted/native function; exact class/type/name unresolved
+// 0x8000A8DC +0x868: CGameGlobalObjects::AddPaksAndFactories (Echoes name; called from PostInitialize with the context); not implemented
 // 0x8000B144 +0x4C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B190 +0xC0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B250 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B2DC +0x2C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B308 +0xB0: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B3B8 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B444 +0x118: retained emitted/native function; exact class/type/name unresolved
 // 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
 // 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
-// 0x8000C218 +0xBC: CGameGlobalObjects LoadStringTable; STRG_Main token ownership
-// 0x8000C2D4 +0x84: emitted optional locked-string-table-token assignment helper
-// 0x8000C358 +0xC8: CGameGlobalObjects PostInitialize; resource factories/string table/renderer initialization
-// 0x8000C420 +0x14C: CGameGlobalObjects constructor; Main.cpp allocations1267/1269, factory/pool/global registration
-// 0x8000CC24 +0x126C: main debug options processing; pool/resource dumps and loaded-texture export, not factory registration
+// 0x8000CC24 +0x126C: UpdateProgrammerDebugOptions (guessed name); pool/resource dumps and loaded-texture export; not implemented
 // 0x8000DE90 +0x138: retained emitted/native function; exact class/type/name unresolved
 // 0x8000DFC8 +0x104: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E0CC +0xDC: retained emitted/native function; exact class/type/name unresolved
@@ -96,21 +42,12 @@
 // 0x8000E2AC +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E320 +0xD8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E3F8 +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x8000E41C +0x630: main memory metrics/debug text display; uses leading string-vector push-back helper
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
-// 0x8000F658 +0x124: emitted TOneStatic global-objects operator delete
-// 0x8000F93C +0xD0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FA0C +0xA8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FAB4 +0xAC: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FB60 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FD54 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FDC8 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FE3C +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FEB0 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FF24 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FF98 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8001000C +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x80010080 +0xB8: retained emitted/native function; exact class/type/name unresolved
 // 0x80010138 +0x88: retained emitted/native function; exact class/type/name unresolved
 // 0x800101C0 +0x80: retained emitted/native function; exact class/type/name unresolved
@@ -123,6 +60,7 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/LockedCache.hpp"
+#include "Kyoto/Animation/CCharAnimMemoryMetrics.hpp"
 #include "Kyoto/Audio/CAudioManager.hpp"
 #include "Kyoto/Audio/CDSPStreamManager.hpp"
 #include "Kyoto/Audio/CStreamAudioManager.hpp"
@@ -137,6 +75,9 @@
 #include "Kyoto/CPakFile.hpp"
 #include "Kyoto/CResFactory.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
+#include "Kyoto/Graphics/CModel.hpp"
+#include "Kyoto/Graphics/CTexture.hpp"
+#include "Kyoto/Graphics/GPUMemory.hpp"
 #include "Kyoto/Input/CControllerGamepadData.hpp"
 #include "Kyoto/Input/IController.hpp"
 #include "Kyoto/Math/CloseEnough.hpp"
@@ -149,13 +90,17 @@
 #include "Kyoto/TFunctor.hpp"
 #include "Kyoto/Text/CStringTable.hpp"
 #include "MetaRender/CCubeRenderer.hpp"
+#include "MetaRender/IRenderer.hpp"
 #include "MetroidPrime/AudioDebug.hpp"
 #include "MetroidPrime/CAnimData.hpp"
 #include "MetroidPrime/CAudioStateWin.hpp"
 #include "MetroidPrime/CConsoleOutputWindow.hpp"
+#include "MetroidPrime/CControllerRecorder.hpp"
 #include "MetroidPrime/CDamageVulnerability.hpp"
+#include "MetroidPrime/CDbgDraw.hpp"
 #include "MetroidPrime/CDebugOption.hpp"
 #include "MetroidPrime/CDecalManager.hpp"
+#include "MetroidPrime/CEnvFxManager.hpp"
 #include "MetroidPrime/CErrorOutputWindow.hpp"
 #include "MetroidPrime/CGameArchitectureSupport.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
@@ -164,16 +109,18 @@
 #include "MetroidPrime/CInGameTweakManager.hpp"
 #include "MetroidPrime/CMainFlow.hpp"
 #include "MetroidPrime/CMemoryCard.hpp"
+#include "MetroidPrime/CMemoryDrawEnum.hpp"
 #include "MetroidPrime/CSaveRegion.hpp"
 #include "MetroidPrime/CWorld.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
-#include "MetroidPrime/ScreenCapture.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CWorldTransManager.hpp"
+#include "MetroidPrime/ScreenCapture.hpp"
 #include "MetroidPrime/Tweaks/CTweakGame.hpp"
 #include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 
+#include "rstl/StringExtras.hpp"
 #include "rstl/auto_ptr.hpp"
 #include "rstl/map.hpp"
 #include "rstl/optional_object.hpp"
@@ -233,7 +180,6 @@
 
 void FreeTweaks();
 extern "C" void RAssert_SetDiagnosticPrintCallback(void (*callback)(const char* format, ...));
-extern "C" void CTexture_SetBindCount(int count);
 // Guessed name. CGameAllocator accumulates its allocation time here (OSGetTick deltas).
 extern uint gAllocationTicks;
 
@@ -322,6 +268,11 @@ extern bool sProgressiveModePrompt; // Echoes name; the second bit of the save r
 void UpdateScreenCapture(SScreenshotState& state);
 // Guessed name. Shades the screen border outside the 576x416 title-safe area.
 void DrawSafeFrame();
+// Guessed name. Restores sProgressiveModePrompt from the save region after a reset.
+void ReadProgressiveModePrompt();
+// Guessed name. 0x8000CC24: the programmer debug options (memory metrics, pool and allocation
+// dumps, loaded-texture export, state manager numbers, ...); DrawDebugMetrics runs it.
+void UpdateProgrammerDebugOptions();
 
 // Guessed name. A named CGameProfiler section that RsMain keeps open around a frame; the
 // section is closed around EndScene and when it goes out of scope.
@@ -482,6 +433,93 @@ CMain::CMain(COsContext* context, CSaveRegion* saveRegion, CMemorySys* memorySys
   gpMain = this;
 }
 
+// Guessed name. The "Memory Metrics" option's lines: Basic (2) and BasicWithPeaks (3) print one
+// line of heap usage in megabytes against a 90 MB budget; Full draws the heap map and lists the
+// main heap, its users, the ARAM pools and the small and medium allocators in kilobytes. The
+// allocator's peaks are reset every 1800 frames.
+void PrintMemoryMetrics() {
+  static const float kMemoryBudget = 90.f;
+  static uint sFramesSinceReset = 0;
+  if (++sFramesSinceReset == 1800) {
+    sFramesSinceReset = 0;
+  }
+  const IAllocator::SMetrics& metrics = CMemory::GetMetrics(sFramesSinceReset == 0, false);
+  const CARAMManager::SPoolStatistics& otherPool = CARAMManager::GetPoolAllocationStatistics(0);
+  const CARAMManager::SPoolStatistics& audioPool = CARAMManager::GetPoolAllocationStatistics(1);
+
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_MemoryMetrics) >= 2) {
+    const uint statics = metrics.x4c_;
+    const float heapMegs = static_cast< float >(metrics.x10_ + statics) / 1048576.f;
+    const float secondaryMegs =
+        static_cast< float >(CTexture::sTotalAllocatedSecondaryMemory) / 1048576.f;
+    const float totalMegs = heapMegs + secondaryMegs;
+    if (gpGameDebug->GetOptionInt(CGameDebug::kDO_MemoryMetrics) == 2) {
+      gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+          ->AddMessage(CStringExtras::Format("%sMem: %3.2fm(%2.2fm) / %2.2fm",
+                                             totalMegs > kMemoryBudget ? "Warning! " : "",
+                                             totalMegs, heapMegs, kMemoryBudget));
+    } else {
+      const float peak0Megs = static_cast< float >(metrics.x20_ + statics) / 1048576.f;
+      const float peak1Megs = static_cast< float >(metrics.x1c_ + statics) / 1048576.f;
+      gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+          ->AddMessage(CStringExtras::Format("%sMem: %3.2f(%2.2f)/%3.2f/%3.2f/%2.2f",
+                                             totalMegs > kMemoryBudget ? "Warning! " : "",
+                                             totalMegs, heapMegs, peak0Megs + secondaryMegs,
+                                             peak1Megs + secondaryMegs, kMemoryBudget));
+    }
+    return;
+  }
+
+  CMemoryDrawEnum drawEnum(metrics);
+  drawEnum.Draw(18, 16, 16, 432);
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(
+          CBasics::Stringize("MRAM Used:%d LAB:%d Free:%d LFB:%d", metrics.x10_ / 1024,
+                             drawEnum.GetLargestAllocatedBlock() / 1024, metrics.mHeapSize2 / 1024,
+                             drawEnum.GetLargestFreeBlock() / 1024)));
+
+  const uint textures = CTexture::sTotalAllocatedMemory;
+  const uint models = CModel::GetTotalMemory();
+  const uint world = CMemoryDrawEnum::GetWorldMemory();
+  const uint animation = CCharAnimMemoryMetrics::GetTotalSize();
+  const uint statics = metrics.x4c_;
+  const uint fakeStatics = metrics.mFakeStatics;
+  const uint other = metrics.x10_ - (textures + models + world + animation + fakeStatics +
+                                     metrics.x50_ + metrics.mMediumTotalAllocated);
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(CBasics::Stringize("TEX:%d MDL:%d WLD:%d ANM:%d OTHR:%d",
+                                                   textures / 1024, models / 1024, world / 1024,
+                                                   animation / 1024, other / 1024)));
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(
+          rstl::string(CBasics::Stringize("STAT:%d FAKE:%d", statics / 1024, fakeStatics / 1024)));
+
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(CBasics::Stringize(
+          "ARAM Audio Used:%d Free:%d Peak:%d",
+          audioPool.mChunkSize * (audioPool.mNumChunks - audioPool.mFreeChunks) / 1024,
+          audioPool.mFreeChunks * audioPool.mChunkSize / 1024,
+          audioPool.mPeakChunks * audioPool.mChunkSize / 1024)));
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(CBasics::Stringize(
+          "ARAM Other Used:%d Free:%d Peak:%d",
+          otherPool.mChunkSize * (otherPool.mNumChunks - otherPool.mFreeChunks) / 1024,
+          otherPool.mFreeChunks * otherPool.mChunkSize / 1024,
+          otherPool.mPeakChunks * otherPool.mChunkSize / 1024)));
+
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(CBasics::Stringize(
+          "APF:%d SAP-Num:%d Used:%d Free:%d", metrics.x48_, metrics.mSmallNumAllocs,
+          metrics.mSmallAllocatedSize, metrics.mSmallRemainingSize)));
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(
+          CBasics::Stringize("MAP-Num:%d Used:%d Free:%d", metrics.mMediumNumAllocs,
+                             metrics.mMediumAllocatedSize, metrics.mMediumBlocksAvailable)));
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
+      ->AddMessage(rstl::string(
+          CBasics::Stringize("Skin Peak:%d", GPUMemory::GetPeakAllocatedAmount() / 1024)));
+}
+
 extern "C" void InvokeCMain(int argc, char** argv, COsContext* context, CSaveRegion* saveRegion,
                             CMemorySys* memorySys, CDvdRequestSys* dvdRequestSys) {
   CMain* main = new (&sMainSpace) CMain(context, saveRegion, memorySys, dvdRequestSys);
@@ -553,6 +591,147 @@ void CMain::ShutdownSubsystems() {
   // The top 0x2000 bytes are never painted, so they count as used.
   const int used = static_cast< int >(stackBase - 0x2000 - ptr) + 0x2000;
   OSReport("Stack usage: %d bytes (%dk)\n", used, static_cast< uint >(used) / 1024);
+}
+
+// Unlike Echoes the debug menu, the two debug-draw lists and the controller are owned here too.
+CGameGlobalObjects::CGameGlobalObjects(COsContext& context, CMemorySys& memorySys)
+: mSimplePool(mResFactory)
+, mCharacterFactoryBuilder(mSimplePool)
+, mDbgDraw(false)
+, mPersistentDbgDraw(true)
+, mGameState(rs_new_line_in("Main.cpp", 1267) CGameState())
+, mInGameTweakManager(rs_new_line_in("Main.cpp", 1269) CInGameTweakManager())
+, mController(IController::Create(context)) {
+  gpResourceFactory = &mResFactory;
+  gpSimplePool = &mSimplePool;
+  gpCharacterFactoryBuilder = &mCharacterFactoryBuilder;
+  gpGameDebug = &mGameDebug;
+  gpDbgDraw = &mDbgDraw;
+  gpPersistentDbgDraw = &mPersistentDbgDraw;
+  gpGameState = mGameState.get();
+  gpTweakManager = mInGameTweakManager.get();
+  gpController = mController.get();
+}
+
+// Unlike Echoes the progressive-mode prompt flag is read back first, and the console output
+// window becomes the assert diagnostic printer once the renderer is up.
+void CGameGlobalObjects::PostInitialize(COsContext& context, CMemorySys& memorySys) {
+  ReadProgressiveModePrompt();
+  AddPaksAndFactories(context);
+  LoadStringTable();
+  printf("Initializing renderer...\n");
+  mRenderer = AllocateRenderer(mSimplePool, context, memorySys, mResFactory);
+  gpRender = static_cast< CCubeRenderer* >(mRenderer.get());
+  CEnvFxManager::Initialize();
+  RAssert_SetDiagnosticPrintCallback(CConsoleOutputWindow::Printf);
+}
+
+void CGameGlobalObjects::LoadStringTable() {
+  rs_debugger_printf("Loading main string table...\n");
+  mStringTable = TLockedToken< CStringTable >(gpSimplePool->GetObj("STRG_Main"));
+  gpStringTable = **mStringTable;
+}
+
+// The reset path stores the progressive-mode prompt flag as the second bit of the save region;
+// Echoes reads it back in RsMain instead.
+void ReadProgressiveModePrompt() {
+  if (CSaveRegion::GetNonVolatileSettingsBuffer() != nullptr) {
+    CMemoryInStream stream(CSaveRegion::GetNonVolatileSettingsBuffer(),
+                           CSaveRegion::kSaveBufferSize);
+    CBitStreamReader reader(stream);
+    reader.ReadBits(1);
+    sProgressiveModePrompt = reader.ReadBits(1) != 0;
+  }
+}
+
+// Prototype only (Echoes draws its metrics elsewhere). Times the frame's CPU and GPU work, prints
+// the frame rate bar, the draw-time, GX counter and FMOD lines into their debug options' message
+// lists, applies the renderer debug options, then runs the programmer options and draws the menu.
+void CMain::DrawDebugMetrics(double dt, CStopwatch& stopWatch) {
+  static const float kFrameTime = 1.f / 60.f;
+  const float cpuTime = stopWatch.GetElapsedTime();
+  CControllerRecorder::SetCpuDrawTime(cpuTime);
+  const int perf0 = gpGameDebug->GetOptionInt(CGameDebug::kDO_DrawTimeInfo) % kNumGPPerf0Metrics;
+  const int perf1 = gpGameDebug->GetOptionInt(CGameDebug::kDO_DrawTimeInfo) % kNumGPPerf1Metrics;
+  if (perf0 != 0 || CControllerRecorder::sProfiling) {
+    GXDrawDone();
+  }
+  const float gpuTime = stopWatch.GetElapsedTime();
+  CControllerRecorder::SetGpuDrawTime(gpuTime);
+  u32 perf0Count = 0;
+  u32 perf1Count = 0;
+  GXReadGPMetric(&perf0Count, &perf1Count);
+  u32 vcCheck = 0;
+  u32 vcMiss = 0;
+  u32 vcStall = 0;
+  GXReadVCacheMetric(&vcCheck, &vcMiss, &vcStall);
+  const double framesPerSecond = 1.0 / (dt + gpuTime);
+
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ShowFramerate) != 0) {
+    if (gpGameDebug->GetOptionInt(CGameDebug::kDO_CPUAndGPUMetrics) == 1 ||
+        gpGameDebug->GetOptionInt(CGameDebug::kDO_CPUAndGPUMetrics) == 3) {
+      // A 50 character bar spans one and a half frames: the frame time, the CPU time, then the
+      // rest. Both are drawn red once the frame takes more than 1.125 frames.
+      const double barTime = kFrameTime * 1.5f;
+      const double frameBar = 50.0 * (dt / barTime);
+      const int cpuBar = static_cast< int >(50.0 * (cpuTime / barTime));
+      const int dtBar = static_cast< int >(frameBar) < 50 ? static_cast< int >(frameBar) : 50;
+      const bool slow = cpuTime + dt > 0.01875f;
+      gpGameDebug->GetOption(CGameDebug::kDO_ShowFramerate)
+          ->AddMessage(CStringExtras::Format("CPU %s[BAR %d]%s[BAR %d][BC 0 50 0][BAR %d]",
+                                             slow ? "[BC 255 0 0 255]" : "[BC 64 64 255]", dtBar,
+                                             slow ? "[BC 255 64 64 255]" : "[BC 64 255 64]", cpuBar,
+                                             50 - dtBar - cpuBar));
+    }
+  }
+  x20_ = framesPerSecond;
+
+  gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)->ClearMessages();
+  if (gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)->GetValue() != 0.f) {
+    gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)
+        ->AddMessage(rstl::string(CBasics::Stringize("UT %0.4f DTCPU %0.4f GPU %0.4f TexL: %d", dt,
+                                                     cpuTime, gpuTime, CTexture::GetBindCount())));
+    gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)
+        ->AddMessage(
+            rstl::string(CBasics::Stringize("%s: %d %s: %d", sGPPerf0Metrics[perf0].mName,
+                                            perf0Count, sGPPerf1Metrics[perf1].mName, perf1Count)));
+    gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)
+        ->AddMessage(rstl::string(
+            CBasics::Stringize("VC Check:%d Miss:%d Stall:%d", vcCheck, vcMiss, vcStall)));
+  }
+
+  CTexture::sReviewTextureSize =
+      gpGameDebug->GetOption(CGameDebug::kDO_ReviewTextureSize)->GetValue() == 1.f;
+  CTexture::sCapTextureSize =
+      gpGameDebug->GetOption(CGameDebug::kDO_CapTextureSize)->GetValue() == 1.f;
+  gpRender->SetWireframeFlags(
+      static_cast< int >(gpGameDebug->GetOption(CGameDebug::kDO_Wireframe)->GetValue()));
+
+  gpGameDebug->GetOption(CGameDebug::kDO_ShowFModMetrics)->ClearMessages();
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ShowFModMetrics) != 0) {
+    const float total = CAudioManager::GetTotalCpuPercent();
+    const float update = CAudioManager::GetUpdateCpuPercent();
+    const float stream = CAudioManager::GetStreamCpuPercent();
+    gpGameDebug->GetOption(CGameDebug::kDO_ShowFModMetrics)
+        ->AddMessage(CStringExtras::Format("FMod CPU Usage(D%0.1f%% S%0.1f%% U%0.1f%%)%0.1f%%",
+                                           CAudioManager::GetDspCpuPercent(), stream, update,
+                                           total));
+    gpGameDebug->GetOption(CGameDebug::kDO_ShowFModMetrics)
+        ->AddMessage(CStringExtras::Format(
+            "FMod MEM Usage %0.2fM",
+            static_cast< float >(CAudioManager::GetFMODAllocatedBytes()) / 1048576.f));
+  }
+
+  gpGameDebug->GetOption(CGameDebug::kDO_DebugSoundSystem)->ClearMessages();
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_DebugSoundSystem) == 1) {
+    rstl::vector< rstl::string > lines = CAudioManager::BuildVoiceDebugStrings();
+    for (rstl::vector< rstl::string >::const_iterator it = lines.begin(); it != lines.end(); ++it) {
+      gpGameDebug->GetOption(CGameDebug::kDO_DebugSoundSystem)->AddMessage(*it);
+    }
+  }
+
+  UpdateProgrammerDebugOptions();
+  gpGameDebug->Draw();
 }
 
 // Guessed name. The "Terminate Game" debug option ends the main loop; with no option registered
@@ -728,10 +907,9 @@ void UpdateScreenCapture(SScreenshotState& state) {
   if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ShowSafeFrame) != 0) {
     DrawSafeFrame();
   }
-  if (sTakeScreenshot ||
-      (!gpGameDebug->IsMenuOpen() &&
-       gpGameDebug->GetOption(CGameDebug::kDO_DumpScreenShot) != nullptr &&
-       gpGameDebug->GetOptionInt(CGameDebug::kDO_DumpScreenShot) == 1)) {
+  if (sTakeScreenshot || (!gpGameDebug->IsMenuOpen() &&
+                          gpGameDebug->GetOption(CGameDebug::kDO_DumpScreenShot) != nullptr &&
+                          gpGameDebug->GetOptionInt(CGameDebug::kDO_DumpScreenShot) == 1)) {
     gpGameDebug->SetOptionValue(CGameDebug::kDO_DumpScreenShot, 0.f);
     sTakeScreenshot = false;
     DumpScreenShot(false, nullptr);
@@ -772,6 +950,8 @@ void CMain::UpdateTweakDebugOptions() {
     gpTweakManager->WriteToMemoryCard(rstl::string_l("AudioTweaks"));
   }
 }
+
+CGameGlobalObjects::~CGameGlobalObjects() {}
 
 int CMain::RsMain(int argc, const char* const* argv) {
   PPCSetFpIEEEMode();
@@ -1034,7 +1214,8 @@ CGameArchitectureSupport::CGameArchitectureSupport(COsContext& context)
   mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1415) CMainFlow(), 0, 0);
   mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1416) CConsoleOutputWindow(8, 5.f, 0.75f), 100, 0);
   mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1418) CAudioStateWin(), 100, -1);
-  mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1420) CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
+  mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1420)
+                         CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
                      10000, 100000);
   gpGameState->GameOptions().EnsureOptions();
 }
@@ -1162,7 +1343,29 @@ void CMain::UpdateGPMetrics() {
   GXSetVCacheMetric(GX_VC_ALL);
   GXClearVCacheMetric();
   gAllocationTicks = 0;
-  CTexture_SetBindCount(0);
+  CTexture::SetBindCount(0);
+}
+
+// Like Prime (Echoes' is empty): the persistent options, the game options, the compressed save
+// data and the previous game results survive the new game state.
+void CMain::ResetGameState() {
+  CPersistentOptions systemOptions = gpGameState->SystemOptions();
+  CGameOptions gameOptions = gpGameState->GameOptions();
+  rstl::reserved_vector< rstl::vector< uchar >, 3 > compressedGameStates =
+      gpGameState->GetCompressedGameStates();
+  rstl::vector< uchar > compressedMultiplayerOptions =
+      gpGameState->GetCompressedMultiplayerOptions();
+  CGameState::SPreviousGameResults previousGameResults = gpGameState->PreviousGameResults();
+  mGameGlobalObjects->GameState() = nullptr;
+  gpGameState = nullptr;
+  mGameGlobalObjects->GameState() = rs_new_line_in("Main.cpp", 3042) CGameState();
+  gpGameState = mGameGlobalObjects->GameState().get();
+  gpGameState->SystemOptions() = systemOptions;
+  gpGameState->GameOptions() = gameOptions;
+  gpGameState->GameOptions().EnsureOptions();
+  gpGameState->SetCompressedGameStates(compressedGameStates);
+  gpGameState->SetCompressedMultiplayerOptions(compressedMultiplayerOptions);
+  gpGameState->PreviousGameResults() = previousGameResults;
 }
 
 int CMain::GetLanguage() const {

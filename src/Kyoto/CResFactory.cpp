@@ -57,19 +57,14 @@ rstl::auto_ptr< IObj > CResFactory::Build(const SObjectTag& tag, const CVParamTr
 
 rstl::auto_ptr< IObj > CResFactory::BuildSync(const SObjectTag& tag,
                                               const CVParamTransfer& params) {
-  if (mFactoryMgr.CanMakeMemory(tag)) {
-    char* buffer;
-    int size;
-    mResLoader.LoadMemResourceSync(tag, &buffer, &size);
-    return mFactoryMgr.MakeObjectFromMemory(
-        tag, rstl::auto_ptr< uchar >(reinterpret_cast< uchar* >(buffer)), size,
-        mResLoader.GetResourceCompression(tag) != CResLoader::kCompressionType_Uncompressed,
-        params);
-  }
-  CInputStream* in = mResLoader.LoadNewResourceSync(tag, nullptr);
-  rstl::auto_ptr< IObj > result = mFactoryMgr.MakeObject(tag, *in, params);
-  delete in;
-  return result;
+  // The prototype has no memory factories (see CFactoryMgr): every resource is loaded into
+  // memory and built through a stream over it.
+  char* buffer;
+  int size;
+  mResLoader.LoadMemResourceSync(tag, &buffer, &size);
+  return mFactoryMgr.MakeObjectFromMemory(
+      tag, rstl::auto_ptr< uchar >(reinterpret_cast< uchar* >(buffer)), size,
+      mResLoader.GetResourceCompression(tag) != CResLoader::kCompressionType_Uncompressed, params);
 }
 
 void CResFactory::BuildAsync(const SObjectTag& tag, const CVParamTransfer& params, IObj** target) {

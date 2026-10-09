@@ -88,7 +88,7 @@ private:
   rstl::map< SObjectTag, LoadList::iterator > mLoadMap;
   LoadList mCancelledList;
 };
-CHECK_SIZEOF(CResFactory, 0xf0)
+CHECK_SIZEOF(CResFactory, 0xd8) // 0x8..0xE0 in CGameGlobalObjects
 
 extern CResFactory* gpResourceFactory;
 

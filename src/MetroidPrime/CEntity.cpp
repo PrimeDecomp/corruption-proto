@@ -5,6 +5,9 @@
 // connection resolution used by generators. Functions are emitted in reverse source order; the
 // rstl instances (vector copy/destruction/reserve, __distance) and CScriptMsg's constructor and
 // destructor are emitted between them.
+//
+// Not implemented: 0x80032FF0 is rstl::vector<SConnection>::reserve and 0x80033088 its element
+// copy loop; CScriptObjectLoaderHelper calls the former, and nothing here instantiates it.
 #include "MetroidPrime/CEntity.hpp"
 
 #include "MetroidPrime/CStateManager.hpp"
@@ -284,7 +287,7 @@ TUniqueId CEntity::FindConnectedObject(const CStateManager& mgr, EScriptObjectSt
     if ((state == kSS_InvalidState || state == it->state) &&
         (msg == kSM_Invalid || msg == it->msg)) {
       CStateManagerObject::TIdListResult ids = mgr.ObjectManager().GetIdListForScript(it->objId);
-      if (ids.first != ids.second) {
+      if (!(ids.first == ids.second)) {
         return ids.first->second;
       }
     }

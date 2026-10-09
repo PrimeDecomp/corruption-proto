@@ -28,7 +28,8 @@ class IConnection;
 // Layout from the constructor (0x80036BAC) and destructor (0x80036AE0); vtable lbl_806B22A8.
 // Compared with Echoes, the prototype's CActor has no model data, actor lights, shadow, scan
 // info, sounds or render bounds: it keeps only the transform, materials, visor parameters, the
-// fluid lists and a handful of flags (0xF8 bytes against Echoes' 0x158).
+// fluid lists and a handful of flags (0xF8 bytes against Echoes' 0x158). The model and the rest
+// of Echoes' CActorParameters moved to the derived CRenderActor (MetroidPrime/CRenderActor.hpp).
 class CActor : public CEntity {
 public:
   CActor(TUniqueId uid, const rstl::string& name, const CEntityInfo& info, uint castFlags,

@@ -32,8 +32,6 @@ public:
   ~CFactoryMgr();
 
   void AddFactory(FourCC type, FFactoryFunc factory);
-  void AddFactory(FourCC type, FMemFactoryFunc factory);
-  bool CanMakeMemory(const SObjectTag& tag) const;
   rstl::auto_ptr< IObj > MakeObject(const SObjectTag& tag, CInputStream& in,
                                     const CVParamTransfer& params);
   rstl::auto_ptr< IObj > MakeObjectFromMemory(const SObjectTag& tag,
@@ -44,10 +42,12 @@ public:
   static uint TypeIdxToFourCC(uint typeIdx);
 
 private:
+  // Unlike Echoes the prototype has no separate memory-factory map: its constructor (0x804FE414)
+  // initializes a single map, CResFactory places its load list right after it at 0x94, and
+  // MakeObjectFromMemory always reads through a stream.
   rstl::map< int, FFactoryFunc > mFactories;
-  rstl::map< int, FMemFactoryFunc > mMemFactories;
 };
-CHECK_SIZEOF(CFactoryMgr, 0x28)
+CHECK_SIZEOF(CFactoryMgr, 0x14)
 
 CFactoryFnReturn FStringTableFactory(const SObjectTag& tag, CInputStream& in,
                                      const CVParamTransfer& xfer);

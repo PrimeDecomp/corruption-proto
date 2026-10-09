@@ -21,6 +21,9 @@ public:
   static rstl::string ConvertToANSI(const rstl::wstring& str);
   static rstl::wstring ConvertToUNICODE(const rstl::string& str);
   static rstl::string ReadString(CInputStream& in);
+  // Guessed name and class (its neighbours in RstlExtras.cpp are CStringExtras). 0x80505428
+  // formats through CBasics' va_list Stringize and returns the result as a string.
+  static rstl::string Format(const char* fmt, ...);
   static rstl::vector< rstl::string > TokenizeString(const rstl::string&, const char*, int);
 };
 

@@ -28,18 +28,6 @@ void CFactoryMgr::AddFactory(FourCC type, FFactoryFunc factory) {
   mFactories.insert(rstl::pair< int, FFactoryFunc >(type, factory));
 }
 
-void CFactoryMgr::AddFactory(FourCC type, FMemFactoryFunc factory) {
-  rstl::map< int, FMemFactoryFunc >::iterator it = mMemFactories.find(type);
-  if (it != mMemFactories.end()) {
-    return;
-  }
-  mMemFactories.insert(rstl::pair< int, FMemFactoryFunc >(type, factory));
-}
-
-bool CFactoryMgr::CanMakeMemory(const SObjectTag& tag) const {
-  return mMemFactories.find(tag.type) != mMemFactories.end();
-}
-
 rstl::auto_ptr< IObj > CFactoryMgr::MakeObject(const SObjectTag& tag, CInputStream& in,
                                                const CVParamTransfer& params) {
   rstl::map< int, FFactoryFunc >::iterator it = mFactories.find(tag.type);
@@ -50,27 +38,6 @@ rstl::auto_ptr< IObj > CFactoryMgr::MakeObjectFromMemory(const SObjectTag& tag,
                                                          const rstl::auto_ptr< uchar >& buffer,
                                                          int size, bool compressed,
                                                          const CVParamTransfer& params) {
-  rstl::map< int, FMemFactoryFunc >::const_iterator memIt = mMemFactories.find(tag.type);
-  if (memIt != mMemFactories.end()) {
-    FMemFactoryFunc factory = memIt->second;
-    if (compressed) {
-      rstl::auto_ptr< CInputStream > in(
-          rs_new CMemoryInStream(buffer.get(), size, CMemoryInStream::kOS_NotOwned));
-      const uint length = in->ReadInt32();
-      CLZOInputStream lzo(in, size - in->GetReadPosition(), length);
-      rstl::auto_ptr< uchar > data(lzo.ReleaseBuffer());
-      return factory(tag, data, length, params).GetObjForTransfer();
-    }
-    rstl::auto_ptr< uchar > data(buffer);
-    if (!data.owner()) {
-      data = rstl::auto_ptr< uchar >(
-          static_cast< uchar* >(CMemory::Alloc(size, IAllocator::kHI_RoundUpLen)));
-      memcpy(data.get(), buffer.get(), size);
-      DCStoreRange(data.get(), size);
-    }
-    return factory(tag, data, size, params).GetObjForTransfer();
-  }
-
   FFactoryFunc factory = mFactories.find(tag.type)->second;
   if (compressed) {
     rstl::auto_ptr< CInputStream > in(

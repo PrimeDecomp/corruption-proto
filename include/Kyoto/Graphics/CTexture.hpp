@@ -121,6 +121,18 @@ public:
   static int sCurrentFrameCount;
   static int sTotalAllocatedMemory;
   static bool sMangleMips;
+  // Guessed name. A second byte count that is counted and uncounted alongside
+  // sTotalAllocatedMemory (from the texture's field at 0x10); main's memory metrics add it to the
+  // main heap usage as memory outside of it.
+  static uint sTotalAllocatedSecondaryMemory;
+  // Count of texture binds this frame (0x804C50EC, 0x804C50F4); main resets it every frame and
+  // prints it as "TexL".
+  static void SetBindCount(int count);
+  static int GetBindCount();
+  // Guessed names, after the "Review texture size" and "Cap texture size" debug options main
+  // copies into them every frame.
+  static bool sReviewTextureSize;
+  static bool sCapTextureSize;
 
 private:
   void InvalidateTexmaps() const; // Guessed name: clears cache entries for this texture.

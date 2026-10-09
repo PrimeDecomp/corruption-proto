@@ -55,6 +55,10 @@ public:
     rstl::reserved_vector< SPlayerResult, 4 > mPlayers;
   };
 
+  // 0x8015C974 and 0x8015BB28; CGameGlobalObjects allocates the game state.
+  CGameState();
+  ~CGameState();
+
   CGameOptions& GameOptions() { return mGameOptions; }
   CPersistentOptions& SystemOptions() { return mSystemOptions; } // Echoes' name
   void InitializeMemoryStates(); // Echoes' name; 0x8015BAD8
@@ -73,6 +77,17 @@ public:
   // Echoes' name for its CHintOptions, which this class replaces.
   CRedundantHintManager& HintOptions() { return mHintOptions; }
   SPreviousGameResults& PreviousGameResults() { return mPreviousGameResults; } // Guessed name
+  // Echoes' names; which of Echoes' compressed slots these two are is guessed. CMain's
+  // ResetGameState carries both over to the new game state through the out-of-line setters
+  // (0x8015A21C and 0x8015A0D8).
+  const rstl::reserved_vector< rstl::vector< uchar >, 3 >& GetCompressedGameStates() const {
+    return mCompressedGameStates;
+  }
+  void SetCompressedGameStates(const rstl::reserved_vector< rstl::vector< uchar >, 3 >& states);
+  const rstl::vector< uchar >& GetCompressedMultiplayerOptions() const {
+    return mCompressedMultiplayerOptions;
+  }
+  void SetCompressedMultiplayerOptions(const rstl::vector< uchar >& options);
   rstl::vector< CToken >& AudioGroups() { return mAudioGroups; }               // Guessed name
   // Out of line (0x80159C7C); returns the rc_ptr at 0x28. Echoes' name.
   rstl::rc_ptr< CWorldTransManager >& WorldTransitionManager();
@@ -108,7 +123,10 @@ private:
   CRedundantHintManager mHintOptions;
   uchar xd8_[0x108 - 0xd8];
   u64 mCardSerial; // Echoes' name
-  uchar x110_[0x1a0 - 0x110];
+  uchar x110_[0x144 - 0x110];
+  rstl::reserved_vector< rstl::vector< uchar >, 3 > mCompressedGameStates; // Echoes' name (guessed)
+  rstl::vector< uchar > mCompressedMultiplayerOptions; // Echoes' name (guessed)
+  uchar x188_[0x1a0 - 0x188];
   SPreviousGameResults mPreviousGameResults;
   rstl::vector< CToken > mAudioGroups;
   uchar x204_[0x104];

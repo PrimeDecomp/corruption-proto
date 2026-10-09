@@ -13,6 +13,7 @@ public:
 
   static void SubtractFromTotalSize(uint size, EAnimSubSystem subSystem);
   static void AddToTotalSize(uint size, EAnimSubSystem subSystem);
+  static uint GetTotalSize(); // Prime's name; 0x804AAEDC
 
 private:
   static uint sTotalSize;

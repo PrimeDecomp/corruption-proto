@@ -4,11 +4,14 @@
 // Existing source-family name retained; historical helper ownership and inlining remain inferred.
 // Current corrected boundaries and complete native inventory are recorded externally.
 //
-// Deferred inlining emits functions in reverse source order. Not implemented yet:
-// 0x80037158 +0x30: static initializer for seven TU-local SDA constants (.ctors 0x8065B500)
-// 0x80037188..0x800373C0: token-list helpers (not CActor methods)
-// 0x80036804, 0x800367E4: square-root helpers
-// 0x80035880: string copy from +0x88 (not a CActor method)
+// Deferred inlining emits functions in reverse source order. Not implemented:
+// 0x80037188..0x800373C0: CWorld's locked-token list (CWorld::ClearLockedTokens, the list's
+//   push_back, insert and clear, and a walker that locks an area's network assets). They follow
+//   this TU's static initializer, so they most likely open CWorld.cpp (configured from 0x80037424).
+// 0x80036804, 0x800367E4: weak copies of MSL's sqrtf and a one-call wrapper; nothing here calls
+// them. 0x80035880: the last slot of CGameArea's IGameArea vtable (0x806B2794), returning the
+// string at
+//   +0x88 by value; weak, emitted here for an unknown reason.
 
 // SetFluidList and SetInFluid call reserved_vector<TUniqueId, 4>::operator= out of line.
 #define RSTL_DONT_INLINE_RESERVED_VECTOR

@@ -3,7 +3,6 @@
 // implemented.
 // Source identity: asserted original basename.
 // Complete proposed native interval retained; historical source arrangement inferred.
-// 0x801E5E28 +0x54: script-message record copy helper (CScriptMsg's implicit copy constructor)
 // 0x801E5F5C +0x30: registered initializer; .ctors 0x8065B7F8; native size 0x30
 
 #include "MetroidPrime/CScriptMsgQueue.hpp"

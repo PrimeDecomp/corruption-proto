@@ -5,9 +5,11 @@
 // Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x80298130 +0x20: owned native method/helper retained; exact source-level name unresolved
 // 0x80298150 +0x20: owned native method/helper retained; exact source-level name unresolved
-// 0x802983C8 +0x1CC: Echoes' SendScriptMsg(const CScriptMsg&): queues the message (blocked on
-//   the CGameDebug "ScriptDebug" option block)
-// 0x80298594 +0x390: Echoes' message pump: drains the CScriptMsgQueue (same debug block)
+// 0x802983C8 +0x1CC: Echoes' SendScriptMsg(const CScriptMsg&) shape: appends to the
+//   CScriptMsgQueue and pumps it past 0x80 entries (blocked on the CGameDebug "ScriptDebug"
+//   option block)
+// 0x80298594 +0x390: Echoes' DispatchScriptMessages shape: drains the CScriptMsgQueue at 0x10D8
+//   (same debug block)
 // 0x802989A0 +0x4E8: owned native method/helper retained; exact source-level name unresolved
 // 0x80298E88 +0xAC: owned native method/helper retained; exact source-level name unresolved
 // 0x80298F34 +0xC4: owned native method/helper retained; exact source-level name unresolved

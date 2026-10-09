@@ -14,7 +14,6 @@ public:
   void Push(const CScriptMsg& msg); // Guessed name; asserts "Overflow in ScriptMsgQueue"
   CScriptMsg Pop();                 // Named by its "Pop from empty queue" assert
   int Size() const;                 // Guessed name
-  bool IsEmpty() const { return mHead == mTail; } // Guessed name
 
 private:
   CScriptMsg mMsgs[kCapacity];

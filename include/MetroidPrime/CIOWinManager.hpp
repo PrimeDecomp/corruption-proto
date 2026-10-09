@@ -5,6 +5,10 @@
 
 #include "MetroidPrime/CArchitectureQueue.hpp"
 
+#include "rstl/rc_ptr.hpp"
+
+class CIOWin;
+
 // Minimal view of the IOWin manager (CIOWinManager.cpp, 0x80033B7C..0x80034A5C) for main.cpp.
 // Names and layout follow Echoes: the draw and pump list roots and a local message queue.
 // RsMain tests both roots for emptiness inline and draws through 0x80033E48.
@@ -14,8 +18,9 @@ public:
   ~CIOWinManager(); // 0x80034988
 
   void Draw() const;
-  void PumpMessages(CArchitectureQueue& queue); // 0x800342A4
-  void RemoveAllIOWins();                       // 0x8003461C
+  void AddIOWin(rstl::rc_ptr< CIOWin > chIOWin, int pumpPrio, int drawPrio); // 0x800347E0
+  void PumpMessages(CArchitectureQueue& queue);                              // 0x800342A4
+  void RemoveAllIOWins();                                                    // 0x8003461C
   bool IsEmpty() const { return mPumpRoot == nullptr && mDrawRoot == nullptr; }
 
 private:

@@ -93,7 +93,6 @@
 // 0x8000B768 +0x6C: CGameArchitectureSupport::Update; touches the world-transition models (CGameState getter 0x80159C7C, TouchModels 0x801769D4), pushes FrameEnd and pumps; not implemented (needs CGameState/CWorldTransManager declarations)
 // 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
 // 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
-// 0x8000BEFC +0x31C: CGameArchitectureSupport constructor; Main.cpp allocations1415/1416/1418/1420 and local IOWin rc release
 // 0x8000C218 +0xBC: CGameGlobalObjects LoadStringTable; STRG_Main token ownership
 // 0x8000C2D4 +0x84: emitted optional locked-string-table-token assignment helper
 // 0x8000C358 +0xC8: CGameGlobalObjects PostInitialize; resource factories/string table/renderer initialization
@@ -117,7 +116,6 @@
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
 // 0x8000F658 +0x124: emitted TOneStatic global-objects operator delete
-// 0x8000F8D8 +0x64: emitted IOWin rc_ptr release helper, directly used by architecture constructor
 // 0x8000F93C +0xD0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FA0C +0xA8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FAB4 +0xAC: retained emitted/native function; exact class/type/name unresolved
@@ -169,19 +167,24 @@
 #include "MetaRender/CCubeRenderer.hpp"
 #include "MetroidPrime/AudioDebug.hpp"
 #include "MetroidPrime/CAnimData.hpp"
+#include "MetroidPrime/CAudioStateWin.hpp"
+#include "MetroidPrime/CConsoleOutputWindow.hpp"
 #include "MetroidPrime/CDamageVulnerability.hpp"
 #include "MetroidPrime/CDebugOption.hpp"
 #include "MetroidPrime/CDecalManager.hpp"
+#include "MetroidPrime/CErrorOutputWindow.hpp"
 #include "MetroidPrime/CGameArchitectureSupport.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/CGameGlobalObjects.hpp"
 #include "MetroidPrime/CGameProfiler.hpp"
 #include "MetroidPrime/CInGameTweakManager.hpp"
+#include "MetroidPrime/CMainFlow.hpp"
 #include "MetroidPrime/CSaveRegion.hpp"
 #include "MetroidPrime/CWorld.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
+#include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 
 #include "rstl/auto_ptr.hpp"
 #include "rstl/optional_object.hpp"
@@ -227,6 +230,7 @@ extern "C" void RAssert_SetDiagnosticPrintCallback(void (*callback)(const char* 
 extern "C" void CAudioManager_Update(float dt);
 extern "C" void CBBASupport_PollMessages();
 extern "C" void CTexture_SetBindCount(int count);
+extern "C" void CAudioManager_InitializeWithMemoryCallbacks(int, int);
 // Guessed name. CGameAllocator accumulates its allocation time here (OSGetTick deltas).
 extern uint gAllocationTicks;
 
@@ -359,6 +363,7 @@ private:
 
 CMain* gpMain;
 CIOWinManager* gpIOWinManager;
+CScanTextDebugManager* gpScanTextDebugManager;
 static uchar sMainSpace[sizeof(CMain)];
 // Guessed names; Echoes keeps the ARAM stack array and allocation size in this TU as well.
 static u32 sARAMMemArray[3];
@@ -871,6 +876,34 @@ void CMain::AsyncIdle(uint time) {
   if (idleTime != 0) {
     gpResourceFactory->AsyncIdle(idleTime, maxSpeed);
   }
+}
+
+// Unlike Echoes there is no audio system member, no CSfxManager and no infinite-loop alarm; the
+// audio comes up through CAudioManager instead, and the scan-text debug manager and the console
+// commands are hooked up.
+CGameArchitectureSupport::CGameArchitectureSupport(COsContext& context)
+: mInputGenerator(&context, gpTweakPlayer->GetLeftAnalogMax(), gpTweakPlayer->GetRightAnalogMax())
+, mGameFrameCount(0)
+, mTickRemainder(0.f)
+, mPreviousTickRemainder2(0.f)
+, mPreviousTickRemainder(0.f) {
+  gpScanTextDebugManager = &mScanTextDebugManager;
+  CDSPStreamManager::Initialize();
+  CAudioManager_InitializeWithMemoryCallbacks(0, 0x600000);
+  gpMain->SetMaxSpeed(false);
+  gpMain->ResetGameState();
+  gpGameDebug->CloseMenu();
+  InitializeConsoleCommands(&mInputGenerator);
+  rs_debugger_printf("Initializing IOWins...\n");
+  gpIOWinManager = &mIoWinMgr;
+  mIoWinMgr.AddIOWin(new ("Main.cpp(1415) : ", nullptr) CMainFlow(), 0, 0);
+  mIoWinMgr.AddIOWin(new ("Main.cpp(1416) : ", nullptr) CConsoleOutputWindow(8, 5.f, 0.75f), 100,
+                     0);
+  mIoWinMgr.AddIOWin(new ("Main.cpp(1418) : ", nullptr) CAudioStateWin(), 100, -1);
+  mIoWinMgr.AddIOWin(new ("Main.cpp(1420) : ", nullptr)
+                         CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
+                     10000, 100000);
+  gpGameState->GameOptions().EnsureOptions();
 }
 
 // Unlike Echoes there is no infinite-loop alarm to cancel and no sound manager to shut down.

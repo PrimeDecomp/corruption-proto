@@ -9,4 +9,9 @@
 // called from CMain::ShutdownSubsystems.
 void ShutdownConsoleCommands();
 
+class CInputGenerator;
+// Guessed name (0x80209AE8). Remembers the architecture's input generator and registers the
+// commands; called from the CGameArchitectureSupport constructor.
+void InitializeConsoleCommands(CInputGenerator* inputGenerator);
+
 #endif // _CONSOLECOMMANDS

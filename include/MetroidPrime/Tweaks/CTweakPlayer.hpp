@@ -12,6 +12,10 @@ class CTweakPlayer {
 public:
   explicit CTweakPlayer(const SLdrTweakPlayer& data) : mData(&data) {}
 
+  // Echoes names; out of line in TweaksAccessors.cpp (0x8024AE58 and 0x8024AE4C).
+  float GetLeftAnalogMax() const;
+  float GetRightAnalogMax() const;
+
 private:
   const SLdrTweakPlayer* mData;
 };

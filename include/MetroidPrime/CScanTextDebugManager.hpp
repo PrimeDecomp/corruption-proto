@@ -43,4 +43,7 @@ private:
 };
 CHECK_SIZEOF(CScanTextDebugManager, 0x20)
 
+// Guessed name. 0x807990EC.
+extern CScanTextDebugManager* gpScanTextDebugManager;
+
 #endif // _CSCANTEXTDEBUGMANAGER

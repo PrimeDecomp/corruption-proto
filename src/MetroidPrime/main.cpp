@@ -46,7 +46,6 @@
 // 0x80007218 +0x230: retained emitted/native function; exact class/type/name unresolved
 // 0x80007448 +0x60: retained emitted/native function; exact class/type/name unresolved
 // 0x800074A8 +0x31C: CMain::UpdateTweakDebugOptions (guessed name); tweak load/save debug options 51..54
-// 0x800077C4 +0x16C: UpdateScreenCapture (guessed name); safe frame, screenshot and movie capture
 // 0x80007930 +0x6C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000799C +0x138: retained emitted/native function; exact class/type/name unresolved
 // 0x80007C94 +0x1CC: retained emitted/native function; exact class/type/name unresolved
@@ -102,7 +101,6 @@
 // 0x8000E320 +0xD8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E3F8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E41C +0x630: main memory metrics/debug text display; uses leading string-vector push-back helper
-// 0x8000EFBC +0x268: main safe-frame debug rendering; four screen-edge quads
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
 // 0x8000F658 +0x124: emitted TOneStatic global-objects operator delete
@@ -171,6 +169,7 @@
 #include "MetroidPrime/CSaveRegion.hpp"
 #include "MetroidPrime/CWorld.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
+#include "MetroidPrime/ScreenCapture.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CWorldTransManager.hpp"
@@ -321,19 +320,11 @@ extern CMemoryCard* gpMemoryCard;
 
 extern bool sProgressiveModePrompt; // Echoes name; the second bit of the save region.
 
-// Guessed. Owns the screenshot capture buffer between frames. The object belongs to
-// ScreenCapture.cpp, whose functions 0x8020B4D0/0x8020B4E0/0x8020B534 test, free and allocate
-// the buffer at 0x4 and reset the counter at 0x8.
-struct SScreenshotState {
-  SScreenshotState() : x8_(0) {}
-
-  rstl::auto_ptr< uchar > x0_buffer;
-  uint x8_;
-};
-
 // Guessed name. Draws the safe frame on request of a debug option, takes the screenshot
 // requested through sTakeScreenshot or a debug option, and runs the movie capture.
 void UpdateScreenCapture(SScreenshotState& state);
+// Guessed name. Shades the screen border outside the 576x416 title-safe area.
+void DrawSafeFrame();
 
 // Guessed name. A named CGameProfiler section that RsMain keeps open around a frame; the
 // section is closed around EndScene and when it goes out of scope.
@@ -405,6 +396,46 @@ void ReceiveBBACommand(int, const rstl::string& command) {
     rs_debugger_printf("Received bba command!\n%s\n", command.data());
   }
   ExecuteConsoleCommand(command.data());
+}
+
+void DrawSafeFrame() {
+  CGraphics::SetOrtho(-320.f, 320.f, 240.f, -240.f, -1.f, 1.f);
+  CGraphics::SetViewPointMatrix(CTransform4f::Identity());
+  gpRender->SetModelMatrix(CTransform4f::Identity());
+  gpRender->SetBlendMode_AlphaBlended();
+  gpRender->SetDepthReadWrite(false, false);
+  // Top, bottom, left and right bands, each 32 pixels wide.
+  for (int i = 0; i < 4; ++i) {
+    float left = -320.f;
+    float right = 320.f;
+    float bottom = -240.f;
+    float top = 240.f;
+    switch (i) {
+    case 0:
+      left += 32.f;
+      right -= 32.f;
+      bottom = 208.f;
+      break;
+    case 1:
+      left += 32.f;
+      right -= 32.f;
+      top = -208.f;
+      break;
+    case 2:
+      right = -288.f;
+      break;
+    case 3:
+      left = 288.f;
+      break;
+    }
+    gpRender->BeginTriangleStrip(4);
+    gpRender->PrimColor(CColor::White().WithAlphaOf(0.6f));
+    gpRender->PrimVertex(CVector3f(left, 0.f, top));
+    gpRender->PrimVertex(CVector3f(left, 0.f, bottom));
+    gpRender->PrimVertex(CVector3f(right, 0.f, top));
+    gpRender->PrimVertex(CVector3f(right, 0.f, bottom));
+    gpRender->EndPrimitive();
+  }
 }
 
 extern "C" void* __sys_alloc(const size_t len) {
@@ -642,6 +673,25 @@ bool CMain::CheckReset() {
   }
   mResetButtonHeld = resetPressed;
   return false;
+}
+
+void UpdateScreenCapture(SScreenshotState& state) {
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ShowSafeFrame) != 0) {
+    DrawSafeFrame();
+  }
+  if (sTakeScreenshot ||
+      (!gpGameDebug->IsMenuOpen() &&
+       gpGameDebug->GetOption(CGameDebug::kDO_DumpScreenShot) != nullptr &&
+       gpGameDebug->GetOptionInt(CGameDebug::kDO_DumpScreenShot) == 1)) {
+    gpGameDebug->SetOptionValue(CGameDebug::kDO_DumpScreenShot, 0.f);
+    sTakeScreenshot = false;
+    DumpScreenShot(false, nullptr);
+  }
+  if (gpGameDebug->IsMovieCaptureRunning()) {
+    state.UpdateMovieCapture(gpGameDebug->IsMovieCaptureFinished());
+  } else if (state.IsEmpty()) {
+    state.Clear();
+  }
 }
 
 // The Audio category's tweak load/save options; only the audio tweaks are handled here. Each is

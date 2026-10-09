@@ -563,6 +563,8 @@ public:
     xA16B_ = false;
     xA16C_ = true;
   }
+  // Guessed name. Set once a capture ends; main hands it to the frame capture.
+  bool IsMovieCaptureFinished() const { return xA16C_; }
 
   // Guessed name. 0x80048C20: the player item of a powerup option (kDO_PowerBeam ..
   // kDO_ItemPercentage), -1 for any other option.

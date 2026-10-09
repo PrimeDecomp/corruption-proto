@@ -32,6 +32,10 @@ struct SMainFrameCallback {
 // (0x8000EE28). The game architecture pumps them around the tick loop (0x70 before, 0x88
 // once per 1/60 s tick with the tick time, 0xa0 after) and RsMain around drawing and the
 // architecture update (0xb8, 0xd0, 0xe8). Neither Prime nor Echoes has an equivalent.
+// The destructor (0x8000EAC4) shows the 0x88 list is a distinct container type (its own
+// destructor 0x8000EB58 vs 0x8000EBE4 for the other five), consistent with the extra float
+// argument; both containers call the owner's virtual at slot 0xc for every node before
+// freeing the list. Modelling that is needed before ~CMain/InvokeCMain can be implemented.
 // Guessed names.
 struct SMainFrameCallbacks {
   rstl::list< SMainFrameCallback > x0_preTick;

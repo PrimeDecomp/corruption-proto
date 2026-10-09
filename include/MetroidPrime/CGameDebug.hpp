@@ -88,8 +88,10 @@ public:
 
   // Option indices, named after the menu strings AddDebugOptions registers them with. The
   // comment gives the category, the kind of value and the menu text; named values follow the
-  // colon. Options 0x23..0x2E repeat the hyper mode tuning for the second tweak set and are drawn
-  // in yellow.
+  // colon. Options 0x17..0x22 show the hyper mode tuning of the "Timer" type (CTweakPlayer getters
+  // called with 0); 0x23..0x2E repeat it for the "Phazon Level" type (called with 1) and are drawn
+  // in yellow. AddDebugOptions registers every index except 0x103, 0x104, 0x11E, 0x154, 0x15C,
+  // 0x15D and 0x160.
   enum EDebugOption {
     kDO_GiveAllPowerupsCheat = 0x0,       // Cheats, bool "Give all powerups cheat"
     kDO_InvulnerableSamus = 0x1,          // Cheats, bool "Invulnerable Samus"
@@ -411,21 +413,22 @@ public:
     kDO_WaterShowWaterEntryExit = 0x137, // Water, value "Show water entry/exit"
     kDO_EnvFxEnable = 0x138,             // EnvFx, value "Enable"
     kDO_EnvFxEnableVisorDrops = 0x139,   // EnvFx, value "Enable Visor Drops"
-    kDO_EnvFxEnableCellDebugDrawing = 0x13A,   // EnvFx, value "Enable Cell Debug Drawing"
-    kDO_DashEnabled = 0x13B,                   // Orbit Stuff, bool "Dash Enabled"
-    kDO_UsesTapHold = 0x13C,                   // Orbit Stuff, bool "Uses Tap/Hold"
-    kDO_TapTime = 0x13D,                       // Orbit Stuff, value "Tap Time"
-    kDO_StickXAxisThreshold = 0x13E,           // Orbit Stuff, value "Stick X-axis threshold"
-    kDO_DoubleJumpImpulse = 0x13F,             // Orbit Stuff, value "DoubleJumpImpulse"
-    kDO_VerticalDoubleJumpAccel = 0x140,       // Orbit Stuff, value "VerticalDoubleJumpAccel"
-    kDO_HorizDoubleJumpAccel = 0x141,          // Orbit Stuff, value "HorizDoubleJumpAccel"
-    kDO_OrbitDashAroundObjectsOnly = 0x142,    // Orbit Stuff, bool "OrbitDashAroundObjectsOnly"
-    kDO_SpeedFactor = 0x143,                   // Orbit Stuff, value "SpeedFactor"
-    kDO_ConstantSpeed = 0x144,                 // Orbit Stuff, bool "ConstantSpeed"
-    kDO_MaxTime = 0x145,                       // Orbit Stuff, value "MaxTime"
-    kDO_SpeedRampTime = 0x146,                 // Orbit Stuff, value "SpeedRampTime"
-    kDO_DebugOrbitStuff = 0x147,               // Orbit Stuff, value "Debug Orbit Stuff"
-    kDO_ShowOrbitPoint = 0x148,                // Player, bool "Show Orbit Point"
+    kDO_EnvFxEnableCellDebugDrawing = 0x13A, // EnvFx, value "Enable Cell Debug Drawing"
+    kDO_DashEnabled = 0x13B,                 // Orbit Stuff, bool "Dash Enabled"
+    kDO_UsesTapHold = 0x13C,                 // Orbit Stuff, bool "Uses Tap/Hold"
+    kDO_TapTime = 0x13D,                     // Orbit Stuff, value "Tap Time"
+    kDO_StickXAxisThreshold = 0x13E,         // Orbit Stuff, value "Stick X-axis threshold"
+    kDO_DoubleJumpImpulse = 0x13F,           // Orbit Stuff, value "DoubleJumpImpulse"
+    kDO_VerticalDoubleJumpAccel = 0x140,     // Orbit Stuff, value "VerticalDoubleJumpAccel"
+    kDO_HorizDoubleJumpAccel = 0x141,        // Orbit Stuff, value "HorizDoubleJumpAccel"
+    kDO_OrbitDashAroundObjectsOnly = 0x142,  // Orbit Stuff, bool "OrbitDashAroundObjectsOnly"
+    kDO_SpeedFactor = 0x143,                 // Orbit Stuff, value "SpeedFactor"
+    kDO_ConstantSpeed = 0x144,               // Orbit Stuff, bool "ConstantSpeed"
+    kDO_MaxTime = 0x145,                     // Orbit Stuff, value "MaxTime"
+    kDO_SpeedRampTime = 0x146,               // Orbit Stuff, value "SpeedRampTime"
+    kDO_DebugOrbitStuff = 0x147,             // Orbit Stuff, value "Debug Orbit Stuff"
+    // Player, bool "Show Orbit Point"; registered again (without effect) in Orbit Stuff
+    kDO_ShowOrbitPoint = 0x148,
     kDO_AutoAimAtOrbitedObject = 0x149,        // Orbit Stuff, bool "Auto Aim at Orbited Object"
     kDO_FreeLookPreventsOrbitMovement = 0x14A, // Orbit Stuff, bool "FreeLookPreventsOrbitMovement"
     kDO_DamageBreaksOrbit = 0x14B,             // Orbit Stuff, value "Damage Breaks Orbit"
@@ -494,11 +497,12 @@ public:
   void AddOption(int category, int index, const char* name, bool value);
   void AddOption(int category, int index, const char* name, float value, float min, float max,
                  float step);
-  void AddOption(int category, int index, const char* name, bool value, const CColor& color);
+  // Unlike the other overloads, the colored bool option takes its color before the value.
+  void AddOption(int category, int index, const char* name, const CColor& color, bool value);
   void AddOption(int category, int index, const char* name, float value, float min, float max,
                  float step, const CColor& color);
   void AddOptionChoice(int index, const char* name, float value);
-  void AddDebugOptions(); // 0x8003CBDC, not implemented
+  void AddDebugOptions();
 
   // Guessed names. Emits the signal of every option changed since the last call.
   void DispatchChangedOptions(CStateManager& mgr);

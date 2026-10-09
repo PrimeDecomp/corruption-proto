@@ -170,6 +170,22 @@ static void ConsolePrintf(const char* format, ...) {
   CBBASupport::SendString(rstl::string_l("Print ") + rstl::string(buffer), 0, nullptr);
 }
 
+// Guessed names. The debug-var commands print each message to the debugger, the warning output
+// and the host. They are macros, not functions, because each of the three calls takes the
+// variadic arguments directly. The uint32 messages go to the host through CBBASupport::Printf.
+#define DEBUG_CONSOLE_PRINTF(...)                                                                  \
+  do {                                                                                             \
+    rs_debugger_printf(__VA_ARGS__);                                                               \
+    gpfnWarningPrintf(__VA_ARGS__);                                                                \
+    ConsolePrintf(__VA_ARGS__);                                                                    \
+  } while (0)
+#define DEBUG_BBA_PRINTF(...)                                                                      \
+  do {                                                                                             \
+    rs_debugger_printf(__VA_ARGS__);                                                               \
+    gpfnWarningPrintf(__VA_ARGS__);                                                                \
+    CBBASupport::Printf(__VA_ARGS__);                                                              \
+  } while (0)
+
 SMouseInfo::SMouseInfo()
 : mPosition(CVector2f::skZeroVector)
 , mLeftButton(false)
@@ -339,12 +355,8 @@ static void SetDebugVar(const char*, const char* args) {
         int* pointer = static_cast< int* >(var.mValue);
         int oldValue = *pointer;
         int newValue = atoi(value.data());
-        rs_debugger_printf("Int32 Var: %s: old value:%d, new value:%d\n", var.mName.data(),
-                           oldValue, newValue);
-        gpfnWarningPrintf("Int32 Var: %s: old value:%d, new value:%d\n", var.mName.data(), oldValue,
-                          newValue);
-        ConsolePrintf("Int32 Var: %s: old value:%d, new value:%d\n", var.mName.data(), oldValue,
-                      newValue);
+        DEBUG_CONSOLE_PRINTF("Int32 Var: %s: old value:%d, new value:%d\n", var.mName.data(),
+                             oldValue, newValue);
         *pointer = newValue;
         break;
       }
@@ -352,12 +364,8 @@ static void SetDebugVar(const char*, const char* args) {
         float* pointer = static_cast< float* >(var.mValue);
         float oldValue = *pointer;
         float newValue = atof(value.data());
-        rs_debugger_printf("Real32 Var: %s: old value:%f, new value:%f\n", var.mName.data(),
-                           oldValue, newValue);
-        gpfnWarningPrintf("Real32 Var: %s: old value:%f, new value:%f\n", var.mName.data(),
-                          oldValue, newValue);
-        ConsolePrintf("Real32 Var: %s: old value:%f, new value:%f\n", var.mName.data(), oldValue,
-                      newValue);
+        DEBUG_CONSOLE_PRINTF("Real32 Var: %s: old value:%f, new value:%f\n", var.mName.data(),
+                             oldValue, newValue);
         *pointer = newValue;
         break;
       }
@@ -370,19 +378,11 @@ static void SetDebugVar(const char*, const char* args) {
           count = sscanf(value.data(), "%x", &newValue);
         }
         if (count == 0) {
-          rs_debugger_printf("Bad format on uint32 var, use hexadecimal eg. 'ffffffff' or "
-                             "'0xffffffff'\n");
-          gpfnWarningPrintf("Bad format on uint32 var, use hexadecimal eg. 'ffffffff' or "
-                            "'0xffffffff'\n");
-          CBBASupport::Printf("Bad format on uint32 var, use hexadecimal eg. 'ffffffff' or "
-                              "'0xffffffff'\n");
+          DEBUG_BBA_PRINTF("Bad format on uint32 var, use hexadecimal eg. 'ffffffff' or "
+                           "'0xffffffff'\n");
         } else {
-          rs_debugger_printf("Uint32 Var: %s: old value:0x%08x, new value:0x%08x\n",
-                             var.mName.data(), oldValue, newValue);
-          gpfnWarningPrintf("Uint32 Var: %s: old value:0x%08x, new value:0x%08x\n",
-                            var.mName.data(), oldValue, newValue);
-          CBBASupport::Printf("Uint32 Var: %s: old value:0x%08x, new value:0x%08x\n",
-                              var.mName.data(), oldValue, newValue);
+          DEBUG_BBA_PRINTF("Uint32 Var: %s: old value:0x%08x, new value:0x%08x\n", var.mName.data(),
+                           oldValue, newValue);
           *pointer = newValue;
         }
         break;
@@ -390,9 +390,7 @@ static void SetDebugVar(const char*, const char* args) {
       }
     }
   } else {
-    rs_debugger_printf("SetDebugVar: Can't find var: %s\n", name.data());
-    gpfnWarningPrintf("SetDebugVar: Can't find var: %s\n", name.data());
-    ConsolePrintf("SetDebugVar: Can't find var: %s\n", name.data());
+    DEBUG_CONSOLE_PRINTF("SetDebugVar: Can't find var: %s\n", name.data());
   }
 }
 
@@ -410,40 +408,30 @@ static void GetDebugVar(const char*, const char* args) {
       switch (var.mType) {
       case SDebugVar::kT_Int32: {
         int value = *static_cast< int* >(var.mValue);
-        rs_debugger_printf("Int32 Var: %s: value:%d\n", var.mName.data(), value);
-        gpfnWarningPrintf("Int32 Var: %s: value:%d\n", var.mName.data(), value);
-        ConsolePrintf("Int32 Var: %s: value:%d\n", var.mName.data(), value);
+        DEBUG_CONSOLE_PRINTF("Int32 Var: %s: value:%d\n", var.mName.data(), value);
         break;
       }
       case SDebugVar::kT_Real32: {
         float value = *static_cast< float* >(var.mValue);
-        rs_debugger_printf("Real32 Var: %s: value:%f\n", var.mName.data(), value);
-        gpfnWarningPrintf("Real32 Var: %s: value:%f\n", var.mName.data(), value);
-        ConsolePrintf("Real32 Var: %s: value:%f\n", var.mName.data(), value);
+        DEBUG_CONSOLE_PRINTF("Real32 Var: %s: value:%f\n", var.mName.data(), value);
         break;
       }
       case SDebugVar::kT_Uint32: {
         uint value = *static_cast< uint* >(var.mValue);
-        rs_debugger_printf("Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
-        gpfnWarningPrintf("Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
-        CBBASupport::Printf("Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
+        DEBUG_BBA_PRINTF("Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
         break;
       }
       }
     }
   } else {
-    rs_debugger_printf("GetDebugVar: Can't find var: %s\n", name.data());
-    gpfnWarningPrintf("GetDebugVar: Can't find var: %s\n", name.data());
-    ConsolePrintf("GetDebugVar: Can't find var: %s\n", name.data());
+    DEBUG_CONSOLE_PRINTF("GetDebugVar: Can't find var: %s\n", name.data());
   }
 }
 
 // Also writes every var to DebugVars.txt on the host.
 static void GetAllDebugVars(const char*, const char*) {
   if (sDebugVars.begin() == sDebugVars.end()) {
-    rs_debugger_printf("GetAllDebugVars: No vars in list.\n");
-    gpfnWarningPrintf("GetAllDebugVars: No vars in list.\n");
-    ConsolePrintf("GetAllDebugVars: No vars in list.\n");
+    DEBUG_CONSOLE_PRINTF("GetAllDebugVars: No vars in list.\n");
     return;
   }
 
@@ -455,25 +443,19 @@ static void GetAllDebugVars(const char*, const char*) {
     switch (var.mType) {
     case SDebugVar::kT_Int32: {
       int value = *static_cast< int* >(var.mValue);
-      rs_debugger_printf("Int32 Var: %s: value:%d\n", var.mName.data(), value);
-      gpfnWarningPrintf("Int32 Var: %s: value:%d\n", var.mName.data(), value);
-      ConsolePrintf("Int32 Var: %s: value:%d\n", var.mName.data(), value);
+      DEBUG_CONSOLE_PRINTF("Int32 Var: %s: value:%d\n", var.mName.data(), value);
       sprintf(line, "Int32 Var: %s: value:%d\n", var.mName.data(), value);
       break;
     }
     case SDebugVar::kT_Real32: {
       float value = *static_cast< float* >(var.mValue);
-      rs_debugger_printf("Real32 Var: %s: value:%f\n", var.mName.data(), value);
-      gpfnWarningPrintf("Real32 Var: %s: value:%f\n", var.mName.data(), value);
-      ConsolePrintf("Real32 Var: %s: value:%f\n", var.mName.data(), value);
+      DEBUG_CONSOLE_PRINTF("Real32 Var: %s: value:%f\n", var.mName.data(), value);
       sprintf(line, "Real32 Var: %s: value:%f\n", var.mName.data(), value);
       break;
     }
     case SDebugVar::kT_Uint32: {
       uint value = *static_cast< uint* >(var.mValue);
-      rs_debugger_printf("Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
-      gpfnWarningPrintf("Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
-      CBBASupport::Printf("Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
+      DEBUG_BBA_PRINTF("Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
       sprintf(line, "Uint32 Var: %s: value:0x%08x\n", var.mName.data(), value);
       break;
     }

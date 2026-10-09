@@ -6,7 +6,9 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/CAssetId.hpp"
 #include "Kyoto/CRandom16.hpp"
+#include "Kyoto/TSignal2.hpp"
 #include "Kyoto/TToken.hpp"
+#include "MetroidPrime/CWeaponMgr.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
 
 #include "rstl/rc_ptr.hpp"
@@ -20,14 +22,13 @@ class CEnvFxManager;
 class CFluidPlaneManager;
 class CRenderManager;
 class CRumbleManager;
-class CSaveGameScreen;
+class CSaveGameInterface;
 class CStateManagerAssetFactory;
 class CStateManagerCallbackLists;
 class CStateManagerCollision;
 class CStateManagerObject;
 class CTexture;
 class CUserEvaluatorDescription;
-class CWeaponMgr;
 class CWorldTransManager;
 
 // The size comes from CMFGameLoader, which allocates the manager through
@@ -123,6 +124,10 @@ public:
   // Echoes' names and signatures; they write the same fields.
   void SetBossParams(TUniqueId bossId, float maxEnergy, uint stringIdx);
   void QueueMessage(int frameCount, CAssetId msg, float f1);
+  // Echoes' name. Unlike Echoes' (uid, type), it takes the owner, whose count goes down, and the
+  // weapon itself, whose id the removal signal passes on. CGameProjectile, CEnergyProjectile,
+  // CPlasmaProjectile and CBomb call it with their owner id, their own id and their weapon type.
+  void RemoveWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType type);
   // Guessed name. Restarts the "PhazonEnragedSlowdownUSER" time curve.
   void StartPhazonEnragedSlowdown();
 
@@ -157,11 +162,14 @@ private:
   rstl::single_ptr< CStateManagerAssetFactory > mAssetFactory;
   TToken< CDependencyGroup > mAudioGroupDependencies; // Echoes' name; built empty
   // Copies of the last two constructor arguments. The first is released through
-  // CWorldTransManager's destructor; the second's type is not known.
+  // CWorldTransManager's destructor; the second's type is not known (its destructor, 0x8009726C,
+  // sits in CAutoMapper.cpp).
   rstl::ncrc_ptr< CWorldTransManager > mWorldTransManager; // Echoes' name
   int x150_[2];                                            // An rc_ptr
-  rstl::single_ptr< CSaveGameScreen > mSaveGameScreen;     // Echoes' name
-  uint mUpdateFrameIdx;                                    // Prime's name
+  // Echoes' member name. The class is Echoes' CSaveGameScreen, but its destructor (0x801A26F4)
+  // sits in CSaveGameInterface.cpp, so the class name is guessed after that file.
+  rstl::single_ptr< CSaveGameInterface > mSaveGameScreen;
+  uint mUpdateFrameIdx; // Prime's name
   // Echoes' names. As in Echoes, the constructor builds the "DefaultShadow" token, then seeds
   // the generator with 0 and clears the flag.
   TCachedToken< CTexture > mShadowTex;
@@ -199,9 +207,12 @@ private:
   int mDeferredTransition;      // Echoes' name
   uchar mPlayerLineOfSightPairs;
   uchar mNextPlayerLineOfSightPair;
-  // Two lists of trivially destructible elements (their node erasers only free the nodes).
-  int x1e0_list[6];
-  int x1f8_list[6];
+  // Guessed names. Two signals that projectiles and bombs fire through the state manager. The
+  // first (0x8028FD50) passes the state manager, the new weapon's id and its type after counting
+  // it in, so it is a three-argument signal (no TSignal3 is declared yet). The second
+  // (RemoveWeaponId) passes the state manager and the removed weapon's id.
+  int x1e0_weaponAdded[6];
+  TSignal2< CStateManager&, TUniqueId > mWeaponRemoved;
   // The constructor clears them all except x210_25. Echoes has three more flags before its
   // map-screen flag; this order is the prototype's.
   bool x210_24_ : 1; // CMFGame checks it after the update

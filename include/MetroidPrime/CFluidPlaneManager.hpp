@@ -13,10 +13,25 @@
 // Echoes'.
 class CFluidPlaneManager {
 public:
+  // Echoes' class and names.
+  class CFluidProfile {
+  public:
+    void Clear(); // 0x800F7AD8
+
+  private:
+    float x0_;
+    float x4_;
+    float x8_;
+    float xc_;
+    float x10_;
+  };
+
   // Echoes' class: 8 bytes.
   class CSplashRecord {
   public:
     ~CSplashRecord() {}
+
+    void SetTime(float time) { mTime = time; }
 
   private:
     float mTime;
@@ -24,6 +39,8 @@ public:
   };
 
   CFluidPlaneManager(); // 0x800F7A3C
+
+  static CFluidProfile sProfile; // 0x8078178C
 
 private:
   // Echoes' names.

@@ -17,6 +17,7 @@ class CStateManager {
 public:
   CStateManagerObject& ObjectManager() { return *mObjectManager; } // Guessed name
   const CStateManagerObject& ObjectManager() const { return *mObjectManager; }
+  CStateManagerCallbackLists& CallbackLists() { return *mCallbackLists; } // Guessed name
   // CScriptLUA's RandomRange (0x802B5C24) inlines this warning before using the generator.
   CRandom16* Random() {
     if (!mRandomAvailable) {

@@ -1,15 +1,16 @@
 #ifndef _CSTATEMANAGEROBJECT
 #define _CSTATEMANAGEROBJECT
 
+#include "MetroidPrime/CEntityInfo.hpp"
 #include "MetroidPrime/CObjectList.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
 
 #include "rstl/auto_ptr.hpp"
 #include "rstl/bit_vector.hpp"
 #include "rstl/list.hpp"
+#include "rstl/multimap.hpp"
 #include "rstl/pair.hpp"
 #include "rstl/rc_ptr.hpp"
-#include "rstl/red_black_tree.hpp"
 #include "rstl/reserved_vector.hpp"
 #include "rstl/single_ptr.hpp"
 
@@ -18,7 +19,6 @@ class CMapWorldInfo;
 class CObjectListSmall;
 class CPlayer;
 class CScriptMailbox;
-class CScriptMsg;
 class CScriptMsgQueue;
 class CScriptObjectLoaderHelper;
 class CStateManager;
@@ -44,9 +44,14 @@ class CStringPropertyManager;
 // CStateManagerCallbackLists (lists at 0x570, 0x588 and 0x5A0 of that object).
 class CStateManagerObject {
 public:
-  // Echoes' types; Corruption keys the multimap with the 26-bit TEditorId compare.
-  typedef rstl::red_black_tree< TEditorId, rstl::pair< TEditorId, TUniqueId >, 1 > TIdList;
+  // Echoes' types; Corruption keys the multimap with the 26-bit TEditorId compare. The member is
+  // an rstl::multimap rather than the bare tree: the destructor calls the multimap's out-of-line
+  // destructor (0x8029A6B8), which wraps the inlined tree clear.
+  typedef rstl::multimap< TEditorId, TUniqueId > TIdList;
   typedef rstl::pair< TIdList::const_iterator, TIdList::const_iterator > TIdListResult;
+
+  // The destructor (0x8029A4E0) is the implicit member teardown, in reverse declaration order.
+  ~CStateManagerObject();
 
   TUniqueId AllocateUniqueId();
   // Echoes' CStateManager name (0x80299880); CActor's material setters call it.
@@ -57,8 +62,29 @@ public:
   CEntity* ObjectById(TUniqueId uid);
   const CEntity* GetObjectById(TUniqueId uid) const;
 
-  // Echoes' message send, moved here from CStateManager.
+  // Echoes' message sends, moved here from CStateManager. The convenience overloads now take the
+  // whole originator instead of Echoes' single actor id, and a list overload sends to each id.
   void SendScriptMsg(const CScriptMsg& msg); // 0x802983C8
+  void SendScriptMsg(CEntity* target, TUniqueId sender, EScriptObjectMessage msg,
+                     const SScriptMsgOriginator& originator);
+  void SendScriptMsg(TUniqueId target, TUniqueId sender, EScriptObjectMessage msg,
+                     const SScriptMsgOriginator& originator);
+  void SendScriptMsg(const rstl::vector< TUniqueId >& targets, TUniqueId sender,
+                     EScriptObjectMessage msg, const SScriptMsgOriginator& originator);
+
+  // Echoes' names. Unlike Echoes, adding and removing do no area or sorted-list work; they fire
+  // the CStateManagerCallbackLists added/removed signals instead.
+  void AddObject(CEntity* object);
+  void AddObject(CEntity& entity);
+  void RemoveObject(TUniqueId uid);
+  void DeleteObjectRequest(TUniqueId uid);
+
+  // Echoes' names (Prime's for the area notifications).
+  void SetCurrentAreaId(TAreaId area);
+  void AreaLoaded(TAreaId area);
+  void PrepareAreaUnload(TAreaId area);
+  void AreaUnloaded(TAreaId area);
+
   // Overloads of the editor-id lookups below that take the whole connection reference and use
   // its cached unique id directly when it is valid.
   TUniqueId GetIdForScript(const SScriptObjectRef& ref) const;         // 0x80299408
@@ -130,8 +156,8 @@ private:
   rstl::reserved_vector< CObjectListSmall*, 5 > mDynamicObjectListsSmall;
   rstl::bit_vector<> mAllocatedObjectIndices; // Echoes' name; built as (0x800, false).
   // Echoes embeds this as ScriptMsgArray (0xC0 messages and two indices); here it is a separate
-  // 0x1808-byte object, allocated by the constructor.
-  CScriptMsgQueue* mScriptMsgs;
+  // 0x1808-byte object, allocated by the constructor and deleted by the destructor.
+  rstl::single_ptr< CScriptMsgQueue > mScriptMsgs;
   rstl::single_ptr< CWorld > mWorld;
   // Echoes' name and type: batches of up to 32 entities deleted together.
   rstl::list< rstl::reserved_vector< CEntity*, 32 > > mGraveyard;

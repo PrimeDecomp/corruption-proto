@@ -33,6 +33,7 @@ public:
   void erase(iterator it) { inner.erase(it); }
   int erase(const T& key) { return inner.erase(key); }
   int size() const { return inner.size(); }
+  void clear() { inner.clear(); }
 
 private:
   rep_type inner;

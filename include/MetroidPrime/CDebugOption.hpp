@@ -34,8 +34,8 @@ public:
   };
 
   // Line 55 (bool options: range 0..1, step 1) and line 34 (float options). The two leading
-  // integers are small constants supplied by CGameDebug (for example 0x19 and 0xFC); their
-  // meaning is unknown.
+  // integers are the CGameDebug category and option index (CGameDebug::ECategory and
+  // CGameDebug::EDebugOption); CGameDebug stores the option in the slot of its index.
   CDebugOption(int, int, const rstl::string& name, bool value, const CColor& color);
   CDebugOption(int, int, const rstl::string& name, float value, float min, float max, float step,
                const CColor& color);
@@ -57,9 +57,13 @@ public:
   float GetValue() const { return mValue; }
   void ClearMessages() { x38_.clear(); }
 
+  // Guessed names (see the constructors).
+  int GetCategory() const { return x0_; }
+  int GetIndex() const { return x4_; }
+
 private:
-  int x0_;
-  int x4_;
+  int x0_; // Category
+  int x4_; // Index
   rstl::string mName;
   float mValue;
   float mMin;

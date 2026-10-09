@@ -28,6 +28,20 @@ public:
   int GetFaceReflectionPositionZ() const;   // 0x158
   int GetFaceReflectionAspectRatio() const; // 0x15C
 
+  // Guessed names; the setters CGameDebug applies its options with.
+  void SetHudCameraY(int value);                // 0xBC
+  void SetHudCameraZ(int value);                // 0xC0
+  void SetRadarMode(int value);                 // 0x108
+  void SetEnableHud(int value);                 // 0x10C
+  void SetEnableAutoMapper(int value);          // 0x110
+  void SetEnableTargeting(int value);           // 0x118
+  void SetEnableVisors(int value);              // 0x11C
+  void SetFaceReflectionWidth(int value);       // 0x14C
+  void SetFaceReflectionHeight(int value);      // 0x150
+  void SetFaceReflectionPositionY(int value);   // 0x154
+  void SetFaceReflectionPositionZ(int value);   // 0x158
+  void SetFaceReflectionAspectRatio(int value); // 0x15C
+
 private:
   const SLdrTweakGui* mData;
 };

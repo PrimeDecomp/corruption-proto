@@ -47,6 +47,9 @@ public:
   rstl::vector< CToken >& AudioGroups() { return mAudioGroups; }               // Guessed name
   // Out of line (0x80159C7C); returns the rc_ptr at 0x28. Echoes' name.
   rstl::rc_ptr< CWorldTransManager >& WorldTransitionManager();
+  // Echoes names. The hard mode flag is the first bit of the byte at 0x308.
+  bool GetHardModeEnabled() const { return mHardMode; }
+  void SetHardMode(bool hardMode); // 0x80159C38
 
 private:
   uchar x0_[0x68];
@@ -54,6 +57,8 @@ private:
   uchar xc4_[0xdc];
   SPreviousGameResults mPreviousGameResults;
   rstl::vector< CToken > mAudioGroups;
+  uchar x204_[0x104];
+  bool mHardMode : 1;
 };
 
 extern CGameState* gpGameState;

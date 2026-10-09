@@ -34,6 +34,20 @@ public:
   // Guessed name. Echoes keeps its sound (surround) mode in the first field; CGameDebug's
   // "Sound Mode" option (Mono/Stereo/Surround) starts from this one.
   int GetSoundMode() const { return x0_; }
+  // Echoes name. 0x8017CA0C: clamps the mode to 0..2 and updates CGameDebug's "Sound Mode".
+  void SetSoundMode(int mode, bool apply);
+
+  // A slider option: its value and the slider position computed with GetSliderPosition.
+  // Returned through memory, so it is not a plain aggregate.
+  struct SSliderValue {
+    SSliderValue(int value, float position) : mValue(value), mPosition(position) {}
+
+    int mValue;
+    float mPosition;
+  };
+  // Echoes names, matched by field order (after the screen stretch at 0x1C).
+  SSliderValue GetSfxVolume() const;   // 0x8017CE94, 0x24
+  SSliderValue GetMusicVolume() const; // 0x8017CE80, 0x2C
 
 private:
   uint x0_;

@@ -19,9 +19,12 @@ class CStateManager;
 //   once, in turn, with the state manager and the frame time (instance at 0x80294444).
 // - 0x450..0x498 and 0x4B0..0x558: two groups of render-phase signals that CRenderManager.cpp
 //   emits with the render manager itself (instances at 0x802A6A20 and 0x802A65B8). CFluidPlane
-//   and CScriptFalsePerspective connect to the first group; CMorphBall, CScriptSubtitles and
-//   the space pirates to the second.
-// - 0x570..0x5A0: the entity notifications that CStateManagerObject fires.
+//   and CScriptFalsePerspective connect to the first group; CMorphBall and CScriptSubtitles to
+//   the second.
+// - 0x570..0x5A0: the entity notifications that CStateManagerObject fires. CGameArea listens to
+//   the added and removed signals, CSortedLists to the removed one and CStateManagerCollision's
+//   constructor (0x8029CECC) to the added and active-changed ones; Echoes' AddObject and
+//   RemoveObject updated those structures directly.
 // - 0x5B8 and 0x5D0: two TSignal1<CStateManager&> (the destructor instance is emitted in
 //   main.cpp; CStateManager.cpp emits them).
 //

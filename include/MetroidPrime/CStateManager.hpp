@@ -23,12 +23,14 @@ class CStateManagerObject;
 //   out-of-line getters instead of inline CStateManager accessors.
 // - CStateManagerCallbackLists (0x0): 63 signals. Instead of calling each subsystem in turn, the
 //   update emits 46 per-phase signals with the frame time, CRenderManager emits two groups of
-//   render signals, and CStateManagerObject fires the entity added/removed/active signals. The
-//   destructor emits the 0x5B8 signal first.
-// - CStateManagerCollision (0x8): the collision and near-list work.
-// - CRenderManager (0x18): the drawing (Echoes' DrawWorld family).
-// What stays here is the frame driver (FrameBegin, the update and its profiling), the damage and
-// knock-back rules, area changes for actors, world setup and the memory callbacks.
+//   render signals, and CStateManagerObject fires the entity added/removed/active signals that
+//   CGameArea, CSortedLists and CStateManagerCollision listen to (Echoes updated those
+//   directly). The destructor emits the 0x5B8 signal first.
+// - CStateManagerCollision (0x8) and CRenderManager (0x18), whose roles are only inferred from
+//   their file names and their signal hookups.
+// What stays here is the frame driver (FrameBegin, the update and its profiling), damage
+// handling (KillPlayer, TestBombHittingWater), actor area changes (SetActorAreaId), world setup
+// and the memory callbacks.
 class CStateManager {
 public:
   CStateManagerObject& ObjectManager() { return *mObjectManager; } // Guessed name

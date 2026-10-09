@@ -3,9 +3,6 @@
 // Source identity: asserted target basename; absent from both retail source inventories.
 // Complete native/helper/callback inventory retained; no speculative declarations.
 // Remaining (not implemented) functions:
-// 0x80048A94 +0x18C: ApplyRewardUnlocks (guessed name): when "All Multiplayer Music/Maps Unlocked"
-//   are set, unlocks "UnlockMusic%d" 1..5 and "UnlockMap%d" 0..1 through the unnamed object at
-//   gpGameState+0x3C (0x8015E64C finds the entry by name, 0x8015E8B0 unlocks it)
 // 0x80049298 +0x30: registered CGameDebug static initializer; raw native and .ctors8065B508
 //   (stores -1, -1, -1, 0, 1, 2, -1 into 0x807973C0..0x807973D8, unused by this unit)
 
@@ -113,6 +110,31 @@ int CGameDebug::GetPlayerItemForOption(int index) {
     return 19;
   default:
     return -1;
+  }
+}
+
+// The rewards are system environment variables (CPersistentOptions at CGameState 0x3C): music
+// tracks 1..5 and maps 0..1, each unlocked once by setting it to 1.
+void CGameDebug::ApplyRewardUnlocks() {
+  if (gpGameDebug->IsOptionSet(kDO_AllMultiplayerMusicUnlocked)) {
+    for (int i = 1; i < 6; ++i) {
+      const char* name = CBasics::Stringize("UnlockMusic%d", i);
+      CEnvironmentVariable* music = gpGameState->SystemOptions().GetEnvVar(name);
+      if (music != nullptr && music->GetValue() == 0) {
+        rs_debugger_printf("Unlocking Music %d\n", i);
+        music->Set(1);
+      }
+    }
+  }
+  if (gpGameDebug->IsOptionSet(kDO_AllMultiplayerMapsUnlocked)) {
+    for (int i = 0; i < 2; ++i) {
+      const char* name = CBasics::Stringize("UnlockMap%d", i);
+      CEnvironmentVariable* map = gpGameState->SystemOptions().GetEnvVar(name);
+      if (map != nullptr && map->GetValue() == 0) {
+        rs_debugger_printf("Unlocking Map %d\n", i);
+        map->Set(1);
+      }
+    }
   }
 }
 

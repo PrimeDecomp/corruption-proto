@@ -6,6 +6,7 @@
 #include "Kyoto/CToken.hpp"
 #include "MetroidPrime/CRedundantHintManager.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
+#include "MetroidPrime/Player/CPersistentOptions.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
 
 #include "rstl/rc_ptr.hpp"
@@ -53,6 +54,7 @@ public:
   };
 
   CGameOptions& GameOptions() { return mGameOptions; }
+  CPersistentOptions& SystemOptions() { return mSystemOptions; } // Echoes' name
   // Echoes' names. CStateManager's update adds the frame time to the play time while running;
   // the setter (0x80159C50) clamps it.
   double GetTotalPlayTime() const { return mTotalPlayTime; }
@@ -95,7 +97,7 @@ private:
   uchar x0_[0x30];
   double mTotalPlayTime; // Echoes' name
   float mEscapeTime;     // Echoes' name
-  uchar x3c_[0x2C];
+  CPersistentOptions mSystemOptions; // Echoes' name
   CGameOptions mGameOptions;
   CRedundantHintManager mHintOptions;
   uchar xd8_[0xc8];

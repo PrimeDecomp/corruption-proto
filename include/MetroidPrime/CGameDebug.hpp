@@ -572,15 +572,24 @@ public:
 
 private:
   // Guessed name. A reserved_vector style array whose N elements are default-constructed
-  // (0x800488EC; the loop is 0x8004892C).
+  // (0x800488EC; the loop is 0x8004892C) and destroyed like a reserved_vector's (main emits the
+  // signal array's destructor, 0x80008E8C, and its element loop, 0x80008EDC). The connection
+  // array inlines both.
   template < typename T, int N >
   class TFilledArray {
   public:
     TFilledArray(int) : mCount(N) { Construct(data(), N); }
+    ~TFilledArray() { destroy_elements(); }
 
     T& operator[](int idx) { return data()[idx]; }
 
   private:
+    void destroy_elements() {
+      T* ptr = data();
+      for (int i = 0; i < mCount; ++i) {
+        rstl::destroy(&ptr[i]);
+      }
+    }
     static void Construct(T* it, int count) {
       for (int i = 0; i < count; ++i, ++it) {
         new (it) T();
@@ -636,7 +645,7 @@ private:
   };
 
   rstl::reserved_vector< rstl::optional_object< CDebugOption >, kDO_Count > mOptions;
-  rstl::reserved_vector< rstl::auto_ptr< IConnection >, kDO_Count > mOptionConnections;
+  TFilledArray< rstl::auto_ptr< IConnection >, kDO_Count > mOptionConnections;
   TFilledArray< OptionSignal, kDO_Count > mOptionSignals;
   rstl::set< int > mChangedOptions;
   // The selected row of each category page; the menu input stores it.

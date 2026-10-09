@@ -19,11 +19,6 @@
 // 0x800074A8 +0x31C: CMain::UpdateTweakDebugOptions (guessed name); tweak load/save debug options 51..54
 // 0x80007E60 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AB0 +0x48: retained emitted/native function; exact class/type/name unresolved
-// 0x80008E8C +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80008EDC +0x60: retained emitted/native function; exact class/type/name unresolved
-// 0x80008F3C +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x80008F5C +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x80008F80 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000900C +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x80009080 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x800090DC +0x20: retained emitted/native function; exact class/type/name unresolved

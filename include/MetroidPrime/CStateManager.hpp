@@ -173,7 +173,9 @@ public:
   // a layer.
   bool HasPendingLayerLoads();
   // Echoes' name, where Echoes' CMFGame::DrawGui calls it. The body (0x802D7B74) sits in
-  // CGameProfileStats.cpp and prints the profile counters into their debug option.
+  // CGameProfileStats.cpp and prints the profile counters into their debug option; it never reads
+  // the state manager. Prime's map has the same symbol draw the collision octree, path finding,
+  // CDbgDraw, the player coordinates and the particle, decal and camera filter counts instead.
   void DrawDebugStuff() const;
 
   // Echoes' names.

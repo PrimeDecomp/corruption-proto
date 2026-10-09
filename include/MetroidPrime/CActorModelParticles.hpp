@@ -19,6 +19,18 @@ class CGenDescription;
 // resources the constructor (0x8016751C) loads into them.
 class CActorModelParticles {
 public:
+  // Echoes' enum; the constructor loads the effects in this order from the name table.
+  enum ESystemTypes {
+    kST_OnFire,
+    kST_Ice,
+    kST_Ash,
+    kST_FirePop,
+    kST_Electric,
+    kST_IcePop,
+    kST_BlackHole, // Guessed name (Echoes'); Effect_Blackhole resource.
+    kST_Imploder,  // Guessed name (Echoes'); Effect_Imploder resource.
+  };
+
   // Echoes' struct, 0x18 bytes: the eight of them end where the item list starts.
   struct CSystem {
     rstl::vector< CToken > mTokens;
@@ -35,9 +47,12 @@ public:
     uchar x0_[0x17C];
   };
 
-  CActorModelParticles();
+  CActorModelParticles(); // 0x8016751C
 
 private:
+  // Echoes' name (0x801655B4): one CSystem per "<effect>_DGRP" dependency group.
+  void InitializeSystemTypes();
+
   // Echoes' names, loaded from the "Effect_*" dependency-group names in this order.
   TToken< CGenDescription > mOnFire;
   TToken< CGenDescription > mAsh;

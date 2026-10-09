@@ -55,6 +55,10 @@ public:
     rstl::reserved_vector< SPlayerResult, 4 > mPlayers;
   };
 
+  // 0x8015C974 and 0x8015BB28; CGameGlobalObjects allocates the game state.
+  CGameState();
+  ~CGameState();
+
   CGameOptions& GameOptions() { return mGameOptions; }
   CPersistentOptions& SystemOptions() { return mSystemOptions; } // Echoes' name
   void InitializeMemoryStates(); // Echoes' name; 0x8015BAD8

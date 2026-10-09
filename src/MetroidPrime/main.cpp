@@ -48,8 +48,6 @@
 // 0x800074A8 +0x31C: CMain::UpdateTweakDebugOptions (guessed name); tweak load/save debug options 51..54
 // 0x80007E60 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AB0 +0x48: retained emitted/native function; exact class/type/name unresolved
-// 0x80008AF8 +0x220: retained emitted/native function; exact class/type/name unresolved
-// 0x80008D18 +0x174: retained emitted/native function; exact class/type/name unresolved
 // 0x80008E8C +0x50: retained emitted/native function; exact class/type/name unresolved
 // 0x80008EDC +0x60: retained emitted/native function; exact class/type/name unresolved
 // 0x80008F3C +0x20: retained emitted/native function; exact class/type/name unresolved
@@ -63,31 +61,18 @@
 // 0x80009194 +0x94: retained emitted/native function; exact class/type/name unresolved
 // 0x80009228 +0x84: retained emitted/native function; exact class/type/name unresolved
 // 0x800092AC +0xA4: retained emitted/native function; exact class/type/name unresolved
-// 0x80009350 +0x58: retained emitted/native function; exact class/type/name unresolved
-// 0x800093A8 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x800093FC +0x84: retained emitted/native function; exact class/type/name unresolved
-// 0x80009480 +0x38: retained emitted/native function; exact class/type/name unresolved
-// 0x800094B8 +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80009508 +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x80009528 +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x8000954C +0x80: retained emitted/native function; exact class/type/name unresolved
 // 0x80009888 +0x54: retained emitted/native function; exact class/type/name unresolved
 // 0x80009F08 +0x7C0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A6C8 +0xC4: retained emitted/native function; exact class/type/name unresolved
-// 0x8000A8DC +0x868: retained emitted/native function; exact class/type/name unresolved
+// 0x8000A8DC +0x868: CGameGlobalObjects::AddPaksAndFactories (Echoes name; called from PostInitialize with the context); not implemented
 // 0x8000B144 +0x4C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B190 +0xC0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B250 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B2DC +0x2C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B308 +0xB0: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B3B8 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B444 +0x118: retained emitted/native function; exact class/type/name unresolved
 // 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
 // 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
-// 0x8000C218 +0xBC: CGameGlobalObjects LoadStringTable; STRG_Main token ownership
-// 0x8000C2D4 +0x84: emitted optional locked-string-table-token assignment helper
-// 0x8000C358 +0xC8: CGameGlobalObjects PostInitialize; resource factories/string table/renderer initialization
-// 0x8000C420 +0x14C: CGameGlobalObjects constructor; Main.cpp allocations1267/1269, factory/pool/global registration
 // 0x8000CC24 +0x126C: main debug options processing; pool/resource dumps and loaded-texture export, not factory registration
 // 0x8000DE90 +0x138: retained emitted/native function; exact class/type/name unresolved
 // 0x8000DFC8 +0x104: retained emitted/native function; exact class/type/name unresolved
@@ -99,18 +84,11 @@
 // 0x8000E41C +0x630: main memory metrics/debug text display; uses leading string-vector push-back helper
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
-// 0x8000F658 +0x124: emitted TOneStatic global-objects operator delete
 // 0x8000F93C +0xD0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FA0C +0xA8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FAB4 +0xAC: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FB60 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FD54 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FDC8 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FE3C +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FEB0 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FF24 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FF98 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8001000C +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x80010080 +0xB8: retained emitted/native function; exact class/type/name unresolved
 // 0x80010138 +0x88: retained emitted/native function; exact class/type/name unresolved
 // 0x800101C0 +0x80: retained emitted/native function; exact class/type/name unresolved
@@ -149,13 +127,16 @@
 #include "Kyoto/TFunctor.hpp"
 #include "Kyoto/Text/CStringTable.hpp"
 #include "MetaRender/CCubeRenderer.hpp"
+#include "MetaRender/IRenderer.hpp"
 #include "MetroidPrime/AudioDebug.hpp"
 #include "MetroidPrime/CAnimData.hpp"
 #include "MetroidPrime/CAudioStateWin.hpp"
 #include "MetroidPrime/CConsoleOutputWindow.hpp"
 #include "MetroidPrime/CDamageVulnerability.hpp"
+#include "MetroidPrime/CDbgDraw.hpp"
 #include "MetroidPrime/CDebugOption.hpp"
 #include "MetroidPrime/CDecalManager.hpp"
+#include "MetroidPrime/CEnvFxManager.hpp"
 #include "MetroidPrime/CErrorOutputWindow.hpp"
 #include "MetroidPrime/CGameArchitectureSupport.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
@@ -167,10 +148,10 @@
 #include "MetroidPrime/CSaveRegion.hpp"
 #include "MetroidPrime/CWorld.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
-#include "MetroidPrime/ScreenCapture.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CWorldTransManager.hpp"
+#include "MetroidPrime/ScreenCapture.hpp"
 #include "MetroidPrime/Tweaks/CTweakGame.hpp"
 #include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 
@@ -322,6 +303,8 @@ extern bool sProgressiveModePrompt; // Echoes name; the second bit of the save r
 void UpdateScreenCapture(SScreenshotState& state);
 // Guessed name. Shades the screen border outside the 576x416 title-safe area.
 void DrawSafeFrame();
+// Guessed name. Restores sProgressiveModePrompt from the save region after a reset.
+void ReadProgressiveModePrompt();
 
 // Guessed name. A named CGameProfiler section that RsMain keeps open around a frame; the
 // section is closed around EndScene and when it goes out of scope.
@@ -555,6 +538,57 @@ void CMain::ShutdownSubsystems() {
   OSReport("Stack usage: %d bytes (%dk)\n", used, static_cast< uint >(used) / 1024);
 }
 
+// Unlike Echoes the debug menu, the two debug-draw lists and the controller are owned here too.
+CGameGlobalObjects::CGameGlobalObjects(COsContext& context, CMemorySys& memorySys)
+: mSimplePool(mResFactory)
+, mCharacterFactoryBuilder(mSimplePool)
+, mDbgDraw(false)
+, mPersistentDbgDraw(true)
+, mGameState(rs_new_in("Main.cpp", 1267) CGameState())
+, mInGameTweakManager(rs_new_in("Main.cpp", 1269) CInGameTweakManager())
+, mController(IController::Create(context)) {
+  gpResourceFactory = &mResFactory;
+  gpSimplePool = &mSimplePool;
+  gpCharacterFactoryBuilder = &mCharacterFactoryBuilder;
+  gpGameDebug = &mGameDebug;
+  gpDbgDraw = &mDbgDraw;
+  gpPersistentDbgDraw = &mPersistentDbgDraw;
+  gpGameState = mGameState.get();
+  gpTweakManager = mInGameTweakManager.get();
+  gpController = mController.get();
+}
+
+// Unlike Echoes the progressive-mode prompt flag is read back first, and the console output
+// window becomes the assert diagnostic printer once the renderer is up.
+void CGameGlobalObjects::PostInitialize(COsContext& context, CMemorySys& memorySys) {
+  ReadProgressiveModePrompt();
+  AddPaksAndFactories(context);
+  LoadStringTable();
+  printf("Initializing renderer...\n");
+  mRenderer = AllocateRenderer(mSimplePool, context, memorySys, mResFactory);
+  gpRender = static_cast< CCubeRenderer* >(mRenderer.get());
+  CEnvFxManager::Initialize();
+  RAssert_SetDiagnosticPrintCallback(CConsoleOutputWindow::Printf);
+}
+
+void CGameGlobalObjects::LoadStringTable() {
+  rs_debugger_printf("Loading main string table...\n");
+  mStringTable = TLockedToken< CStringTable >(gpSimplePool->GetObj("STRG_Main"));
+  gpStringTable = **mStringTable;
+}
+
+// The reset path stores the progressive-mode prompt flag as the second bit of the save region;
+// Echoes reads it back in RsMain instead.
+void ReadProgressiveModePrompt() {
+  if (CSaveRegion::GetNonVolatileSettingsBuffer() != nullptr) {
+    CMemoryInStream stream(CSaveRegion::GetNonVolatileSettingsBuffer(),
+                           CSaveRegion::kSaveBufferSize);
+    CBitStreamReader reader(stream);
+    reader.ReadBits(1);
+    sProgressiveModePrompt = reader.ReadBits(1) != 0;
+  }
+}
+
 // Guessed name. The "Terminate Game" debug option ends the main loop; with no option registered
 // the value defaults to -1, which also ends the loop.
 bool CMain::CheckTerminate() {
@@ -728,10 +762,9 @@ void UpdateScreenCapture(SScreenshotState& state) {
   if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ShowSafeFrame) != 0) {
     DrawSafeFrame();
   }
-  if (sTakeScreenshot ||
-      (!gpGameDebug->IsMenuOpen() &&
-       gpGameDebug->GetOption(CGameDebug::kDO_DumpScreenShot) != nullptr &&
-       gpGameDebug->GetOptionInt(CGameDebug::kDO_DumpScreenShot) == 1)) {
+  if (sTakeScreenshot || (!gpGameDebug->IsMenuOpen() &&
+                          gpGameDebug->GetOption(CGameDebug::kDO_DumpScreenShot) != nullptr &&
+                          gpGameDebug->GetOptionInt(CGameDebug::kDO_DumpScreenShot) == 1)) {
     gpGameDebug->SetOptionValue(CGameDebug::kDO_DumpScreenShot, 0.f);
     sTakeScreenshot = false;
     DumpScreenShot(false, nullptr);
@@ -772,6 +805,8 @@ void CMain::UpdateTweakDebugOptions() {
     gpTweakManager->WriteToMemoryCard(rstl::string_l("AudioTweaks"));
   }
 }
+
+CGameGlobalObjects::~CGameGlobalObjects() {}
 
 int CMain::RsMain(int argc, const char* const* argv) {
   PPCSetFpIEEEMode();

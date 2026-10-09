@@ -101,6 +101,9 @@ public:
   // across the DOL branch to these out-of-line getters.
   CWorld* World();
   const CWorld* GetWorld() const;
+  // Guessed name. CStateManager (0x80295680) hands over the world it creates; the old one is
+  // deleted.
+  void SetWorld(rstl::auto_ptr< CWorld > world);
   bool HasWorld() const;
   TAreaId GetNextAreaId() const;
   TAreaId GetPreviousAreaId() const;
@@ -154,8 +157,7 @@ private:
                                  const CScriptMsg& msg);
   static bool MatchesScriptMsgState(EScriptObjectState state, int choice);   // 0x80298E88
   static bool MatchesScriptMsgMessage(EScriptObjectMessage msg, int choice); // 0x80298F34
-  // 0x80298FF8, not implemented: a switch over 17 choices, each one a TCastToConstPtr of the
-  // entity (choice 1 is CActor; the other casts in TypesMatch.cpp are not identified yet).
+  // 0x80298FF8: each choice is a class the entity must cast to.
   static bool MatchesScriptMsgEntity(const CEntity* entity, int choice);
 
   CStateManager* mStateMgr;

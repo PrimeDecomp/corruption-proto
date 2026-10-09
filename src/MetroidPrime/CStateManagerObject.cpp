@@ -5,9 +5,6 @@
 // Complete emitted native/helper inventory retained; no speculative declarations.
 // 0x80298130 +0x20: owned native method/helper retained; exact source-level name unresolved
 // 0x80298150 +0x20: owned native method/helper retained; exact source-level name unresolved
-// 0x80298FF8 +0x188: MatchesScriptMsgEntity (see the header): a 17-way switch of TypesMatch.cpp
-//   casts that are not identified yet
-// 0x8029A46C +0x74: world setter: takes an rstl::auto_ptr<CWorld>& and releases it into mWorld
 // 0x8029A72C +0xC80: state manager object constructor; original source61/70/75..89 (news nine
 //   CObjectList and five CObjectListSmall subclasses whose names are unknown)
 // 0x8029B6D8 +0x30: registered static initializer; .ctors 0x8065B964; seven SDA constants
@@ -26,6 +23,7 @@
 #include "MetroidPrime/CWorld.hpp"
 
 #include "MetroidPrime/CGameDebug.hpp"
+#include "MetroidPrime/TCastTo.hpp"
 
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
@@ -34,7 +32,25 @@
 #include "rstl/algorithm.hpp"
 #include "rstl/string.hpp"
 
+class CActor;
+class CGameCamera;
+class CPatterned;
+class CScriptCameraHint;
+class CScriptControlHint;
+class CScriptDock;
+class CScriptDoor;
+class CScriptEffect;
+class CScriptLayerController;
+class CScriptPlatform;
+class CScriptPlayerHint;
+class CScriptSound;
+class CScriptTrigger;
+class CScriptWaypoint;
+class CWeapon;
+
 CStateManagerObject::~CStateManagerObject() {}
+
+void CStateManagerObject::SetWorld(rstl::auto_ptr< CWorld > world) { mWorld = world.release(); }
 
 CWorld* CStateManagerObject::World() { return mWorld.get(); }
 
@@ -280,6 +296,49 @@ void CStateManagerObject::AddToGraveyard(CEntity* entity) {
   }
 
   mGraveyard.back().push_back(entity);
+}
+
+// The choices of "Script msg Sender" and "Script msg Target". The classes behind the type ids
+// come from the vtables whose TypesMatch override compares that id (CPatterned's cast tests the
+// cast flag that only its constructor passes to CAi).
+bool CStateManagerObject::MatchesScriptMsgEntity(const CEntity* entity, int choice) {
+  switch (choice) {
+  case 0:
+    return true;
+  case 1:
+    return TCastToConstPtr< CActor >(entity) != nullptr;
+  case 2:
+    return TCastToConstPtr< CPlayer >(entity) != nullptr;
+  case 3:
+    return TCastToConstPtr< CScriptTrigger >(entity) != nullptr;
+  case 4:
+    return TCastToConstPtr< CScriptPlatform >(entity) != nullptr;
+  case 5:
+    return TCastToConstPtr< CPatterned >(entity) != nullptr;
+  case 6:
+    return TCastToConstPtr< CGameCamera >(entity) != nullptr;
+  case 7:
+    return TCastToConstPtr< CScriptCameraHint >(entity) != nullptr;
+  case 8:
+    return TCastToConstPtr< CScriptPlayerHint >(entity) != nullptr;
+  case 9:
+    return TCastToConstPtr< CScriptControlHint >(entity) != nullptr;
+  case 10:
+    return TCastToConstPtr< CWeapon >(entity) != nullptr;
+  case 11:
+    return TCastToConstPtr< CScriptDoor >(entity) != nullptr;
+  case 12:
+    return TCastToConstPtr< CScriptDock >(entity) != nullptr;
+  case 13:
+    return TCastToConstPtr< CScriptEffect >(entity) != nullptr;
+  case 14:
+    return TCastToConstPtr< CScriptLayerController >(entity) != nullptr;
+  case 15:
+    return TCastToConstPtr< CScriptWaypoint >(entity) != nullptr;
+  case 16:
+    return TCastToConstPtr< CScriptSound >(entity) != nullptr;
+  }
+  return false;
 }
 
 // The choices of "Script msg Type" and "Script msg Exclude Type"; 0 (any) is never looked up.

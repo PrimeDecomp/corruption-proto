@@ -176,14 +176,14 @@ rstl::string CGameDebug::GetOptionLabel(CDebugOption& option) {
       return option.GetName() + rstl::string_l(option.GetValue() != 0.f ? ": ON" : ": OFF");
     }
     return option.GetName() + rstl::string_l(": ") +
-           CStringExtras::CreateFromFloat(option.GetValue(), 0) + choice;
+           CStringExtras::CreateFromReal(option.GetValue(), 0) + choice;
   }
   if (option.GetStep() == 1.f) {
     return option.GetName() + rstl::string_l(": ") +
-           CStringExtras::CreateFromFloat(option.GetValue(), 0) + choice;
+           CStringExtras::CreateFromReal(option.GetValue(), 0) + choice;
   }
   return option.GetName() + rstl::string_l(": ") +
-         CStringExtras::CreateFromFloat(option.GetValue(), 3) + choice;
+         CStringExtras::CreateFromReal(option.GetValue(), 3) + choice;
 }
 
 rstl::string CGameDebug::GetDemoLabel(const CControllerRecorder::SDemoInfo& demo) {

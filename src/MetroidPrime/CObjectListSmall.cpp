@@ -10,8 +10,6 @@
 //   TypesMatch override in the DOL names)
 // 0x802628F0 +0x60: CType106ListSmall's implicit destructor (emitted with its vtable, once
 //   IsQualified is defined)
-// 0x80262A10 +0x30: static initializer (.ctors 0x8065B8FC) for seven SDA constants shared through
-//   a header (three -1 ids, then 0, 1, 2 and -1)
 
 #include "MetroidPrime/CObjectListSmall.hpp"
 

@@ -20,8 +20,9 @@ CEnvFxManagerGrid::CEnvFxManagerGrid(const CVector2i& position, const CVector2i&
   mParticles.reserve(reserve);
 }
 
-// Unlike Echoes, the constructor also calls an empty function with no arguments (0x8018623C)
-// before seeding its random generator, and sets the single rain splash id twice.
+// Unlike Echoes, the original also calls an empty function with no arguments (0x8018623C) before
+// seeding its random generator; that call is not reproduced here, since nothing names the
+// function. The single rain splash id is set twice.
 CEnvFxManager::CEnvFxManager()
 : mParticleBounds(CVector3f(-63.5f, -63.5f, -63.5f), CVector3f(63.5f, 63.5f, 63.5f))
 , mFocusCellPosition(CVector3f::Zero())

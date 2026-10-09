@@ -5,7 +5,6 @@
 // 0x800F7884 +0x4C
 // 0x800F78D0 +0xF8
 // 0x800F79C8 +0x74
-// 0x800F7AF4 +0x30: static initializer for TGameTypes.hpp's seven SDA constants
 
 #include "MetroidPrime/CFluidPlaneManager.hpp"
 

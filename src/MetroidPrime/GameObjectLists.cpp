@@ -5,7 +5,6 @@
 // points. Listed below are the functions not implemented yet.
 // 0x80148484 +0x58: CListeningAiList::IsQualified (needs CPatterned's IsListening, vtable slot
 //   0xD8, which no header models yet)
-// 0x801486F0 +0x30: static initializer for TGameTypes.hpp's seven SDA constants
 
 #include "MetroidPrime/GameObjectLists.hpp"
 

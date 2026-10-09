@@ -2,6 +2,8 @@
 // G2MEAB .text 0x800B0FE4..0x800B18D8 (end exclusive).
 // Echoes' CWeaponMgr.cpp, in the same order. The map's find, erase and insert helpers and the
 // static initializer for TGameTypes.hpp's SDA constants (0x800B18A8) are emitted with it.
+// Not paired: 0x800B1820 +0x88, a 0x58-byte block copy of the map's (id, counts) pair that
+// insert_into calls where this rstl constructs the node in place.
 
 #include "MetroidPrime/CWeaponMgr.hpp"
 

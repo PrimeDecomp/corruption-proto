@@ -122,14 +122,10 @@ public:
   // Weak (0x80262470).
   void push_back(T val);
   // Weak (0x80296F54).
-  iterator insert(const iterator& pos, T val) { return do_insert(pos.mNode, pos.mIndex, val); }
+  iterator insert(const iterator& pos, T val);
   // Weak (0x80296EB4).
   template < typename It >
-  void insert(const iterator& pos, It first, It last) {
-    for (; first != last; ++first) {
-      insert(pos, *first);
-    }
-  }
+  void insert(const iterator& pos, It first, It last);
   // Weak (0x8026202C).
   iterator erase(const iterator& it);
 
@@ -214,6 +210,20 @@ typename TBlockList< T, N, Alloc >::iterator TBlockList< T, N, Alloc >::do_inser
   nn->mPrev->mNext = nn;
   nn->mNext->mPrev = nn;
   return iterator(n, idx);
+}
+
+template < typename T, int N, typename Alloc >
+typename TBlockList< T, N, Alloc >::iterator TBlockList< T, N, Alloc >::insert(const iterator& pos,
+                                                                               T val) {
+  return do_insert(pos.mNode, pos.mIndex, val);
+}
+
+template < typename T, int N, typename Alloc >
+template < typename It >
+void TBlockList< T, N, Alloc >::insert(const iterator& pos, It first, It last) {
+  for (It it = first; it != last; ++it) {
+    insert(pos, *it);
+  }
 }
 
 template < typename T, int N, typename Alloc >

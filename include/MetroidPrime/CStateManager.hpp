@@ -6,14 +6,17 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/CAssetId.hpp"
 #include "Kyoto/CRandom16.hpp"
+#include "Kyoto/TOneStatic.hpp"
 #include "Kyoto/TSignal2.hpp"
 #include "Kyoto/TSignal3.hpp"
 #include "Kyoto/TToken.hpp"
 #include "MetroidPrime/CWeaponMgr.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
 
+#include "rstl/map.hpp"
 #include "rstl/rc_ptr.hpp"
 #include "rstl/single_ptr.hpp"
+#include "rstl/string.hpp"
 
 class CActorModelParticles;
 class CArchitectureQueue;
@@ -30,6 +33,7 @@ class CStateManagerCollision;
 class CStateManagerObject;
 class CTexture;
 class CUserEvaluatorDescription;
+class CWorldLayerState;
 class CWorldTransManager;
 
 // The size comes from CMFGameLoader, which allocates the manager through
@@ -85,7 +89,7 @@ class CWorldTransManager;
 //    delta, average and peak, 5 the object count, 8 the frame counter, 2 and 4 the per-object
 //    think statistics (4 sorted by time). The low-memory report (0x80294748) follows, then the
 //    "END OF FRAME" marker when requested; the frame counter is bumped and the queue cleared.
-class CStateManager {
+class CStateManager : public TOneStatic< CStateManager > {
 public:
   // Echoes' values; 0x174 is compared against them all through the update.
   enum EGameState {
@@ -134,6 +138,25 @@ public:
   // Guessed name. Restarts the "PhazonEnragedSlowdownUSER" time curve.
   void StartPhazonEnragedSlowdown();
 
+  // Two name-keyed tables of three counters each, kept in .sbss (0x80799E5C, 0x80799E60).
+  // CGameProfileStats.cpp prints them ("%s-%3d/%3d-%5d") and adds to them, CRenderManager.cpp
+  // reads the first; the constructor news both (lines 367 and 368) and the destructor deletes
+  // them. They are two map instantiations (separate node-freeing instances at 0x80297CE8 and
+  // 0x80297D68), so their value types differ, but what they count is not known. All names
+  // guessed, and so is their owner.
+  struct SProfileCountersA {
+    int x0_;
+    int x4_;
+    int x8_;
+  };
+  struct SProfileCountersB {
+    int x0_;
+    int x4_;
+    int x8_;
+  };
+  static rstl::map< rstl::string, SProfileCountersA >* sProfileCountersA;
+  static rstl::map< rstl::string, SProfileCountersB >* sProfileCountersB;
+
 private:
   // The constructor news these (0x5E8, 0x1138 and 0x1C038 bytes); their constructors live in
   // CStateManagerCallbackLists.cpp, CStateManagerObject.cpp and CStateManagerCollision.cpp, and
@@ -164,11 +187,10 @@ private:
   // state manager (line 217).
   rstl::single_ptr< CStateManagerAssetFactory > mAssetFactory;
   TToken< CDependencyGroup > mAudioGroupDependencies; // Echoes' name; built empty
-  // Copies of the last two constructor arguments. The first is released through
-  // CWorldTransManager's destructor; the second's type is not known (its destructor, 0x8009726C,
-  // sits in CAutoMapper.cpp).
-  rstl::ncrc_ptr< CWorldTransManager > mWorldTransManager; // Echoes' name
-  int x150_[2];                                            // An rc_ptr
+  // Echoes' names; copies of the last two constructor arguments. The second's implicit
+  // destructor (0x8009726C) has the layout of Echoes' CWorldLayerState.
+  rstl::ncrc_ptr< CWorldTransManager > mWorldTransManager;
+  rstl::ncrc_ptr< CWorldLayerState > mCurrentWorldLayerState;
   // Echoes' member name. The class is Echoes' CSaveGameScreen, but its destructor (0x801A26F4)
   // sits in CSaveGameInterface.cpp, so the class name is guessed after that file.
   rstl::single_ptr< CSaveGameInterface > mSaveGameScreen;

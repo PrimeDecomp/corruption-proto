@@ -57,7 +57,7 @@
 // 0x802943E4 +0x60: owned native method/helper retained; exact source-level name unresolved
 // 0x80294444 +0x7C: TSignal2<CStateManager&, float>::Emit
 // 0x802944C0 +0x54: CGameProfileStats destructor (the update's local; constructor 0x802D8348)
-// 0x80294514 +0x74: owned native method/helper retained; exact source-level name unresolved
+// 0x80294514 +0x74: destructor of the map behind sProfileCountersA (the destructor deletes it)
 // 0x80294588 +0x48: Echoes' PostUpdatePlayer(float)
 // 0x802945D0 +0x178: Echoes' PreThinkObjects(float)
 // 0x80294748 +0x248: memory/timing debug text ("LOW MEMORY: area ..")
@@ -73,36 +73,19 @@
 // 0x80295680 +0x738: world setup like Echoes' InitializeState; calls SetWorld
 // 0x80295DB8 +0x2F8: player spawn ("Invalid transform in Spawn Point")
 // 0x802960B0 +0x170: creates the render manager and the player
-// 0x80296220 +0x5DC: ~CStateManager
-// 0x802967FC +0x58: single_ptr<CWeaponMgr> destructor
-// 0x80296854 +0x54: owned native method/helper retained; exact source-level name unresolved
-// 0x802968A8 +0xAC: single_ptr<CFluidPlaneManager> destructor
-// 0x80296954 +0x58: single_ptr<CEnvFxManager> destructor
-// 0x802969AC +0xF0: owned native method/helper retained; exact source-level name unresolved
-// 0x80296A9C +0x58: single_ptr<CActorModelParticles> destructor
-// 0x80296AF4 +0x14C: owned native method/helper retained; exact source-level name unresolved
-// 0x80296C40 +0x8C: destructor of the list at 0x1E0
-// 0x80296CCC +0x8C: destructor of the list at 0x1F8
-// 0x80296D58 +0x74: owned native method/helper retained; exact source-level name unresolved
-// 0x80296DCC +0x58: owned native method/helper retained; exact source-level name unresolved
-// 0x80296E24 +0x90: owned native method/helper retained; exact source-level name unresolved
-// 0x80296EB4 +0xA0: owned native method/helper retained; exact source-level name unresolved
-// 0x80296F54 +0x3C: owned native method/helper retained; exact source-level name unresolved
+// 0x80296D58 +0x74: destructor of the map behind sProfileCountersB
 // 0x80296F90 +0x558: state manager constructor; direct target original source206..368. Takes
 //   CStateManagerObject's three arguments and two rc_ptrs (0x148, 0x150).
 // 0x802974E8 +0x88: TToken<CDependencyGroup>(CDependencyGroup*) for the empty audio-group token
 // 0x80297570 +0x90: owned native method/helper retained; exact source-level name unresolved
 // 0x80297600 +0x54: owned native method/helper retained; exact source-level name unresolved
 // 0x80297654 +0x90: owned native method/helper retained; exact source-level name unresolved
-// 0x802976E4 +0x124: TOneStatic<CStateManager>::operator delete (TOneStatic.h(81/82) asserts)
 // 0x80297808 +0x1EC: owned native method/helper retained; exact source-level name unresolved
 // 0x802979F4 +0xC8: owned native method/helper retained; exact source-level name unresolved
 // 0x80297ABC +0xBC: owned native method/helper retained; exact source-level name unresolved
 // 0x80297B78 +0x88: owned native method/helper retained; exact source-level name unresolved
-// 0x80297C00 +0x74: owned native method/helper retained; exact source-level name unresolved
-// 0x80297C74 +0x74: owned native method/helper retained; exact source-level name unresolved
-// 0x80297CE8 +0x80: owned native method/helper retained; exact source-level name unresolved
-// 0x80297D68 +0x80: owned native method/helper retained; exact source-level name unresolved
+// 0x80297CE8 +0x80: free_node_and_sub_nodes of the sProfileCountersA map
+// 0x80297D68 +0x80: free_node_and_sub_nodes of the sProfileCountersB map
 // 0x80297DE8 +0x16C: owned native method/helper retained; exact source-level name unresolved
 // 0x80297F54 +0xA8: owned native method/helper retained; exact source-level name unresolved
 // 0x80297FFC +0xFC: owned native method/helper retained; exact source-level name unresolved
@@ -110,10 +93,86 @@
 
 #include "MetroidPrime/CStateManager.hpp"
 
+#include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/CARAMManager.hpp"
 #include "Kyoto/CARAMToken.hpp"
 #include "Kyoto/CFrameDelayedKiller.hpp"
+#include "MetroidPrime/CActorModelParticles.hpp"
+#include "MetroidPrime/CDisplayManager.hpp"
+#include "MetroidPrime/CEnvFxManager.hpp"
+#include "MetroidPrime/CFluidPlaneManager.hpp"
+#include "MetroidPrime/CMain.hpp"
+#include "MetroidPrime/CObjectListSmall.hpp"
+#include "MetroidPrime/CRenderManager.hpp"
+#include "MetroidPrime/CRumbleManager.hpp"
+#include "MetroidPrime/CSaveGameInterface.hpp"
+#include "MetroidPrime/CStateManagerAssetFactory.hpp"
+#include "MetroidPrime/CStateManagerCallbackLists.hpp"
+#include "MetroidPrime/CStateManagerCollision.hpp"
 #include "MetroidPrime/CStateManagerObject.hpp"
+#include "MetroidPrime/CWorldLayerState.hpp"
+#include "MetroidPrime/Cameras/CGameCamera.hpp"
+#include "MetroidPrime/Player/CPlayer.hpp"
+#include "MetroidPrime/Player/CWorldTransManager.hpp"
+#include "MetroidPrime/TCastTo.hpp"
+
+// 0x80296220. Echoes' teardown: every object except the players and cameras is sent a delete
+// message, then removed and deleted; then the cameras (from a copy of the camera list) and the
+// player. Around it the prototype emits its two teardown signals and frees the profile tables.
+CStateManager::~CStateManager() {
+  mCallbackLists->StateManagerDestroying().Emit(*this);
+  mTearingDown = true;
+  CMemory::OffsetFakeStatics(-0x24214);
+  mRumbleManager->HardStopAll();
+  mEnvFxManager->Cleanup();
+  mRandomAvailable = true;
+
+  CObjectList& objects = mObjectManager->ObjectListById(0);
+  mObjectManager->ClearGraveyard();
+  for (int i = 0; i != 0x800; ++i) {
+    CEntity* entity = objects[i];
+    if (entity != nullptr && TCastToConstPtr< CPlayer >(entity) == nullptr &&
+        TCastToConstPtr< CGameCamera >(entity) == nullptr) {
+      mObjectManager->DeliverScriptMsg(
+          CScriptMsg(kSM_Delete, kInvalidUniqueId, entity->GetUniqueId(),
+                     SScriptMsgOriginator(kInvalidUniqueId), kSS_InvalidState));
+    }
+  }
+  for (int i = 0; i != 0x800; ++i) {
+    CEntity* entity = objects[i];
+    if (entity != nullptr && TCastToConstPtr< CPlayer >(entity) == nullptr &&
+        TCastToConstPtr< CGameCamera >(entity) == nullptr) {
+      mObjectManager->RemoveObject(entity->GetUniqueId());
+      delete entity;
+    }
+  }
+  mObjectManager->ClearGraveyard();
+
+  const CObjectListSmall cameras(mObjectManager->GetObjectListSmallById(3));
+  for (CObjectListSmall::TList::const_iterator it = cameras.begin(); it != cameras.end(); ++it) {
+    if (const CGameCamera* camera = TCastToConstPtr< CGameCamera >(*it)) {
+      mObjectManager->DeliverScriptMsg(
+          CScriptMsg(kSM_Delete, kInvalidUniqueId, camera->GetUniqueId(),
+                     SScriptMsgOriginator(kInvalidUniqueId), kSS_InvalidState));
+      mObjectManager->RemoveObject(camera->GetUniqueId());
+      delete camera;
+    }
+  }
+  CPlayer* player = mObjectManager->Player();
+  mObjectManager->DeliverScriptMsg(CScriptMsg(kSM_Delete, kInvalidUniqueId, player->GetUniqueId(),
+                                              SScriptMsgOriginator(kInvalidUniqueId),
+                                              kSS_InvalidState));
+  mObjectManager->RemoveObject(player->GetUniqueId());
+  delete player;
+
+  CMemory::SetOutOfMemoryCallback(nullptr, nullptr);
+  delete sProfileCountersA;
+  sProfileCountersA = nullptr;
+  delete sProfileCountersB;
+  sProfileCountersB = nullptr;
+  gpMain->SetThirtyFps(false);
+  mCallbackLists->StateManagerDestroyed().Emit(*this);
+}
 
 // 0x80295524. Empty, as in Echoes; FrameBegin (0x80295528) still calls it with (2, 0x180000).
 void CStateManager::SwapOutTexturesToARAM(int, uint) {}

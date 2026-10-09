@@ -48,6 +48,10 @@ public:
   TEntitySignal& ObjectAdded() { return mObjectAdded; }
   TEntitySignal& ObjectRemoved() { return mObjectRemoved; }
   TEntitySignal& ActiveChanged() { return mActiveChanged; }
+  // Guessed names. CStateManager's destructor emits the first before anything else and the
+  // second once the objects are gone, before its members are destroyed.
+  TStateManagerSignal& StateManagerDestroying() { return x5b8_; }
+  TStateManagerSignal& StateManagerDestroyed() { return x5d0_; }
 
 private:
   TUpdateSignal x0_;

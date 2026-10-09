@@ -21,6 +21,9 @@ public:
   // second (0x800116C8). Their bodies are identical, so the const-ness follows that order.
   CEntity* GetObjectById(TUniqueId uid);
   const CEntity* GetObjectById(TUniqueId uid) const;
+  // Echoes' name. Only one overload is emitted (0x80011668); CStateManager's destructor reads
+  // the list it gets from ObjectListById through it.
+  CEntity* operator[](int idx);
   // Echoes' names; CStateManagerObject's add, remove and list-update paths call these.
   void RemoveObject(TUniqueId uid); // 0x80011718
   void AddObject(CEntity& entity);  // 0x8001180C

@@ -12,6 +12,9 @@ class CStateManager;
 // the state manager at +4.
 class CRenderManager {
 public:
+  // CStateManager deletes it through its first virtual function.
+  virtual ~CRenderManager();
+
   // Guessed names. A signal at +0x604 that the world render pass emits with the state manager
   // after the opaque geometry; CActor draws its collision boxes from it. The argument type is
   // inferred: CActor's bridge for it is a different instantiation than its CStateManager& one.

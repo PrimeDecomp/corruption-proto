@@ -49,9 +49,6 @@
 // 0x800077C4 +0x16C: UpdateScreenCapture (guessed name); safe frame, screenshot and movie capture
 // 0x80007930 +0x6C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000799C +0x138: retained emitted/native function; exact class/type/name unresolved
-// 0x80007AD4 +0x84: retained emitted/native function; exact class/type/name unresolved
-// 0x80007B58 +0x60: retained emitted/native function; exact class/type/name unresolved
-// 0x80007BB8 +0xDC: retained emitted/native function; exact class/type/name unresolved
 // 0x80007C94 +0x1CC: retained emitted/native function; exact class/type/name unresolved
 // 0x80007E60 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AB0 +0x48: retained emitted/native function; exact class/type/name unresolved
@@ -97,11 +94,6 @@
 // 0x8000C2D4 +0x84: emitted optional locked-string-table-token assignment helper
 // 0x8000C358 +0xC8: CGameGlobalObjects PostInitialize; resource factories/string table/renderer initialization
 // 0x8000C420 +0x14C: CGameGlobalObjects constructor; Main.cpp allocations1267/1269, factory/pool/global registration
-// 0x8000C888 +0x208: CMain::CheckForDuplicateWorlds (guessed name); MLVL asset-id/name map, asserts Main.cpp(993)
-// 0x8000CA90 +0x4C: retained emitted/native function; exact class/type/name unresolved
-// 0x8000CADC +0xA4: retained emitted/native function; exact class/type/name unresolved
-// 0x8000CB80 +0x30: retained emitted/native function; exact class/type/name unresolved
-// 0x8000CBB0 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000CC24 +0x126C: main debug options processing; pool/resource dumps and loaded-texture export, not factory registration
 // 0x8000DE90 +0x138: retained emitted/native function; exact class/type/name unresolved
 // 0x8000DFC8 +0x104: retained emitted/native function; exact class/type/name unresolved
@@ -131,9 +123,6 @@
 // 0x80010138 +0x88: retained emitted/native function; exact class/type/name unresolved
 // 0x800101C0 +0x80: retained emitted/native function; exact class/type/name unresolved
 // 0x80010240 +0x60: emitted recursive red-black-tree node cleanup helper
-// 0x800102A0 +0x7C: emitted recursive string-payload red-black-tree cleanup helper
-// 0x8001031C +0x1E0: emitted 64-bit asset-key/string-map insert; tree rebalance and local node allocator
-// 0x800104FC +0x80: emitted 0x28-byte map node allocator; copies 64-bit key and string payload
 // 0x8001057C +0x48: registered main static initializer; .ctors entry8065B4C4
 // clang-format on
 
@@ -187,6 +176,7 @@
 #include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 
 #include "rstl/auto_ptr.hpp"
+#include "rstl/map.hpp"
 #include "rstl/optional_object.hpp"
 #include "rstl/string.hpp"
 
@@ -875,6 +865,30 @@ void CMain::AsyncIdle(uint time) {
 
   if (idleTime != 0) {
     gpResourceFactory->AsyncIdle(idleTime, maxSpeed);
+  }
+}
+
+// Guessed name. Prototype-only. Called once all paks are loaded: two paks providing the same world
+// asset would silently shadow each other, so this asserts instead.
+void CMain::CheckForDuplicateWorlds() {
+  rstl::map< CAssetId, rstl::string > worlds;
+  rstl::vector< rstl::pair< rstl::string, SObjectTag > > resources =
+      gpResourceFactory->GetResourceIdToNameList();
+  for (rstl::vector< rstl::pair< rstl::string, SObjectTag > >::iterator it = resources.begin();
+       it != resources.end(); ++it) {
+    const CAssetId id = it->second.id;
+    if (gpResourceFactory->GetResLoader().GetResourceTypeById(id) != 'MLVL') {
+      continue;
+    }
+    rstl::map< CAssetId, rstl::string >::iterator found = worlds.find(id);
+    if (found != worlds.end()) {
+      RS_VERIFY_FAILURE_IN(
+          "Main.cpp", 993, "false", "false",
+          CBasics::Stringize(
+              "Duplicate worlds found: %s and %s.  Delete one of the pakfiles from your drive!",
+              found->second.data(), it->first.data()));
+    }
+    worlds.insert(rstl::pair< CAssetId, rstl::string >(id, it->first));
   }
 }
 

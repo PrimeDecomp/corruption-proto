@@ -68,7 +68,10 @@ public:
   CResLoader& GetResLoader() { return mResLoader; }
   CFactoryMgr& GetFactoryMgr() { return mFactoryMgr; }
   FourCC GetResourceTypeById(CAssetId id) { return GetResLoader().GetResourceTypeById(id); }
-  rstl::vector< rstl::pair< rstl::string, SObjectTag > > GetResourceIdToNameList() const;
+  // Inline: main.cpp emits it (0x8000CB80).
+  rstl::vector< rstl::pair< rstl::string, SObjectTag > > GetResourceIdToNameList() const {
+    return mResLoader.GetResourceIdToNameList();
+  }
 
 private:
   typedef rstl::list< SLoadingData > LoadList;

@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include "Kyoto/CToken.hpp"
+#include "MetroidPrime/CRedundantHintManager.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
 
@@ -13,8 +14,15 @@
 
 class CBitStreamReader;
 class CGameMode;
+class CPlayerState;
 class CWorldTransManager;
 class CBitStreamWriter;
+
+// Minimal view of Echoes' per-world state (CGameState.cpp). Echoes' name.
+class CWorldState {
+public:
+  void SetAreaId(TAreaId areaId); // 0x8015D190; stores it at 0x8
+};
 
 // Minimal view of the prototype's CGameState for main.cpp; only the members main touches are
 // placed, the rest is padding. Nested types and accessor names follow Echoes.
@@ -45,6 +53,17 @@ public:
   };
 
   CGameOptions& GameOptions() { return mGameOptions; }
+  // Echoes' names. CStateManager's update adds the frame time to the play time while running;
+  // the setter (0x80159C50) clamps it.
+  double GetTotalPlayTime() const { return mTotalPlayTime; }
+  void SetTotalPlayTime(double time);
+  // Guessed name. 0x80159C8C returns the pointer at 0x20; the update ticks the timed power-ups
+  // through it.
+  CPlayerState* PlayerState();
+  // Echoes' name. 0x80159D20 looks up the state of the world id at 0x0.
+  CWorldState& CurrentWorldState();
+  // Echoes' name for its CHintOptions, which this class replaces.
+  CRedundantHintManager& HintOptions() { return mHintOptions; }
   SPreviousGameResults& PreviousGameResults() { return mPreviousGameResults; } // Guessed name
   rstl::vector< CToken >& AudioGroups() { return mAudioGroups; }               // Guessed name
   // Out of line (0x80159C7C); returns the rc_ptr at 0x28. Echoes' name.
@@ -59,11 +78,22 @@ public:
   CGameMode& GetGameMode();                                                           // 0x80159BB0
   CGameMode& GetGameMode() const;                                                     // 0x80159BB8
   void SetQueuedScriptMsgEnabled(bool enabled) { mQueuedScriptMsgEnabled = enabled; } // Guessed
+  // Guessed names, after the fields below.
+  bool IsQueuedScriptMsgEnabled() const { return mQueuedScriptMsgEnabled; }
+  TEditorId GetQueuedScriptMsgTarget() const { return mQueuedScriptMsgTarget; }
+  int GetQueuedScriptMsg() const { return mQueuedScriptMsg; }
+  void ClearQueuedScriptMsg() {
+    mQueuedScriptMsg = -1;
+    mQueuedScriptMsgTarget = kInvalidEditorId;
+  }
 
 private:
-  uchar x0_[0x68];
+  uchar x0_[0x30];
+  double mTotalPlayTime; // Echoes' name
+  uchar x38_[0x30];
   CGameOptions mGameOptions;
-  uchar xc4_[0xdc];
+  CRedundantHintManager mHintOptions;
+  uchar xd8_[0xc8];
   SPreviousGameResults mPreviousGameResults;
   rstl::vector< CToken > mAudioGroups;
   uchar x204_[0x104];

@@ -106,7 +106,9 @@ public:
   // Echoes' names. The world, the area ids and the object lists are no longer inline: callers
   // across the DOL branch to these out-of-line getters.
   CWorld* World();
-  const CWorld* GetWorld() const;
+  // CStateManager's update calls the world's Update and TravelToArea through it, so unlike
+  // Echoes the const getter hands out a mutable world.
+  CWorld* GetWorld() const;
   // Guessed name. CStateManager (0x80295680) hands over the world it creates; the old one is
   // deleted.
   void SetWorld(rstl::auto_ptr< CWorld > world);
@@ -150,11 +152,12 @@ public:
   CPlayer* Player();
   void SetPlayer(CPlayer* player); // Guessed name
 
+  // Echoes' name. Delivers every queued message; a kSM_Delete message then buries its target.
+  // CStateManager's update runs it three times a frame.
+  void DispatchScriptMessages(); // 0x80298594
+
 private:
   const CObjectList& GetAllObjectList() const { return *mObjectLists[0]; } // Guessed name
-
-  // Echoes' name. Delivers every queued message; a kSM_Delete message then buries its target.
-  void DispatchScriptMessages(); // 0x80298594
 
   // Guessed names. The "Script msg Debugger" filter (0x802989A0): whether a delivered message is
   // logged, given the Sender/Target/Type/Exclude Type/State/Exclude State choices. The

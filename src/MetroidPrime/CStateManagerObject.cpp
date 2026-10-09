@@ -106,7 +106,7 @@ void CStateManagerObject::SetWorld(rstl::auto_ptr< CWorld > world) { mWorld = wo
 
 CWorld* CStateManagerObject::World() { return mWorld.get(); }
 
-const CWorld* CStateManagerObject::GetWorld() const { return mWorld.get(); }
+CWorld* CStateManagerObject::GetWorld() const { return mWorld.get(); }
 
 bool CStateManagerObject::HasWorld() const { return mWorld.get() != nullptr; }
 

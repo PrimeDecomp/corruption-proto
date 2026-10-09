@@ -11,7 +11,9 @@
 #include "Kyoto/TSignal2.hpp"
 #include "Kyoto/TSignal3.hpp"
 #include "Kyoto/TToken.hpp"
+#include "MetroidPrime/CGameProfileStats.hpp"
 #include "MetroidPrime/CWeaponMgr.hpp"
+#include "MetroidPrime/Player/CPlayerState.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
 
 #include "rstl/map.hpp"
@@ -19,13 +21,16 @@
 #include "rstl/single_ptr.hpp"
 #include "rstl/string.hpp"
 
+class CActor;
 class CActorModelParticles;
 class CArchitectureQueue;
 class CDependencyGroup;
 class CDisplayManager;
 class CEnvFxManager;
 class CFluidPlaneManager;
+class CDamageInfo;
 class CMapWorldInfo;
+class CPlayer;
 class CRenderManager;
 class CRumbleManager;
 class CSaveGameInterface;
@@ -36,6 +41,7 @@ class CStateManagerCallbackLists;
 class CStateManagerCollision;
 class CStateManagerObject;
 class CTexture;
+class CVector3f;
 class CUserEvaluatorDescription;
 class CWorldLayerState;
 class CWorldTransManager;
@@ -134,6 +140,11 @@ public:
   // 0x5D0 signal before the members go.
   ~CStateManager();
 
+  // Echoes' name. CMFGame calls it with the frame time and its queue; see the frame flow above.
+  void Update(float dt, CArchitectureQueue& queue);
+  // Echoes' name. CMFGame passes the frame number of its kAM_FrameBegin message.
+  void FrameBegin(int frame);
+
   // Echoes' names, in Echoes' order. The constructor installs the callback with CMemory; unlike
   // Echoes, it first reports the last and current areas.
   void SwapOutTexturesToARAM(int, uint);
@@ -152,26 +163,48 @@ public:
   // Guessed name. Restarts the "PhazonEnragedSlowdownUSER" time curve.
   void StartPhazonEnragedSlowdown();
 
-  // Two name-keyed tables of three counters each, kept in .sbss (0x80799E5C, 0x80799E60).
+  // Echoes' names and signatures, unless noted.
+  void ShowPausedHUDMemo(CAssetId strg, float time);
+  void UpdateEscapeSequenceTimer(float dt);
+  void UpdateHintState(float dt);
+  void UpdateDynamicLayers();
+  void UpdateAreaSounds();
+  void ProcessPlayerInput();
+  void PreThinkObjects(float dt);
+  // Unlike Echoes, it also takes the update's statistics.
+  void Think(float dt, CGameProfileStats& stats);
+  void PostUpdatePlayer(float dt);
+  void CrossTouchActors();
+  void DisplayAlertAboutOutOfAmmo(const CPlayer& player, CPlayerState::EItemType type);
+  bool ApplyLocalDamage(const CVector3f& pos, const CVector3f& dir, CActor& damagee, float damage,
+                        TUniqueId source, TUniqueId owner, const CDamageInfo& damageInfo,
+                        bool radiusDamage);
+
+  // Two name-keyed tables of counters, kept in .sbss (0x80799E5C, 0x80799E60).
   // CGameProfileStats.cpp prints them ("%s-%3d/%3d-%5d") and adds to them, CRenderManager.cpp
   // reads the first; the constructor news both (lines 367 and 368) and the destructor deletes
   // them. They are two map instantiations (separate node-freeing instances at 0x80297CE8 and
-  // 0x80297D68), so their value types differ, but what they count is not known. All names
-  // guessed, and so is their owner.
-  struct SProfileCountersA {
-    int x0_;
-    int x4_;
-    int x8_;
-  };
+  // 0x80297D68), so their value types differ. The first shares its destructor (0x80294514) with
+  // CGameProfileStats' map, so it holds the same statistics; what the second counts is not
+  // known. All names guessed, and so is their owner.
   struct SProfileCountersB {
     int x0_;
     int x4_;
     int x8_;
   };
-  static rstl::map< rstl::string, SProfileCountersA >* sProfileCountersA;
+  static rstl::map< rstl::string, CGameProfileStats::SStats >* sProfileCountersA;
   static rstl::map< rstl::string, SProfileCountersB >* sProfileCountersB;
 
 private:
+  // Guessed names. The update's debug passes: the entity index check ("ENTITY INDEX MISMATCH",
+  // 0x802951A8), the map world sphere (0x8029530C) and the low-memory report (0x80294748).
+  void CheckEntityIndices();
+  void UpdateMapWorldSphere();
+  void ReportLowMemory();
+  // Guessed name. 0x8028F448 plays the "PhazonEnragedSlowdownUSER" curve while it runs and
+  // returns the scaled frame time.
+  float ApplyPhazonEnragedSlowdown(float dt);
+
   // The constructor news these (0x5E8, 0x1138 and 0x1C038 bytes); their constructors live in
   // CStateManagerCallbackLists.cpp, CStateManagerObject.cpp and CStateManagerCollision.cpp, and
   // the class names are guessed from those files. The destructor deletes them last.
@@ -238,10 +271,10 @@ private:
   // Guessed name. FrameBegin counts the frames rendered while the cinematic camera is not yet
   // active and warns ("BUG THIS: %d frame Cinematic Glitch before camera '%s'!") when the
   // cinematic starts after one to three of them.
-  int mCinematicGlitchFrames;
+  uint mCinematicGlitchFrames;
   // Echoes' names. The update shows the queued memo when the two frame counts meet.
-  int mHudMessageFrameCount;
-  int mPausedHudMemoFrameCount;
+  uint mHudMessageFrameCount; // Unsigned here, unlike Echoes: the update compares them unsigned
+  uint mPausedHudMemoFrameCount;
   CAssetId mPausedHudMemoAssetId;
   float mQueuedHudMemoDismissalDelay;
   CAssetId mMapTeleportWorldId; // Echoes' name

@@ -10,6 +10,7 @@
 #include "rstl/vector.hpp"
 
 class CAudioSoundEffect;
+class CStateManager;
 class CElectricDescription;
 class CGenDescription;
 
@@ -48,6 +49,8 @@ public:
   };
 
   CActorModelParticles(); // 0x8016751C
+
+  void Update(float dt, CStateManager& mgr); // Echoes' name; 0x80167460
 
 private:
   // Echoes' name (0x801655B4): one CSystem per "<effect>_DGRP" dependency group.

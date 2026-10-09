@@ -38,6 +38,14 @@ public:
   CStateManagerCollision(CStateManager& mgr, CStateManagerObject& objects);
   ~CStateManagerCollision();
 
+  // Echoes' names for the passes CStateManager's update makes in this order (Echoes' update
+  // calls UpdateSortedLists, MovePlatforms, MoveActors and the player's CGameCollision::Move);
+  // MovePlayer is a guessed name.
+  void UpdateSortedLists();     // 0x8029C7F8
+  void MovePlatforms(float dt); // 0x8029C1B0
+  void MoveActors(float dt);    // 0x8029BF74
+  void MovePlayer(float dt);    // 0x8029C160
+
 private:
   // 0x8029C6B8. Prime's UpdateActorInSortedLists body, run for every added entity and every
   // entity whose active state changes: a dirty actor that uses the sorted lists is inserted,

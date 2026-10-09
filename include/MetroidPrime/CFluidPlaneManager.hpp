@@ -38,7 +38,8 @@ public:
     TUniqueId mId;
   };
 
-  CFluidPlaneManager(); // 0x800F7A3C
+  CFluidPlaneManager();  // 0x800F7A3C
+  void Update(float dt); // Echoes' name; 0x800F79C8
 
   static CFluidProfile sProfile; // 0x8078178C
 

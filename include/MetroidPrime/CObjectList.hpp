@@ -44,8 +44,9 @@ public:
   // the list it gets from ObjectListById through it.
   CEntity* operator[](int idx);
   // Echoes' names; CStateManagerObject's add, remove and list-update paths call these.
-  void RemoveObject(TUniqueId uid); // 0x80011718
-  void AddObject(CEntity& entity);  // 0x8001180C
+  void RemoveObject(TUniqueId uid);   // 0x80011718
+  void AddObject(CEntity& entity);    // 0x8001180C
+  int size() const { return mCount; } // Echoes' name
 
   // Echoes' guessed name. CStateManagerObject's constructor keeps the dynamic lists in a second
   // view, which UpdateObjectInLists re-filters when an entity changes.

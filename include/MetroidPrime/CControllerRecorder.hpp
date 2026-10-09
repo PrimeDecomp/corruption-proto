@@ -8,6 +8,8 @@
 #include "rstl/string.hpp"
 #include "rstl/vector.hpp"
 
+class CStateManager;
+
 // Minimal view of the prototype's demo/controller recorder (CControllerRecorder.cpp,
 // 0x80120D74..0x8012478C), embedded in CInputGenerator at 0x10. Neither Echoes nor Prime has
 // it. Only what the architecture tick reads is placed; the rest is padding. Guessed names: the
@@ -18,6 +20,11 @@ public:
   float GetGameSpeed() const { return mGameSpeed; }
   bool GetStepFrame() const { return mStepFrame; }
   void ClearStepFrame(); // 0x8012124C
+
+  // Guessed name. 0x801239B8 builds a capture name from the state manager (0x801236F8) and
+  // hands it to CGameDebug (0x8003C9B0); CStateManager's update calls it while a movie capture
+  // runs without a name.
+  static void SetMovieCaptureName(CStateManager& mgr);
 
   // Guessed name. Set by the recorder's profiling switch (0x80121A14); main keeps the GX
   // performance counters running while it is set.

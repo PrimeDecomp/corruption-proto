@@ -15,6 +15,7 @@
 #include "rstl/vector.hpp"
 
 class CAudioSoundEffect;
+class CStateManager;
 class CGenDescription;
 class CTexture;
 
@@ -56,6 +57,8 @@ enum EEnvFxType {
 class CEnvFxManager {
 public:
   CEnvFxManager();
+
+  void Update(float dt, CStateManager& mgr); // Echoes' name; 0x80183F40
 
   // Echoes' name (0x80184738); CStateManager's destructor calls it.
   void Cleanup();

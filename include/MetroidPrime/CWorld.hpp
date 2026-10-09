@@ -9,11 +9,25 @@
 
 class CGameArea;
 class CMapWorld;
+class CStateManager;
 
-// Minimal: only what CStateManagerObject, CMain and CActor use.
+// Minimal: only what CStateManagerObject, CStateManager, CMain and CActor use.
 class CWorld : public IWorld {
 public:
+  // Echoes' names.
+  enum EAreaTravelType {
+    kATT_LoadAdjacent,
+    kATT_SkipAdjacent,
+  };
+
   virtual ~CWorld();
+
+  // Echoes' names and signatures; CStateManager's update calls them.
+  void TravelToArea(const TAreaId& areaId, CStateManager& mgr, EAreaTravelType travelType);
+  void Update(float dt); // 0x80037A60
+  // 0x80037424. Unlike Echoes' inline getter it asserts "area->IsFullyConstructed()" ("Invalid
+  // area passed into GetArea()").
+  CGameArea* GetArea(TAreaId id);
 
   // Echoes' name and signature; reads the map world through the resource at 0x38 (0x80039038).
   CMapWorld* GetMapWorld() const;

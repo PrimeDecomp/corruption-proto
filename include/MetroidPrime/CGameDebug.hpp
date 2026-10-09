@@ -557,6 +557,8 @@ public:
   // counts the time down ("Movie Capture Time Left = %f\n"), then ends the capture.
   bool IsMovieCaptureRunning() const { return xA16B_; }
   float GetMovieCaptureTime() const { return mMovieCaptureTime; }
+  // Guessed name. CStateManager::FrameBegin stores the render frame here.
+  void SetFrameIndex(int frame) { xA188_ = frame; }
   void FinishMovieCapture() {
     xA16B_ = false;
     xA16C_ = true;

@@ -72,8 +72,9 @@ public:
   bool GetHardModeEnabled() const { return mHardMode; }
   void SetHardMode(bool hardMode); // 0x80159C38
   class CPlayerState* GetPlayerState();
-  // Its identical twin just before it (0x80159C84). CStateManager's escape timer calls it through
-  // a const game state, like the const GetGameMode below.
+  // Its identical twin just before it (0x80159C84). KillPlayer (0x80292440) clears the alive bit
+  // through 0x80159C8C, so that one is mutable; CScriptSpecialFunction (0x80110DB4) only passes
+  // 0x80159C84's result to the const GetItemAmount, and the escape timer only reads it.
   const class CPlayerState* GetPlayerState() const;
   // Echoes' names. Both return the game mode owned through the rstl::auto_ptr at 0x198. Only the
   // first is called so far (CStateManager's constructor, CGameDebug); which twin is const is

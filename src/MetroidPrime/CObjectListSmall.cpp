@@ -1,26 +1,15 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x80261CD0..0x80262A40 (31 native functions).
 // Source identity: the "CObjectListSmall.cpp(41) : " assert.
-// The five subclasses (vtables 0x806B9CF8..0x806B9D38) are not implemented: their names are not
-// known. Each one's IsQualified casts the entity to one class through a non-null TypesMatch.cpp
-// cast (0x801D753C: type 0x3B, 0x801D7D94: CGameCamera, 0x801D6F78: type 0x6A, 0x801D762C:
-// CScriptDock, 0x801D75D8: CScriptDoor). CStateManagerObject builds them in the order dock, door,
-// 0x6A, camera, 0x3B, so its small list 3 holds the cameras.
-// 0x80261CD0 +0x60: subclass (type 0x3B) destructor
-// 0x80261D30 +0x30: its IsQualified
-// 0x80261D60 +0x40: its constructor
-// 0x80261DA0 +0x30: camera subclass IsQualified
-// 0x80261DD0 +0x40: camera subclass constructor
-// 0x80261E10 +0x30: subclass (type 0x6A) IsQualified
-// 0x80261E40 +0x40: its constructor
-// 0x80261E80 +0x30: dock subclass IsQualified
-// 0x80261EB0 +0x40: dock subclass constructor
-// 0x80261EF0 +0x30: door subclass IsQualified
-// 0x80261F20 +0x40: door subclass constructor
-// 0x80262890 +0x60: camera subclass destructor
-// 0x802628F0 +0x60: subclass (type 0x6A) destructor
-// 0x80262950 +0x60: dock subclass destructor
-// 0x802629B0 +0x60: door subclass destructor
+// The five subclasses (vtables 0x806B9CF8..0x806B9D38; GameObjectLists.hpp) follow the base
+// class. Each one's IsQualified casts the entity through a non-null TypesMatch.cpp cast; the
+// classes come from the TypesMatch override their type id selects. CStateManagerObject builds them
+// in the order dock, door, 0x6A, camera, grapple point.
+// Listed below are the functions not implemented yet.
+// 0x80261E10 +0x30: CType106ListSmall::IsQualified (cast 0x801D6F78, type 0x6A, whose class no
+//   TypesMatch override in the DOL names)
+// 0x802628F0 +0x60: CType106ListSmall's implicit destructor (emitted with its vtable, once
+//   IsQualified is defined)
 // 0x80262A10 +0x30: static initializer (.ctors 0x8065B8FC) for seven SDA constants shared through
 //   a header (three -1 ids, then 0, 1, 2 and -1)
 
@@ -28,11 +17,18 @@
 
 #include "Kyoto/Alloc/Assert.hpp"
 #include "MetroidPrime/CEntity.hpp"
+#include "MetroidPrime/GameObjectLists.hpp"
+#include "MetroidPrime/TCastTo.hpp"
 
 #include "rstl/algorithm.hpp"
 
+class CGameCamera;
+class CScriptDock;
+class CScriptDoor;
+class CScriptGrapplePoint;
+
 // 0x8026285C
-CObjectListSmall::CObjectListSmall(bool flag) : x20_(flag) {}
+CObjectListSmall::CObjectListSmall(bool dynamic) : mDynamic(dynamic) {}
 
 // 0x8026277C
 CObjectListSmall::~CObjectListSmall() {}
@@ -73,4 +69,30 @@ void CObjectListSmall::RemoveObject(TUniqueId uid) {
       return;
     }
   }
+}
+
+CDoorListSmall::CDoorListSmall() : CObjectListSmall(false) {}
+
+bool CDoorListSmall::IsQualified(const CEntity& entity) const {
+  return TCastToConstPtr< CScriptDoor >(entity) != nullptr;
+}
+
+CDockListSmall::CDockListSmall() : CObjectListSmall(false) {}
+
+bool CDockListSmall::IsQualified(const CEntity& entity) const {
+  return TCastToConstPtr< CScriptDock >(entity) != nullptr;
+}
+
+CType106ListSmall::CType106ListSmall() : CObjectListSmall(false) {}
+
+CGameCameraListSmall::CGameCameraListSmall() : CObjectListSmall(false) {}
+
+bool CGameCameraListSmall::IsQualified(const CEntity& entity) const {
+  return TCastToConstPtr< CGameCamera >(entity) != nullptr;
+}
+
+CGrapplePointListSmall::CGrapplePointListSmall() : CObjectListSmall(false) {}
+
+bool CGrapplePointListSmall::IsQualified(const CEntity& entity) const {
+  return TCastToConstPtr< CScriptGrapplePoint >(entity) != nullptr;
 }

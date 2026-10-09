@@ -259,8 +259,10 @@ class CObjectListSmall {
 public:
   typedef TBlockList< CEntity*, 16 > TList;
 
-  // The five subclasses pass false; what the flag means is not known.
-  explicit CObjectListSmall(bool flag);
+  // Echoes' CFilteredObjectList flag: CStateManagerObject's constructor keeps the dynamic lists
+  // in a second view, which UpdateObjectInLists re-filters. The five subclasses
+  // (GameObjectLists.hpp) all pass false.
+  explicit CObjectListSmall(bool dynamic);
   virtual ~CObjectListSmall();
   virtual bool IsQualified(const CEntity& entity) const; // The base one returns true.
 
@@ -274,9 +276,11 @@ public:
   TList::const_iterator begin() const { return mList.begin(); }
   TList::const_iterator end() const { return mList.end(); }
 
+  bool IsDynamic() const { return mDynamic; } // Echoes' CFilteredObjectList name
+
 private:
   TList mList;
-  bool x20_;
+  bool mDynamic; // Echoes' CFilteredObjectList name
 };
 CHECK_SIZEOF(CObjectListSmall, 0x24)
 

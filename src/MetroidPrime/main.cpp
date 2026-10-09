@@ -10,37 +10,9 @@
 // 0x80005BA0 +0x50: retained emitted/native function; exact class/type/name unresolved
 // 0x80005C94 +0x150: retained emitted/native function; exact class/type/name unresolved
 // 0x80005DE4 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x80005E68 +0x1CC: retained emitted/native function; exact class/type/name unresolved
-// 0x800062E0 +0xC: retained emitted/native function; exact class/type/name unresolved
-// 0x800062EC +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x8000633C +0xB8: retained emitted/native function; exact class/type/name unresolved
-// 0x800063F4 +0xC: retained emitted/native function; exact class/type/name unresolved
-// 0x80006400 +0x40: retained emitted/native function; exact class/type/name unresolved
-// 0x80006440 +0x30: retained emitted/native function; exact class/type/name unresolved
-// 0x80006470 +0xC8: retained emitted/native function; exact class/type/name unresolved
-// 0x80006538 +0x5C: retained emitted/native function; exact class/type/name unresolved
-// 0x80006594 +0x60: retained emitted/native function; exact class/type/name unresolved
-// 0x800065F4 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x80006648 +0x104: retained emitted/native function; exact class/type/name unresolved
-// 0x8000674C +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x8000679C +0x60: retained emitted/native function; exact class/type/name unresolved
-// 0x800067FC +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x8000681C +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x80006840 +0x44: retained emitted/native function; exact class/type/name unresolved
-// 0x80006884 +0x68: retained emitted/native function; exact class/type/name unresolved
-// 0x800068EC +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x8000690C +0x28: retained emitted/native function; exact class/type/name unresolved
-// 0x800069E0 +0xE4: retained emitted/native function; exact class/type/name unresolved
-// 0x80006AC4 +0x150: retained emitted/native function; exact class/type/name unresolved
-// 0x80006C14 +0x64: retained emitted/native function; exact class/type/name unresolved
-// 0x80006C78 +0x58: retained emitted/native function; exact class/type/name unresolved
-// 0x80006CD0 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x80006D44 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x80006D98 +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80006DE8 +0x150: retained emitted/native function; exact class/type/name unresolved
-// 0x80006F38 +0x40: retained emitted/native function; exact class/type/name unresolved
-// 0x80006F78 +0x30: retained emitted/native function; exact class/type/name unresolved
-// 0x80006FA8 +0xA8: retained emitted/native function; exact class/type/name unresolved
+// 0x80006884 +0x68: rstl uninitialized copy of vector<uchar> for reserved_vector<vector<uchar>,3>'s copy (our rstl inlines it)
+// 0x800068EC +0x20: rstl construct<vector<uchar>> called from the copy above
+// 0x8000690C +0x28: its placement-new impl (null check, then vector<uchar>'s copy constructor)
 // 0x80007050 +0xF8: retained emitted/native function; exact class/type/name unresolved
 // 0x80007148 +0xD0: retained emitted/native function; exact class/type/name unresolved
 // 0x80007218 +0x230: retained emitted/native function; exact class/type/name unresolved
@@ -56,11 +28,8 @@
 // 0x8000900C +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x80009080 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x800090DC +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x800090FC +0x24: retained emitted/native function; exact class/type/name unresolved
-// 0x80009120 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x80009194 +0x94: retained emitted/native function; exact class/type/name unresolved
 // 0x80009228 +0x84: retained emitted/native function; exact class/type/name unresolved
-// 0x800092AC +0xA4: retained emitted/native function; exact class/type/name unresolved
 // 0x80009888 +0x54: retained emitted/native function; exact class/type/name unresolved
 // 0x80009F08 +0x7C0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A6C8 +0xC4: retained emitted/native function; exact class/type/name unresolved
@@ -1198,6 +1167,28 @@ void CMain::UpdateGPMetrics() {
   GXClearVCacheMetric();
   gAllocationTicks = 0;
   CTexture_SetBindCount(0);
+}
+
+// Like Prime (Echoes' is empty): the persistent options, the game options, the compressed save
+// data and the previous game results survive the new game state.
+void CMain::ResetGameState() {
+  CPersistentOptions systemOptions = gpGameState->SystemOptions();
+  CGameOptions gameOptions = gpGameState->GameOptions();
+  rstl::reserved_vector< rstl::vector< uchar >, 3 > compressedGameStates =
+      gpGameState->GetCompressedGameStates();
+  rstl::vector< uchar > compressedMultiplayerOptions =
+      gpGameState->GetCompressedMultiplayerOptions();
+  CGameState::SPreviousGameResults previousGameResults = gpGameState->PreviousGameResults();
+  mGameGlobalObjects->GameState() = nullptr;
+  gpGameState = nullptr;
+  mGameGlobalObjects->GameState() = rs_new_in("Main.cpp", 3042) CGameState();
+  gpGameState = mGameGlobalObjects->GameState().get();
+  gpGameState->SystemOptions() = systemOptions;
+  gpGameState->GameOptions() = gameOptions;
+  gpGameState->GameOptions().EnsureOptions();
+  gpGameState->SetCompressedGameStates(compressedGameStates);
+  gpGameState->SetCompressedMultiplayerOptions(compressedMultiplayerOptions);
+  gpGameState->PreviousGameResults() = previousGameResults;
 }
 
 int CMain::GetLanguage() const {

@@ -6,6 +6,7 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/CRandom16.hpp"
 
+class CRenderManager;
 class CStateManagerCallbackLists;
 class CStateManagerCollision;
 class CStateManagerObject;
@@ -18,6 +19,7 @@ public:
   CStateManagerObject& ObjectManager() { return *mObjectManager; } // Guessed name
   const CStateManagerObject& ObjectManager() const { return *mObjectManager; }
   CStateManagerCallbackLists& CallbackLists() { return *mCallbackLists; } // Guessed name
+  CRenderManager* RenderManager() { return mRenderManager; }              // Guessed name
   // CScriptLUA's RandomRange (0x802B5C24) inlines this warning before using the generator.
   CRandom16* Random() {
     if (!mRandomAvailable) {
@@ -35,7 +37,11 @@ private:
   CStateManagerCallbackLists* mCallbackLists; // Guessed name
   CStateManagerObject* mObjectManager;        // Guessed name
   CStateManagerCollision* mCollision;         // Guessed name
-  uchar xc_[0x16C - 0xC];
+  uchar xc_[0x18 - 0xC];
+  // Guessed name. CStateManager.cpp news this (0x780 bytes; the constructor 0x802AA5F4 is in
+  // CRenderManager.cpp and keeps the state manager at +4).
+  CRenderManager* mRenderManager;
+  uchar x1c_[0x16C - 0x1C];
   // Echoes' names. As in Echoes, the constructor builds the "DefaultShadow" token at 0x160, then
   // seeds this with 0 and clears the flag.
   CRandom16 mRandom;

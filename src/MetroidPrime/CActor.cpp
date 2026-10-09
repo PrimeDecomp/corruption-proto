@@ -11,18 +11,11 @@
 //   CFluidHeightCompare (by-value ids, const GetObjectById, TCastToConstPtr<CScriptWater>), and
 //   CScriptWater::GetWRSurfacePlane (0x80036F50, a z-up plane at CScriptWater+0x188). Only
 //   SetInFluid instantiates them.
-// 0x800369C8 / 0x800368E8: DrawTouchBounds and the helper it forwards to; needs CGameDebug
 // 0x80036804, 0x800367E4: square-root helpers
-// 0x80035998 / 0x80035B18: AcceptScriptMsg and its delegate thunk
 // 0x80035880: string copy from +0x88 (not a CActor method)
-// 0x800358A4: reserved_vector<TUniqueId, 4>::operator=, out of line with a constructing copy;
-//   the shared rstl header inlines it, so SetFluidList does not match yet
 // 0x8003527C: SetInFluid. Beyond the Echoes logic it prints "'%s' in area '%s' has just
-//   entered/exited ..." and "BUG THIS! Fluid list for '%s' is full ..." when a CGameDebug
-//   option (gpGameDebug+0x6134) is above 1, so it waits for CGameDebug.
-// 0x80034D20 / 0x80034D8C / 0x80034FFC: UpdateTouchBoundsDrawing, the helper that connects
-//   DrawTouchBounds to the draw signal at CStateManager+0x18 into 0xF0, and the delegate thunk;
-//   they need CGameDebug (option at gpGameDebug+0x4C94)
+//   entered/exited ..." and "BUG THIS! Fluid list for '%s' is full ..." when CGameDebug's
+//   "Show water entry/exit" is above 1.
 
 // SetFluidList and SetInFluid call reserved_vector<TUniqueId, 4>::operator= out of line.
 #define RSTL_DONT_INLINE_RESERVED_VECTOR
@@ -31,6 +24,9 @@
 
 #include "MetroidPrime/CDamageInfo.hpp"
 #include "MetroidPrime/CDamageVulnerability.hpp"
+#include "MetroidPrime/CGameDebug.hpp"
+#include "MetroidPrime/CGameDebugDraw.hpp"
+#include "MetroidPrime/CRenderManager.hpp"
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerObject.hpp"
 #include "MetroidPrime/TCastTo.hpp"
@@ -69,13 +65,25 @@ CActor::CActor(TUniqueId uid, const rstl::string& name, const CEntityInfo& info,
 
 CActor::~CActor() {}
 
+void CActor::DrawTouchBoundsBox() {
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_DrawObjectCollisionBoxes) != 0) {
+    rstl::optional_object< CAABox > bounds = GetTouchBounds();
+    if (bounds) {
+      CColor color = GetCollisionBoxColor();
+      DrawDebugAABox(bounds.data(), color.GetRed(), color.GetGreen(), color.GetBlue(), 1.f);
+    }
+  }
+}
+
 // Fades between red and green over a ten second cycle.
-CColor CActor::GetTouchBoundsColor() const {
+CColor CActor::GetCollisionBoxColor() const {
   const float t = CMath::ModF(CGraphics::GetSecondsMod900(), 10.f) / 10.f;
   const float green =
       (1.f + static_cast< float >(sin(CAbsAngle::FromDegrees(360.f * t).AsRadians()))) / 2.f;
   return CColor(1.f - green, green, 0.f, 1.f);
 }
+
+void CActor::DrawCollisionBoxes(const CStateManager&) { DrawTouchBoundsBox(); }
 
 CHealthInfo* CActor::HealthInfo() { return nullptr; }
 
@@ -295,6 +303,17 @@ void CActor::SetActive(bool active) {
   CEntity::SetActive(active);
 }
 
+void CActor::AcceptScriptMsg(CStateManager& mgr, const CScriptMsg& msg) {
+  CEntity::AcceptScriptMsg(mgr, msg);
+  if (msg.GetMessage() == kSM_Create) {
+    mCollisionBoxOptionConnection =
+        gpGameDebug->ConnectOption(CGameDebug::kDO_DrawObjectCollisionBoxes,
+                                   TFunctor1FromMethod< CActor, CStateManager& >::Make(
+                                       *this, &CActor::UpdateCollisionBoxDrawing));
+    UpdateCollisionBoxDrawing(mgr);
+  }
+}
+
 void CActor::Virtual28(CStateManager&) {}
 
 TUniqueId CActor::InFluidId() const {
@@ -353,6 +372,24 @@ void CActor::SetTransform(const CTransform4f& xf) {
   mTransform = xf;
   mPosition = xf.GetTranslation();
   SetTransformDirty();
+}
+
+void CActor::SetCollisionBoxDrawing(CRenderManager* renderMgr, bool enable) {
+  if (enable == (mCollisionBoxDrawConnection.get() != nullptr)) {
+    return;
+  }
+  if (enable) {
+    mCollisionBoxDrawConnection =
+        renderMgr->ConnectDebugDraw(TFunctor1FromMethod< CActor, const CStateManager& >::Make(
+            *this, &CActor::DrawCollisionBoxes));
+  } else {
+    mCollisionBoxDrawConnection = rstl::auto_ptr< IConnection >();
+  }
+}
+
+void CActor::UpdateCollisionBoxDrawing(CStateManager& mgr) {
+  SetCollisionBoxDrawing(mgr.RenderManager(),
+                         gpGameDebug->GetOptionInt(CGameDebug::kDO_DrawObjectCollisionBoxes) != 0);
 }
 
 CAudioHandle CActor::PlayPannedSoundEffect(CAssetId id, float volume, float pan) {

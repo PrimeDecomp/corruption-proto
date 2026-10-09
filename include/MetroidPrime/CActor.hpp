@@ -21,14 +21,9 @@
 class CDamageInfo;
 class CDamageVulnerability;
 class CHealthInfo;
+class CRenderManager;
 class CWeaponMode;
-
-// Guessed name. The objects owned at 0xE8 and 0xF0 are signal connections built from a member
-// delegate (AcceptScriptMsg fills 0xE8 on 'XCRT'); both are deleted through their vtables.
-class CActorSignalConnection {
-public:
-  virtual ~CActorSignalConnection();
-};
+class IConnection;
 
 // Layout from the constructor (0x80036BAC) and destructor (0x80036AE0); vtable lbl_806B22A8.
 // Compared with Echoes, the prototype's CActor has no model data, actor lights, shadow, scan
@@ -70,21 +65,19 @@ public:
   virtual EWeaponCollisionResponseTypes GetCollisionResponseType(const CVector3f&, const CVector3f&,
                                                                  const CWeaponMode&,
                                                                  int) const; // 0x58
-  // Guessed name. 0x5C: forwards to a non-virtual helper (0x800369C8) that, while a CGameDebug
-  // option is set, draws the touch bounds in GetTouchBoundsColor's color.
-  // UpdateTouchBoundsDrawing connects it (pointer to member lbl_806B229C) to a draw signal in 0xF0.
-  virtual void DrawTouchBounds();
+  // Guessed name. 0x5C: draws the touch bounds while CGameDebug's "Draw Object Collision Boxes"
+  // is set. UpdateCollisionBoxDrawing connects it to the render manager's debug draw signal.
+  virtual void DrawCollisionBoxes(const CStateManager& mgr);
   virtual void Virtual60();                                    // 0x60, empty
   virtual void Virtual64();                                    // 0x64, weak, returns 0
   virtual void Virtual68();                                    // 0x68, weak, empty
   virtual void Virtual6C();                                    // 0x6C, weak, empty
   virtual CVector3f Virtual70(const CStateManager& mgr) const; // 0x70, weak, GetAimPosition(mgr, 0)
-  // Guessed name. 0x74: connects DrawTouchBounds to the draw signal while a CGameDebug option is
-  // set and disconnects it otherwise. AcceptScriptMsg subscribes it (pointer to member
-  // lbl_806B2290) to CGameDebug option 0xF5 into 0xE8 and then calls it.
-  virtual void UpdateTouchBoundsDrawing(CStateManager& mgr);
-  // Guessed name. 0x78: only DrawTouchBounds uses this pulsing color.
-  virtual CColor GetTouchBoundsColor() const;
+  // Guessed name. 0x74: connects DrawCollisionBoxes while "Draw Object Collision Boxes" is set
+  // and disconnects it otherwise. AcceptScriptMsg subscribes it to that option on 'XCRT'.
+  virtual void UpdateCollisionBoxDrawing(CStateManager& mgr);
+  // Guessed name. 0x78: the pulsing color the collision boxes are drawn in.
+  virtual CColor GetCollisionBoxColor() const;
   // Guessed name. 0x7C: empty here; called after every material change so subclasses can react.
   virtual void MaterialChanged();
 
@@ -131,6 +124,10 @@ public:
 private:
   // Guessed name. 0x80036478: after NotifyDamage, sends a state that names the weapon type.
   void SendWeaponDamageState(CStateManager& mgr, const CDamageInfo& info, bool damaged);
+  // Guessed names. 0x80034D8C and 0x800369C8, the non-virtual halves of the collision box
+  // drawing.
+  void SetCollisionBoxDrawing(CRenderManager* renderMgr, bool enable);
+  void DrawTouchBoundsBox();
 
   CTransform4f mTransform;                         // 0x5C
   CVector3f mPosition;                             // 0x8C, copy of the transform's translation
@@ -147,8 +144,10 @@ private:
   uint mCallTouch : 1;
   uint xe4_5_ : 1;
   uint xe4_6_ : 1;
-  rstl::auto_ptr< CActorSignalConnection > xe8_;
-  rstl::auto_ptr< CActorSignalConnection > xf0_;
+  // Guessed names. The subscription to "Draw Object Collision Boxes" and the connection to the
+  // render manager's debug draw signal.
+  rstl::auto_ptr< IConnection > mCollisionBoxOptionConnection; // 0xE8
+  rstl::auto_ptr< IConnection > mCollisionBoxDrawConnection;   // 0xF0
 };
 CHECK_SIZEOF(CActor, 0xF8)
 

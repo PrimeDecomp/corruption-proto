@@ -31,6 +31,10 @@ public:
   // by CGameDebug.
   static float GetSliderPosition(int value, int min, int max);
 
+  // Guessed name. Echoes keeps its sound (surround) mode in the first field; CGameDebug's
+  // "Sound Mode" option (Mono/Stereo/Surround) starts from this one.
+  int GetSoundMode() const { return x0_; }
+
 private:
   uint x0_;
   uint x4_;

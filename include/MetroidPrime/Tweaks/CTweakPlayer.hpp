@@ -16,6 +16,39 @@ public:
   float GetLeftAnalogMax() const;
   float GetRightAnalogMax() const;
 
+  // Named after the SLdrTweakPlayer fields they return. Defined in TweaksAccessors.cpp.
+  float GetNormalTurnFactor() const;
+  float GetFreeLookTurnFactor() const;
+  bool GetRevFreeLookGun() const;
+  bool GetRevOrbitLockGun() const;
+  bool GetRevOrbitTagObjects() const;
+  bool GetRevLockCursor() const;
+  bool GetOrbitDash() const;
+  bool GetOrbitDashUsesTap() const;
+  float GetOrbitDashTapTime() const;
+  float GetOrbitDashStickThreshold() const;
+  float GetOrbitDashDoubleJumpImpulse() const;
+  float GetOrbitDashVerticalDoubleJumpAccel() const;
+  float GetOrbitDashHorizontalDoubleJumpAccel() const;
+  bool GetScanFreezesGame() const;
+  bool GetScanLineOfSight() const;
+  bool GetShieldAllowsMotion() const;
+
+  // The hyper mode tuning of a hyper mode type: 0 reads hyperModeTimer, anything else
+  // hyperModePhazonLevel.
+  bool GetHyperModeInvulnerablePhazonLoss(int type) const;
+  float GetHyperModeInvulnerableTime(int type) const;
+  float GetHyperModeCorruptionTime(int type) const;
+  bool GetHyperModeConstantCorruptionRate(int type) const;
+  float GetHyperModeCorruptionRate(int type) const;
+  float GetHyperModePhazonLevel(int type) const;
+  float GetHyperModePhazonCapacity(int type) const;
+  float GetHyperModeDangerPercentage(int type) const;
+  float GetHyperModeBeamLossAmount(int type) const;
+  float GetHyperModeMissileLossAmount(int type) const;
+  float GetHyperModePhazonBallRate(int type) const;
+  float GetHyperModeDamageMultiplier(int type) const;
+
 private:
   const SLdrTweakPlayer* mData;
 };

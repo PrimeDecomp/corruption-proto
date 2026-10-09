@@ -12,6 +12,10 @@ class CTweakTargeting {
 public:
   explicit CTweakTargeting(const SLdrTweakTargeting& data) : mData(&data) {}
 
+  // Guessed name, after the CGameDebug option it initializes; it returns the unnamed bool at
+  // 0x274. Defined in TweaksAccessors.cpp.
+  bool GetShowOrbitPoint() const;
+
 private:
   const SLdrTweakTargeting* mData;
 };

@@ -12,6 +12,10 @@ class CTweakAutoMapper {
 public:
   explicit CTweakAutoMapper(const SLdrTweakAutoMapper& data) : mData(&data) {}
 
+  // Guessed name, after the CGameDebug option it initializes; it returns the unnamed bool at
+  // 0xF4. Defined in TweaksAccessors.cpp.
+  bool GetMapCheatEnabled() const;
+
 private:
   const SLdrTweakAutoMapper* mData;
 };

@@ -55,6 +55,7 @@ public:
 
   CGameOptions& GameOptions() { return mGameOptions; }
   CPersistentOptions& SystemOptions() { return mSystemOptions; } // Echoes' name
+  void InitializeMemoryStates(); // Echoes' name; 0x8015BAD8
   // Echoes' names. CStateManager's update adds the frame time to the play time while running;
   // the setter (0x80159C50) clamps it.
   double GetTotalPlayTime() const { return mTotalPlayTime; }

@@ -82,7 +82,6 @@
 // 0x8000B308 +0xB0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B3B8 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B444 +0x118: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B69C +0xCC: retained emitted/native function; exact class/type/name unresolved
 // 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
 // 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
 // 0x8000C218 +0xBC: CGameGlobalObjects LoadStringTable; STRG_Main token ownership
@@ -164,6 +163,7 @@
 #include "MetroidPrime/CGameProfiler.hpp"
 #include "MetroidPrime/CInGameTweakManager.hpp"
 #include "MetroidPrime/CMainFlow.hpp"
+#include "MetroidPrime/CMemoryCard.hpp"
 #include "MetroidPrime/CSaveRegion.hpp"
 #include "MetroidPrime/CWorld.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
@@ -314,8 +314,6 @@ static const SGPPerf1Metric sGPPerf1Metrics[] = {
 };
 static const int kNumGPPerf1Metrics = sizeof(sGPPerf1Metrics) / sizeof(sGPPerf1Metrics[0]);
 extern IController* gpController;
-class CMemoryCard;
-extern CMemoryCard* gpMemoryCard;
 
 extern bool sProgressiveModePrompt; // Echoes name; the second bit of the save region.
 
@@ -1130,6 +1128,22 @@ void CGameArchitectureSupport::Update() {
   gpGameState->WorldTransitionManager()->TouchModels();
   mArchQueue.Push(MakeMsg::CreateFrameEnd(kAMT_Game, mGameFrameCount));
   mIoWinMgr.PumpMessages(mArchQueue);
+}
+
+// Same as Echoes.
+void CMain::MemoryCardInitializePump() {
+  if (gpMemoryCard != nullptr) {
+    return;
+  }
+  if (mGameGlobalObjects->MemoryCard().get() == nullptr) {
+    mGameGlobalObjects->MemoryCard() = rs_new_in("Main.cpp", 1681) CMemoryCard();
+  }
+  CMemoryCard* card = mGameGlobalObjects->MemoryCard().get();
+  if (card->InitializePump()) {
+    gpMemoryCard = card;
+    gpGameState->SystemOptions().InitializeMemoryState();
+    gpGameState->InitializeMemoryStates();
+  }
 }
 
 // The "DrawTime Info" option picks one counter of each GX performance group (its value modulo

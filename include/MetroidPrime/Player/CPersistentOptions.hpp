@@ -12,6 +12,10 @@
 // Minimal view after Echoes (where the name is guessed): the system-wide environment variables
 // plus the seen cinematics and the selected save slot.
 class CPersistentOptions : public CGameStateEnvVarManager {
+public:
+  // Echoes' name. 0x8015DB30: adds the memory card's system variables.
+  void InitializeMemoryState();
+
 private:
   rstl::vector< rstl::pair< CAssetId, TEditorId > > mCinematicStates;
   int mSaveIdx;

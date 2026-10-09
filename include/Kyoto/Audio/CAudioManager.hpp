@@ -240,6 +240,18 @@ public:
   static void SetChannel(ESfxChannels channel);
   static ESfxChannels GetChannel();
   static void KillAll(ESfxChannels channel);
+  // Guessed names. Corruption's FMOD-side counterparts of Echoes' CSfxManager channels: a
+  // current voice context (0x8079B680) that every voice in the pool (0x8078EF10, 0x70-byte
+  // voices) is tagged with. CStateManager::SetGameState uses them where Echoes calls
+  // GetChannel/KillAll/SetChannel, but the values differ: 1 while the game runs, 2 while it is
+  // soft-paused; the pause screen and the player GUI select 0. Switching from 0 to 1 stops
+  // context 0 and resumes context 1, switching from 1 to 0 pauses context 1, and any other
+  // switch stops every voice.
+  static int GetVoiceContext();
+  static void SetVoiceContext(int context);
+  static void SetContextPaused(int context, bool paused);
+  static void StopContextVoices(int context);
+  static void StopAllVoices();
   static void TurnOnChannel(ESfxChannels channel);
   static void TurnOffChannel(ESfxChannels channel);
   static void AddListener(ESfxChannels channel, const CVector3f& position,

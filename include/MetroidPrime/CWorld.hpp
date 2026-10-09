@@ -25,6 +25,9 @@ public:
   // Echoes' names and signatures; CStateManager's update calls them.
   void TravelToArea(const TAreaId& areaId, CStateManager& mgr, EAreaTravelType travelType);
   void Update(float dt); // 0x80037A60
+  // Echoes' name and signature (0x80037584): pauses the areas still loading and keeps the flag.
+  // CStateManager::SetGameState calls it when entering or leaving the soft pause.
+  void SetLoadPauseState(bool paused);
   // 0x80037424. Unlike Echoes' inline getter it asserts "area->IsFullyConstructed()" ("Invalid
   // area passed into GetArea()").
   CGameArea* GetArea(TAreaId id);

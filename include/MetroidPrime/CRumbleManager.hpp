@@ -26,6 +26,9 @@ public:
 
   // Echoes' name; CStateManager's destructor inlines it.
   void HardStopAll() { mRumbleGenerator.HardStopAll(); }
+  // Echoes' names and bodies; CStateManager::SetGameState inlines them.
+  bool GetDisabled() const { return mRumbleGenerator.GetDisabled(); }
+  void SetDisabled(bool disabled) { mRumbleGenerator.SetDisabled(disabled); }
 
 private:
   EIOPort mPort; // Echoes' name

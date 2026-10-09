@@ -165,6 +165,10 @@ public:
   // Guessed name. Restarts the "PhazonEnragedSlowdownUSER" time curve.
   void StartPhazonEnragedSlowdown();
 
+  // Echoes' name and signature. Like Echoes, it pauses the world's loading during the soft pause
+  // and turns the rumble off; the CAudioManager voice context replaces Echoes' sfx channel.
+  void SetGameState(EGameState state);
+
   // Echoes' names and signatures, unless noted.
   void ShowPausedHUDMemo(CAssetId strg, float time);
   void UpdateEscapeSequenceTimer(float dt);

@@ -9,8 +9,6 @@
 // 0x8028F5A0 +0x60: owned native method/helper retained; exact source-level name unresolved
 // 0x8028F600 +0x5C: calls 0x80051A60 (CGameArea) with the manager on every area; the update
 //   calls it after the world update, like Echoes' UpdateDynamicLayers
-// 0x8028F68C +0xE4: Echoes' SetGameState(EGameState): world load pause (0x80037584), rumble
-//   disable and the CAudioManager voice context
 // 0x8028F770 +0xC4: owned native method/helper retained; exact source-level name unresolved
 // 0x8028F834 +0x58: Echoes' DeleteSaveGameScreen (x210 bit 0x10 from the screen's +0x80)
 // 0x8028F88C +0x78: creates the save-game screen (CStateManager.cpp(3736), 0xB0 bytes)
@@ -75,6 +73,7 @@
 #include "MetroidPrime/CStateManager.hpp"
 
 #include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Audio/CAudioManager.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
 #include "Kyoto/Basics/CStopwatch.hpp"
 #include "Kyoto/CARAMManager.hpp"
@@ -746,6 +745,40 @@ void CStateManager::AddWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType t
 void CStateManager::RemoveWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType type) {
   mWeaponMgr->DecrCount(owner, type);
   mWeaponRemoved.Emit(*this, weapon);
+}
+
+// 0x8028F68C. Unlike Echoes there is a single rumble manager, and the soft pause has its own
+// voice context (2) instead of Echoes' kSC_SoftPaused channel.
+void CStateManager::SetGameState(EGameState state) {
+  if (mGameState == state) {
+    return;
+  }
+
+  if (mGameState == kGS_SoftPaused) {
+    mObjectManager->GetWorld()->SetLoadPauseState(false);
+  }
+
+  switch (state) {
+  case kGS_Running:
+    if (mRumbleManager->GetDisabled()) {
+      mRumbleManager->SetDisabled(false);
+    }
+    if (CAudioManager::GetVoiceContext() == 2) {
+      CAudioManager::StopContextVoices(2);
+    }
+    CAudioManager::SetVoiceContext(1);
+    break;
+  case kGS_SoftPaused:
+    if (!mRumbleManager->GetDisabled()) {
+      mRumbleManager->SetDisabled(true);
+    }
+    CAudioManager::SetVoiceContext(2);
+    mObjectManager->GetWorld()->SetLoadPauseState(true);
+    break;
+  default:
+    break;
+  }
+  mGameState = state;
 }
 
 // 0x8028F678

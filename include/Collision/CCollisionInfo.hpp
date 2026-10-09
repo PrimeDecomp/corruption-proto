@@ -3,7 +3,7 @@
 
 #include "Collision/CMaterialList.hpp"
 #include "Kyoto/Math/CVector3f.hpp"
-#include "MetroidPrime/TGameTypes.hpp"
+#include "rstl/construct.hpp"
 
 class CAABox;
 class CTransform4f;

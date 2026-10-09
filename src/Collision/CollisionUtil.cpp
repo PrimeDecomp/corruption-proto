@@ -23,7 +23,6 @@
 #include "Collision/CCollisionInfo.hpp"
 #include "Collision/CCollisionInfoList.hpp"
 #include "Collision/CMaterialList.hpp"
-#include "MetroidPrime/TGameTypes.hpp"
 
 #include "Collision/CMRay.hpp"
 #include "Kyoto/Math/CAABox.hpp"
@@ -569,14 +568,14 @@ bool AABoxAABoxIntersection(const CAABox& left, const CMaterialList& leftFilter,
     switch (flags[i]) {
     case 2:
       list.Add(CCollisionInfo(overlapBox, leftFilter, rightFilter, normalTable[i * 2 + 1],
-                              -normalTable[i * 2 + 1], kInvalidUniqueId.value));
+                              -normalTable[i * 2 + 1], -1));
       break;
     case 3:
     case 10:
       break;
     case 11:
       list.Add(CCollisionInfo(overlapBox, leftFilter, rightFilter, normalTable[i * 2],
-                              -normalTable[i * 2], kInvalidUniqueId.value));
+                              -normalTable[i * 2], -1));
       break;
     default:
       break;
@@ -584,10 +583,10 @@ bool AABoxAABoxIntersection(const CAABox& left, const CMaterialList& leftFilter,
   }
 
   if (list.GetCount() == 0) {
-    list.Add(CCollisionInfo(overlapBox, leftFilter, rightFilter, normalTable[4], -normalTable[4],
-                            kInvalidUniqueId.value));
-    list.Add(CCollisionInfo(overlapBox, leftFilter, rightFilter, normalTable[5], -normalTable[5],
-                            kInvalidUniqueId.value));
+    list.Add(
+        CCollisionInfo(overlapBox, leftFilter, rightFilter, normalTable[4], -normalTable[4], -1));
+    list.Add(
+        CCollisionInfo(overlapBox, leftFilter, rightFilter, normalTable[5], -normalTable[5], -1));
   }
   return true;
 }
@@ -902,7 +901,7 @@ void AddAverageToFront(const CCollisionInfoList& in, CCollisionInfoList& out) {
       const float factor = 1.f / float(count);
       pointAccum *= factor;
       out.Add(CCollisionInfo(pointAccum, in[0].GetMaterialRight(), in[0].GetMaterialLeft(),
-                             normAccum, kInvalidUniqueId.value));
+                             normAccum, -1));
     }
   }
 

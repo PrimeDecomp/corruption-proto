@@ -8,15 +8,6 @@
 class CInputStream;
 class COutputStream;
 
-struct TAreaId;
-struct TEditorId;
-struct TUniqueId;
-
-extern const TAreaId kInvalidAreaId;
-extern const TEditorId kInvalidEditorId;
-extern const TEditorId kUnkId;
-extern const TUniqueId kInvalidUniqueId;
-
 struct TAreaId {
   int value;
 
@@ -61,6 +52,19 @@ struct TUniqueId {
   bool operator<(const TUniqueId& other) const { return value < other.value; }
 };
 CHECK_SIZEOF(TUniqueId, 0x4)
+
+// Every G2MEAB unit that includes this header has its own copies of these constants: its static
+// initializer stores -1, -1, -1, 0, 1, 2, -1 into seven consecutive local .sbss words (CEntity:
+// 0x80797318..0x80797330), in declaration order. The 0/1/2 area ids are compared against
+// CGameArea's area id, index CWorld's area list (CStateManager), and CWorld passes the third as
+// the start area of SetWhichMapAreasLoaded where Echoes passes area 0.
+static const TEditorId kInvalidEditorId(-1);
+static const TUniqueId kInvalidUniqueId(-1);
+static const TAreaId kInvalidAreaId(-1);
+static const TAreaId kAreaId0(0);  // Guessed name
+static const TAreaId kAreaId1(1);  // Guessed name
+static const TAreaId kAreaId2(2);  // Guessed name
+static const TEditorId kUnkId(-1); // Unreferenced in every G2MEAB unit seen so far
 
 namespace rstl {
 RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(TUniqueId)

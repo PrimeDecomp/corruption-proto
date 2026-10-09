@@ -7,8 +7,6 @@
 //   x212 bit 0x40 is set; reseeds the randoms ("Random() called when not deterministic"). The
 //   update calls it outside cinematics.
 // 0x8028F5A0 +0x60: owned native method/helper retained; exact source-level name unresolved
-// 0x8028F600 +0x5C: calls 0x80051A60 (CGameArea) with the manager on every area; the update
-//   calls it after the world update, like Echoes' UpdateDynamicLayers
 // 0x8028F770 +0xC4: owned native method/helper retained; exact source-level name unresolved
 // 0x802901B0 +0xC: owned native method/helper retained; exact source-level name unresolved
 // 0x802901BC +0x40: owned native method/helper retained; exact source-level name unresolved
@@ -31,12 +29,10 @@
 //   ids, CDamageInfo); the update's "Kill Player" option calls it with 10000 damage
 // 0x8029214C +0x198: owned native method/helper retained; exact source-level name unresolved
 // 0x802922E4 +0x15C: owned native method/helper retained; exact source-level name unresolved
-// 0x80292440 +0xE0: KillPlayer(float, TUniqueId, TUniqueId) (Echoes' guessed name)
 // 0x80292520 +0xA4: owned native method/helper retained; exact source-level name unresolved
 // 0x802925C4 +0x4CC: owned native method/helper retained; exact source-level name unresolved
 // 0x80292B40 +0x108: unconfirmed; looks like Echoes' UpdateAreaSounds
 // 0x80292C48 +0x34: owned native method/helper retained; exact source-level name unresolved
-// 0x80292C7C +0xD4: player input step of the update (like Echoes' ProcessPlayerInput)
 // 0x80292D50 +0x14C: owned native method/helper retained; exact source-level name unresolved
 // 0x80294264 +0xFC: vector push_back of the 0x1C-byte stat entries (vector.h(482) assert)
 // 0x802943E4 +0x60: owned native method/helper retained; exact source-level name unresolved
@@ -825,6 +821,20 @@ void CStateManager::Update(float inputDt, CArchitectureQueue& queue) {
   mArchQueue = nullptr;
 }
 
+// 0x80292C7C. Prime's body (the player takes the frame's input), skipped at maximum speed and
+// during cinematics; the input step also applies the "Give all powerups cheat" option once.
+void CStateManager::ProcessPlayerInput() {
+  if (!gpMain->IsMaxSpeed()) {
+    if (!mDisplayManager->IsCinematicActive()) {
+      mObjectManager->Player()->ProcessInput(mFinalInput, *this);
+    }
+    if (gpGameDebug->IsOptionSet(CGameDebug::kDO_GiveAllPowerupsCheat)) {
+      gpGameState->GetPlayerState()->GiveAllPowerUps(*this);
+      gpGameDebug->SetOptionValue(CGameDebug::kDO_GiveAllPowerupsCheat, 0.f);
+    }
+  }
+}
+
 // 0x80292A90. Unlike Echoes, it only tells the item depletion objects; there is no HUD memo, and
 // the player is unused.
 void CStateManager::DisplayAlertAboutOutOfAmmo(const CPlayer& player,
@@ -835,6 +845,23 @@ void CStateManager::DisplayAlertAboutOutOfAmmo(const CPlayer& player,
     if (special != nullptr && special->GetFunction() == CScriptSpecialFunction::kSF_ItemDepletion) {
       special->OnItemDepleted(*this, type);
     }
+  }
+}
+
+// 0x80292440. Echoes' body for a single player; the game's voices are stopped through the audio
+// manager.
+void CStateManager::KillPlayer(float previousHealth, TUniqueId victim, TUniqueId killer) {
+  if (TCastToConstPtr< CPlayer >(mObjectManager->ObjectById(victim)) != nullptr) {
+    gpGameState->GetPlayerState()->SetPlayerAlive(false);
+
+    if (previousHealth >= 0.f) {
+      const CGameState& gameState = *gpGameState;
+      CGameMode& gameMode = gameState.GetGameMode();
+      gameMode.OnPlayerKilled(*this, victim, killer);
+    }
+
+    CAudioManager::StopAllVoices();
+    CStreamAudioManager::FadeOutSoftwareAudio(CStreamAudioManager::kSC_Default, 0.5f);
   }
 }
 
@@ -1032,6 +1059,14 @@ void CStateManager::QueueMessage(int frameCount, CAssetId msg, float f1) {
   mPausedHudMemoFrameCount = frameCount;
   mPausedHudMemoAssetId = msg;
   mQueuedHudMemoDismissalDelay = f1;
+}
+
+// 0x8028F600. Echoes' body.
+void CStateManager::UpdateDynamicLayers() {
+  for (CGameArea::CChainIterator it = mObjectManager->GetWorld()->ChainHead(CWorld::kC_Alive);
+       it != CWorld::AliveAreasEnd(); ++it) {
+    it->UpdateDynamicLayers(*this);
+  }
 }
 
 // 0x8028F584

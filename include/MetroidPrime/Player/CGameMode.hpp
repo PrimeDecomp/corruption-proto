@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include "Kyoto/SObjectTag.hpp"
+#include "MetroidPrime/TGameTypes.hpp"
 
 class CStateManager;
 
@@ -16,7 +17,8 @@ public:
   virtual void x0C_() = 0;
   // Echoes' name and slot. CStateManager's update calls it every frame.
   virtual void Update(float dt, CStateManager& mgr) = 0;
-  virtual void x14_() = 0;
+  // Echoes' (guessed) name and slot. CStateManager::KillPlayer calls it.
+  virtual void OnPlayerKilled(CStateManager& mgr, TUniqueId victim, TUniqueId killer) = 0;
   virtual void x18_() = 0;
   virtual void x1C_() = 0;
   virtual void x20_() = 0;

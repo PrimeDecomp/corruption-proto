@@ -18,7 +18,6 @@
 // 0x8028FAB0 +0xD4: owned native method/helper retained; exact source-level name unresolved
 // 0x8028FB84 +0xE4: Echoes' SkipCinematic (the special-function id at 0x1A4); CMFGame calls it
 // 0x8028FE38 +0x200: Echoes' UpdateHintState(float)
-// 0x80290038 +0x178: Echoes' UpdateEscapeSequenceTimer(float); calls KillPlayer
 // 0x802901B0 +0xC: owned native method/helper retained; exact source-level name unresolved
 // 0x802901BC +0x40: owned native method/helper retained; exact source-level name unresolved
 // 0x802901FC +0x34: owned native method/helper retained; exact source-level name unresolved
@@ -98,6 +97,7 @@
 #include "Kyoto/Graphics/CGraphicsPalette.hpp"
 #include "Kyoto/Graphics/CTexture.hpp"
 #include "Kyoto/Math/CVector3f.hpp"
+#include "Kyoto/Math/CloseEnough.hpp"
 #include "Kyoto/Particles/CElementGen.hpp"
 #include "Kyoto/Particles/CParticleElectric.hpp"
 #include "Kyoto/Particles/CParticleSpawnSystem.hpp"
@@ -143,9 +143,12 @@
 #include "Weapons/CProjectileWeapon.hpp"
 
 #include "rstl/algorithm.hpp"
+#include "rstl/math.hpp"
 #include "rstl/pair.hpp"
 #include "rstl/string.hpp"
 #include "rstl/vector.hpp"
+
+#include <float.h>
 
 CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& stringProperties,
                              const rstl::ncrc_ptr< CScriptMailbox >& mailbox,
@@ -701,6 +704,31 @@ void CStateManager::Update(float inputDt, CArchitectureQueue& queue) {
   }
   ++mUpdateFrameIdx;
   mArchQueue = nullptr;
+}
+
+// 0x80290038. Unlike Echoes, there is a single player, and the game state hands out its player
+// state.
+void CStateManager::UpdateEscapeSequenceTimer(float dt) {
+  if (close_enough(mEscapeTotalTime, 0.f)) {
+    mEscapeTotalTime = gpGameState->GetEscapeTime();
+  }
+  const float totalTime = mEscapeTotalTime;
+  if (gpGameState->GetEscapeTime() > 0.f) {
+    gpGameState->SetEscapeTime(rstl::max_val(FLT_EPSILON, gpGameState->GetEscapeTime() - dt));
+    const CGameState& gameState = *gpGameState;
+    if (gpGameState->GetEscapeTime() <= FLT_EPSILON &&
+        gameState.GetPlayerState()->IsPlayerAlive()) {
+      KillPlayer(0.f, mObjectManager->Player()->GetUniqueId(), kInvalidUniqueId);
+    }
+
+    static float sNextEscapeRumble = 0.f;
+    sNextEscapeRumble -= dt;
+    if (sNextEscapeRumble < 0.f) {
+      const float factor = 1.f - gpGameState->GetEscapeTime() / totalTime;
+      mRumbleManager->Rumble(*this, kRFX_PlayerBump, 0.75f, kRP_One);
+      sNextEscapeRumble = -12.f * (factor * factor) + 15.f;
+    }
+  }
 }
 
 // 0x8028FD50

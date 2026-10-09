@@ -57,9 +57,9 @@ public:
   // the setter (0x80159C50) clamps it.
   double GetTotalPlayTime() const { return mTotalPlayTime; }
   void SetTotalPlayTime(double time);
-  // Guessed name. 0x80159C8C returns the pointer at 0x20; the update ticks the timed power-ups
-  // through it.
-  CPlayerState* PlayerState();
+  // Echoes' names. CStateManager counts the escape sequence down through them.
+  float GetEscapeTime() const { return mEscapeTime; }
+  void SetEscapeTime(float time); // 0x80159C48
   // Echoes' name. 0x80159D20 looks up the state of the world id at 0x0.
   CWorldState& CurrentWorldState();
   // Echoes' name for its CHintOptions, which this class replaces.
@@ -72,6 +72,9 @@ public:
   bool GetHardModeEnabled() const { return mHardMode; }
   void SetHardMode(bool hardMode); // 0x80159C38
   class CPlayerState* GetPlayerState();
+  // Its identical twin just before it (0x80159C84). CStateManager's escape timer calls it through
+  // a const game state, like the const GetGameMode below.
+  const class CPlayerState* GetPlayerState() const;
   // Echoes' names. Both return the game mode owned through the rstl::auto_ptr at 0x198. Only the
   // first is called so far (CStateManager's constructor, CGameDebug); which twin is const is
   // inferred from Echoes emitting the mutable one first.
@@ -90,7 +93,8 @@ public:
 private:
   uchar x0_[0x30];
   double mTotalPlayTime; // Echoes' name
-  uchar x38_[0x30];
+  float mEscapeTime;     // Echoes' name
+  uchar x3c_[0x2C];
   CGameOptions mGameOptions;
   CRedundantHintManager mHintOptions;
   uchar xd8_[0xc8];

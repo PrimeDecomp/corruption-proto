@@ -31,9 +31,12 @@ public:
   int GetItemAmount(EItemType type, bool respectFieldToQuery = true) const; // Echoes; 0x80088830
   void AddPowerUp(EItemType type, int delta);  // Echoes name; 0x80088B34, clamps the capacity
   void IncrPickUp(EItemType type, int amount); // Echoes name; 0x8008898C
+  // Echoes' name. The first bit of the byte at 0x0; CStateManager's escape timer checks it.
+  bool IsPlayerAlive() const { return mAlive; }
 
 private:
-  uchar x0_[0x5C];
+  bool mAlive : 1; // Echoes' name
+  uchar x1_[0x5B];
   // Echoes' name. The loader (0x800890DC) pushes all 0x25 entries, counting at 0x5C.
   rstl::reserved_vector< CPowerUp, kIT_Max > mPowerUps;
 };

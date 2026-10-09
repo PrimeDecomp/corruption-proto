@@ -166,6 +166,8 @@ public:
   // Echoes' names and signatures, unless noted.
   void ShowPausedHUDMemo(CAssetId strg, float time);
   void UpdateEscapeSequenceTimer(float dt);
+  // Guessed name, as in Echoes. 0x80292440 clears the victim's alive flag and tells the game mode.
+  void KillPlayer(float previousHealth, TUniqueId victim, TUniqueId killer);
   void UpdateHintState(float dt);
   void UpdateDynamicLayers();
   void UpdateAreaSounds();

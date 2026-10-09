@@ -513,8 +513,8 @@ CGameGlobalObjects::CGameGlobalObjects(COsContext& context, CMemorySys& memorySy
 , mCharacterFactoryBuilder(mSimplePool)
 , mDbgDraw(false)
 , mPersistentDbgDraw(true)
-, mGameState(rs_new_in("Main.cpp", 1267) CGameState())
-, mInGameTweakManager(rs_new_in("Main.cpp", 1269) CInGameTweakManager())
+, mGameState(rs_new_line_in("Main.cpp", 1267) CGameState())
+, mInGameTweakManager(rs_new_line_in("Main.cpp", 1269) CInGameTweakManager())
 , mController(IController::Create(context)) {
   gpResourceFactory = &mResFactory;
   gpSimplePool = &mSimplePool;
@@ -1181,7 +1181,7 @@ void CMain::ResetGameState() {
   CGameState::SPreviousGameResults previousGameResults = gpGameState->PreviousGameResults();
   mGameGlobalObjects->GameState() = nullptr;
   gpGameState = nullptr;
-  mGameGlobalObjects->GameState() = rs_new_in("Main.cpp", 3042) CGameState();
+  mGameGlobalObjects->GameState() = rs_new_line_in("Main.cpp", 3042) CGameState();
   gpGameState = mGameGlobalObjects->GameState().get();
   gpGameState->SystemOptions() = systemOptions;
   gpGameState->GameOptions() = gameOptions;

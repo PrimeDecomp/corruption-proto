@@ -15,6 +15,8 @@ public:
   // Guessed names (0x8056BDC8, 0x8056BEA0).
   CAudioHandle PlaySpatial(int areaId, const CVector3f& position, float volume);
   CAudioHandle PlayPanned(int areaId, float volume, float pan);
+  // 0x8056BFD8 plays it in no area (-1).
+  CAudioHandle PlayPanned(float volume, float pan);
 };
 
 #endif // _CAUDIOSOUNDEFFECT

@@ -112,6 +112,11 @@ public:
   bool IsQueuedScriptMsgEnabled() const { return mQueuedScriptMsgEnabled; }
   TEditorId GetQueuedScriptMsgTarget() const { return mQueuedScriptMsgTarget; }
   int GetQueuedScriptMsg() const { return mQueuedScriptMsg; }
+  void QueueScriptMsg(const TEditorId& target, int msg) {
+    mQueuedScriptMsgTarget = target;
+    mQueuedScriptMsg = msg;
+    mQueuedScriptMsgEnabled = false;
+  }
   void ClearQueuedScriptMsg() {
     mQueuedScriptMsg = -1;
     mQueuedScriptMsgTarget = kInvalidEditorId;

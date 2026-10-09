@@ -45,6 +45,9 @@ public:
   static void Shutdown();
   // CMain's frame loop polls for host messages once per frame.
   static void PollMessages();
+
+  // 0x80540988: when connected, asks the host for the list of assets it serves and waits for it.
+  static void RefreshNetworkAssets();
 };
 
 #endif // _CBBASUPPORT

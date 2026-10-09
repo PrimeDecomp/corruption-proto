@@ -7,17 +7,28 @@
 #include "MetroidPrime/ConsoleCommands.hpp"
 
 #include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/Audio/CAudioSoundEffect.hpp"
+#include "Kyoto/CSimplePool.hpp"
 #include "Kyoto/Math/CVector2f.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
+#include "Kyoto/SObjectTag.hpp"
+#include "Kyoto/Streams/CBBAInStream.hpp"
+#include "Kyoto/TToken.hpp"
 #include "Kyoto/Text/CStringTokenizer.hpp"
+#include "MetroidPrime/CDisplayManager.hpp"
 #include "MetroidPrime/CEntityInfo.hpp"
+#include "MetroidPrime/CGameArea.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/CInputGenerator.hpp"
+#include "MetroidPrime/CMFGame.hpp"
 #include "MetroidPrime/CMain.hpp"
 #include "MetroidPrime/CScriptMsgUtils.hpp"
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerCallbackLists.hpp"
 #include "MetroidPrime/CStateManagerObject.hpp"
+#include "MetroidPrime/CWorld.hpp"
+#include "MetroidPrime/Cameras/CCameraManager.hpp"
+#include "MetroidPrime/Cameras/CGameCamera.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CPlayer.hpp"
 #include "MetroidPrime/Player/CPlayerState.hpp"
@@ -253,9 +264,17 @@ void AddDebugVar(const char* name, uint* value) {
   AddDebugVar(SDebugVar(name, SDebugVar::kT_Uint32, value));
 }
 
-// Guessed name. CMain's post-update callback: puts the player camera back where the last
-// FASTSCRIPTCOOK or RESTARTGAMEAREA found it.
-void RestoreCameraTransform();
+// Guessed name. CMain's post-update callback: puts the debug camera back where the last
+// FASTSCRIPTCOOK or RESTARTGAMEAREA found it, once the restarted game runs with it again.
+void RestoreCameraTransform() {
+  if (sSavedCameraTransform && sStateManager != nullptr) {
+    CDisplayManager& display = sStateManager->DisplayManager();
+    if (display.IsDebugCameraActive()) {
+      display.PlayerCameraManager()->GetDebugCamera()->SetTransform(*sSavedCameraTransform);
+      sSavedCameraTransform = rstl::optional_object< CTransform4f >();
+    }
+  }
+}
 
 // Guessed name.
 static void OnStateManagerDestroyed(CStateManager&) { sStateManager = nullptr; }
@@ -280,9 +299,47 @@ void ShutdownConsoleCommands() {
   sStateManagerConnection = rstl::auto_ptr< IConnection >();
 }
 
-// Not implemented yet; they need members CStateManager.hpp does not expose (see the report).
-void FastScriptCook(const char* command, const char* args);
-void RestartGameArea(const char* command, const char* args);
+// Restarts like RESTARTGAMEAREA with the script objects loaded from the host, and optionally
+// queues a script message ("<editor id in hex> <message>") the restarted game sends.
+void FastScriptCook(const char*, const char* args) {
+  rs_debugger_printf("Fast script cook initiated\n");
+  gpfnWarningPrintf("Fast script cook initiated\n...\n");
+  gpGameDebug->SetOptionValue(CGameDebug::kDO_PCLoadScriptObjects, 1.f);
+  if (args != nullptr && *args != '\0') {
+    uint editorId;
+    int message;
+    if (sscanf(args, "%x %d", &editorId, &message) == 2) {
+      gpGameState->QueueScriptMsg(TEditorId(editorId), message);
+    } else {
+      rs_debugger_printf("Internal error? Could not extract editor id and message from \n%s\n",
+                         args);
+    }
+  }
+  if (sStateManager != nullptr) {
+    const CDisplayManager& display = sStateManager->GetDisplayManager();
+    if (display.IsDebugCameraActive()) {
+      sSavedCameraTransform = display.PlayerCameraManager()->GetDebugCamera()->GetTransform();
+    }
+    sStateManager->ObjectManager().GetWorld()->LockCurrentAreaTokens();
+    gpMain->SetRestartMode(CMain::kRM_None);
+    CMFGame::ActivateMultiplayerGui();
+  }
+}
+
+// Keeps the debug camera where it is (see RestoreCameraTransform) and the area's assets the host
+// does not serve, then quits to restart the game.
+void RestartGameArea(const char*, const char*) {
+  rs_debugger_printf("Restart game area.\n");
+  if (sStateManager != nullptr) {
+    const CDisplayManager& display = sStateManager->GetDisplayManager();
+    if (display.IsDebugCameraActive()) {
+      sSavedCameraTransform = display.PlayerCameraManager()->GetDebugCamera()->GetTransform();
+    }
+    sStateManager->ObjectManager().GetWorld()->LockCurrentAreaTokens();
+    gpMain->SetRestartMode(CMain::kRM_None);
+    CMFGame::ActivateMultiplayerGui();
+  }
+}
 
 static void GameSpeed(const char*, const char* args) {
   float speed = 1.f;
@@ -298,9 +355,28 @@ static void AdvanceFrame(const char*, const char*) {
   rs_debugger_printf("Advanced 1 frame.\n");
 }
 
+void RefreshNetworkAssets(const char*, const char*) {
+  rs_debugger_printf("Refreshing network loading assets.\n");
+  CBBASupport::RefreshNetworkAssets();
+}
+
 static void Screenshot(const char*, const char*) {
   rs_debugger_printf("Taking screenshot.\n");
   gpMain->TakeScreenshot();
+}
+
+void TitleScreen(const char*, const char*) {
+  gpMain->SetRestartMode(CMain::kRM_Default);
+  CMFGame::ActivateMultiplayerGui();
+}
+
+// Reads the tweaks the host's tools write and recreates the tweak globals from them.
+void ReloadTweaks(const char*, const char*) {
+  rs_debugger_printf("Reloading tweaks.\n");
+  CBBAInStream in("c:\\FIO\\Auto.ntwk");
+  LoadTweaks(in);
+  CreateTweakGlobals();
+  gpfnWarningPrintf("TWEAKS RELOADED!\n");
 }
 
 static void DropConnection(const char*, const char*) {
@@ -541,6 +617,31 @@ static void MouseInfo(const char*, const char* args) {
   sMouseInfo.mRightButton = (buttons & 0x2) != 0;
   sMouseInfo.mMiddleButton = (buttons & 0x10) != 0;
   sMouseInfo.mPosition.SetY(y);
+}
+
+// Prints the script layers of the player's area.
+void ShowLayerInfo(const char*, const char*) {
+  if (sStateManager != nullptr) {
+    TAreaId areaId = sStateManager->ObjectManager().GetPlayer()->GetCurrentAreaId();
+    CWorld* world = sStateManager->ObjectManager().World();
+    if (world->DoesAreaExist(areaId) && world->IsAreaValid(areaId)) {
+      world->GetArea(areaId)->DumpScriptLayers(*sStateManager);
+    }
+  }
+}
+
+// Plays the sound effect with the given asset id, stopping the one played before.
+void PlaySound(const char*, const char* args) {
+  if (sSoundHandle) {
+    sSoundHandle.StopWithFade();
+  }
+  TToken< CAudioSoundEffect > sound = gpSimplePool->GetObj(SObjectTag('CAUD', CAssetId(args)));
+  sSoundHandle = sound->PlayPanned(1.f, 0.f);
+}
+
+void StopSound(const char*, const char*) {
+  sSoundHandle.StopWithFade();
+  sSoundHandle.Clear();
 }
 
 static void PrintDebugMessages(const char*, const char*) {

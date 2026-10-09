@@ -49,6 +49,14 @@ public:
   // console's network-asset reload. Called by CMain::ShutdownSubsystems and CGameArea. The
   // configured split places it at the end of CActor.cpp, after that unit's static initializer.
   static void ClearLockedTokens();
+  // Guessed name. 0x80037188 locks the tokens of the current area's dependencies that the host
+  // does not serve (CBBASupport finds no network asset for them) into that list. The console's
+  // RESTARTGAMEAREA and FASTSCRIPTCOOK call it before restarting.
+  void LockCurrentAreaTokens() const;
+
+  // Echoes' names. Unlike Echoes the first is not inlined (0x800374CC).
+  bool IsAreaValid(TAreaId id) const;
+  bool DoesAreaExist(TAreaId id) const { return id.Value() >= 0 && id.Value() < mAreas.size(); }
 
   // Echoes' name. CActor::SetInFluid inlines it (areas vector data at 0x2C, 8-byte elements).
   CGameArea* Area(TAreaId id) { return mAreas[id.Value()].get(); }

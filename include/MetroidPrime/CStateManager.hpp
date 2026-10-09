@@ -128,6 +128,7 @@ public:
   // Guessed name. The readers reach the display manager through it, so they get its const
   // camera-manager getter (0x802A34D0); FrameBegin does.
   const CDisplayManager& GetDisplayManager() const { return *mDisplayManager; }
+  CDisplayManager& DisplayManager() { return *mDisplayManager; } // Guessed name
   // CScriptLUA's RandomRange (0x802B5C24) inlines this warning before using the generator.
   CRandom16* Random() {
     if (!mRandomAvailable) {

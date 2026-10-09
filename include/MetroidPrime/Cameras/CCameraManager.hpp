@@ -4,6 +4,7 @@
 #include "types.h"
 
 class CCinematicCamera;
+class CGameCamera;
 class CStateManager;
 
 // Minimal view of Echoes' camera manager (Cameras/CCameraManager.cpp); CDisplayManager owns it.
@@ -22,8 +23,15 @@ public:
   // then clears the id. CStateManager::PreThinkObjects calls it first.
   void StartPendingCinematic(CStateManager& mgr);
 
+  // Guessed name. CDisplayManager's debug camera activation (0x802A3310) makes this camera the
+  // current one and its deactivation (0x802A32A0) switches back; the console commands save and
+  // restore its transform.
+  CGameCamera* GetDebugCamera() const { return mDebugCamera; }
+
 private:
-  uchar x0_[0x34];
+  uchar x0_[0x2C];
+  CGameCamera* mDebugCamera;
+  uchar x30_[0x34 - 0x30];
   CCinematicCamera* mCinematicCamera;
 };
 

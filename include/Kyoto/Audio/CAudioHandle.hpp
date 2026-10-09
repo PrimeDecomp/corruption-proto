@@ -15,6 +15,8 @@ public:
   bool operator!=(const CAudioHandle& other) const { return mID != other.mID; }
   operator bool() const { return mID != 0; }
   void Clear() { mID = 0; }
+  // Guessed name. Stops the voice, if it still plays, with a fade (0x805686B8).
+  void StopWithFade();
 
 private:
   uint mID;

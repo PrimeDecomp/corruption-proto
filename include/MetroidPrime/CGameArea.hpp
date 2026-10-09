@@ -37,10 +37,17 @@ public:
   // Echoes' name (0x80051A60); CStateManager's update calls it on every live area.
   void UpdateDynamicLayers(CStateManager& mgr);
 
-  // Echoes' names. Only the occluded time is modelled; CStateManager::Think, CAi and
+  // Echoes' names.
+  enum EOcclusionState {
+    kOS_Occluded,
+    kOS_Visible,
+  };
+  // Echoes' names. Only the occlusion state and time are modelled; CStateManager::Think, CAi and
   // CStateManagerCollision skip the objects of an area occluded for more than five seconds.
   struct CPostConstructed {
-    uchar x0_[0x184];
+    uchar x0_[0x17C];
+    EOcclusionState mOcclusionState;
+    uchar x180_[0x184 - 0x180];
     float mOccludedTime;
   };
   // Echoes' names; the prototype has one load phase fewer than Echoes (kP_Loaded is 16 there).
@@ -49,9 +56,14 @@ public:
   };
   bool IsLoaded() const { return mPhase == kP_Loaded; }
   const CPostConstructed* GetPostConstructed() const { return mPostConstructed.get(); }
+  EOcclusionState GetOcclusionState() const {
+    return IsLoaded() ? mPostConstructed->mOcclusionState : kOS_Occluded;
+  }
+  TAreaId GetId() const { return mSelfIdx; } // Echoes' name
 
 private:
-  uchar x4_[0xA8 - 0x4];
+  TAreaId mSelfIdx; // Echoes' name
+  uchar x8_[0xA8 - 0x8];
   EPhase mPhase;
   CGameArea* mNext; // Echoes' name
   uchar xb0_[0xB8 - 0xB0];

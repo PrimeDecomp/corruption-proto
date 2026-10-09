@@ -31,7 +31,6 @@
 // 0x802922E4 +0x15C: owned native method/helper retained; exact source-level name unresolved
 // 0x80292520 +0xA4: owned native method/helper retained; exact source-level name unresolved
 // 0x802925C4 +0x4CC: owned native method/helper retained; exact source-level name unresolved
-// 0x80292B40 +0x108: unconfirmed; looks like Echoes' UpdateAreaSounds
 // 0x80292C48 +0x34: owned native method/helper retained; exact source-level name unresolved
 // 0x80292D50 +0x14C: owned native method/helper retained; exact source-level name unresolved
 // 0x80294264 +0xFC: vector push_back of the 0x1C-byte stat entries (vector.h(482) assert)
@@ -39,7 +38,6 @@
 // 0x80294444 +0x7C: TSignal2<CStateManager&, float>::Emit
 // 0x80294748 +0x248: memory/timing debug text ("LOW MEMORY: area ..")
 // 0x80294EA4 +0x304: unconfirmed; looks like Echoes' CrossTouchActors
-// 0x802951A8 +0x164: object list check ("ENTITY INDEX MISMATCH")
 // 0x8029530C +0x138: recalculates the map world sphere
 // 0x80295680 +0x738: world setup like Echoes' InitializeState; calls SetWorld
 // 0x80295DB8 +0x2F8: player spawn ("Invalid transform in Spawn Point")
@@ -319,6 +317,32 @@ bool CStateManager::SwapOutAllPossibleMemory() {
   CARAMManager::WaitForAllDMAsToComplete();
   CARAMToken::UpdateAllDMAs();
   return true;
+}
+
+// 0x802951A8. Not in Echoes. The "Dump script object" option prints every object of the list
+// with its unique id, once, and reports objects whose list index differs from their id.
+void CStateManager::CheckEntityIndices() {
+  CObjectList& allList = mObjectManager->ObjectListById(0);
+  if (gpGameDebug->GetOptionValue(CGameDebug::kDO_DumpScriptObject)) {
+    gpGameDebug->GetOption(CGameDebug::kDO_DumpScriptObject)->SetValue(0.f);
+    rs_debugger_printf("\n\n--------------------------------------------------\n\n");
+    for (int i = allList.GetFirstObjectIndex(); i != -1; i = allList.GetNextObjectIndex(i)) {
+      CEntity* entity = allList[i];
+      if (entity == nullptr) {
+        continue;
+      }
+      const int index = entity->GetUniqueId().value & 0xFFFF;
+      if (i != index) {
+        rs_debugger_printf("ENTITY INDEX MISMATCH %d != %d\n", index, i);
+      }
+      if (entity != nullptr) {
+        rs_debugger_printf("%4d(%2d) %s\n", entity->GetUniqueId().value & 0xFFFF,
+                           entity->GetUniqueId().value >> 16, entity->GetName().data());
+      } else {
+        rs_debugger_printf("%4d MISSING\n", i);
+      }
+    }
+  }
 }
 
 // 0x80294D2C. Echoes' ThinkEntity also thinks the entity's think-after objects first (unless
@@ -828,11 +852,29 @@ void CStateManager::ProcessPlayerInput() {
     if (!mDisplayManager->IsCinematicActive()) {
       mObjectManager->Player()->ProcessInput(mFinalInput, *this);
     }
-    if (gpGameDebug->IsOptionSet(CGameDebug::kDO_GiveAllPowerupsCheat)) {
+    if (gpGameDebug->GetOptionValue(CGameDebug::kDO_GiveAllPowerupsCheat)) {
       gpGameState->GetPlayerState()->GiveAllPowerUps(*this);
       gpGameDebug->SetOptionValue(CGameDebug::kDO_GiveAllPowerupsCheat, 0.f);
     }
   }
+}
+
+// 0x80292B40. Unlike Echoes, it also collects the live areas that are not visible and hands both
+// sets to the audio manager.
+void CStateManager::UpdateAreaSounds() {
+  rstl::reserved_vector< int, 16 > visibleAreas;
+  rstl::reserved_vector< int, 16 > otherAreas;
+  otherAreas.clear();
+  for (CGameArea::CChainIterator area = mObjectManager->GetWorld()->ChainHead(CWorld::kC_Alive);
+       area != mObjectManager->GetWorld()->GetAliveAreasEnd(); ++area) {
+    if (area->GetOcclusionState() == CGameArea::kOS_Visible) {
+      visibleAreas.push_back(area->GetId().Value());
+    } else {
+      otherAreas.push_back(area->GetId().Value());
+    }
+  }
+  CAudioManager::UpdateVoiceIdSets(mObjectManager->GetNextAreaId().Value(), visibleAreas,
+                                   otherAreas);
 }
 
 // 0x80292A90. Unlike Echoes, it only tells the item depletion objects; there is no HUD memo, and

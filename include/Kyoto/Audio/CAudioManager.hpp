@@ -254,6 +254,12 @@ public:
   static void SetContextPaused(int context, bool paused);
   static void StopContextVoices(int context);
   static void StopAllVoices();
+  // Guessed name (0x80568C04). CStateManager::UpdateAreaSounds passes the visible and the other
+  // live areas: voices of a visible area play, those of another live area are muted and the
+  // rest are faded out. The current area is unused.
+  static void UpdateVoiceIdSets(int currentArea,
+                                const rstl::reserved_vector< int, 16 >& visibleAreas,
+                                const rstl::reserved_vector< int, 16 >& otherAreas);
   static void TurnOnChannel(ESfxChannels channel);
   static void TurnOffChannel(ESfxChannels channel);
   static void AddListener(ESfxChannels channel, const CVector3f& position,

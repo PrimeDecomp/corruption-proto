@@ -59,8 +59,11 @@ public:
     return CGameArea::CChainIterator(mChainHeads[chain]);
   }
   static CGameArea::CChainIterator AliveAreasEnd() { return skGlobalNonConstEnd; }
+  // Echoes' name. Not inlined: a weak copy is emitted with CGroundMovement (0x8013A3B4).
+  static CGameArea::CChainIterator GetAliveAreasEnd();
 
 private:
+  static CGameArea::CChainIterator skGlobalEnd;
   static CGameArea::CChainIterator skGlobalNonConstEnd;
 
   uchar x4_[0x20 - 0x4];

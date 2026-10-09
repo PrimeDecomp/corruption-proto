@@ -31,6 +31,19 @@ private:
   };
 };
 
+// Guessed name, following TFunctor1/TFunctor2: the no-argument callback stored by TSignal0.
+class TFunctor0 {
+public:
+  typedef void (*Functor)(const void* object, const void* method);
+
+  void operator()() const { mFunctor(mObject, mMethod.GetMethodPointer()); }
+
+private:
+  Functor mFunctor;
+  const void* mObject;
+  CMethodPtrStore mMethod;
+};
+
 template < class Arg1 >
 class TFunctor1 {
 public:

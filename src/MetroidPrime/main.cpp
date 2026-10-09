@@ -37,7 +37,6 @@
 // 0x800068EC +0x20: retained emitted/native function; exact class/type/name unresolved
 // 0x8000690C +0x28: retained emitted/native function; exact class/type/name unresolved
 // 0x80006934 +0x58: retained emitted/native function; exact class/type/name unresolved
-// 0x8000698C +0x54: retained emitted/native function; exact class/type/name unresolved
 // 0x800069E0 +0xE4: retained emitted/native function; exact class/type/name unresolved
 // 0x80006AC4 +0x150: retained emitted/native function; exact class/type/name unresolved
 // 0x80006C14 +0x64: retained emitted/native function; exact class/type/name unresolved
@@ -143,11 +142,6 @@
 // 0x8000E320 +0xD8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E3F8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E41C +0x630: main memory metrics/debug text display; uses leading string-vector push-back helper
-// 0x8000EA4C +0x78: retained emitted/native function; exact class/type/name unresolved
-// 0x8000EAC4 +0x94: retained emitted/native function; exact class/type/name unresolved
-// 0x8000EB58 +0x8C: retained emitted/native function; exact class/type/name unresolved
-// 0x8000EBE4 +0x8C: retained emitted/native function; exact class/type/name unresolved
-// 0x8000EC70 +0x80: retained emitted/native function; exact class/type/name unresolved
 // 0x8000EFBC +0x268: main safe-frame debug rendering; four screen-edge quads
 // 0x8000F224 +0x84: BBA message callback, directly registered by InitializeSubsystems through local C834 adapter
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
@@ -166,9 +160,7 @@
 // 0x8000FA0C +0xA8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FAB4 +0xAC: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FB60 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FBD4 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FC48 +0x98: emitted architecture-message list destructor; strong Echoes match and architecture queue use
-// 0x8000FCE0 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FD54 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FDC8 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FE3C +0x74: retained emitted/native function; exact class/type/name unresolved
@@ -243,6 +235,7 @@ void FreeTweaks();
 #define UNUSED_STACK_VAL 0x7337D00D
 
 CMain* gpMain;
+static uchar sMainSpace[sizeof(CMain)];
 // Guessed names; Echoes keeps the ARAM stack array and allocation size in this TU as well.
 static u32 sARAMMemArray[3];
 uint gARAMAllocationSize;
@@ -318,6 +311,15 @@ CMain::CMain(COsContext* context, CSaveRegion* saveRegion, CMemorySys* memorySys
 , mArchSupport(nullptr) {
   gpMain = this;
 }
+
+extern "C" void InvokeCMain(int argc, char** argv, COsContext* context, CSaveRegion* saveRegion,
+                            CMemorySys* memorySys, CDvdRequestSys* dvdRequestSys) {
+  CMain* main = new (&sMainSpace) CMain(context, saveRegion, memorySys, dvdRequestSys);
+  main->RsMain(argc, argv);
+  main->~CMain();
+}
+
+CMain::~CMain() {}
 
 void CMain::InitializeSubsystems() {
   ARInit(sARAMMemArray, 3);

@@ -3,7 +3,9 @@
 
 #include "types.h"
 
+#include "Kyoto/Streams/CStreamPreloadedToken.hpp"
 #include "Kyoto/TReservedAverage.hpp"
+#include "Kyoto/TSignal.hpp"
 
 #include "rstl/list.hpp"
 #include "rstl/reserved_vector.hpp"
@@ -16,34 +18,19 @@ class CMemorySys;
 class CDvdRequestSys;
 class CGameGlobalObjects;
 class CGameArchitectureSupport;
-class CStreamPreloadedToken;
 
-// Element of the per-frame callback lists below. Only the invocation is known: the frame
-// pumps call x4_function(x8_context, &xc_data[, dt]). The leading word is an owned object
-// released through its second virtual when a list is destroyed. Guessed name and layout.
-struct SMainFrameCallback {
-  void* x0_owner;
-  void* x4_function;
-  void* x8_context;
-  uint xc_data;
-};
-
-// Six callback lists embedded in CMain at 0x70 with an out-of-line implicit constructor
-// (0x8000EE28). The game architecture pumps them around the tick loop (0x70 before, 0x88
-// once per 1/60 s tick with the tick time, 0xa0 after) and RsMain around drawing and the
-// architecture update (0xb8, 0xd0, 0xe8). Neither Prime nor Echoes has an equivalent.
-// The destructor (0x8000EAC4) shows the 0x88 list is a distinct container type (its own
-// destructor 0x8000EB58 vs 0x8000EBE4 for the other five), consistent with the extra float
-// argument; both containers call the owner's virtual at slot 0xc for every node before
-// freeing the list. Modelling that is needed before ~CMain/InvokeCMain can be implemented.
-// Guessed names.
+// Six signals embedded in CMain at 0x70 with an out-of-line implicit constructor (0x8000EE28)
+// and destructor (0x8000EAC4). The game architecture fires the first three around the tick
+// loop (0x70 before, 0x88 once per 1/60 s tick with the tick time, 0xa0 after) and RsMain the
+// last three around drawing and the architecture update (0xb8, 0xd0, 0xe8). Neither Prime nor
+// Echoes has an equivalent. Guessed names.
 struct SMainFrameCallbacks {
-  rstl::list< SMainFrameCallback > x0_preTick;
-  rstl::list< SMainFrameCallback > x18_tick;
-  rstl::list< SMainFrameCallback > x30_postTick;
-  rstl::list< SMainFrameCallback > x48_preDraw;
-  rstl::list< SMainFrameCallback > x60_postDraw;
-  rstl::list< SMainFrameCallback > x78_postUpdate;
+  TSignal0 x0_preTick;
+  TSignal1< float > x18_tick;
+  TSignal0 x30_postTick;
+  TSignal0 x48_preDraw;
+  TSignal0 x60_postDraw;
+  TSignal0 x78_postUpdate;
 };
 
 class CMain {
@@ -62,6 +49,7 @@ public:
 
   CMain(COsContext* context, CSaveRegion* saveRegion, CMemorySys* memorySys,
         CDvdRequestSys* dvdRequestSys);
+  ~CMain();
 
   int RsMain(int argc, const char* const* argv);
   void InitializeSubsystems();

@@ -206,6 +206,8 @@ public:
   void PreThinkObjects(float dt);
   // Unlike Echoes, it also takes the update's statistics.
   void Think(float dt, CGameProfileStats& stats);
+  // Echoes' name; the last two parameters are new. Guessed name: skipThinkAfter.
+  void ThinkEntity(float dt, CEntity& entity, int skipThinkAfter, CGameProfileStats& stats);
   void PostUpdatePlayer(float dt);
   void CrossTouchActors();
   void DisplayAlertAboutOutOfAmmo(const CPlayer& player, CPlayerState::EItemType type);

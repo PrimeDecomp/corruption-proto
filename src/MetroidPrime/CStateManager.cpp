@@ -43,8 +43,7 @@
 // 0x80294444 +0x7C: TSignal2<CStateManager&, float>::Emit
 // 0x80294748 +0x248: memory/timing debug text ("LOW MEMORY: area ..")
 // 0x80294990 +0x338: Echoes' Think(float); also takes the update's CGameProfileStats
-// 0x80294CC8 +0x64: owned native method/helper retained; exact source-level name unresolved
-// 0x80294D2C +0x178: owned native method/helper retained; exact source-level name unresolved
+// 0x80294CC8 +0x64: CObjectList's implicit copy constructor; Think copies the whole list
 // 0x80294EA4 +0x304: unconfirmed; looks like Echoes' CrossTouchActors
 // 0x802951A8 +0x164: object list check ("ENTITY INDEX MISMATCH")
 // 0x8029530C +0x138: recalculates the map world sphere
@@ -324,6 +323,46 @@ bool CStateManager::SwapOutAllPossibleMemory() {
   CARAMManager::WaitForAllDMAsToComplete();
   CARAMToken::UpdateAllDMAs();
   return true;
+}
+
+// 0x80294D2C. Echoes' ThinkEntity also thinks the entity's think-after objects first (unless
+// skipThinkAfter is set), at most once per update frame, and times the think in the update's
+// statistics. The walk restarts whenever the list changes, and stops if the entity is deleted.
+void CStateManager::ThinkEntity(float dt, CEntity& entity, int skipThinkAfter,
+                                CGameProfileStats& stats) {
+  if (mUpdateFrameIdx == entity.x40_) {
+    return;
+  }
+
+  if (skipThinkAfter == 0) {
+    entity.x54_10_ = false;
+    const TUniqueId id = entity.GetUniqueId();
+    for (rstl::vector< TUniqueId >::iterator it = entity.x20_.begin(); it != entity.x20_.end();) {
+      const TUniqueId afterId = *it;
+      if (CEntity* after = mObjectManager->ObjectById(afterId)) {
+        ThinkEntity(dt, *after, skipThinkAfter, stats);
+        if (mObjectManager->GetObjectById(id) == nullptr) {
+          return;
+        }
+      } else {
+        entity.RemoveThinkAfter(*this, afterId);
+      }
+
+      if (entity.x54_10_) {
+        // The list changed under the walk; start over.
+        entity.x54_10_ = false;
+        it = entity.x20_.begin();
+        continue;
+      }
+      ++it;
+    }
+  }
+
+  stats.BeginEntity();
+  entity.Think(dt, *this);
+  mObjectManager->DispatchScriptMessages();
+  entity.x40_ = mUpdateFrameIdx;
+  stats.EndEntity(entity);
 }
 
 // 0x802945D0. Unlike Echoes, the camera manager first starts a pending cinematic, and there is a
@@ -862,10 +901,10 @@ void CStateManager::DeferStateTransition(EStateManagerTransition t) {
 void CStateManager::ShowPausedHUDMemo(CAssetId strg, float time) {
   mHudMessageTime = time;
   mPauseHudMessage = strg;
-  if (strg == CAssetId(gpResourceFactory->GetResourceIdByName("STRG_AllTempleKeysFound")->id) ||
-      strg == CAssetId(gpResourceFactory->GetResourceIdByName("STRG_AllSandKeysFound")->id) ||
-      strg == CAssetId(gpResourceFactory->GetResourceIdByName("STRG_AllSwampKeysFound")->id) ||
-      strg == CAssetId(gpResourceFactory->GetResourceIdByName("STRG_AllCliffsKeysFound")->id)) {
+  if (strg == gpResourceFactory->GetResourceIdByName("STRG_AllTempleKeysFound")->id ||
+      strg == gpResourceFactory->GetResourceIdByName("STRG_AllSandKeysFound")->id ||
+      strg == gpResourceFactory->GetResourceIdByName("STRG_AllSwampKeysFound")->id ||
+      strg == gpResourceFactory->GetResourceIdByName("STRG_AllCliffsKeysFound")->id) {
     CStreamAudioManager::PlaySoftwareAudio(CStreamAudioManager::kSC_OneShot,
                                            rstl::string_l("/audio/evt_x_event_00.dsp"), 0.25f,
                                            0.01f, 0x41, true);

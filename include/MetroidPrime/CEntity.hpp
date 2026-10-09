@@ -18,6 +18,8 @@ class CStateManager;
 // CEntityInfo (0x58). The connection list is searched with -1 wildcards for both the state and
 // the message, and a family of helpers fixes the message to kSM_Attach.
 class CEntity {
+  friend class CStateManager; // As in Prime; ThinkEntity walks x20_ and stamps x40_.
+
 public:
   CEntity(TUniqueId uid, const CEntityInfo& info, const rstl::string& name, uint castFlags);
 
@@ -38,8 +40,7 @@ public:
   TUniqueId FindConnectedObject_if(const CStateManager& mgr, EScriptObjectState state,
                                    EScriptObjectMessage msg,
                                    const CValidEntityPredicate& predicate) const;
-  rstl::vector< TUniqueId > FindConnectedObjects(const CStateManager& mgr,
-                                                 EScriptObjectState state,
+  rstl::vector< TUniqueId > FindConnectedObjects(const CStateManager& mgr, EScriptObjectState state,
                                                  EScriptObjectMessage msg) const;
   rstl::vector< TUniqueId > FindConnectedObjects_if(const CStateManager& mgr,
                                                     EScriptObjectState state,
@@ -62,7 +63,7 @@ public:
   TUniqueId FindAttachedObject(const CStateManager& mgr, EScriptObjectState state) const;
   TUniqueId CheckAttachedObject(const CStateManager& mgr, EScriptObjectState state) const;
   static TUniqueId CheckAttachedObject(TUniqueId uid, const CStateManager& mgr,
-                                      EScriptObjectState state);
+                                       EScriptObjectState state);
 
   // Guessed name. Points the connections between freshly generated objects at each other.
   static void ResolveInstanceConnections(const rstl::vector< TUniqueId >& uids, TUniqueId owner,
@@ -81,6 +82,9 @@ public:
   const rstl::vector< SConnection >& GetConnectionList() const { return mConnections; }
   bool GetActive() const { return mActive; }
   uint GetCastFlags() const { return mCastFlags; }
+  // Echoes' names. CStateManager::Think tests them.
+  bool GetUpdateWhileOccluded() const { return x54_8_; }
+  bool GetUpdateDuringCinematicSkip() const { return x54_9_; }
   // The script message logs (CStateManagerObject.cpp) print it next to the name, as 0x%x.
   TEditorId GetX58() const { return x58_; }
 
@@ -97,7 +101,8 @@ private:
   rstl::vector< TUniqueId > x20_;
   // Objects this one thinks after, from its own kSS_ThinkBefore connections.
   rstl::vector< TUniqueId > x30_;
-  int x40_; // Never initialized by the constructor.
+  int x40_; // Never initialized by the constructor. CStateManager::ThinkEntity stores the update
+            // frame index.
   rstl::vector< SConnection > mConnections;
   uint mActive : 1;
   uint mNotInArea : 1; // Echoes' name; set when the area id is kInvalidAreaId.

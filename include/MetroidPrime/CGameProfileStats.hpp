@@ -8,6 +8,8 @@
 #include "rstl/map.hpp"
 #include "rstl/string.hpp"
 
+class CEntity;
+
 // The per-object think statistics of CStateManager's update (CGameProfileStats.cpp). The update
 // builds one on the stack from the "State Manager Numbers" option and passes it to Think; for
 // modes 2 and 4 it then prints every entry ("%s - Num:%3d/%3d - Time:%5d"), sorted by time for
@@ -29,6 +31,10 @@ public:
   CGameProfileStats(int mode, bool flag);
 
   const TStatsMap& GetStats() const { return mStats; }
+  // 0x802D82E4 and 0x802D8180. While collecting, they record the stopwatch time before an
+  // entity thinks and add the elapsed time to the entity's entry afterwards.
+  void BeginEntity();
+  void EndEntity(const CEntity& entity);
 
 private:
   TStatsMap mStats;

@@ -24,7 +24,6 @@
 // 0x8029127C +0x2E4: owned native method/helper retained; exact source-level name unresolved
 // 0x80291560 +0x198: owned native method/helper retained; exact source-level name unresolved
 // 0x802916F8 +0x34C: owned native method/helper retained; exact source-level name unresolved
-// 0x80291A44 +0x128: TestBombHittingWater (Echoes' name)
 // 0x80291B6C +0x5E0: unconfirmed; like Echoes' ApplyLocalDamage (position, direction, damagee,
 //   ids, CDamageInfo); the update's "Kill Player" option calls it with 10000 damage
 // 0x8029214C +0x198: owned native method/helper retained; exact source-level name unresolved
@@ -38,7 +37,6 @@
 // 0x80294444 +0x7C: TSignal2<CStateManager&, float>::Emit
 // 0x80294748 +0x248: memory/timing debug text ("LOW MEMORY: area ..")
 // 0x80294EA4 +0x304: unconfirmed; looks like Echoes' CrossTouchActors
-// 0x8029530C +0x138: recalculates the map world sphere
 // 0x80295680 +0x738: world setup like Echoes' InitializeState; calls SetWorld
 // 0x80295DB8 +0x2F8: player spawn ("Invalid transform in Spawn Point")
 // 0x802960B0 +0x170: creates the render manager and the player
@@ -88,6 +86,7 @@
 #include "MetroidPrime/CGameArea.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/CMain.hpp"
+#include "MetroidPrime/CMapWorld.hpp"
 #include "MetroidPrime/CMapWorldInfo.hpp"
 #include "MetroidPrime/CMemoryCard.hpp"
 #include "MetroidPrime/CObjectListSmall.hpp"
@@ -117,7 +116,9 @@
 #include "MetroidPrime/ScriptObjects/CScriptCinematicCamera.hpp"
 #include "MetroidPrime/ScriptObjects/CScriptEffect.hpp"
 #include "MetroidPrime/ScriptObjects/CScriptSpecialFunction.hpp"
+#include "MetroidPrime/ScriptObjects/CScriptWater.hpp"
 #include "MetroidPrime/TCastTo.hpp"
+#include "MetroidPrime/Weapons/CWeapon.hpp"
 #include "MetroidPrime/Weapons/WeaponTypes.hpp"
 #include "Weapons/CDecal.hpp"
 #include "Weapons/CProjectileWeapon.hpp"
@@ -129,6 +130,9 @@
 #include "rstl/vector.hpp"
 
 #include <float.h>
+
+// Echoes' name and values (0x8079F448): how deep a bomb and a power bomb still splash.
+static const float skBombUnderwaterRanges[2] = {2.f, 4.f};
 
 CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& stringProperties,
                              const rstl::ncrc_ptr< CScriptMailbox >& mailbox,
@@ -317,6 +321,26 @@ bool CStateManager::SwapOutAllPossibleMemory() {
   CARAMManager::WaitForAllDMAsToComplete();
   CARAMToken::UpdateAllDMAs();
   return true;
+}
+
+// 0x8029530C. Not in Echoes. Recalculates the map world's sphere whenever "Map Cheat Enabled"
+// changes, and while the debug camera is active pauses the game when "Debug Camera" is 2.
+void CStateManager::UpdateMapWorldSphere() {
+  static bool sMapCheatEnabled = false; // Guessed name
+  const bool mapCheatEnabled = gpGameDebug->GetOptionInt(CGameDebug::kDO_MapCheatEnabled) == 1;
+  if (mapCheatEnabled != sMapCheatEnabled) {
+    CStateManagerObject& objectManager = *mObjectManager;
+    const CMapWorld* mapWorld = objectManager.GetWorld()->GetMapWorld();
+    mapWorld->RecalculateWorldSphere(*objectManager.GetMapWorldInfo(), *objectManager.World());
+    sMapCheatEnabled = mapCheatEnabled;
+  }
+  if (mDisplayManager->IsDebugCameraActive()) {
+    if (gpGameDebug->GetOptionValue(CGameDebug::kDO_DebugCamera) == 2.f) {
+      mGameState = kGS_Paused;
+    } else {
+      mGameState = kGS_Running;
+    }
+  }
 }
 
 // 0x802951A8. Not in Echoes. The "Dump script object" option prints every object of the list
@@ -904,6 +928,32 @@ void CStateManager::KillPlayer(float previousHealth, TUniqueId victim, TUniqueId
 
     CAudioManager::StopAllVoices();
     CStreamAudioManager::FadeOutSoftwareAudio(CStreamAudioManager::kSC_Default, 0.5f);
+  }
+}
+
+// 0x80291A44. Echoes' body; the splash takes one more flag, and the water's surface height stands
+// in for the top of its trigger bounds.
+void CStateManager::TestBombHittingWater(const CActor& source, const CVector3f& position,
+                                         CActor& damagee) {
+  int index = 0;
+  if (const CWeapon* weapon = TCastToConstPtr< CWeapon >(source)) {
+    const int attributes = weapon->GetAttribField();
+    if ((attributes & (CWeapon::kPA_TriggerBomb | CWeapon::kPA_PowerBombs)) != 0) {
+      if ((attributes & CWeapon::kPA_PowerBombs) != 0) {
+        index = 1;
+      }
+      if (CScriptWater* const water = TCastToPtr< CScriptWater >(damagee)) {
+        const CVector3f hitPosition(position.GetX(), position.GetY(), water->GetSurfaceHeight());
+        const float depth = -water->GetWRSurfacePlane().GetHeight(position);
+        if (depth <= skBombUnderwaterRanges[index] && depth > 0.f) {
+          const float splashFactor = 1.f - depth / skBombUnderwaterRanges[index];
+          if (index == 0) {
+            mFluidPlaneManager->CreateSplash(source.GetUniqueId(), *this, *water, hitPosition,
+                                             splashFactor, true, false);
+          }
+        }
+      }
+    }
   }
 }
 

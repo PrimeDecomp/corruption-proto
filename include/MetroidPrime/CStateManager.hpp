@@ -211,6 +211,7 @@ public:
   void PostUpdatePlayer(float dt);
   void CrossTouchActors();
   void DisplayAlertAboutOutOfAmmo(const CPlayer& player, CPlayerState::EItemType type);
+  void TestBombHittingWater(const CActor& source, const CVector3f& position, CActor& damagee);
   bool ApplyLocalDamage(const CVector3f& pos, const CVector3f& dir, CActor& damagee, float damage,
                         TUniqueId source, TUniqueId owner, const CDamageInfo& damageInfo,
                         bool radiusDamage);

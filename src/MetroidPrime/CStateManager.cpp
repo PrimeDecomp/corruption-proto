@@ -1,7 +1,8 @@
 // G2MEAB prototype NonMatching translation-unit scaffold.
 // .text: 0x8028F448..0x80298128 (104 native functions).
 // Source identity: asserted target basename; reference-corrobated root placement.
-// Complete emitted native/helper inventory retained; no speculative declarations.
+// Complete emitted native/helper inventory retained; no speculative declarations. Functions
+// identified with an Echoes counterpart keep their fn_ symbol until their signature is confirmed.
 // 0x8028F448 +0x13C: reseeds the randoms ("Random() called when not deterministic")
 // 0x8028F584 +0x1C: owned native method/helper retained; exact source-level name unresolved
 // 0x8028F5A0 +0x60: owned native method/helper retained; exact source-level name unresolved

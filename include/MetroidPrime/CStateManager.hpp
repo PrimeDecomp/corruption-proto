@@ -4,18 +4,36 @@
 #include "types.h"
 
 #include "Kyoto/Alloc/Assert.hpp"
+#include "Kyoto/CAssetId.hpp"
 #include "Kyoto/CRandom16.hpp"
+#include "Kyoto/TToken.hpp"
+#include "MetroidPrime/TGameTypes.hpp"
 
+#include "rstl/rc_ptr.hpp"
+#include "rstl/single_ptr.hpp"
+
+class CActorModelParticles;
+class CArchitectureQueue;
+class CDependencyGroup;
+class CDisplayManager;
+class CEnvFxManager;
+class CFluidPlaneManager;
 class CRenderManager;
+class CRumbleManager;
+class CSaveGameScreen;
+class CStateManagerAssetFactory;
 class CStateManagerCallbackLists;
 class CStateManagerCollision;
 class CStateManagerObject;
+class CTexture;
+class CUserEvaluatorDescription;
+class CWeaponMgr;
+class CWorldTransManager;
 
-// Only the fields with evidence are laid out. The size comes from CMFGameLoader, which allocates
-// the manager through TOneStatic<CStateManager>'s operator new (0x8021A380) and asserts a
-// 0x220-byte limit there.
+// The size comes from CMFGameLoader, which allocates the manager through
+// TOneStatic<CStateManager>'s operator new (0x8021A380) and asserts a 0x220-byte limit there.
 //
-// Unlike Echoes' monolithic class (0x1C00+ bytes), Corruption's manager is a 0x220-byte hub
+// Unlike Echoes' monolithic class (0x2950 bytes), Corruption's manager is a 0x220-byte hub
 // whose state lives in separately allocated objects:
 // - CStateManagerObject (0x4): the entity database. Object lists, unique ids, the script message
 //   queue and its delivery, the world, the graveyard, the editor-id map, the mailbox, the
@@ -25,18 +43,59 @@ class CStateManagerObject;
 //   update emits 46 per-phase signals with the frame time, CRenderManager emits two groups of
 //   render signals, and CStateManagerObject fires the entity added/removed/active signals that
 //   CGameArea, CSortedLists and CStateManagerCollision listen to (Echoes updated those
-//   directly). The destructor emits the 0x5B8 signal first.
-// - CStateManagerCollision (0x8) and CRenderManager (0x18), whose roles are only inferred from
-//   their file names and their signal hookups.
-// What stays here is the frame driver (FrameBegin, the update and its profiling), damage
-// handling (KillPlayer, TestBombHittingWater), actor area changes (SetActorAreaId), world setup
-// and the memory callbacks.
+//   directly). The destructor emits the 0x5B8 signal first and the 0x5D0 signal last.
+// - CStateManagerCollision (0x8): the sorted lists and the movement passes (Echoes'
+//   UpdateSortedLists, MovePlatforms, MoveActors and the player move), by what its update
+//   calls do.
+// - CDisplayManager (0x14): wraps the player camera manager; the update asks it about the
+//   cinematic camera and has it update the cameras.
+// - CRenderManager (0x18): the render passes and their signals.
+// The rest of the members keep Echoes' order: the rumble manager, the per-frame input, the
+// weapon, fluid, EnvFx and actor-model-particle managers, the audio-group token, the
+// world-transition manager, the save-game screen, the frame counter, the shadow token, the
+// random generator, the game state, the hint, boss and HUD-memo state and the flags.
+//
+// Frame flow (Update, 0x80292E9C; called by CMFGame with the frame time and the architecture
+// queue, kept at 0xC for the duration of the call):
+// 1. The frame time is scaled: by the cinematic camera's slow-motion factor and doubled
+//    (capped at 1/30 s) while the game runs at max speed, or else by the "PhazonEnraged
+//    slowdown" curve (0x8028F448). "dt > FLT_EPSILON" gates the moving and thinking passes,
+//    and a dead player (death time > 0) skips the decals, the moving passes, touch, the actor
+//    model particles and EnvFx, as in Echoes.
+// 2. A CStopwatch is started and a CGameProfileStats is built from the "State Manager Numbers"
+//    debug option; the particle, decal and projectile seeds are set from the frame counter.
+// 3. The update then walks through 23 phases. Each one emits a "before" signal, does the work
+//    the state manager still does itself, and emits an "after" signal (CStateManagerCallbackLists
+//    0x0..0x438, two signals per phase). The work, in order: entity index check (debug), map
+//    world sphere, play time, hints, power-up timers and the render clock (running only); the
+//    script message the game state queued; PreThink (and the fluid planes); decals, sorted
+//    lists, platforms and actors (running only); player input; the player move, sorted lists
+//    again, touch and the first message dispatch (running only); the actor model particles;
+//    Think; the "Kill Player" debug option; the queued HUD memo; the escape timer; the world,
+//    dynamic layers, rumble and EnvFx; area sounds; docks; the map-screen hint; the game mode;
+//    message dispatch; cameras; message dispatch; PostThink; the world state's area; travel to
+//    the next area; the graveyard.
+// 4. After the groups of phases the stopwatch's time is written into a static table of 14
+//    sections (Prethink, SortedLists, Moving, MovePlayer, SortedLists2, Touch logic, Think,
+//    Gamestate, Scripting, Update cameras, PostThink, World/env upd, Graveyard; PreRender adds
+//    CRenderManager's render time). Phases that are skipped still record their section.
+// 5. "State Manager Numbers" then prints into its own option: 1 lists every section with its
+//    delta, average and peak, 5 the object count, 8 the frame counter, 2 and 4 the per-object
+//    think statistics (4 sorted by time). The low-memory report (0x80294748) follows, then the
+//    "END OF FRAME" marker when requested; the frame counter is bumped and the queue cleared.
 class CStateManager {
 public:
+  // Echoes' values; 0x174 is compared against them all through the update.
+  enum EGameState {
+    kGS_Running,
+    kGS_SoftPaused,
+    kGS_Paused,
+  };
+
   CStateManagerObject& ObjectManager() { return *mObjectManager; } // Guessed name
   const CStateManagerObject& ObjectManager() const { return *mObjectManager; }
   CStateManagerCallbackLists& CallbackLists() { return *mCallbackLists; } // Guessed name
-  CRenderManager* RenderManager() { return mRenderManager; }              // Guessed name
+  CRenderManager* RenderManager() { return mRenderManager.get(); }        // Guessed name
   // CScriptLUA's RandomRange (0x802B5C24) inlines this warning before using the generator.
   CRandom16* Random() {
     if (!mRandomAvailable) {
@@ -50,31 +109,117 @@ public:
   // it at the end; the script message logs print it.
   uint GetUpdateFrameIndex() const { return mUpdateFrameIdx; }
 
+  // 0x80296220. Emits the 0x5B8 signal, sets mTearingDown, stops the rumble, cleans up EnvFx,
+  // deletes every object (players and cameras last), frees the profile-stat tables and emits the
+  // 0x5D0 signal before the members go.
+  ~CStateManager();
+
   // Echoes' names, in Echoes' order. The constructor installs the callback with CMemory; unlike
   // Echoes, it first reports the last and current areas.
   void SwapOutTexturesToARAM(int, uint);
   static const bool MemoryAllocatorAllocationFailedCallback(const void* context, uint size);
   bool SwapOutAllPossibleMemory();
 
+  // Echoes' names and signatures; they write the same fields.
+  void SetBossParams(TUniqueId bossId, float maxEnergy, uint stringIdx);
+  void QueueMessage(int frameCount, CAssetId msg, float f1);
+  // Guessed name. Restarts the "PhazonEnragedSlowdownUSER" time curve.
+  void StartPhazonEnragedSlowdown();
+
 private:
-  // The constructor news each of these (0x5E8, 0x1138 and 0x1C038 bytes); their constructors live
-  // in CStateManagerCallbackLists.cpp, CStateManagerObject.cpp and CStateManagerCollision.cpp, and
-  // the class names are guessed from those files.
-  CStateManagerCallbackLists* mCallbackLists; // Guessed name
-  CStateManagerObject* mObjectManager;        // Guessed name
-  CStateManagerCollision* mCollision;         // Guessed name
-  uchar xc_[0x18 - 0xC];
-  // Guessed name. CStateManager.cpp news this (0x780 bytes; the constructor 0x802AA5F4 is in
-  // CRenderManager.cpp and keeps the state manager at +4).
-  CRenderManager* mRenderManager;
-  uchar x1c_[0x15C - 0x1C];
-  uint mUpdateFrameIdx; // Prime's name
-  uchar x160_[0x16C - 0x160];
-  // Echoes' names. As in Echoes, the constructor builds the "DefaultShadow" token at 0x160, then
-  // seeds this with 0 and clears the flag.
+  // The constructor news these (0x5E8, 0x1138 and 0x1C038 bytes); their constructors live in
+  // CStateManagerCallbackLists.cpp, CStateManagerObject.cpp and CStateManagerCollision.cpp, and
+  // the class names are guessed from those files. The destructor deletes them last.
+  rstl::single_ptr< CStateManagerCallbackLists > mCallbackLists; // Guessed name
+  rstl::single_ptr< CStateManagerObject > mObjectManager;        // Guessed name
+  rstl::single_ptr< CStateManagerCollision > mCollision;         // Guessed name
+  CArchitectureQueue* mArchQueue; // Echoes' name; only valid during Update
+  int x10_;
+  // Guessed names. Both are created with the player (0x802960B0); CRenderManager's constructor
+  // (0x802AA5F4, 0x780 bytes) keeps the state manager at +4.
+  rstl::single_ptr< CDisplayManager > mDisplayManager;
+  rstl::single_ptr< CRenderManager > mRenderManager;
+  // Echoes keeps one per player. The constructor news it (0x48 bytes) but the destructor only
+  // stops it and never deletes it.
+  CRumbleManager* mRumbleManager;
+  // A CFinalInput (built with CFinalInput_Construct). The prototype's input is 0x108 bytes; the
+  // CFinalInput header still describes Prime's 0x2C-byte layout.
+  uchar x20_finalInput[0x108];
+  TUniqueId x128_; // Initialized to kInvalidUniqueId
+  // Echoes' names. Echoes keeps these in one CStateManagerContainer; here each one is newed
+  // (0x14, 0x11C, 0x1468 and 0x140 bytes, CStateManager.cpp lines 226..229).
+  rstl::single_ptr< CWeaponMgr > mWeaponMgr;
+  rstl::single_ptr< CFluidPlaneManager > mFluidPlaneManager;
+  rstl::single_ptr< CEnvFxManager > mEnvFxManager;
+  rstl::single_ptr< CActorModelParticles > mActorModelParticles;
+  // Guessed name, after CStateManagerAssetFactory.cpp. 0x40 bytes, polymorphic, built with the
+  // state manager (line 217).
+  rstl::single_ptr< CStateManagerAssetFactory > mAssetFactory;
+  TToken< CDependencyGroup > mAudioGroupDependencies; // Echoes' name; built empty
+  // Copies of the last two constructor arguments. The first is released through
+  // CWorldTransManager's destructor; the second's type is not known.
+  rstl::ncrc_ptr< CWorldTransManager > mWorldTransManager; // Echoes' name
+  int x150_[2];                                            // An rc_ptr
+  rstl::single_ptr< CSaveGameScreen > mSaveGameScreen;     // Echoes' name
+  uint mUpdateFrameIdx;                                    // Prime's name
+  // Echoes' names. As in Echoes, the constructor builds the "DefaultShadow" token, then seeds
+  // the generator with 0 and clears the flag.
+  TCachedToken< CTexture > mShadowTex;
   CRandom16 mRandom;
   bool mRandomAvailable : 1;
-  uchar x171_[0x220 - 0x171];
+  // Echoes' names, initialized in Echoes' order: the game state, the init phase, the hint
+  // index and periods, the pause HUD message, the escape and time-mod-900 timers, the boss id,
+  // health and string, the skip-cinematic special function and the player actor head.
+  EGameState mGameState;
+  int mInitPhase;
+  int mHintIdx;
+  uint mHintPeriods;
+  CAssetId mPauseHudMessage;
+  float mEscapeTotalTime;
+  float mCurTimeMod900;
+  TUniqueId mBossId;
+  float mBossHealth;
+  uint mBossLanguageTableIndex;
+  TUniqueId mSpecialFunctionId;
+  TUniqueId mPlayerActorHead;
+  float mHudMessageTime;
+  // Echoes' name. FrameBegin (0x80295528) stores its argument here and in the texture and
+  // palette frame counters. It sits where Echoes kept its shadow list.
+  int mRenderFrameIndex;
+  // Guessed name. FrameBegin counts the frames rendered while the cinematic camera is not yet
+  // active and warns ("BUG THIS: %d frame Cinematic Glitch before camera '%s'!") when the
+  // cinematic starts after one to three of them.
+  int mCinematicGlitchFrames;
+  // Echoes' names. The update shows the queued memo when the two frame counts meet.
+  int mHudMessageFrameCount;
+  int mPausedHudMemoFrameCount;
+  CAssetId mPausedHudMemoAssetId;
+  float mQueuedHudMemoDismissalDelay;
+  CAssetId mMapTeleportWorldId; // Echoes' name
+  int mDeferredTransition;      // Echoes' name
+  uchar mPlayerLineOfSightPairs;
+  uchar mNextPlayerLineOfSightPair;
+  // Two lists of trivially destructible elements (their node erasers only free the nodes).
+  int x1e0_list[6];
+  int x1f8_list[6];
+  // The constructor clears them all except x210_25. Echoes has three more flags before its
+  // map-screen flag; this order is the prototype's.
+  bool x210_24_ : 1; // CMFGame checks it after the update
+  bool x210_25_ : 1;
+  bool mInMapScreen : 1;   // Echoes' name; the update dismisses the displayed hint and clears it
+  bool x210_27_ : 1;       // Set when the save-game screen is deleted (0x8028F834)
+  bool mLogEndOfFrame : 1; // Guessed name. The update prints "END OF FRAME" and clears it.
+  bool x210_29_ : 1;
+  bool x210_30_ : 1;
+  bool mTearingDown : 1; // Echoes' name; set first in the destructor
+  bool x211_24_ : 1;
+  uint mLightAmmoDepletedPlayers : 4; // Echoes' names; the update clears both
+  uint mDarkAmmoDepletedPlayers : 4;
+  // Guessed names. The "PhazonEnragedSlowdownUSER" CUserEvaluator curve, its play time and
+  // whether it runs; while it does, it scales the frame time outside cinematics.
+  bool mPhazonEnragedSlowdown : 1;
+  float mPhazonEnragedSlowdownTime;
+  TToken< CUserEvaluatorDescription > mPhazonEnragedSlowdownCurve;
 };
 CHECK_SIZEOF(CStateManager, 0x220)
 

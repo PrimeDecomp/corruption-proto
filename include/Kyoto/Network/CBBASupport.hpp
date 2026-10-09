@@ -27,6 +27,17 @@ public:
   static void BBAWrite(int handle, const void* data, int size);
   static void BBAClose(int handle);
 
+  // Guessed names. What the host returns for a remote command: its output, then a status word.
+  struct SRemoteCommandResult {
+    rstl::string mOutput;
+    int mStatus;
+  };
+  // Guessed name. 0x805400C8: runs a shell command on the host, waiting up to timeout seconds.
+  static SRemoteCommandResult ExecuteRemoteSystemCommand(const rstl::string& command,
+                                                         float timeout);
+  // Guessed name. 0x805406F4: reads an environment variable on the host.
+  static rstl::string GetRemoteEnvironmentVariable(const rstl::string& name);
+
   // CMain's subsystem setup and teardown. InitializeBBA returns nonzero on failure.
   static int InitializeBBA(int);
   static void RegisterStringMessageCallback(int,

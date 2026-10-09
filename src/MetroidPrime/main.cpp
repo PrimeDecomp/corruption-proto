@@ -3,12 +3,7 @@
 // Source identity: asserted Main.cpp; established reference path is lower-case main.cpp.
 // Remaining emitted/native helper inventory (implemented functions are removed):
 // clang-format off
-// 0x8000598C +0x64: retained emitted/native function; exact class/type/name unresolved
-// 0x800059F0 +0xAC: retained emitted/native function; exact class/type/name unresolved
-// 0x80005A9C +0x104: retained emitted/native function; exact class/type/name unresolved
 // 0x80005BA0 +0x50: retained emitted/native function; exact class/type/name unresolved
-// 0x80005C94 +0x150: retained emitted/native function; exact class/type/name unresolved
-// 0x80005DE4 +0x54: retained emitted/native function; exact class/type/name unresolved
 // 0x80006884 +0x68: rstl uninitialized copy of vector<uchar> for reserved_vector<vector<uchar>,3>'s copy (our rstl inlines it)
 // 0x800068EC +0x20: rstl construct<vector<uchar>> called from the copy above
 // 0x8000690C +0x28: its placement-new impl (null check, then vector<uchar>'s copy constructor)
@@ -32,14 +27,8 @@
 // 0x8000B2DC +0x2C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B308 +0xB0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B444 +0x118: retained emitted/native function; exact class/type/name unresolved
-// 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
-// 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
-// 0x8000CC24 +0x126C: UpdateProgrammerDebugOptions (guessed name); pool/resource dumps and loaded-texture export; not implemented
-// 0x8000DE90 +0x138: retained emitted/native function; exact class/type/name unresolved
-// 0x8000DFC8 +0x104: retained emitted/native function; exact class/type/name unresolved
-// 0x8000E0CC +0xDC: retained emitted/native function; exact class/type/name unresolved
-// 0x8000E1A8 +0x104: retained emitted/native function; exact class/type/name unresolved
-// 0x8000E2AC +0x74: retained emitted/native function; exact class/type/name unresolved
+// 0x8000BE64 +0x38: rstl::destroy over CObjectTagToFilenameMapping entries; calls the out-of-line loop below (our rstl inlines it)
+// 0x8000BE9C +0x60: rstl::destroy_impl loop over CObjectTagToFilenameMapping entries (string at 0xC)
 // 0x8000E320 +0xD8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E3F8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
@@ -110,6 +99,7 @@
 #include "MetroidPrime/CMainFlow.hpp"
 #include "MetroidPrime/CMemoryCard.hpp"
 #include "MetroidPrime/CMemoryDrawEnum.hpp"
+#include "MetroidPrime/CObjectTagToFilenameMapping.hpp"
 #include "MetroidPrime/CSaveRegion.hpp"
 #include "MetroidPrime/CWorld.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
@@ -270,9 +260,11 @@ void UpdateScreenCapture(SScreenshotState& state);
 void DrawSafeFrame();
 // Guessed name. Restores sProgressiveModePrompt from the save region after a reset.
 void ReadProgressiveModePrompt();
-// Guessed name. 0x8000CC24: the programmer debug options (memory metrics, pool and allocation
-// dumps, loaded-texture export, state manager numbers, ...); DrawDebugMetrics runs it.
+// Guessed name. 0x8000CC24: the Programmer category's memory metrics and dump options;
+// DrawDebugMetrics runs it.
 void UpdateProgrammerDebugOptions();
+// Guessed name. TypesMatch.cpp (0x801D5F1C) prints the sizes of the game classes.
+void PrintGameClassSizes();
 
 // Guessed name. A named CGameProfiler section that RsMain keeps open around a frame; the
 // section is closed around EndScene and when it goes out of scope.
@@ -518,6 +510,173 @@ void PrintMemoryMetrics() {
   gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)
       ->AddMessage(rstl::string(
           CBasics::Stringize("Skin Peak:%d", GPUMemory::GetPeakAllocatedAmount() / 1024)));
+}
+
+// Prototype only; neither Echoes nor Prime has these Programmer options. Each frame this prints
+// the "Memory Metrics" lines, and runs the one-shot dumps requested by setting an option (which
+// it clears again):
+// - "Dump Memory Allocations" prints the game class sizes and the heap's block statistics.
+// - "Dump Simple Pool" writes one line per loaded resource of the simple pool to SimplePool.txt
+//   on the host, with the sizes and file names from a CObjectTagToFilenameMapping.
+// - "Dump Loaded Textures" copies the source images (.tga/.tif from ASSETS_LOCAL_REPOSITORY) and
+//   the cooked .txtr (ASSETS_COOKED_REPOSITORY) of every loaded texture into c:\fio\loadedTex on
+//   the host; a merged texture ("merge_<a>!<b>") copies the images of both halves.
+// "Dump Sorted Lists" (kDO_DumpSortedLists) is not handled here.
+void UpdateProgrammerDebugOptions() {
+  gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)->ClearMessages();
+  if (gpGameDebug->GetOption(CGameDebug::kDO_MemoryMetrics)->GetValue()) {
+    PrintMemoryMetrics();
+  }
+
+  gpGameDebug->GetOption(CGameDebug::kDO_DumpMemoryAllocations)->ClearMessages();
+  if (gpGameDebug->GetOption(CGameDebug::kDO_DumpMemoryAllocations)->GetValue()) {
+    rs_debugger_printf("Game Class sizes:\n");
+    PrintGameClassSizes();
+    rs_debugger_printf("Memory Dump:\n");
+    CMemoryDrawEnum::PrintBlockStatistics();
+    gpGameDebug->GetOption(CGameDebug::kDO_DumpMemoryAllocations)->SetValue(0.f);
+  }
+
+  gpGameDebug->GetOption(CGameDebug::kDO_DumpSimplePool)->ClearMessages();
+  if (gpGameDebug->GetOption(CGameDebug::kDO_DumpSimplePool)->GetValue()) {
+    rstl::vector< SObjectTag > tags = gpSimplePool->GetReferencedTags();
+    CObjectTagToFilenameMapping mapping(tags);
+    uint totalSize = 0;
+    char line[1024] = "";
+    int file = -1;
+    CBBASupport::BBAOpen("SimplePool.txt", 2, &file);
+    for (int i = 0; i < tags.size(); ++i) {
+      const SObjectTag& tag = tags[i];
+      const CObjectTagToFilenameMapping::SEntry& entry = mapping.GetEntry(i);
+      const uint size = entry.mSize;
+      if (gpSimplePool->GetObj(tag).IsLoaded()) {
+        const uint compressedSize =
+            gpResourceFactory->CanBuild(tag) ? gpResourceFactory->ResourceSize(tag) : 0;
+        totalSize += size;
+        const char* filename = entry.mFilename.length() == 0 ? "???\n" : entry.mFilename.data();
+        sprintf(line, "0x%8.8x\t%s\t%d\t%d\t%s", tag.id, SObjectTag::Type2Text(tag.type), size,
+                compressedSize, filename);
+        // End the line with CR LF for the host.
+        const int length = strlen(line);
+        line[length - 1] = '\r';
+        line[length] = '\n';
+        if (file != -1) {
+          CBBASupport::BBAWrite(file, line, length + 1);
+        }
+      }
+    }
+    if (file != -1) {
+      CBBASupport::BBAClose(file);
+    }
+    CBBASupport::Printf("Format:\nAssetId Type UncompressedSize CompressedSize Filename\n"
+                        "Total pool size: %d\n",
+                        totalSize);
+    gpfnWarningPrintf("Simple Pool Written to SimplePool.txt\n");
+    gpGameDebug->GetOption(CGameDebug::kDO_DumpSimplePool)->SetValue(0.f);
+  }
+
+  gpGameDebug->GetOption(CGameDebug::kDO_DumpLoadedTextures)->ClearMessages();
+  if (gpGameDebug->GetOption(CGameDebug::kDO_DumpLoadedTextures)->GetValue()) {
+    rstl::string localRepository =
+        CBBASupport::GetRemoteEnvironmentVariable(rstl::string("ASSETS_LOCAL_REPOSITORY"));
+    rstl::string cookedRepository =
+        CBBASupport::GetRemoteEnvironmentVariable(rstl::string("ASSETS_COOKED_REPOSITORY"));
+    CBBASupport::ExecuteRemoteSystemCommand(rstl::string("cmd.exe /c md c:\\fio\\loadedTex"), 5.f);
+    CBBASupport::ExecuteRemoteSystemCommand(
+        rstl::string("cmd.exe /c del /q c:\\fio\\loadedTex\\*.*"), 5.f);
+
+    rstl::vector< SObjectTag > tags = gpSimplePool->GetReferencedTags();
+    CObjectTagToFilenameMapping mapping(tags);
+    for (int i = 0; i < tags.size(); ++i) {
+      const SObjectTag& tag = tags[i];
+      const rstl::string& filename = mapping.GetEntry(i).mFilename;
+      if (!gpSimplePool->GetObj(tag).IsLoaded() || filename.length() == 0 || tag.type != 'TXTR') {
+        continue;
+      }
+
+      // The asset path without its two leading directories and its extension, with
+      // backslashes; the dotted form names the copies.
+      rstl::string path(filename);
+      while (path.find('/') != -1) {
+        path[path.find('/')] = '\\';
+      }
+      for (int j = 0; j < 2; ++j) {
+        const int separator = path.find('\\');
+        if (separator == -1) {
+          break;
+        }
+        path = path.substr(separator + 1);
+      }
+      if (path.rfind('.') != -1) {
+        path = path.substr(0, path.rfind('.'));
+      }
+      rstl::string name(path);
+      while (name.find('\\') != -1) {
+        name[name.find('\\')] = '.';
+      }
+
+      rstl::string loadedTga =
+          rstl::string(CBasics::Stringize("c:\\fio\\loadedTex\\%s.tga", name.data()));
+      rstl::string loadedTif =
+          rstl::string(CBasics::Stringize("c:\\fio\\loadedTex\\%s.tif", name.data()));
+      rstl::string loadedTxtr =
+          rstl::string(CBasics::Stringize("c:\\fio\\loadedTex\\%s.txtr", name.data()));
+      rstl::string localTga =
+          rstl::string(CBasics::Stringize("%s\\%s.tga", localRepository.data(), path.data()));
+      rstl::string localTif =
+          rstl::string(CBasics::Stringize("%s\\%s.tif", localRepository.data(), path.data()));
+      rstl::string cookedTxtr =
+          rstl::string(CBasics::Stringize("%s\\%s.txtr", cookedRepository.data(), path.data()));
+      CBBASupport::ExecuteRemoteSystemCommand(
+          rstl::string("cmd.exe /c copy " + localTga + rstl::string(" ") + loadedTga), 5.f);
+      CBBASupport::ExecuteRemoteSystemCommand(
+          rstl::string("cmd.exe /c copy " + localTif + rstl::string(" ") + loadedTif), 5.f);
+      CBBASupport::ExecuteRemoteSystemCommand(
+          rstl::string("cmd.exe /c copy " + cookedTxtr + rstl::string(" ") + loadedTxtr), 5.f);
+
+      if (path.rfind('!') != -1) {
+        rstl::string merged = path.substr(path.rfind("merge_") + 6);
+        rstl::string first = merged.substr(0, merged.rfind('!'));
+        rstl::string firstName = name.substr(0, name.rfind('.') + 1) + first;
+        rstl::string firstPath = path.substr(0, path.rfind('\\') + 1) + first;
+        rstl::string second = path.substr(path.rfind('!') + 1);
+        rstl::string secondName = name.substr(0, name.rfind('.') + 1) + second;
+        rstl::string secondPath = path.substr(0, path.rfind('\\') + 1) + second;
+
+        rstl::string firstLoadedTga =
+            rstl::string(CBasics::Stringize("c:\\fio\\loadedTex\\%s.tga", firstName.data()));
+        rstl::string firstLoadedTif =
+            rstl::string(CBasics::Stringize("c:\\fio\\loadedTex\\%s.tif", firstName.data()));
+        rstl::string firstLocalTga = rstl::string(
+            CBasics::Stringize("%s\\%s.tga", localRepository.data(), firstPath.data()));
+        rstl::string firstLocalTif = rstl::string(
+            CBasics::Stringize("%s\\%s.tif", localRepository.data(), firstPath.data()));
+        CBBASupport::ExecuteRemoteSystemCommand(
+            rstl::string("cmd.exe /c copy " + firstLocalTga + rstl::string(" ") + firstLoadedTga),
+            5.f);
+        CBBASupport::ExecuteRemoteSystemCommand(
+            rstl::string("cmd.exe /c copy " + firstLocalTif + rstl::string(" ") + firstLoadedTif),
+            5.f);
+
+        rstl::string secondLoadedTga =
+            rstl::string(CBasics::Stringize("c:\\fio\\loadedTex\\%s.tga", secondName.data()));
+        rstl::string secondLoadedTif =
+            rstl::string(CBasics::Stringize("c:\\fio\\loadedTex\\%s.tif", secondName.data()));
+        rstl::string secondLocalTga = rstl::string(
+            CBasics::Stringize("%s\\%s.tga", localRepository.data(), secondPath.data()));
+        rstl::string secondLocalTif = rstl::string(
+            CBasics::Stringize("%s\\%s.tif", localRepository.data(), secondPath.data()));
+        CBBASupport::ExecuteRemoteSystemCommand(
+            rstl::string("cmd.exe /c copy " + secondLocalTga + rstl::string(" ") + secondLoadedTga),
+            5.f);
+        CBBASupport::ExecuteRemoteSystemCommand(
+            rstl::string("cmd.exe /c copy " + secondLocalTif + rstl::string(" ") + secondLoadedTif),
+            5.f);
+      }
+    }
+    gpfnWarningPrintf("All loaded textures written to c:\\fio\\loadedTex\n");
+    gpGameDebug->GetOption(CGameDebug::kDO_DumpLoadedTextures)->SetValue(0.f);
+  }
 }
 
 extern "C" void InvokeCMain(int argc, char** argv, COsContext* context, CSaveRegion* saveRegion,

@@ -20,6 +20,10 @@ public:
   uint GetLargestFreeBlock() const { return x80_largestFreeBlock; }
   uint GetLargestAllocatedBlock() const { return x84_largestAllocatedBlock; }
 
+  // Guessed name. 0x800B3E44: enumerates the heap's allocations and prints the block, free and
+  // allocated counts, byte totals and average sizes (main's "Dump Memory Allocations").
+  static void PrintBlockStatistics();
+
   // Prime's names. CGameArea and CMapArea count their memory here; main prints it as "WLD".
   static void AddWorldMemory(uint size) { sWorldMemory += size; }
   static void SubtractWorldMemory(uint size) { sWorldMemory -= size; }

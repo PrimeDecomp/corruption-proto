@@ -60,6 +60,28 @@ struct char_traits< char > {
 
 struct case_insensitive_char_traits : char_traits< char > {};
 
+// Walks a sequence backwards: the iterator is stepped back once on construction, so wrapping
+// end() visits the last element first. basic_string::rfind searches through it (main.cpp emits
+// the searches at 0x8000DFC8 and 0x8000E1A8).
+template < typename It >
+class reverse_iterator {
+public:
+  typedef typename iterator_traits< It >::value_type value_type;
+
+  explicit reverse_iterator(It it) : mIt(it - 1) {}
+
+  const value_type& operator*() const { return *mIt; }
+  reverse_iterator& operator++() {
+    mIt -= 1;
+    return *this;
+  }
+  bool operator==(const reverse_iterator& other) const { return mIt == other.mIt; }
+  bool operator!=(const reverse_iterator& other) const { return !(mIt == other.mIt); }
+
+private:
+  It mIt;
+};
+
 template < typename _CharTp, typename Traits = char_traits< _CharTp >,
            typename Alloc = rmemory_allocator >
 class basic_string {
@@ -146,6 +168,11 @@ public:
 
   int compare(const _CharTp* rhs, int count = -1) const;
   const _CharTp& operator[](int idx) const { return mPtr[idx]; }
+  // Unshares the buffer before handing out a writable character.
+  _CharTp& operator[](int idx) {
+    internal_prepare_to_write(mSize, true);
+    return const_cast< _CharTp& >(mPtr[idx]);
+  }
   const_iterator begin() const { return const_iterator(this, 0); }
   const_iterator end() const { return const_iterator(this, size()); }
 
@@ -163,6 +190,8 @@ public:
   int find(const basic_string& other, int pos = 0) const;
   int find(const _CharTp* other, int pos = 0, int count = -1) const;
   int find(_CharTp ch, int pos = 0) const;
+  int rfind(const _CharTp* other, int pos = -1, int count = -1) const;
+  int rfind(_CharTp ch, int pos = -1) const;
   int find_first_of(const basic_string& other, int pos = 0) const;
   int find_first_of(const _CharTp* other, int pos = 0, int count = -1) const;
   const_iterator position_iterator(int pos) const;
@@ -171,6 +200,12 @@ public:
   int get_real_pos_for_begin(int pos) const {
     if (pos == -1 || pos >= static_cast< int >(size())) {
       return size();
+    }
+    return pos;
+  }
+  int get_real_pos_for_end(int pos) const {
+    if (pos == -1 || pos >= static_cast< int >(size())) {
+      return size() - 1;
     }
     return pos;
   }
@@ -235,19 +270,26 @@ inline int basic_string< _CharTp, Traits, Alloc >::internal_search(It first, It 
   if (otherFirst == otherLast) {
     return 0;
   }
-  It it = first;
-  int matched = 0;
-  OtherIt search = otherFirst;
-  for (; it != last; ++it) {
-    if (Traits::eq(*it, *search)) {
+  int index = 0;
+  for (It it = first; it != last; ++it, ++index) {
+    if (Traits::eq(*it, *otherFirst)) {
+      It match = it;
+      ++match;
+      OtherIt search = otherFirst;
       ++search;
-      ++matched;
-      if (search == otherLast) {
-        return (it - first) - matched + 1;
+      while (match != last) {
+        if (!Traits::eq(*match, *search)) {
+          break;
+        }
+        ++match;
+        ++search;
+        if (search == otherLast) {
+          break;
+        }
       }
-    } else {
-      search = otherFirst;
-      matched = 0;
+      if (search == otherLast) {
+        return index;
+      }
     }
   }
   return -1;
@@ -287,6 +329,42 @@ int basic_string< _CharTp, Traits, Alloc >::find(_CharTp ch, int pos) const {
   const int found = internal_search(begin() + pos, end(), static_cast< const _CharTp* >(&ch),
                                     static_cast< const _CharTp* >(&ch) + 1);
   int result = found + pos;
+  if (found == -1) {
+    result = found;
+  }
+  return result;
+}
+
+// rfind searches the string backwards from pos for the reversed pattern; main.cpp emits both
+// (0x8000DE90 and 0x8000E0CC).
+template < typename _CharTp, typename Traits, typename Alloc >
+int basic_string< _CharTp, Traits, Alloc >::rfind(const _CharTp* other, int pos, int count) const {
+  pos = get_real_pos_for_end(pos);
+  int length = 0;
+  const _CharTp* end = other;
+  while ((count == -1 || length < count) && *end != Traits::eos()) {
+    ++end;
+    ++length;
+  }
+  const int found = internal_search(reverse_iterator< const_iterator >(begin() + pos + 1),
+                                    reverse_iterator< const_iterator >(begin()),
+                                    reverse_iterator< const _CharTp* >(end),
+                                    reverse_iterator< const _CharTp* >(other));
+  int result = pos - found - length + 1;
+  if (found == -1) {
+    result = found;
+  }
+  return result;
+}
+
+template < typename _CharTp, typename Traits, typename Alloc >
+int basic_string< _CharTp, Traits, Alloc >::rfind(_CharTp ch, int pos) const {
+  pos = get_real_pos_for_end(pos);
+  const int found =
+      internal_search(reverse_iterator< const_iterator >(begin() + pos + 1),
+                      reverse_iterator< const_iterator >(begin()),
+                      static_cast< const _CharTp* >(&ch), static_cast< const _CharTp* >(&ch) + 1);
+  int result = pos - found;
   if (found == -1) {
     result = found;
   }

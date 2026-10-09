@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+#include "Kyoto/CAssetId.hpp"
 #include "Kyoto/Streams/CStreamPreloadedToken.hpp"
 #include "Kyoto/TReservedAverage.hpp"
 #include "Kyoto/TSignal0.hpp"
@@ -62,6 +63,10 @@ public:
   void AsyncIdle(uint time);
   bool CheckTerminate();
   void AddWorldPaks();
+  // Echoes' names. Unstash every world pak, or only the world paks holding the given world
+  // (stashing the others) unless the scan-text debugger keeps them all ready.
+  static void EnsureWorldPaksReady();
+  static void EnsureWorldPakReady(CAssetId id);
   void DrawDebugMetrics(double dt, CStopwatch& stopWatch);
   // Guessed name. Programs the GX performance counters from a debug option every frame.
   void UpdateGPMetrics();

@@ -46,9 +46,6 @@
 // 0x80007218 +0x230: retained emitted/native function; exact class/type/name unresolved
 // 0x80007448 +0x60: retained emitted/native function; exact class/type/name unresolved
 // 0x800074A8 +0x31C: CMain::UpdateTweakDebugOptions (guessed name); tweak load/save debug options 51..54
-// 0x80007930 +0x6C: retained emitted/native function; exact class/type/name unresolved
-// 0x8000799C +0x138: retained emitted/native function; exact class/type/name unresolved
-// 0x80007C94 +0x1CC: retained emitted/native function; exact class/type/name unresolved
 // 0x80007E60 +0x5C: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AB0 +0x48: retained emitted/native function; exact class/type/name unresolved
 // 0x80008AF8 +0x220: retained emitted/native function; exact class/type/name unresolved
@@ -138,6 +135,7 @@
 #include "Kyoto/CDvdFile.hpp"
 #include "Kyoto/CFrameDelayedKiller.hpp"
 #include "Kyoto/CMemoryCardSys.hpp"
+#include "Kyoto/CPakFile.hpp"
 #include "Kyoto/CResFactory.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Input/CControllerGamepadData.hpp"
@@ -173,6 +171,7 @@
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CWorldTransManager.hpp"
+#include "MetroidPrime/Tweaks/CTweakGame.hpp"
 #include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 
 #include "rstl/auto_ptr.hpp"
@@ -673,6 +672,58 @@ bool CMain::CheckReset() {
   }
   mResetButtonHeld = resetPressed;
   return false;
+}
+
+// Unlike Echoes the universe pak is added first, and each world pak found is reported.
+void CMain::AddWorldPaks() {
+  gpResourceFactory->GetResLoader().AddPakFileAsync(rstl::string_l("UniverseArea"), false, false);
+  rstl::string basePath = gpTweakGame->GetPakFile();
+  for (int i = 0; i < 16; ++i) {
+    rstl::string pak =
+        basePath + (i == 0 ? rstl::string_l("") : rstl::string(CBasics::Stringize("%d", i)));
+    if (CDvdFile::FileExists((pak + rstl::string_l(".pak")).data())) {
+      rs_debugger_printf("Adding WorldPak %s.pak\n", pak.data());
+      gpResourceFactory->GetResLoader().AddPakFileAsync(pak, false, true);
+    }
+  }
+}
+
+// The scan-text debugger needs every world loaded, so it keeps all world paks ready.
+void CMain::EnsureWorldPakReady(CAssetId id) {
+  if (gpGameDebug->IsOptionSet(CGameDebug::kDO_ScanTextDebugger)) {
+    return;
+  }
+  CResLoader& loader = gpResourceFactory->GetResLoader();
+  for (int i = 0; i < loader.GetPakCount(); ++i) {
+    bool stash = true;
+    CPakFile& pak = *loader.GetPakFile(i);
+    if (!pak.IsWorldPak()) {
+      continue;
+    }
+    const rstl::vector< rstl::pair< rstl::string, SObjectTag > > names =
+        pak.GetStringToObjectList();
+    for (rstl::vector< rstl::pair< rstl::string, SObjectTag > >::const_iterator it = names.begin();
+         it != names.end(); ++it) {
+      if (it->second.id == id) {
+        stash = false;
+      }
+    }
+    if (stash) {
+      pak.sub_80323554();
+    } else {
+      pak.EnsureWorldPakReady();
+    }
+  }
+}
+
+void CMain::EnsureWorldPaksReady() {
+  CResLoader& loader = gpResourceFactory->GetResLoader();
+  for (int i = 0; i < loader.GetPakCount(); ++i) {
+    CPakFile& pak = *loader.GetPakFile(i);
+    if (pak.IsWorldPak()) {
+      pak.EnsureWorldPakReady();
+    }
+  }
 }
 
 void UpdateScreenCapture(SScreenshotState& state) {

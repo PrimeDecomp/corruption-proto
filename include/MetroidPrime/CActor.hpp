@@ -79,7 +79,8 @@ public:
   // 0xF5 into 0xE8 and then calls it.
   virtual void Virtual74(CStateManager& mgr);
   virtual CColor Virtual78() const; // 0x78, pulsing debug color
-  virtual void Virtual7C();         // 0x7C, empty; called after material changes
+  // Guessed name. 0x7C: empty here; called after every material change so subclasses can react.
+  virtual void MaterialChanged();
 
   const CTransform4f& GetTransform() const { return mTransform; }
   void SetTransform(const CTransform4f& xf);

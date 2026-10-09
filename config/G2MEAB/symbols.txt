@@ -936,7 +936,7 @@ AddMaterial__6CActorF14EMaterialTypes14EMaterialTypes14EMaterialTypes14EMaterial
 AddMaterial__6CActorF14EMaterialTypes14EMaterialTypes14EMaterialTypesR13CStateManager = .text:0x80036204; // type:function size:0xE4
 AddMaterial__6CActorF14EMaterialTypes14EMaterialTypesR13CStateManager = .text:0x800362E8; // type:function size:0xB0
 AddMaterial__6CActorF14EMaterialTypesR13CStateManager = .text:0x80036398; // type:function size:0x7C
-Virtual7C__6CActorFv = .text:0x80036414; // type:function size:0x4
+MaterialChanged__6CActorFv = .text:0x80036414; // type:function size:0x4
 SetCallTouch__6CActorFb = .text:0x80036418; // type:function size:0x10
 GetCallTouch__6CActorCFv = .text:0x80036428; // type:function size:0x18
 SetUseInSortedLists__6CActorFb = .text:0x80036440; // type:function size:0x10

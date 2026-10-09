@@ -79,19 +79,19 @@ bool CActor::GetCallTouch() const { return mCallTouch; }
 
 void CActor::SetCallTouch(bool value) { mCallTouch = value; }
 
-void CActor::Virtual7C() {}
+void CActor::MaterialChanged() {}
 
 void CActor::AddMaterial(EMaterialTypes mat1, CStateManager& mgr) {
   mMaterial.Add(mat1);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 void CActor::AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, CStateManager& mgr) {
   mMaterial.Add(mat1);
   mMaterial.Add(mat2);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 void CActor::AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
@@ -100,7 +100,7 @@ void CActor::AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialType
   mMaterial.Add(mat2);
   mMaterial.Add(mat3);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 void CActor::AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
@@ -110,7 +110,7 @@ void CActor::AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialType
   mMaterial.Add(mat3);
   mMaterial.Add(mat4);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 void CActor::AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
@@ -121,20 +121,20 @@ void CActor::AddMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialType
   mMaterial.Add(mat4);
   mMaterial.Add(mat5);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 void CActor::RemoveMaterial(EMaterialTypes mat1, CStateManager& mgr) {
   mMaterial.Remove(mat1);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 void CActor::RemoveMaterial(EMaterialTypes mat1, EMaterialTypes mat2, CStateManager& mgr) {
   mMaterial.Remove(mat1);
   mMaterial.Remove(mat2);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 void CActor::RemoveMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
@@ -143,7 +143,7 @@ void CActor::RemoveMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialT
   mMaterial.Remove(mat2);
   mMaterial.Remove(mat3);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 void CActor::RemoveMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialTypes mat3,
@@ -153,7 +153,7 @@ void CActor::RemoveMaterial(EMaterialTypes mat1, EMaterialTypes mat2, EMaterialT
   mMaterial.Remove(mat3);
   mMaterial.Remove(mat4);
   mgr.ObjectManager().UpdateObjectInLists(*this);
-  Virtual7C();
+  MaterialChanged();
 }
 
 EWeaponCollisionResponseTypes CActor::GetCollisionResponseType(const CVector3f&, const CVector3f&,

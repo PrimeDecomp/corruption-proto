@@ -3,7 +3,6 @@
 // Source identity: asserted Main.cpp; established reference path is lower-case main.cpp.
 // Remaining emitted/native helper inventory (implemented functions are removed):
 // clang-format off
-// 0x8000586C +0x120: emitted vector<string> push-back helper used by main memory diagnostics; vector.h assertion line482
 // 0x8000598C +0x64: retained emitted/native function; exact class/type/name unresolved
 // 0x800059F0 +0xAC: retained emitted/native function; exact class/type/name unresolved
 // 0x80005A9C +0x104: retained emitted/native function; exact class/type/name unresolved
@@ -31,8 +30,6 @@
 // 0x80009194 +0x94: retained emitted/native function; exact class/type/name unresolved
 // 0x80009228 +0x84: retained emitted/native function; exact class/type/name unresolved
 // 0x80009888 +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x80009F08 +0x7C0: retained emitted/native function; exact class/type/name unresolved
-// 0x8000A6C8 +0xC4: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A8DC +0x868: CGameGlobalObjects::AddPaksAndFactories (Echoes name; called from PostInitialize with the context); not implemented
 // 0x8000B144 +0x4C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B190 +0xC0: retained emitted/native function; exact class/type/name unresolved
@@ -42,7 +39,7 @@
 // 0x8000B444 +0x118: retained emitted/native function; exact class/type/name unresolved
 // 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
 // 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
-// 0x8000CC24 +0x126C: main debug options processing; pool/resource dumps and loaded-texture export, not factory registration
+// 0x8000CC24 +0x126C: UpdateProgrammerDebugOptions (guessed name); pool/resource dumps and loaded-texture export; not implemented
 // 0x8000DE90 +0x138: retained emitted/native function; exact class/type/name unresolved
 // 0x8000DFC8 +0x104: retained emitted/native function; exact class/type/name unresolved
 // 0x8000E0CC +0xDC: retained emitted/native function; exact class/type/name unresolved
@@ -53,7 +50,6 @@
 // 0x8000E41C +0x630: main memory metrics/debug text display; uses leading string-vector push-back helper
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
-// 0x8000F93C +0xD0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FA0C +0xA8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FAB4 +0xAC: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FB60 +0x74: retained emitted/native function; exact class/type/name unresolved
@@ -84,6 +80,7 @@
 #include "Kyoto/CPakFile.hpp"
 #include "Kyoto/CResFactory.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
+#include "Kyoto/Graphics/CTexture.hpp"
 #include "Kyoto/Input/CControllerGamepadData.hpp"
 #include "Kyoto/Input/IController.hpp"
 #include "Kyoto/Math/CloseEnough.hpp"
@@ -101,6 +98,7 @@
 #include "MetroidPrime/CAnimData.hpp"
 #include "MetroidPrime/CAudioStateWin.hpp"
 #include "MetroidPrime/CConsoleOutputWindow.hpp"
+#include "MetroidPrime/CControllerRecorder.hpp"
 #include "MetroidPrime/CDamageVulnerability.hpp"
 #include "MetroidPrime/CDbgDraw.hpp"
 #include "MetroidPrime/CDebugOption.hpp"
@@ -124,6 +122,7 @@
 #include "MetroidPrime/Tweaks/CTweakGame.hpp"
 #include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 
+#include "rstl/StringExtras.hpp"
 #include "rstl/auto_ptr.hpp"
 #include "rstl/map.hpp"
 #include "rstl/optional_object.hpp"
@@ -183,7 +182,6 @@
 
 void FreeTweaks();
 extern "C" void RAssert_SetDiagnosticPrintCallback(void (*callback)(const char* format, ...));
-extern "C" void CTexture_SetBindCount(int count);
 // Guessed name. CGameAllocator accumulates its allocation time here (OSGetTick deltas).
 extern uint gAllocationTicks;
 
@@ -274,6 +272,9 @@ void UpdateScreenCapture(SScreenshotState& state);
 void DrawSafeFrame();
 // Guessed name. Restores sProgressiveModePrompt from the save region after a reset.
 void ReadProgressiveModePrompt();
+// Guessed name. 0x8000CC24: the programmer debug options (memory metrics, pool and allocation
+// dumps, loaded-texture export, state manager numbers, ...); DrawDebugMetrics runs it.
+void UpdateProgrammerDebugOptions();
 
 // Guessed name. A named CGameProfiler section that RsMain keeps open around a frame; the
 // section is closed around EndScene and when it goes out of scope.
@@ -556,6 +557,96 @@ void ReadProgressiveModePrompt() {
     reader.ReadBits(1);
     sProgressiveModePrompt = reader.ReadBits(1) != 0;
   }
+}
+
+// Prototype only (Echoes draws its metrics elsewhere). Times the frame's CPU and GPU work, prints
+// the frame rate bar, the draw-time, GX counter and FMOD lines into their debug options' message
+// lists, applies the renderer debug options, then runs the programmer options and draws the menu.
+void CMain::DrawDebugMetrics(double dt, CStopwatch& stopWatch) {
+  static const float kFrameTime = 1.f / 60.f;
+  const float cpuTime = stopWatch.GetElapsedTime();
+  CControllerRecorder::SetCpuDrawTime(cpuTime);
+  const int perf0 = gpGameDebug->GetOptionInt(CGameDebug::kDO_DrawTimeInfo) % kNumGPPerf0Metrics;
+  const int perf1 = gpGameDebug->GetOptionInt(CGameDebug::kDO_DrawTimeInfo) % kNumGPPerf1Metrics;
+  if (perf0 != 0 || CControllerRecorder::sProfiling) {
+    GXDrawDone();
+  }
+  const float gpuTime = stopWatch.GetElapsedTime();
+  CControllerRecorder::SetGpuDrawTime(gpuTime);
+  u32 perf0Count = 0;
+  u32 perf1Count = 0;
+  GXReadGPMetric(&perf0Count, &perf1Count);
+  u32 vcCheck = 0;
+  u32 vcMiss = 0;
+  u32 vcStall = 0;
+  GXReadVCacheMetric(&vcCheck, &vcMiss, &vcStall);
+  const double framesPerSecond = 1.0 / (dt + gpuTime);
+
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ShowFramerate) != 0) {
+    if (gpGameDebug->GetOptionInt(CGameDebug::kDO_CPUAndGPUMetrics) == 1 ||
+        gpGameDebug->GetOptionInt(CGameDebug::kDO_CPUAndGPUMetrics) == 3) {
+      // A 50 character bar spans one and a half frames: the frame time, the CPU time, then the
+      // rest. Both are drawn red once the frame takes more than 1.125 frames.
+      const double barTime = kFrameTime * 1.5f;
+      const double frameBar = 50.0 * (dt / barTime);
+      const int cpuBar = static_cast< int >(50.0 * (cpuTime / barTime));
+      const int dtBar = static_cast< int >(frameBar) < 50 ? static_cast< int >(frameBar) : 50;
+      const bool slow = cpuTime + dt > 0.01875f;
+      gpGameDebug->GetOption(CGameDebug::kDO_ShowFramerate)
+          ->AddMessage(CStringExtras::Format("CPU %s[BAR %d]%s[BAR %d][BC 0 50 0][BAR %d]",
+                                             slow ? "[BC 255 0 0 255]" : "[BC 64 64 255]", dtBar,
+                                             slow ? "[BC 255 64 64 255]" : "[BC 64 255 64]", cpuBar,
+                                             50 - dtBar - cpuBar));
+    }
+  }
+  x20_ = framesPerSecond;
+
+  gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)->ClearMessages();
+  if (gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)->GetValue() != 0.f) {
+    gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)
+        ->AddMessage(rstl::string(CBasics::Stringize("UT %0.4f DTCPU %0.4f GPU %0.4f TexL: %d", dt,
+                                                     cpuTime, gpuTime, CTexture::GetBindCount())));
+    gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)
+        ->AddMessage(
+            rstl::string(CBasics::Stringize("%s: %d %s: %d", sGPPerf0Metrics[perf0].mName,
+                                            perf0Count, sGPPerf1Metrics[perf1].mName, perf1Count)));
+    gpGameDebug->GetOption(CGameDebug::kDO_DrawTimeInfo)
+        ->AddMessage(rstl::string(
+            CBasics::Stringize("VC Check:%d Miss:%d Stall:%d", vcCheck, vcMiss, vcStall)));
+  }
+
+  CTexture::sReviewTextureSize =
+      gpGameDebug->GetOption(CGameDebug::kDO_ReviewTextureSize)->GetValue() == 1.f;
+  CTexture::sCapTextureSize =
+      gpGameDebug->GetOption(CGameDebug::kDO_CapTextureSize)->GetValue() == 1.f;
+  gpRender->SetWireframeFlags(
+      static_cast< int >(gpGameDebug->GetOption(CGameDebug::kDO_Wireframe)->GetValue()));
+
+  gpGameDebug->GetOption(CGameDebug::kDO_ShowFModMetrics)->ClearMessages();
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_ShowFModMetrics) != 0) {
+    const float total = CAudioManager::GetTotalCpuPercent();
+    const float update = CAudioManager::GetUpdateCpuPercent();
+    const float stream = CAudioManager::GetStreamCpuPercent();
+    gpGameDebug->GetOption(CGameDebug::kDO_ShowFModMetrics)
+        ->AddMessage(CStringExtras::Format("FMod CPU Usage(D%0.1f%% S%0.1f%% U%0.1f%%)%0.1f%%",
+                                           CAudioManager::GetDspCpuPercent(), stream, update,
+                                           total));
+    gpGameDebug->GetOption(CGameDebug::kDO_ShowFModMetrics)
+        ->AddMessage(CStringExtras::Format(
+            "FMod MEM Usage %0.2fM",
+            static_cast< float >(CAudioManager::GetFMODAllocatedBytes()) / 1048576.f));
+  }
+
+  gpGameDebug->GetOption(CGameDebug::kDO_DebugSoundSystem)->ClearMessages();
+  if (gpGameDebug->GetOptionInt(CGameDebug::kDO_DebugSoundSystem) == 1) {
+    rstl::vector< rstl::string > lines = CAudioManager::BuildVoiceDebugStrings();
+    for (rstl::vector< rstl::string >::const_iterator it = lines.begin(); it != lines.end(); ++it) {
+      gpGameDebug->GetOption(CGameDebug::kDO_DebugSoundSystem)->AddMessage(*it);
+    }
+  }
+
+  UpdateProgrammerDebugOptions();
+  gpGameDebug->Draw();
 }
 
 // Guessed name. The "Terminate Game" debug option ends the main loop; with no option registered
@@ -1038,7 +1129,8 @@ CGameArchitectureSupport::CGameArchitectureSupport(COsContext& context)
   mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1415) CMainFlow(), 0, 0);
   mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1416) CConsoleOutputWindow(8, 5.f, 0.75f), 100, 0);
   mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1418) CAudioStateWin(), 100, -1);
-  mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1420) CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
+  mIoWinMgr.AddIOWin(rs_new_line_in("Main.cpp", 1420)
+                         CErrorOutputWindow(CErrorOutputWindow::kF_Zero),
                      10000, 100000);
   gpGameState->GameOptions().EnsureOptions();
 }
@@ -1166,7 +1258,7 @@ void CMain::UpdateGPMetrics() {
   GXSetVCacheMetric(GX_VC_ALL);
   GXClearVCacheMetric();
   gAllocationTicks = 0;
-  CTexture_SetBindCount(0);
+  CTexture::SetBindCount(0);
 }
 
 // Like Prime (Echoes' is empty): the persistent options, the game options, the compressed save

@@ -11,6 +11,8 @@
 #include "rstl/auto_ptr.hpp"
 #include "rstl/pair.hpp"
 #include "rstl/reserved_vector.hpp"
+#include "rstl/string.hpp"
+#include "rstl/vector.hpp"
 
 #include <musyx/musyx.h>
 
@@ -261,6 +263,15 @@ public:
   static void UpdateListener(const CVector3f& position, const CVector3f& direction,
                              const CVector3f& heading, const CVector3f& up, uchar maxVolume,
                              int listener);
+  // Guessed names. main's audio debug options print these: FMOD's DSP, stream, update and total
+  // CPU usage (0x8056925C, 0x80569224, 0x805691EC, 0x80569294), its allocated memory
+  // (0x805691C0) and one line per allocated voice (0x805689F0).
+  static float GetDspCpuPercent();
+  static float GetStreamCpuPercent();
+  static float GetUpdateCpuPercent();
+  static float GetTotalCpuPercent();
+  static int GetFMODAllocatedBytes();
+  static rstl::vector< rstl::string > BuildVoiceDebugStrings();
   static void SetActiveAreas(const rstl::reserved_vector< int, 10 >& areas, int currentArea);
   static ushort TranslateSFXID(ushort id);
   static bool LoadTranslationTable(CSimplePool* pool, const SObjectTag* tag);

@@ -90,21 +90,10 @@
 // 0x8000B308 +0xB0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B3B8 +0x8C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B444 +0x118: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B55C +0x20: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B57C +0x28: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B5A4 +0x70: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B614 +0x88: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B69C +0xCC: retained emitted/native function; exact class/type/name unresolved
-// 0x8000B768 +0x6C: architecture update and IOWin message pumping
-// 0x8000B7D4 +0x3C4: architecture tick update
-// 0x8000BB98 +0x6C: architecture frame/tick bookkeeping
-// 0x8000BC04 +0x98: CGameArchitectureSupport destructor; queue/static-owner destruction retained
-// 0x8000BC9C +0x98: retained emitted/native function; exact class/type/name unresolved
-// 0x8000BD34 +0x58: retained emitted/native function; exact class/type/name unresolved
-// 0x8000BD8C +0x54: retained emitted/native function; exact class/type/name unresolved
-// 0x8000BDE0 +0x84: retained emitted/native function; exact class/type/name unresolved
-// 0x8000BE64 +0x38: retained emitted/native function; exact class/type/name unresolved
-// 0x8000BE9C +0x60: retained emitted/native function; exact class/type/name unresolved
+// 0x8000B768 +0x6C: CGameArchitectureSupport::Update; touches the world-transition models (CGameState getter 0x80159C7C, TouchModels 0x801769D4), pushes FrameEnd and pumps; not implemented (needs CGameState/CWorldTransManager declarations)
+// 0x8000BE64 +0x38: rstl::destroy over the scan-text debug entries; calls the out-of-line loop below (our rstl inlines it)
+// 0x8000BE9C +0x60: rstl::destroy_impl loop over the scan-text debug entries (string at 0xC)
 // 0x8000BEFC +0x31C: CGameArchitectureSupport constructor; Main.cpp allocations1415/1416/1418/1420 and local IOWin rc release
 // 0x8000C218 +0xBC: CGameGlobalObjects LoadStringTable; STRG_Main token ownership
 // 0x8000C2D4 +0x84: emitted optional locked-string-table-token assignment helper
@@ -129,13 +118,11 @@
 // 0x8000F2A8 +0x24: retained emitted/native function; exact class/type/name unresolved
 // 0x8000F3E8 +0x124: emitted TOneStatic architecture operator delete
 // 0x8000F658 +0x124: emitted TOneStatic global-objects operator delete
-// 0x8000F874 +0x64: emitted rc_ptr release helper; typed identity not copied from ambiguous identical reference bodies
 // 0x8000F8D8 +0x64: emitted IOWin rc_ptr release helper, directly used by architecture constructor
 // 0x8000F93C +0xD0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FA0C +0xA8: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FAB4 +0xAC: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FB60 +0x74: retained emitted/native function; exact class/type/name unresolved
-// 0x8000FC48 +0x98: emitted architecture-message list destructor; strong Echoes match and architecture queue use
 // 0x8000FD54 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FDC8 +0x74: retained emitted/native function; exact class/type/name unresolved
 // 0x8000FE3C +0x74: retained emitted/native function; exact class/type/name unresolved
@@ -158,6 +145,7 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/LockedCache.hpp"
+#include "Kyoto/Audio/CDSPStreamManager.hpp"
 #include "Kyoto/Audio/CStreamAudioManager.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
 #include "Kyoto/Basics/COsContext.hpp"
@@ -171,6 +159,7 @@
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Input/CControllerGamepadData.hpp"
 #include "Kyoto/Input/IController.hpp"
+#include "Kyoto/Math/CloseEnough.hpp"
 #include "Kyoto/Particles/CElementGen.hpp"
 #include "Kyoto/Streams/CBitStreamReader.hpp"
 #include "Kyoto/Streams/CBitStreamWriter.hpp"
@@ -236,6 +225,7 @@ extern "C" void CAudioManager_Shutdown();
 void FreeTweaks();
 extern "C" void RAssert_SetDiagnosticPrintCallback(void (*callback)(const char* format, ...));
 extern "C" void CAudioManager_Update(float dt);
+extern "C" void CBBASupport_PollMessages();
 extern IController* gpController;
 class CMemoryCard;
 extern CMemoryCard* gpMemoryCard;
@@ -288,6 +278,7 @@ private:
 #define UNUSED_STACK_VAL 0x7337D00D
 
 CMain* gpMain;
+CIOWinManager* gpIOWinManager;
 static uchar sMainSpace[sizeof(CMain)];
 // Guessed names; Echoes keeps the ARAM stack array and allocation size in this TU as well.
 static u32 sARAMMemArray[3];
@@ -800,6 +791,90 @@ void CMain::AsyncIdle(uint time) {
   if (idleTime != 0) {
     gpResourceFactory->AsyncIdle(idleTime, maxSpeed);
   }
+}
+
+// Unlike Echoes there is no infinite-loop alarm to cancel and no sound manager to shut down.
+CGameArchitectureSupport::~CGameArchitectureSupport() {
+  mIoWinMgr.RemoveAllIOWins();
+  gpIOWinManager = nullptr;
+  CDSPStreamManager::Shutdown();
+}
+
+bool CGameArchitectureSupport::UpdateTicks() {
+  bool quit = false;
+  const BOOL interrupts = OSDisableInterrupts();
+  const float stopwatchTime = mTickStopwatch.GetElapsedTime();
+  float frameTime = stopwatchTime;
+  mTickStopwatch.Reset();
+  OSRestoreInterrupts(interrupts);
+  mTickRemainder += stopwatchTime;
+  if (gpMain->GetThirtyFps()) {
+    mTickRemainder = 1.f / 30.f;
+  }
+  if (gpMain->IsMaxSpeed() || stopwatchTime > 0.035f) {
+    frameTime = 1.f / 60.f;
+    gpMain->DecrementMaxSpeedDrawTimer(stopwatchTime);
+    mTickRemainder = 1.f / 60.f;
+  }
+  gpMain->FrameCallbacks().x0_preTick.Emit();
+
+  bool keepLooping = true;
+  CBBASupport_PollMessages();
+  if (gpGameDebug->IsMovieCaptureRunning()) {
+    // Movie capture runs exactly one fixed tick per drawn frame.
+    mTickRemainder = 1.f / 60.f;
+    const float timeLeft = gpGameDebug->GetMovieCaptureTime();
+    rs_debugger_printf("Movie Capture Time Left = %f\n", timeLeft);
+    if (timeLeft <= 0.f) {
+      gpGameDebug->FinishMovieCapture();
+    } else {
+      gpGameDebug->SetMovieCaptureTime(gpGameDebug->GetMovieCaptureTime() - 1.f / 60.f);
+    }
+  } else {
+    // The recorder's game speed scales the ticks; a requested single step runs at full speed.
+    CControllerRecorder& recorder = mInputGenerator.GetRecorder();
+    const float gameSpeed = recorder.GetStepFrame() ? 1.f : recorder.GetGameSpeed();
+    recorder.ClearStepFrame();
+    if (gameSpeed != 1.f) {
+      keepLooping = false;
+      if (gameSpeed == 0.f) {
+        // Paused: input and messages are still pumped once per frame.
+        if (!mInputGenerator.Update(1.f / 60.f, mArchQueue)) {
+          quit = true;
+        }
+        mIoWinMgr.PumpMessages(mArchQueue);
+      }
+      mTickRemainder -= frameTime;
+      mTickRemainder += 1.f / 60.f * gameSpeed;
+    }
+  }
+
+  mArchQueue.Push(MakeMsg::CreateFrameBegin(kAMT_Game, mGameFrameCount));
+  while (keepLooping || mTickRemainder >= 1.f / 60.f) {
+    keepLooping = false;
+    // The fake 50 Hz option only lengthens the tick; the remainder still advances by 1/60 s.
+    const float dt =
+        gpGameDebug->IsOptionSet(CGameDebug::kDO_FakePAL50HzUpdate) ? 1.f / 50.f : 1.f / 60.f;
+    if (!mInputGenerator.Update(dt, mArchQueue)) {
+      quit = true;
+    }
+    gpMain->FrameCallbacks().x18_tick.Emit(dt);
+    mScanTextDebugManager.Update(dt);
+    mArchQueue.Push(MakeMsg::CreateTimerTick(kAMT_Game, dt));
+    mTickRemainder -= 1.f / 60.f;
+    mIoWinMgr.PumpMessages(mArchQueue);
+  }
+  gpMain->FrameCallbacks().x30_postTick.Emit();
+
+  if (close_enough((mPreviousTickRemainder2 - mPreviousTickRemainder) +
+                       (mPreviousTickRemainder - mTickRemainder),
+                   0.f, 0.00005f)) {
+    mTickRemainder = 0.f;
+  }
+  mPreviousTickRemainder2 = mPreviousTickRemainder;
+  mPreviousTickRemainder = mTickRemainder;
+  mIoWinMgr.PumpMessages(mArchQueue);
+  return !quit;
 }
 
 int CMain::GetLanguage() const {

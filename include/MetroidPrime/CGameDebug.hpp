@@ -518,6 +518,14 @@ public:
   // remaining capture time that main counts down.
   void SetMovieCaptureTime(float time);
   const rstl::string& GetMovieCaptureName();
+  // Guessed names. While a capture runs, the architecture tick runs fixed 1/60 s frames and
+  // counts the time down ("Movie Capture Time Left = %f\n"), then ends the capture.
+  bool IsMovieCaptureRunning() const { return xA16B_; }
+  float GetMovieCaptureTime() const { return mMovieCaptureTime; }
+  void FinishMovieCapture() {
+    xA16B_ = false;
+    xA16C_ = true;
+  }
 
   // Guessed name. 0x80048C20: the player item of a powerup option (kDO_PowerBeam ..
   // kDO_ItemPercentage), -1 for any other option.

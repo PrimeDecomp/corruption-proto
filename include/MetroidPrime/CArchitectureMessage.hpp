@@ -55,6 +55,10 @@ private:
 
 namespace MakeMsg {
 const CArchMsgParmReal32& GetParmTimerTick(const CArchitectureMessage& msg);
+// Echoes names; the message types (4, 0xA, 0xB) confirm them (Decode.cpp).
+CArchitectureMessage CreateTimerTick(EArchMsgTarget target, const float& dt);
+CArchitectureMessage CreateFrameBegin(EArchMsgTarget target, const int& frame);
+CArchitectureMessage CreateFrameEnd(EArchMsgTarget target, const int& frame);
 } // namespace MakeMsg
 
 #endif // _CARCHITECTUREMESSAGE

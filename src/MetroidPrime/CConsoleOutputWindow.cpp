@@ -2,12 +2,12 @@
 // G2MEAB .text 0x800DD114..0x800DDAEC (end exclusive).
 // Complete native/helper inventory: 14 functions; implementation remains pending.
 // Boundary evidence is retained outside this repository in the agent workflow.
-// Not yet implemented:
-// 0x800DDABC static initializer: seven SDA constants (-1,-1,-1,0,1,2,-1) from a shared header.
+// The static initializer (0x800DDABC) is the per-unit copy of the TGameTypes.hpp id constants.
 #include "MetroidPrime/CConsoleOutputWindow.hpp"
 
 #include "MetroidPrime/CArchitectureMessage.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
+#include "MetroidPrime/TGameTypes.hpp"
 
 #include "Kyoto/CDvdFile.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"

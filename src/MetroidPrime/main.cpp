@@ -81,7 +81,6 @@
 // 0x80009888 +0x54: retained emitted/native function; exact class/type/name unresolved
 // 0x80009F08 +0x7C0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A6C8 +0xC4: retained emitted/native function; exact class/type/name unresolved
-// 0x8000A78C +0x150: CMain::UpdateGPMetrics (guessed name); GX perf counters from debug option 250
 // 0x8000A8DC +0x868: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B144 +0x4C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B190 +0xC0: retained emitted/native function; exact class/type/name unresolved
@@ -194,6 +193,7 @@
 #include "dolphin/base/PPCArch.h"
 #include "dolphin/dvd.h"
 #include "dolphin/gx/GXManage.h"
+#include "dolphin/gx/GXPerf.h"
 #include "dolphin/os.h"
 #include "dolphin/os/OSCache.h"
 #include "dolphin/os/OSMemory.h"
@@ -226,6 +226,86 @@ void FreeTweaks();
 extern "C" void RAssert_SetDiagnosticPrintCallback(void (*callback)(const char* format, ...));
 extern "C" void CAudioManager_Update(float dt);
 extern "C" void CBBASupport_PollMessages();
+extern "C" void CTexture_SetBindCount(int count);
+// Guessed name. CGameAllocator accumulates its allocation time here (OSGetTick deltas).
+extern uint gAllocationTicks;
+
+// Guessed names. The selectable GX performance counters (all but PERF0_VERTICES, with NONE
+// first); the names are the first strings of the main.cpp pool.
+struct SGPPerf0Metric {
+  const char* mName;
+  GXPerf0 mMetric;
+};
+struct SGPPerf1Metric {
+  const char* mName;
+  GXPerf1 mMetric;
+};
+
+static const SGPPerf0Metric sGPPerf0Metrics[] = {
+    {"PERF0_NONE", GX_PERF0_NONE},
+    {"PERF0_CLIP_VTX", GX_PERF0_CLIP_VTX},
+    {"PERF0_CLIP_CLKS", GX_PERF0_CLIP_CLKS},
+    {"PERF0_XF_WAIT_IN", GX_PERF0_XF_WAIT_IN},
+    {"PERF0_XF_WAIT_OUT", GX_PERF0_XF_WAIT_OUT},
+    {"PERF0_XF_XFRM_CLKS", GX_PERF0_XF_XFRM_CLKS},
+    {"PERF0_XF_LIT_CLKS", GX_PERF0_XF_LIT_CLKS},
+    {"PERF0_XF_BOT_CLKS", GX_PERF0_XF_BOT_CLKS},
+    {"PERF0_XF_REGLD_CLKS", GX_PERF0_XF_REGLD_CLKS},
+    {"PERF0_XF_REGRD_CLKS", GX_PERF0_XF_REGRD_CLKS},
+    {"PERF0_CLIP_RATIO", GX_PERF0_CLIP_RATIO},
+    {"PERF0_TRIANGLES", GX_PERF0_TRIANGLES},
+    {"PERF0_TRIANGLES_CULLED", GX_PERF0_TRIANGLES_CULLED},
+    {"PERF0_TRIANGLES_PASSED", GX_PERF0_TRIANGLES_PASSED},
+    {"PERF0_TRIANGLES_SCISSORED", GX_PERF0_TRIANGLES_SCISSORED},
+    {"PERF0_TRIANGLES_0TEX", GX_PERF0_TRIANGLES_0TEX},
+    {"PERF0_TRIANGLES_1TEX", GX_PERF0_TRIANGLES_1TEX},
+    {"PERF0_TRIANGLES_2TEX", GX_PERF0_TRIANGLES_2TEX},
+    {"PERF0_TRIANGLES_3TEX", GX_PERF0_TRIANGLES_3TEX},
+    {"PERF0_TRIANGLES_4TEX", GX_PERF0_TRIANGLES_4TEX},
+    {"PERF0_TRIANGLES_5TEX", GX_PERF0_TRIANGLES_5TEX},
+    {"PERF0_TRIANGLES_6TEX", GX_PERF0_TRIANGLES_6TEX},
+    {"PERF0_TRIANGLES_7TEX", GX_PERF0_TRIANGLES_7TEX},
+    {"PERF0_TRIANGLES_8TEX", GX_PERF0_TRIANGLES_8TEX},
+    {"PERF0_TRIANGLES_0CLR", GX_PERF0_TRIANGLES_0CLR},
+    {"PERF0_TRIANGLES_1CLR", GX_PERF0_TRIANGLES_1CLR},
+    {"PERF0_TRIANGLES_2CLR", GX_PERF0_TRIANGLES_2CLR},
+    {"PERF0_QUAD_0CVG", GX_PERF0_QUAD_0CVG},
+    {"PERF0_QUAD_NON0CVG", GX_PERF0_QUAD_NON0CVG},
+    {"PERF0_QUAD_1CVG", GX_PERF0_QUAD_1CVG},
+    {"PERF0_QUAD_2CVG", GX_PERF0_QUAD_2CVG},
+    {"PERF0_QUAD_3CVG", GX_PERF0_QUAD_3CVG},
+    {"PERF0_QUAD_4CVG", GX_PERF0_QUAD_4CVG},
+    {"PERF0_AVG_QUAD_CNT", GX_PERF0_AVG_QUAD_CNT},
+    {"PERF0_CLOCKS", GX_PERF0_CLOCKS},
+};
+static const int kNumGPPerf0Metrics = sizeof(sGPPerf0Metrics) / sizeof(sGPPerf0Metrics[0]);
+
+static const SGPPerf1Metric sGPPerf1Metrics[] = {
+    {"PERF1_NONE", GX_PERF1_NONE},
+    {"PERF1_TEXELS", GX_PERF1_TEXELS},
+    {"PERF1_TX_IDLE", GX_PERF1_TX_IDLE},
+    {"PERF1_TX_REGS", GX_PERF1_TX_REGS},
+    {"PERF1_TX_MEMSTALL", GX_PERF1_TX_MEMSTALL},
+    {"PERF1_TC_CHECK1_2", GX_PERF1_TC_CHECK1_2},
+    {"PERF1_TC_CHECK3_4", GX_PERF1_TC_CHECK3_4},
+    {"PERF1_TC_CHECK5_6", GX_PERF1_TC_CHECK5_6},
+    {"PERF1_TC_CHECK7_8", GX_PERF1_TC_CHECK7_8},
+    {"PERF1_TC_MISS", GX_PERF1_TC_MISS},
+    {"PERF1_VC_ELEMQ_FULL", GX_PERF1_VC_ELEMQ_FULL},
+    {"PERF1_VC_MISSQ_FULL", GX_PERF1_VC_MISSQ_FULL},
+    {"PERF1_VC_MEMREQ_FULL", GX_PERF1_VC_MEMREQ_FULL},
+    {"PERF1_VC_STATUS7", GX_PERF1_VC_STATUS7},
+    {"PERF1_VC_MISSREP_FULL", GX_PERF1_VC_MISSREP_FULL},
+    {"PERF1_VC_STREAMBUF_LOW", GX_PERF1_VC_STREAMBUF_LOW},
+    {"PERF1_VC_ALL_STALLS", GX_PERF1_VC_ALL_STALLS},
+    {"PERF1_VERTICES", GX_PERF1_VERTICES},
+    {"PERF1_FIFO_REQ", GX_PERF1_FIFO_REQ},
+    {"PERF1_CALL_REQ", GX_PERF1_CALL_REQ},
+    {"PERF1_VC_MISS_REQ", GX_PERF1_VC_MISS_REQ},
+    {"PERF1_CP_ALL_REQ", GX_PERF1_CP_ALL_REQ},
+    {"PERF1_CLOCKS", GX_PERF1_CLOCKS},
+};
+static const int kNumGPPerf1Metrics = sizeof(sGPPerf1Metrics) / sizeof(sGPPerf1Metrics[0]);
 extern IController* gpController;
 class CMemoryCard;
 extern CMemoryCard* gpMemoryCard;
@@ -875,6 +955,25 @@ bool CGameArchitectureSupport::UpdateTicks() {
   mPreviousTickRemainder = mTickRemainder;
   mIoWinMgr.PumpMessages(mArchQueue);
   return !quit;
+}
+
+// The "DrawTime Info" option picks one counter of each GX performance group (its value modulo
+// the table sizes); DrawDebugMetrics prints the names. The counters only run while the first
+// pick is not PERF0_NONE or while the controller recorder profiles.
+void CMain::UpdateGPMetrics() {
+  // Unused. The original has a guarded local static set to 1, which MWCC emits for an
+  // enum-typed static; the type and name are guessed.
+  static GXPerf0 sUnusedPerf0Metric = GX_PERF0_CLIP_VTX;
+  const int perf0 = gpGameDebug->GetOptionInt(CGameDebug::kDO_DrawTimeInfo) % kNumGPPerf0Metrics;
+  const int perf1 = gpGameDebug->GetOptionInt(CGameDebug::kDO_DrawTimeInfo) % kNumGPPerf1Metrics;
+  if (perf0 != 0 || CControllerRecorder::sProfiling) {
+    GXSetGPMetric(sGPPerf0Metrics[perf0].mMetric, sGPPerf1Metrics[perf1].mMetric);
+    GXClearGPMetric();
+  }
+  GXSetVCacheMetric(GX_VC_ALL);
+  GXClearVCacheMetric();
+  gAllocationTicks = 0;
+  CTexture_SetBindCount(0);
 }
 
 int CMain::GetLanguage() const {

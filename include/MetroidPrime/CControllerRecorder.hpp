@@ -14,6 +14,10 @@ public:
   bool GetStepFrame() const { return mStepFrame; }
   void ClearStepFrame(); // 0x8012124C
 
+  // Guessed name. Set by the recorder's profiling switch (0x80121A14); main keeps the GX
+  // performance counters running while it is set.
+  static bool sProfiling;
+
 private:
   uchar x0_[0x30];
   float mGameSpeed;

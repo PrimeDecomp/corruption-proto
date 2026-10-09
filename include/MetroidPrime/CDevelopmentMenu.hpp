@@ -16,7 +16,7 @@ class CFinalInput;
 // (CFrontEndUIDevelopment keeps one at 0x4C and builds it, including the world/area/layer
 // pickers). Each entry is a line of debug-font text with an optional list of choices that the
 // player cycles through with left/right; up/down move between the visible entries. Both the pad
-// (through a CControlMapper) and the development keyboard (COsContext_GetKeyState) drive it.
+// (through a CControlMapper) and the development keyboard (COsContext::GetOsKeyState) drive it.
 // Entries are kept sorted by sort key, then by name. The constructor and destructor are emitted
 // in CFrontEndUIDevelopment. No Echoes/Prime equivalent is known.
 class CDevelopmentMenu {

@@ -26,6 +26,7 @@
 #include "MetroidPrime/CControllerRecorder.hpp"
 #include "MetroidPrime/CDecalManager.hpp"
 #include "MetroidPrime/CDisplayManager.hpp"
+#include "MetroidPrime/CFrontEndUI.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/CInGameGuiManager.hpp"
 #include "MetroidPrime/CMain.hpp"
@@ -46,9 +47,6 @@
 
 extern IController* gpController;
 extern const TToken< CRasterFont >* gpDefaultFont;
-// The build label ("Build v3.068 3/2/2006 14:55:13"), CFrontEndUI.cpp; CFrontEndUIDevelopment
-// draws it too.
-extern "C" const char* fn_80023394();
 
 bool CMFGame::mMultiplayerGuiActive;
 
@@ -425,7 +423,7 @@ void CMFGame::Draw() const {
 
   if (gpGameState->GetGameMode().GetGameType() == 'FRND') {
     gpRender->SetViewportOrtho(false, -4096.f, 4096.f);
-    ScreenText::DrawString(rstl::string_l(fn_80023394()), 24, -412, *gpDefaultFont);
+    ScreenText::DrawString(rstl::string_l(CFrontEndUI::GetVersionInfo()), 24, -412, *gpDefaultFont);
   }
 }
 

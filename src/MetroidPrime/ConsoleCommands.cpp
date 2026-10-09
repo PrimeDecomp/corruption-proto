@@ -488,10 +488,10 @@ static void SendMessage(const char*, const char* args) {
       if (sStateManager != nullptr) {
         // The editor id is taken as relative to the player's area.
         const CPlayer* player = sStateManager->ObjectManager().GetPlayer();
-        editorId =
-            (editorId & ~0x03FF0000) | ((player->GetCurrentAreaId().Value() << 16) & 0x03FF0000);
+        TEditorId id(editorId);
+        id.SetAreaNum(player->GetCurrentAreaId().Value());
         CStateManagerObject::TIdListResult range =
-            sStateManager->ObjectManager().GetIdListForScript(TEditorId(editorId));
+            sStateManager->ObjectManager().GetIdListForScript(id);
         for (CStateManagerObject::TIdList::const_iterator it = range.first; it != range.second;
              ++it) {
           TUniqueId uid = it->second;
@@ -522,8 +522,9 @@ void SetTransform(const char*, const char* args) {
       if (sStateManager != nullptr) {
         // The editor id is taken as relative to the player's area.
         TAreaId areaId = sStateManager->ObjectManager().GetPlayer()->GetCurrentAreaId();
-        editorId = (editorId & ~0x03FF0000) | ((areaId.Value() << 16) & 0x03FF0000);
-        TUniqueId uid = sStateManager->ObjectManager().GetIdForScript(TEditorId(editorId));
+        TEditorId id(editorId);
+        id.SetAreaNum(areaId.Value());
+        TUniqueId uid = sStateManager->ObjectManager().GetIdForScript(id);
         if (uid == kInvalidUniqueId) {
           return;
         }

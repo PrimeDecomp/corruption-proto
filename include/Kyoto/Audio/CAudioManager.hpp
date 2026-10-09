@@ -202,6 +202,12 @@ public:
   static const int kAllAreas;
 
   static void Initialize(); // Guessed name
+  // Guessed names. CMain starts the audio system with these arguments (0 and 0x600000);
+  // Corruption's manager sits on FMOD and hands it memory callbacks (0x80569A6C).
+  static void InitializeWithMemoryCallbacks(int, int);
+  // Guessed name. 0x80568760 stores one of the debug switches CGameDebug drives: 0 mutes the
+  // audio ("Enable Audio" off), 1 turns on the sound system debug display.
+  static void SetDebugOption(int option, bool enabled);
   static void Shutdown();
   static void StopAndRemoveAllEmitters();
   static void Update(float dt);

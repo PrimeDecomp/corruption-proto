@@ -13,6 +13,7 @@
 
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Alloc/CMemory.hpp"
+#include "Kyoto/Audio/CAudioManager.hpp"
 #include "Kyoto/Audio/CStreamAudioManager.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
 #include "Kyoto/Basics/COsContext.hpp"
@@ -614,7 +615,6 @@ void ResetAiTraceFocus();
 void SaveGameToDebugSlot(int slot);
 // The debug slot CMainFlow loads the game from when it is not -1; it resets it afterwards.
 extern int lbl_80795E50;
-extern "C" void CAudioManager_SetDebugOption(int option, bool enabled);
 
 // The Start command closes the menu (and asks the front end to drop its window unless the game
 // mode is 'FRND'). Right and left switch the pages of the category list. A picked row opens a
@@ -765,8 +765,8 @@ CIOWin::EMessageReturn CGameDebug::ProcessMenuInput(const CControlMapper& mapper
         rs_debugger_printf("Setting language %d\n", language);
         OSSetLanguage(language);
       }
-      CAudioManager_SetDebugOption(0, !IsOptionSet(kDO_EnableAudio));
-      CAudioManager_SetDebugOption(1, GetOptionInt(kDO_DebugSoundSystem) == 3);
+      CAudioManager::SetDebugOption(0, !IsOptionSet(kDO_EnableAudio));
+      CAudioManager::SetDebugOption(1, GetOptionInt(kDO_DebugSoundSystem) == 3);
     }
   }
 
@@ -1852,8 +1852,8 @@ const rstl::string& CGameDebug::GetMovieCaptureName() {
     for (int i = 0; i < 100; ++i) {
       strcpy(path, CBasics::Stringize("%s_%03d_%06d.mzip", mMovieCaptureName.data(), i, 0));
       int handle = -1;
-      if (CBBASupport_BBAOpen(path, 0, &handle) == 0) {
-        CBBASupport_BBAClose(handle);
+      if (CBBASupport::BBAOpen(path, 0, &handle) == 0) {
+        CBBASupport::BBAClose(handle);
       } else {
         found = true;
         strcpy(path, CBasics::Stringize("%s_%03d_", mMovieCaptureName.data(), i));
@@ -1935,10 +1935,10 @@ void CGameDebug::DumpLog() {
     return;
   }
   int handle = -1;
-  if (CBBASupport_BBAOpen("C:\\FIO\\debuglog.txt", mLogFileCreated ? 1 : 2, &handle) == 0) {
+  if (CBBASupport::BBAOpen("C:\\FIO\\debuglog.txt", mLogFileCreated ? 1 : 2, &handle) == 0) {
     mLogFileCreated = true;
-    CBBASupport_BBAWrite(handle, mLogBuffer.get(), mLogSize);
-    CBBASupport_BBAClose(handle);
+    CBBASupport::BBAWrite(handle, mLogBuffer.get(), mLogSize);
+    CBBASupport::BBAClose(handle);
     FreeLog();
   } else {
     gpfnWarningPrintf("Could not open C:\\FIO\\debuglog.txt\n");

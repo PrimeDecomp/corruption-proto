@@ -505,7 +505,7 @@ void CStateManagerObject::DispatchScriptMessages() {
           mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender), GetDebugName(sender),
           msg.GetSenderId().value & 0xFFFF, msg.GetState(), msg.GetMessage(), GetDebugId(target),
           GetDebugName(target), msg.GetTargetId().value & 0xFFFF));
-      CBBASupport_SendString(text, 0, nullptr);
+      CBBASupport::SendString(text, 0, nullptr);
     }
 
     CEntity* entity = ObjectById(msg.GetTargetId());
@@ -516,7 +516,7 @@ void CStateManagerObject::DispatchScriptMessages() {
                                              mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender),
                                              GetDebugName(sender), msg.GetState(), msg.GetMessage(),
                                              entity->GetX58().value, entity->GetName().data()));
-        CBBASupport_SendString(text, 0, nullptr);
+        CBBASupport::SendString(text, 0, nullptr);
       }
     }
 
@@ -546,7 +546,7 @@ void CStateManagerObject::SendScriptMsg(const CScriptMsg& msg) {
         mStateMgr->GetUpdateFrameIndex(), GetDebugId(sender), GetDebugName(sender),
         msg.GetSenderId().value & 0xFFFF, msg.GetState(), msg.GetMessage(), GetDebugId(target),
         GetDebugName(target), msg.GetTargetId().value & 0xFFFF));
-    if (!CBBASupport_SendString(text, 0, nullptr)) {
+    if (!CBBASupport::SendString(text, 0, nullptr)) {
       rs_debugger_printf(text.data());
     }
   }

@@ -137,7 +137,7 @@ protected:
                                              "call reserve() yourself (capacity: %d)",
                                              mCapacity));
     rs_debugger_printf("Would have thrown exception: %s\n", "false");
-    RAssert_TriggerIllegalInstruction();
+    rs_halt_cpu();
   }
 };
 

@@ -130,6 +130,7 @@
 #include "Kyoto/Alloc/Assert.hpp"
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Alloc/LockedCache.hpp"
+#include "Kyoto/Audio/CAudioManager.hpp"
 #include "Kyoto/Audio/CDSPStreamManager.hpp"
 #include "Kyoto/Audio/CStreamAudioManager.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
@@ -144,6 +145,7 @@
 #include "Kyoto/Graphics/CGraphics.hpp"
 #include "Kyoto/Input/CControllerGamepadData.hpp"
 #include "Kyoto/Input/IController.hpp"
+#include "Kyoto/Network/CBBASupport.hpp"
 #include "Kyoto/Math/CloseEnough.hpp"
 #include "Kyoto/Particles/CElementGen.hpp"
 #include "Kyoto/Streams/CBitStreamReader.hpp"
@@ -232,18 +234,9 @@
 // - The class has no Draw or PreloadAudio: RsMain draws through the IOWin manager directly, and
 //   CMain::UpdateGPMetrics selects GX performance counters from kDO_DrawTimeInfo.
 
-extern "C" int CBBASupport_InitializeBBA(int);
-extern "C" void
-CBBASupport_RegisterStringMessageCallback(int,
-                                          const TFunctor2< int, const rstl::string& >& callback);
-extern "C" void CBBASupport_Shutdown();
-extern "C" void CAudioManager_Shutdown();
 void FreeTweaks();
 extern "C" void RAssert_SetDiagnosticPrintCallback(void (*callback)(const char* format, ...));
-extern "C" void CAudioManager_Update(float dt);
-extern "C" void CBBASupport_PollMessages();
 extern "C" void CTexture_SetBindCount(int count);
-extern "C" void CAudioManager_InitializeWithMemoryCallbacks(int, int);
 // Guessed name. CGameAllocator accumulates its allocation time here (OSGetTick deltas).
 extern uint gAllocationTicks;
 
@@ -491,12 +484,12 @@ void CMain::InitializeSubsystems() {
   CDecalManager::Initialize();
   CDamageVulnerability::Initialize();
   CFrameDelayedKiller::Initialize();
-  if (CBBASupport_InitializeBBA(0)) {
+  if (CBBASupport::InitializeBBA(0)) {
     printf("*************************\n");
     printf("BBA initialization error!\n");
     printf("*************************\n");
   }
-  CBBASupport_RegisterStringMessageCallback(
+  CBBASupport::RegisterStringMessageCallback(
       0, TStaticCallback2< int, const rstl::string& >::Make(ReceiveBBACommand));
   allocate_profiler(4);
 }
@@ -507,9 +500,9 @@ void CMain::ShutdownSubsystems() {
   CDecalManager::ShutDown();
   CElementGen::ShutDown();
   CAnimData::FreeCache();
-  CAudioManager_Shutdown();
+  CAudioManager::Shutdown();
   FreeTweaks();
-  CBBASupport_Shutdown();
+  CBBASupport::Shutdown();
   ShutdownConsoleCommands();
   CWorld::ClearLockedTokens();
   CDamageVulnerability::Shutdown();
@@ -817,7 +810,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
       x70_frameCallbacks.x78_postUpdate.Emit();
       gpGameDebug->GetOption(CGameDebug::kDO_GenericMsgs)->ClearMessages();
       gpGameDebug->GetOption(CGameDebug::kDO_ShowFramerate)->ClearMessages();
-      CAudioManager_Update(1.f / 60.f);
+      CAudioManager::Update(1.f / 60.f);
       if (CheckTerminate()) {
         gpGameState->AudioGroups().clear();
         break;
@@ -926,7 +919,7 @@ CGameArchitectureSupport::CGameArchitectureSupport(COsContext& context)
 , mPreviousTickRemainder(0.f) {
   gpScanTextDebugManager = &mScanTextDebugManager;
   CDSPStreamManager::Initialize();
-  CAudioManager_InitializeWithMemoryCallbacks(0, 0x600000);
+  CAudioManager::InitializeWithMemoryCallbacks(0, 0x600000);
   gpMain->SetMaxSpeed(false);
   gpMain->ResetGameState();
   gpGameDebug->CloseMenu();
@@ -969,7 +962,7 @@ bool CGameArchitectureSupport::UpdateTicks() {
   gpMain->FrameCallbacks().x0_preTick.Emit();
 
   bool keepLooping = true;
-  CBBASupport_PollMessages();
+  CBBASupport::PollMessages();
   if (gpGameDebug->IsMovieCaptureRunning()) {
     // Movie capture runs exactly one fixed tick per drawn frame.
     mTickRemainder = 1.f / 60.f;

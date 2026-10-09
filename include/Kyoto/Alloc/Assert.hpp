@@ -6,7 +6,7 @@
 extern "C" void rs_log_assert_failure(const CCallStack* stack, const char* source, int line,
                                       const char* kind, const char* condition, const char* message);
 extern "C" void rs_debugger_printf(const char* format, ...);
-extern "C" void RAssert_TriggerIllegalInstruction();
+extern "C" void rs_halt_cpu();
 extern "C" const char kUnknownType[];
 
 // Guessed name. 0x80796BF0: initialized to rs_debugger_printf.
@@ -28,7 +28,7 @@ extern void (*gpfnWarningPrintf)(const char* format, ...);
     CCallStack stack(0, file "(" RS_STRINGIZE(line) ") : ", kUnknownType);                         \
     rs_log_assert_failure(&stack, file, line, "Verify", conditionText, message);                   \
     rs_debugger_printf("Would have thrown exception: %s\n", exceptionText);                        \
-    RAssert_TriggerIllegalInstruction();                                                           \
+    rs_halt_cpu();                                                           \
   }
 
 // The condition is stored in a bool before the test: CObjectListSmall::AddObject (0x80262294)

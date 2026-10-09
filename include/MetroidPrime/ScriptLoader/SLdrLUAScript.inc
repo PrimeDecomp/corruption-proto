@@ -30,7 +30,7 @@ for (int i = 0; i < propertyCount; ++i) {
     break;
   }
   default:
-    CBBASupport_Printf("Unknown property 0x%08x in LUAScript loader.\n", propertyId);
+    CBBASupport::Printf("Unknown property 0x%08x in LUAScript loader.\n", propertyId);
     input.ReadBytes(nullptr, propertySize);
     break;
   }

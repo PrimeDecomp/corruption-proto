@@ -7,7 +7,9 @@
 
 #include "rstl/single_ptr.hpp"
 
-// Minimal declaration.
+// Minimal declarations.
+class CGamePortalArea;
+class CObjectList;
 class CStateManager;
 
 class CGameArea : public IGameArea {
@@ -42,20 +44,31 @@ public:
     kOS_Occluded,
     kOS_Visible,
   };
-  // Echoes' names. Only the occlusion state and time are modelled; CStateManager::Think, CAi and
-  // CStateManagerCollision skip the objects of an area occluded for more than five seconds.
+  // Echoes' names. Only the portal area, the object list and the occlusion state and time are
+  // modelled; CStateManager::Think, CAi and CStateManagerCollision skip the objects of an area
+  // occluded for more than five seconds.
   struct CPostConstructed {
-    uchar x0_[0x17C];
+    uchar x0_[0x134];
+    rstl::single_ptr< CGamePortalArea > mPortalArea;
+    rstl::single_ptr< CObjectList > mAreaObjectList; // Echoes' CAreaObjectList
+    uchar x13c_[0x17C - 0x13C];
     EOcclusionState mOcclusionState;
     uchar x180_[0x184 - 0x180];
     float mOccludedTime;
   };
-  // Echoes' names; the prototype has one load phase fewer than Echoes (kP_Loaded is 16 there).
+  // Echoes' names; the prototype has one load phase fewer than Echoes (kP_FinishScriptObjects
+  // and kP_Loaded are 13 and 16 there).
   enum EPhase {
+    kP_FinishScriptObjects = 12,
     kP_Loaded = 15,
   };
+  EPhase GetPhase() const { return mPhase; } // Echoes' name
   bool IsLoaded() const { return mPhase == kP_Loaded; }
   const CPostConstructed* GetPostConstructed() const { return mPostConstructed.get(); }
+  CPostConstructed* PostConstructed() { return mPostConstructed.get(); } // Guessed name
+  // Echoes' names.
+  const CObjectList* GetObjectList() const { return GetPostConstructed()->mAreaObjectList.get(); }
+  CObjectList* ObjectList() { return PostConstructed()->mAreaObjectList.get(); }
   EOcclusionState GetOcclusionState() const {
     return IsLoaded() ? mPostConstructed->mOcclusionState : kOS_Occluded;
   }

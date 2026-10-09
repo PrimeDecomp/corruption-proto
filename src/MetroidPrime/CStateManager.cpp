@@ -12,7 +12,6 @@
 // 0x802901BC +0x40: owned native method/helper retained; exact source-level name unresolved
 // 0x802901FC +0x34: owned native method/helper retained; exact source-level name unresolved
 // 0x80290230 +0x498: player debug text ("P|..", "Vel|..", movement/surface)
-// 0x802906C8 +0x190: SetActorAreaId(CActor&, TAreaId) (Echoes' name)
 // 0x80290858 +0x58: owned native method/helper retained; exact source-level name unresolved
 // 0x802908B0 +0x28: owned native method/helper retained; exact source-level name unresolved
 // 0x802908D8 +0x50: owned native method/helper retained; exact source-level name unresolved
@@ -85,6 +84,7 @@
 #include "MetroidPrime/CFluidPlaneManager.hpp"
 #include "MetroidPrime/CGameArea.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
+#include "MetroidPrime/CGamePortalArea.hpp"
 #include "MetroidPrime/CMain.hpp"
 #include "MetroidPrime/CMapWorld.hpp"
 #include "MetroidPrime/CMapWorldInfo.hpp"
@@ -952,6 +952,40 @@ void CStateManager::TestBombHittingWater(const CActor& source, const CVector3f& 
                                              splashFactor, true, false);
           }
         }
+      }
+    }
+  }
+}
+
+// 0x802906C8. Echoes' body, except that the new area is looked up through the asserting
+// GetArea, and an unloaded new area or an actor already in its list is reported.
+void CStateManager::SetActorAreaId(CActor& actor, const TAreaId area) {
+  const int oldArea = actor.GetCurrentAreaId().Value();
+  if (oldArea != area.Value()) {
+    CWorld* world = mObjectManager->GetWorld();
+    if (oldArea != kInvalidAreaId.Value()) {
+      CGameArea* oldAreaObject = world->Area(actor.GetCurrentAreaId());
+      if (oldAreaObject->GetPhase() > CGameArea::kP_FinishScriptObjects) {
+        oldAreaObject->ObjectList()->RemoveObject(actor.GetUniqueId());
+        if (oldAreaObject->PostConstructed()->mPortalArea.get() != nullptr) {
+          oldAreaObject->PostConstructed()->mPortalArea->RemoveActor(actor.GetUniqueId());
+        }
+      }
+    }
+
+    actor.SetCurrentAreaId(area);
+    if (area != kInvalidAreaId) {
+      CGameArea* newAreaObject = world->GetArea(area);
+      if (!newAreaObject->IsLoaded()) {
+        gpfnWarningPrintf("BUG: Trying to move actor %s to unloaded area %d\n",
+                          actor.GetName().data(), area.Value());
+        rs_debugger_printf("BUG: Trying to move actor %s to unloaded area %d\n",
+                           actor.GetName().data(), area.Value());
+      } else if (newAreaObject->GetObjectList()->GetObjectById(actor.GetUniqueId()) != nullptr) {
+        rs_debugger_printf("Moving from area %d to area %d and it already exists?!\n", oldArea,
+                           area.Value());
+      } else {
+        newAreaObject->ObjectList()->AddObject(actor);
       }
     }
   }

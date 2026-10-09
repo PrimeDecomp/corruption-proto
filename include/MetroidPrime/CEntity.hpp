@@ -76,6 +76,7 @@ public:
   void AddThinkBefore(CStateManager& mgr, TUniqueId uid);
 
   TAreaId GetCurrentAreaId() const { return mAreaId; }
+  void SetCurrentAreaId(TAreaId area) { mAreaId = area; } // Echoes' name
   TUniqueId GetUniqueId() const { return mUniqueId; }
   TEditorId GetEditorId() const { return mEditorId; }
   const rstl::string& GetName() const { return mName; }

@@ -211,7 +211,7 @@ struct SScriptObjectRef {
   TEditorId mEditorId;
   TUniqueId mUniqueId;
 
-  SScriptObjectRef(TEditorId editorId, TUniqueId uniqueId)
+  SScriptObjectRef(TEditorId editorId, const TUniqueId& uniqueId)
   : mEditorId(editorId), mUniqueId(uniqueId) {}
 };
 CHECK_SIZEOF(SScriptObjectRef, 0x8)

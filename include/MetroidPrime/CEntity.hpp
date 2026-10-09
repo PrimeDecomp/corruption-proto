@@ -103,7 +103,9 @@ private:
   rstl::vector< TUniqueId > x30_;
   int x40_; // Never initialized by the constructor. CStateManager::ThinkEntity stores the update
             // frame index.
-  rstl::vector< SConnection > mConnections;
+  // Mutable: the const connection queries reload the list's end on every iteration, as the
+  // non-const SendScriptMsgs does, where Echoes' const queries hoist it out of the loop.
+  mutable rstl::vector< SConnection > mConnections;
   uint mActive : 1;
   uint mNotInArea : 1; // Echoes' name; set when the area id is kInvalidAreaId.
   uint mCastFlags : 6;

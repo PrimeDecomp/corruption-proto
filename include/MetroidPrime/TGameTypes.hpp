@@ -49,10 +49,12 @@ CHECK_SIZEOF(TEditorId, 0x4)
 
 // G2MEAB stores and copies unique ids as words: CEntity keeps one at 0x8, CScriptMsg packs
 // sender/target at 0x0/0x4, and kInvalidUniqueId is a 4-byte -1. Echoes uses a ushort.
+// Unsigned: CStateManagerObject::RemoveObject and the SScriptObjectRef lookups compare ids
+// with cmplw.
 struct TUniqueId {
-  int value;
+  uint value;
 
-  explicit TUniqueId(int packed) : value(packed) {}
+  explicit TUniqueId(uint packed) : value(packed) {}
 
   bool operator==(const TUniqueId& other) const { return value == other.value; }
   bool operator!=(const TUniqueId& other) const { return value != other.value; }

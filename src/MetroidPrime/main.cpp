@@ -510,14 +510,16 @@ void CMain::ShutdownSubsystems() {
   OSThread* thread = OSGetCurrentThread();
   uchar* stackEnd =
       reinterpret_cast< uchar* >((reinterpret_cast< uint >(thread->stackEnd) + 0x3ff) & ~0x3ff);
+  uchar* stackBase = thread->stackBase;
+
   uchar* ptr = stackEnd + 0x400;
-  for (; ptr < thread->stackBase - 0x2000; ptr += sizeof(uint)) {
+  for (; ptr < stackBase - 0x2000; ptr += sizeof(uint)) {
     if (*reinterpret_cast< uint* >(ptr) != UNUSED_STACK_VAL) {
       break;
     }
   }
   // The top 0x2000 bytes are never painted, so they count as used.
-  const int used = (thread->stackBase - 0x2000 - ptr) + 0x2000;
+  const int used = static_cast< int >(stackBase - 0x2000 - ptr) + 0x2000;
   OSReport("Stack usage: %d bytes (%dk)\n", used, static_cast< uint >(used) / 1024);
 }
 

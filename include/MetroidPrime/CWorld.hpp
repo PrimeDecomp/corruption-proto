@@ -2,10 +2,15 @@
 #define _CWORLD
 
 #include "MetroidPrime/IWorld.hpp"
+#include "MetroidPrime/TGameTypes.hpp"
 
+#include "rstl/auto_ptr.hpp"
+#include "rstl/vector.hpp"
+
+class CGameArea;
 class CMapWorld;
 
-// Minimal: only what CStateManagerObject uses.
+// Minimal: only what CStateManagerObject, CMain and CActor use.
 class CWorld : public IWorld {
 public:
   virtual ~CWorld();
@@ -18,6 +23,13 @@ public:
   // console's network-asset reload. Called by CMain::ShutdownSubsystems and CGameArea. The
   // configured split places it at the end of CActor.cpp, after that unit's static initializer.
   static void ClearLockedTokens();
+
+  // Echoes' name. CActor::SetInFluid inlines it (areas vector data at 0x2C, 8-byte elements).
+  CGameArea* Area(TAreaId id) { return mAreas[id.Value()].get(); }
+
+private:
+  uchar x4_[0x20 - 0x4];
+  rstl::vector< rstl::auto_ptr< CGameArea > > mAreas; // Echoes' name
 };
 
 #endif // _CWORLD

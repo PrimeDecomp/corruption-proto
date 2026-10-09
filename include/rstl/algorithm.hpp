@@ -34,15 +34,23 @@ inline It find_if(It first, It last, Pred pred) {
   return first;
 }
 
+// Out of line by default. CActor.cpp defines RSTL_INLINE_SWAP: its fluid sort (0x80036D08,
+// 0x8003705C) swaps in place, while ScriptLoaderRegistry's sort calls both out of line.
 template < typename T >
-void swap(T& a, T& b) {
+#ifdef RSTL_INLINE_SWAP
+inline
+#endif
+    void swap(T& a, T& b) {
   T tmp(a);
   a = b;
   b = tmp;
 }
 
 template < typename I1, typename I2 >
-void iter_swap(I1 a, I2 b) {
+#ifdef RSTL_INLINE_SWAP
+inline
+#endif
+    void iter_swap(I1 a, I2 b) {
   typename iterator_traits< I1 >::value_type tmp = *a;
   *a = *b;
   *b = tmp;

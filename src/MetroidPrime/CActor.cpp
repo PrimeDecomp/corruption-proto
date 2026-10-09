@@ -7,28 +7,26 @@
 // Deferred inlining emits functions in reverse source order. Not implemented yet:
 // 0x80037158 +0x30: static initializer for seven TU-local SDA constants (.ctors 0x8065B500)
 // 0x80037188..0x800373C0: token-list helpers (not CActor methods)
-// 0x80036D08, 0x80036E58..0x8003705C: rstl::sort over the fluid list with Echoes'
-//   CFluidHeightCompare (by-value ids, const GetObjectById, TCastToConstPtr<CScriptWater>), and
-//   CScriptWater::GetWRSurfacePlane (0x80036F50, a z-up plane at CScriptWater+0x188). Only
-//   SetInFluid instantiates them.
 // 0x80036804, 0x800367E4: square-root helpers
 // 0x80035880: string copy from +0x88 (not a CActor method)
-// 0x8003527C: SetInFluid. Beyond the Echoes logic it prints "'%s' in area '%s' has just
-//   entered/exited ..." and "BUG THIS! Fluid list for '%s' is full ..." when CGameDebug's
-//   "Show water entry/exit" is above 1.
 
 // SetFluidList and SetInFluid call reserved_vector<TUniqueId, 4>::operator= out of line.
 #define RSTL_DONT_INLINE_RESERVED_VECTOR
+// The fluid sort swaps in place.
+#define RSTL_INLINE_SWAP
 
 #include "MetroidPrime/CActor.hpp"
 
 #include "MetroidPrime/CDamageInfo.hpp"
 #include "MetroidPrime/CDamageVulnerability.hpp"
+#include "MetroidPrime/CGameArea.hpp"
 #include "MetroidPrime/CGameDebug.hpp"
 #include "MetroidPrime/CGameDebugDraw.hpp"
 #include "MetroidPrime/CRenderManager.hpp"
 #include "MetroidPrime/CStateManager.hpp"
 #include "MetroidPrime/CStateManagerObject.hpp"
+#include "MetroidPrime/CWorld.hpp"
+#include "MetroidPrime/ScriptObjects/CScriptWater.hpp"
 #include "MetroidPrime/TCastTo.hpp"
 
 #include "Kyoto/Audio/CAudioSoundEffect.hpp"
@@ -39,11 +37,31 @@
 
 #include "rstl/algorithm.hpp"
 
-// TypesMatch id 0x5A, whose vtable (lbl_806B3AC8) starts with a function in CScriptWater.cpp.
-class CScriptWater;
-
 // As in Echoes, the solid material comes from a variable rather than a constant.
 static EMaterialTypes SolidMaterial = kMT_Solid;
+
+// Echoes' guessed name; sorts fluid volumes by their world-space surface height. Unlike Echoes the
+// ids are taken by value and the operator is inline.
+class CFluidHeightCompare {
+public:
+  explicit CFluidHeightCompare(CStateManager& mgr) : mManager(mgr) {}
+
+  bool operator()(TUniqueId a, TUniqueId b) const {
+    const CScriptWater* waterA =
+        TCastToConstPtr< CScriptWater >(mManager.ObjectManager().GetObjectById(a));
+    const CScriptWater* waterB =
+        TCastToConstPtr< CScriptWater >(mManager.ObjectManager().GetObjectById(b));
+    if (waterA != nullptr && waterB != nullptr) {
+      const float heightA = waterA->GetWRSurfacePlane().GetClosestPoint(CVector3f::Zero()).GetZ();
+      const float heightB = waterB->GetWRSurfacePlane().GetClosestPoint(CVector3f::Zero()).GetZ();
+      return heightA < heightB;
+    }
+    return false;
+  }
+
+private:
+  CStateManager& mManager;
+};
 
 CActor::CActor(TUniqueId uid, const rstl::string& name, const CEntityInfo& info, uint castFlags,
                const CTransform4f& xf, const CMaterialList& materialList,
@@ -335,6 +353,120 @@ void CActor::ClearFluidList(CStateManager&) {
   mFluidIds.clear();
   mPreviousFluidIds.clear();
   mFluidIdsChanged = false;
+}
+
+// Beyond the Echoes logic it prints entry/exit messages (the uid's index and the area names)
+// while "Show water entry/exit" is above 1, and warns when the list is full. Echoes calls
+// RemoveInvalidFluidIds at the end; the prototype has the same loop inline.
+void CActor::SetInFluid(CStateManager& mgr, bool inFluid, TUniqueId uid) {
+  if (inFluid) {
+    bool found = false;
+    for (int i = 0; i < mFluidIds.size(); ++i) {
+      if (mFluidIds[i] == uid) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      if (mFluidIds.size() != mFluidIds.capacity()) {
+        if (!mFluidIdsChanged) {
+          mFluidIdsChanged = true;
+          mPreviousFluidIds = mFluidIds;
+        }
+        mFluidIds.push_back(uid);
+        rstl::sort(mFluidIds.begin(), mFluidIds.end(), CFluidHeightCompare(mgr));
+        if (gpGameDebug->GetOptionInt(CGameDebug::kDO_WaterShowWaterEntryExit) > 1) {
+          if (GetCurrentAreaId().Value() >= 0) {
+            rs_debugger_printf(
+                "'%s' in area '%s' has just entered '%s' (%d) belonging to area '%s' (%d)\n",
+                GetName().data(),
+                mgr.ObjectManager()
+                    .World()
+                    ->Area(GetCurrentAreaId())
+                    ->IGetInternalAreaName()
+                    .data(),
+                mgr.ObjectManager().GetObjectById(uid)->GetName().data(), uid.value & 0xFFFF,
+                mgr.ObjectManager()
+                    .World()
+                    ->Area(mgr.ObjectManager().GetObjectById(uid)->GetCurrentAreaId())
+                    ->IGetInternalAreaName()
+                    .data(),
+                mgr.ObjectManager().GetObjectById(uid)->GetCurrentAreaId().Value());
+          } else {
+            rs_debugger_printf(
+                "'%s' in area '%d' has just entered '%s' (%d) belonging to area '%s' (%d)\n",
+                GetName().data(), GetCurrentAreaId().Value(),
+                mgr.ObjectManager().GetObjectById(uid)->GetName().data(), uid.value & 0xFFFF,
+                mgr.ObjectManager()
+                    .World()
+                    ->Area(mgr.ObjectManager().GetObjectById(uid)->GetCurrentAreaId())
+                    ->IGetInternalAreaName()
+                    .data(),
+                mgr.ObjectManager().GetObjectById(uid)->GetCurrentAreaId().Value());
+          }
+        }
+      } else {
+        const CActor* fluid = TCastToConstPtr< CActor >(mgr.ObjectManager().GetObjectById(uid));
+        if (fluid != nullptr) {
+          rs_debugger_printf("BUG THIS! Fluid list for '%s' is full, failed to add '%s'\n",
+                             GetName().data(), fluid->GetName().data());
+          gpfnWarningPrintf("BUG THIS! Fluid list for '%s' is full, failed to add '%s'\n",
+                            GetName().data(), fluid->GetName().data());
+        }
+      }
+    }
+  } else {
+    for (rstl::reserved_vector< TUniqueId, 4 >::iterator it = mFluidIds.begin();
+         it != mFluidIds.end(); ++it) {
+      if (*it == uid) {
+        if (!mFluidIdsChanged) {
+          mFluidIdsChanged = true;
+          mPreviousFluidIds = mFluidIds;
+        }
+        mFluidIds.erase(it);
+        if (gpGameDebug->GetOptionInt(CGameDebug::kDO_WaterShowWaterEntryExit) > 1) {
+          if (GetCurrentAreaId().Value() >= 0) {
+            rs_debugger_printf(
+                "'%s' in area '%s' has just exited '%s' belonging to area '%s' (%d)\n",
+                GetName().data(),
+                mgr.ObjectManager()
+                    .World()
+                    ->Area(GetCurrentAreaId())
+                    ->IGetInternalAreaName()
+                    .data(),
+                mgr.ObjectManager().GetObjectById(uid)->GetName().data(),
+                mgr.ObjectManager()
+                    .World()
+                    ->Area(mgr.ObjectManager().GetObjectById(uid)->GetCurrentAreaId())
+                    ->IGetInternalAreaName()
+                    .data(),
+                mgr.ObjectManager().GetObjectById(uid)->GetCurrentAreaId().Value());
+          } else {
+            rs_debugger_printf(
+                "'%s' in area '%d' has just exited '%s' belonging to area '%s' (%d)\n",
+                GetName().data(), GetCurrentAreaId().Value(),
+                mgr.ObjectManager().GetObjectById(uid)->GetName().data(),
+                mgr.ObjectManager()
+                    .World()
+                    ->Area(mgr.ObjectManager().GetObjectById(uid)->GetCurrentAreaId())
+                    ->IGetInternalAreaName()
+                    .data(),
+                mgr.ObjectManager().GetObjectById(uid)->GetCurrentAreaId().Value());
+          }
+        }
+        break;
+      }
+    }
+  }
+
+  rstl::reserved_vector< TUniqueId, 4 >::iterator it = mFluidIds.begin();
+  while (it != mFluidIds.end()) {
+    if (!TCastToConstPtr< CScriptWater >(mgr.ObjectManager().GetObjectById(*it))) {
+      it = mFluidIds.erase(it);
+    } else {
+      ++it;
+    }
+  }
 }
 
 void CActor::RemoveInvalidFluidIds(CStateManager& mgr) {

@@ -114,6 +114,7 @@ public:
   TUniqueId InFluidId() const;
   const rstl::reserved_vector< TUniqueId, 4 >& GetFluidList() const;
   void SetFluidList(const rstl::reserved_vector< TUniqueId, 4 >& fluids);
+  void SetInFluid(CStateManager& mgr, bool inFluid, TUniqueId uid);
   void RemoveInvalidFluidIds(CStateManager& mgr);
 
   // Guessed names. Play a CAUD sound effect at the actor's position, or panned without a

@@ -42,8 +42,6 @@
 // 0x802943E4 +0x60: owned native method/helper retained; exact source-level name unresolved
 // 0x80294444 +0x7C: TSignal2<CStateManager&, float>::Emit
 // 0x80294748 +0x248: memory/timing debug text ("LOW MEMORY: area ..")
-// 0x80294990 +0x338: Echoes' Think(float); also takes the update's CGameProfileStats
-// 0x80294CC8 +0x64: CObjectList's implicit copy constructor; Think copies the whole list
 // 0x80294EA4 +0x304: unconfirmed; looks like Echoes' CrossTouchActors
 // 0x802951A8 +0x164: object list check ("ENTITY INDEX MISMATCH")
 // 0x8029530C +0x138: recalculates the map world sphere
@@ -114,6 +112,8 @@
 #include "MetroidPrime/Cameras/CCinematicCamera.hpp"
 #include "MetroidPrime/Cameras/CGameCamera.hpp"
 #include "MetroidPrime/ConsoleCommands.hpp"
+#include "MetroidPrime/Enemies/CGenericFSM2.hpp"
+#include "MetroidPrime/Enemies/CPatterned.hpp"
 #include "MetroidPrime/HUD/CHUDMemoParms.hpp"
 #include "MetroidPrime/HUD/CSamusHud.hpp"
 #include "MetroidPrime/Player/CGameMode.hpp"
@@ -363,6 +363,68 @@ void CStateManager::ThinkEntity(float dt, CEntity& entity, int skipThinkAfter,
   mObjectManager->DispatchScriptMessages();
   entity.x40_ = mUpdateFrameIdx;
   stats.EndEntity(entity);
+}
+
+// 0x80294990. Echoes' Think, over a copy of the object list (its implicit copy constructor is
+// emitted at 0x80294CC8), with a single player. The prototype dispatches the queued script
+// messages first, asks the AI itself whether it should update (Echoes' ShouldUpdatePatterned),
+// and kills every active AI while "Kill All AIs" is set, the way the update's "Kill Player" option
+// kills the player.
+//
+// The target calls the const casts (TCastToConstPtr<CScriptEffect> and <CPatterned>) and then
+// thinks and damages through their results; the mutable casts are used here instead, so only
+// those two call targets differ.
+void CStateManager::Think(float dt, CGameProfileStats& stats) {
+  if (mObjectManager->GetPlayer()->GetDeathTime() > 0.f) {
+    mObjectManager->Player()->DoThink(dt, *this);
+    return;
+  }
+
+  CObjectList allList(mObjectManager->ObjectListById(0));
+  if (mGameState == kGS_SoftPaused) {
+    for (int i = allList.GetFirstObjectIndex(); i != -1; i = allList.GetNextObjectIndex(i)) {
+      CScriptEffect* effect = TCastToPtr< CScriptEffect >(allList[i]);
+      if (effect != nullptr) {
+        effect->Think(dt, *this);
+      }
+    }
+  } else {
+    mObjectManager->DispatchScriptMessages();
+    CPatterned* patterned;
+    for (int i = allList.GetFirstObjectIndex(); i != -1;) {
+      CEntity* entity = allList[i];
+      i = allList.GetNextObjectIndex(i);
+      if (entity == nullptr || (!entity->GetUpdateDuringCinematicSkip() && gpMain->IsMaxSpeed())) {
+        continue;
+      }
+
+      if (!entity->GetUpdateWhileOccluded() && entity->GetCurrentAreaId() != kInvalidAreaId) {
+        const CGameArea& area = *mObjectManager->World()->Area(entity->GetCurrentAreaId());
+        const float occludedTime = area.IsLoaded() ? area.GetPostConstructed()->mOccludedTime : 0.f;
+        if (occludedTime > 5.f) {
+          continue;
+        }
+      }
+
+      patterned = TCastToPtr< CPatterned >(entity);
+      if (patterned != nullptr && !patterned->ShouldUpdate(*this)) {
+        continue;
+      }
+      if (patterned != nullptr && patterned->IsAiActive() == true &&
+          patterned->GetStateMachineState()->IsInitialized() &&
+          gpGameDebug->IsOptionSet(CGameDebug::kDO_KillAllAIs) == true) {
+        ApplyLocalDamage(patterned->GetTranslation(), CVector3f::Zero(), *patterned, 10000.f,
+                         kInvalidUniqueId, patterned->GetUniqueId(),
+                         CDamageInfo(CWeaponMode(kWT_DebugKill), 10000.f, false, false,
+                                     kInvalidAssetId, kInvalidAssetId, kInvalidAssetId, 0.f, 0.f),
+                         false);
+      }
+
+      if (TCastToConstPtr< CGameCamera >(entity) == nullptr) {
+        ThinkEntity(dt, *entity, 0, stats);
+      }
+    }
+  }
 }
 
 // 0x802945D0. Unlike Echoes, the camera manager first starts a pending cinematic, and there is a

@@ -26,6 +26,9 @@ public:
     }
   }
 
+  // Guessed name, after TSignal1. 0x8009E9CC, emitted in CAi.cpp. The allocation string of the
+  // connection names the original header "CSignal0.h" (line 52).
+  rstl::auto_ptr< IConnection > Connect(TFunctor0 functor);
   void Emit() const; // Name confirmed by Metroid Prime Remastered symbols
 
 private:

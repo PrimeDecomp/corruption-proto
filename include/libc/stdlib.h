@@ -11,6 +11,7 @@ extern "C" {
 #endif
 
 double atof(const char* str);
+int atoi(const char* str);
 void srand(unsigned int seed);
 int rand(void);
 int abs(int n);

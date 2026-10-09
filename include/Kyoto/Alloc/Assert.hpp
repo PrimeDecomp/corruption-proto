@@ -31,8 +31,13 @@ extern void (*gpfnWarningPrintf)(const char* format, ...);
     RAssert_TriggerIllegalInstruction();                                                           \
   }
 
+// The condition is stored in a bool before the test: CObjectListSmall::AddObject (0x80262294)
+// materializes the comparison result rather than branching on it directly.
 #define RS_VERIFY_THROW(line, condition, exception, message)                                       \
-  if ((condition) == false)                                                                        \
-  RS_VERIFY_FAILURE(line, #condition, #exception, message)
+  {                                                                                                \
+    bool verified = (condition);                                                                   \
+    if (verified == false)                                                                         \
+      RS_VERIFY_FAILURE(line, #condition, #exception, message)                                     \
+  }
 
 #endif

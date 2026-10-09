@@ -48,11 +48,10 @@ bool CObjectListSmall::IsObjectInList(const CEntity* object) const {
 // 0x80262294
 // Names from the assert string.
 void CObjectListSmall::AddObject(CEntity& object) {
-  bool notInList = IsObjectInList(&object) == NULL;
-  if (notInList == false) {
-    RS_VERIFY_FAILURE(41, "IsObjectInList( &object ) == NULL", "false",
-                      "Object in list already when being added");
-  }
+  // clang-format off: the spacing is part of the stringized assert condition.
+  RS_VERIFY_THROW(41, IsObjectInList( &object ) == NULL, false,
+                  "Object in list already when being added");
+  // clang-format on
   if (IsQualified(object)) {
     mList.insert(&object);
   }

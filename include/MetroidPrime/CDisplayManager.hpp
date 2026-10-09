@@ -36,6 +36,9 @@ public:
   // Guessed name. The flag at 0x124 (0x802A3188), which the debug camera's activation (0x802A3310)
   // sets and its deactivation (0x802A32A0) clears.
   bool IsDebugCameraActive() const;
+  // Guessed name. 0x802A3310: unless already active, makes the camera manager's debug camera the
+  // current camera, starting from the current camera's view.
+  void ActivateDebugCamera(CStateManager& mgr);
   // Guessed name. Updates every camera manager and the viewports (0x802A388C).
   void Update(float dt, CStateManager& mgr);
 };

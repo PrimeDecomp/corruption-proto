@@ -40,6 +40,8 @@
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CPlayer.hpp"
 #include "MetroidPrime/Player/CPlayerState.hpp"
+#include "MetroidPrime/ScriptObjects/CScriptSpawnPoint.hpp"
+#include "MetroidPrime/TCastTo.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
 #include "MetroidPrime/Tweaks/CTweakContents.hpp"
 
@@ -58,6 +60,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+class CScriptWaypoint;
 
 // Guessed names. The state the mouse commands store (0xC bytes). The host sends the Windows
 // mouse key state, whose left, right and middle buttons are 0x1, 0x2 and 0x10.
@@ -505,6 +509,69 @@ static void SendMessage(const char*, const char* args) {
   }
 }
 
+// Moves the script object to a transform relative to the player's area. Spawn points take the
+// transform as it is; actors keep their scale.
+void SetTransform(const char*, const char* args) {
+  if (args != nullptr && *args != '\0') {
+    uint editorId;
+    float m00, m01, m02, m03;
+    float m10, m11, m12, m13;
+    float m20, m21, m22, m23;
+    if (sscanf(args, "%x %f %f %f %f %f %f %f %f %f %f %f %f", &editorId, &m00, &m01, &m02, &m03,
+               &m10, &m11, &m12, &m13, &m20, &m21, &m22, &m23) == 13) {
+      if (sStateManager != nullptr) {
+        // The editor id is taken as relative to the player's area.
+        TAreaId areaId = sStateManager->ObjectManager().GetPlayer()->GetCurrentAreaId();
+        editorId = (editorId & ~0x03FF0000) | ((areaId.Value() << 16) & 0x03FF0000);
+        TUniqueId uid = sStateManager->ObjectManager().GetIdForScript(TEditorId(editorId));
+        if (uid == kInvalidUniqueId) {
+          return;
+        }
+        CTransform4f xf(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23);
+
+        CScriptSpawnPoint* spawnPoint =
+            TCastToPtr< CScriptSpawnPoint >(sStateManager->ObjectManager().ObjectById(uid));
+        if (spawnPoint != nullptr) {
+          CTransform4f worldXf =
+              sStateManager->ObjectManager().World()->GetArea(areaId)->GetTransform() * xf;
+          spawnPoint->SetTransform(worldXf);
+        }
+
+        // The only pointer cast to CActor is the const one.
+        CActor* actor = const_cast< CActor* >(
+            TCastToConstPtr< CActor >(sStateManager->ObjectManager().ObjectById(uid)));
+        if (actor != nullptr) {
+          CTransform4f oldXf = actor->GetTransform();
+          CVector3f right = xf.GetRight().AsNormalized() * oldXf.GetRight().Magnitude();
+          CVector3f forward = xf.GetForward().AsNormalized() * oldXf.GetForward().Magnitude();
+          CVector3f up = xf.GetUp().AsNormalized() * oldXf.GetUp().Magnitude();
+          CTransform4f localXf = CTransform4f::FromColumns(right, forward, up, xf.GetTranslation());
+          CTransform4f worldXf =
+              sStateManager->ObjectManager().World()->GetArea(areaId)->GetTransform() * localXf;
+          actor->SetTransform(worldXf);
+
+          const bool randomWasAvailable = sStateManager->IsRandomAvailable();
+          sStateManager->SetRandomAvailable(true);
+          if (TCastToConstPtr< CScriptWaypoint >(actor) != nullptr) {
+            CObjectList& objects = sStateManager->ObjectManager().ObjectListById(kOL_All);
+            for (int i = objects.GetFirstObjectIndex(); i != -1;
+                 i = objects.GetNextObjectIndex(i)) {
+              CActor* other = const_cast< CActor* >(TCastToConstPtr< CActor >(objects[i]));
+              if (other != nullptr) {
+                other->Virtual60(*sStateManager);
+              }
+            }
+          }
+          sStateManager->SetRandomAvailable(randomWasAvailable);
+        }
+      }
+    } else {
+      rs_debugger_printf("Internal error? Could not extract editor id or transform from \n%s\n",
+                         args);
+    }
+  }
+}
+
 static void SetDebugVar(const char*, const char* args) {
   CStringTokenizer tokenizer(args);
   rstl::string name = tokenizer.ReadToken(nullptr, '"');
@@ -634,6 +701,39 @@ static void GetAllDebugVars(const char*, const char*) {
   }
   if (file != -1) {
     CBBASupport::BBAClose(file);
+  }
+}
+
+// "debug" moves the debug camera, "teleport" the player, both to a transform relative to the
+// player's area; "teleport_ws" moves the player to a world transform.
+void SetDebugTransform(const char*, const char* args) {
+  if (args != nullptr && *args != '\0') {
+    char target[1024];
+    float m00, m01, m02, m03;
+    float m10, m11, m12, m13;
+    float m20, m21, m22, m23;
+    if (sscanf(args, "%s %f %f %f %f %f %f %f %f %f %f %f %f", target, &m00, &m01, &m02, &m03, &m10,
+               &m11, &m12, &m13, &m20, &m21, &m22, &m23) == 13) {
+      if (sStateManager != nullptr) {
+        CTransform4f xf(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23);
+        CPlayer* player = sStateManager->ObjectManager().Player();
+        TAreaId areaId = player->GetCurrentAreaId();
+        CTransform4f worldXf =
+            sStateManager->ObjectManager().World()->GetArea(areaId)->GetTransform() * xf;
+        CCameraManager* cameraManager = sStateManager->DisplayManager().PlayerCameraManager();
+        if (stricmp(target, "debug") == 0) {
+          gpGameDebug->SetOptionValue(CGameDebug::kDO_DebugCamera, 1.f);
+          sStateManager->DisplayManager().ActivateDebugCamera(*sStateManager);
+          cameraManager->GetDebugCamera()->SetTransform(worldXf);
+        } else if (stricmp(target, "teleport") == 0) {
+          player->Teleport(worldXf, *sStateManager, true);
+        } else if (stricmp(target, "teleport_ws") == 0) {
+          player->Teleport(xf, *sStateManager, true);
+        }
+      }
+    } else {
+      rs_debugger_printf("Internal error? Could not get transform from \n%s\n", args);
+    }
   }
 }
 

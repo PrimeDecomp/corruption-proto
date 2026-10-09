@@ -5,6 +5,8 @@
 
 #include "MetroidPrime/IGameArea.hpp"
 
+#include "Kyoto/Math/CTransform4f.hpp"
+
 #include "rstl/single_ptr.hpp"
 
 // Minimal declarations.
@@ -76,10 +78,14 @@ public:
     return IsLoaded() ? mPostConstructed->mOcclusionState : kOS_Occluded;
   }
   TAreaId GetId() const { return mSelfIdx; } // Echoes' name
+  // Prime's name. The console's transform commands read it inline.
+  const CTransform4f& GetTransform() const { return mTransform; }
 
 private:
   TAreaId mSelfIdx; // Echoes' name
-  uchar x8_[0xA8 - 0x8];
+  uchar x8_[0x10 - 0x8];
+  CTransform4f mTransform;
+  uchar x40_[0xA8 - 0x40];
   EPhase mPhase;
   CGameArea* mNext; // Echoes' name
   uchar xb0_[0xB8 - 0xB0];

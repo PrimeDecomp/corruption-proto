@@ -69,7 +69,8 @@ public:
   // Guessed name. 0x5C: draws the touch bounds while CGameDebug's "Draw Object Collision Boxes"
   // is set. UpdateCollisionBoxDrawing connects it to the render manager's debug draw signal.
   virtual void DrawCollisionBoxes(const CStateManager& mgr);
-  virtual void Virtual60();                                    // 0x60, empty
+  // 0x60, empty. The console's SETTRANSFORM calls it on every actor after moving a waypoint.
+  virtual void Virtual60(CStateManager& mgr);
   virtual void Virtual64();                                    // 0x64, weak, returns 0
   virtual void Virtual68();                                    // 0x68, weak, empty
   virtual void Virtual6C();                                    // 0x6C, weak, empty

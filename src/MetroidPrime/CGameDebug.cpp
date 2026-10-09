@@ -2,9 +2,10 @@
 // .text: 0x8003B898..0x800492C8 (93 native functions).
 // Source identity: asserted target basename; absent from both retail source inventories.
 // Complete native/helper/callback inventory retained; no speculative declarations.
-// Remaining (not implemented) functions:
-// 0x80049298 +0x30: registered CGameDebug static initializer; raw native and .ctors8065B508
-//   (stores -1, -1, -1, 0, 1, 2, -1 into 0x807973C0..0x807973D8, unused by this unit)
+// The static initializer (0x80049298) is the TGameTypes.hpp id constants' and is emitted by the
+// compiler. Remaining emitted rstl helpers not yet paired: 0x8004861C/0x80048A0C (construct
+// wrappers), 0x8004892C (signal array fill), 0x800489A0 (optional option fill), 0x80048F70
+// (12-byte element copy).
 
 #include "MetroidPrime/CGameDebug.hpp"
 

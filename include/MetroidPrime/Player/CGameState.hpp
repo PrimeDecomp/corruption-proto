@@ -56,6 +56,8 @@ public:
   CGameOptions& GameOptions() { return mGameOptions; }
   CPersistentOptions& SystemOptions() { return mSystemOptions; } // Echoes' name
   void InitializeMemoryStates(); // Echoes' name; 0x8015BAD8
+  // Echoes' name. CStateManager hands it to the in-game save screen.
+  u64 GetCardSerial() const { return mCardSerial; }
   // Echoes' names. CStateManager's update adds the frame time to the play time while running;
   // the setter (0x80159C50) clamps it.
   double GetTotalPlayTime() const { return mTotalPlayTime; }
@@ -101,7 +103,9 @@ private:
   CPersistentOptions mSystemOptions; // Echoes' name
   CGameOptions mGameOptions;
   CRedundantHintManager mHintOptions;
-  uchar xd8_[0xc8];
+  uchar xd8_[0x108 - 0xd8];
+  u64 mCardSerial; // Echoes' name
+  uchar x110_[0x1a0 - 0x110];
   SPreviousGameResults mPreviousGameResults;
   rstl::vector< CToken > mAudioGroups;
   uchar x204_[0x104];

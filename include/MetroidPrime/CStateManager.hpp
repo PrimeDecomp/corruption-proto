@@ -46,6 +46,17 @@ class CUserEvaluatorDescription;
 class CWorldLayerState;
 class CWorldTransManager;
 
+// Echoes' values. The save screen (5) and the paused HUD memo (6) keep Echoes' numbers.
+enum EStateManagerTransition {
+  kSMT_InGame,
+  kSMT_MapScreen,
+  kSMT_PauseGame,
+  kSMT_Unk,
+  kSMT_LogBook,
+  kSMT_SaveGame,
+  kSMT_MessageScreen
+};
+
 // The size comes from CMFGameLoader, which allocates the manager through
 // TOneStatic<CStateManager>'s operator new (0x8021A380) and asserts a 0x220-byte limit there.
 //
@@ -177,7 +188,11 @@ public:
   // 2 when the special function handled it, 0 without one.
   int SpecialSkipCinematic();
 
+  // Echoes' name and signature. Unlike Echoes there is no multiplayer check.
+  void DeferStateTransition(EStateManagerTransition t);
+
   // Echoes' names and signatures, unless noted.
+  // Unlike Echoes, the "all keys found" memos also play a jingle.
   void ShowPausedHUDMemo(CAssetId strg, float time);
   void UpdateEscapeSequenceTimer(float dt);
   // Guessed name, as in Echoes. 0x80292440 clears the victim's alive flag and tells the game mode.
@@ -293,8 +308,8 @@ private:
   uint mPausedHudMemoFrameCount;
   CAssetId mPausedHudMemoAssetId;
   float mQueuedHudMemoDismissalDelay;
-  CAssetId mMapTeleportWorldId; // Echoes' name
-  int mDeferredTransition;      // Echoes' name
+  CAssetId mMapTeleportWorldId;                // Echoes' name
+  EStateManagerTransition mDeferredTransition; // Echoes' name
   uchar mPlayerLineOfSightPairs;
   uchar mNextPlayerLineOfSightPair;
   // Guessed names. Two signals that projectiles and bombs fire through the state manager.

@@ -12,8 +12,6 @@
 // 0x8028F770 +0xC4: owned native method/helper retained; exact source-level name unresolved
 // 0x8028F834 +0x58: Echoes' DeleteSaveGameScreen (x210 bit 0x10 from the screen's +0x80)
 // 0x8028F88C +0x78: creates the save-game screen (CStateManager.cpp(3736), 0xB0 bytes)
-// 0x8028F904 +0x1AC: Echoes' ShowPausedHUDMemo; the update calls it when the queued memo is due
-// 0x8028FAB0 +0xD4: owned native method/helper retained; exact source-level name unresolved
 // 0x8028FE38 +0x200: Echoes' UpdateHintState(float)
 // 0x802901B0 +0xC: owned native method/helper retained; exact source-level name unresolved
 // 0x802901BC +0x40: owned native method/helper retained; exact source-level name unresolved
@@ -72,12 +70,14 @@
 
 #include "Kyoto/Alloc/CMemory.hpp"
 #include "Kyoto/Audio/CAudioManager.hpp"
+#include "Kyoto/Audio/CStreamAudioManager.hpp"
 #include "Kyoto/Basics/CBasics.hpp"
 #include "Kyoto/Basics/CStopwatch.hpp"
 #include "Kyoto/CARAMManager.hpp"
 #include "Kyoto/CARAMToken.hpp"
 #include "Kyoto/CDependencyGroup.hpp"
 #include "Kyoto/CFrameDelayedKiller.hpp"
+#include "Kyoto/CResFactory.hpp"
 #include "Kyoto/CSimplePool.hpp"
 #include "Kyoto/Graphics/CGraphicsPalette.hpp"
 #include "Kyoto/Graphics/CTexture.hpp"
@@ -181,7 +181,7 @@ CStateManager::CStateManager(const rstl::ncrc_ptr< CStringPropertyManager >& str
 , mPausedHudMemoAssetId(kInvalidAssetId)
 , mQueuedHudMemoDismissalDelay(0.f)
 , mMapTeleportWorldId(kInvalidAssetId)
-, mDeferredTransition(0)
+, mDeferredTransition(kSMT_InGame)
 , mPlayerLineOfSightPairs(0)
 , mNextPlayerLineOfSightPair(0)
 , x210_24_(false)
@@ -795,6 +795,38 @@ int CStateManager::SpecialSkipCinematic() {
     }
   }
   return result;
+}
+
+// 0x8028FAB0. Echoes' body without the multiplayer check.
+void CStateManager::DeferStateTransition(EStateManagerTransition t) {
+  if (t == kSMT_InGame) {
+    if (mDeferredTransition != kSMT_InGame) {
+      mObjectManager->GetWorld()->SetLoadPauseState(false);
+      mDeferredTransition = kSMT_InGame;
+    }
+  } else if (mDeferredTransition == kSMT_InGame) {
+    mObjectManager->GetWorld()->SetLoadPauseState(true);
+    mDeferredTransition = t;
+    if (mDeferredTransition == kSMT_SaveGame) {
+      mSaveGameScreen = rs_new(3736) CSaveGameInterface(kSC_InGame, gpGameState->GetCardSerial());
+    }
+  }
+}
+
+// 0x8028F904. As in Echoes it keeps the memo and its time and defers the message screen; the
+// memos of the four key hunts also play the event jingle.
+void CStateManager::ShowPausedHUDMemo(CAssetId strg, float time) {
+  mHudMessageTime = time;
+  mPauseHudMessage = strg;
+  if (strg == CAssetId(gpResourceFactory->GetResourceIdByName("STRG_AllTempleKeysFound")->id) ||
+      strg == CAssetId(gpResourceFactory->GetResourceIdByName("STRG_AllSandKeysFound")->id) ||
+      strg == CAssetId(gpResourceFactory->GetResourceIdByName("STRG_AllSwampKeysFound")->id) ||
+      strg == CAssetId(gpResourceFactory->GetResourceIdByName("STRG_AllCliffsKeysFound")->id)) {
+    CStreamAudioManager::PlaySoftwareAudio(CStreamAudioManager::kSC_OneShot,
+                                           rstl::string_l("/audio/evt_x_event_00.dsp"), 0.25f,
+                                           0.01f, 0x41, true);
+  }
+  DeferStateTransition(kSMT_MessageScreen);
 }
 
 // 0x8028F68C. Unlike Echoes there is a single rumble manager, and the soft pause has its own

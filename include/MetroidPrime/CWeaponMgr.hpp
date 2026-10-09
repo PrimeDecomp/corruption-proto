@@ -4,12 +4,7 @@
 #include "types.h"
 
 #include "MetroidPrime/TGameTypes.hpp"
-
-// Echoes' weapon type enum (WeaponTypes.hpp there). Only the type is needed so far; the
-// prototype's values are not mapped yet.
-enum EWeaponType {
-  kWT_None = -1,
-};
+#include "MetroidPrime/Weapons/WeaponTypes.hpp"
 
 // Minimal view of the per-owner weapon counters (CWeaponMgr.cpp; CStateManager news one, 0x14
 // bytes). Names and signatures follow Echoes, whose bodies these match: IncrCount adds the owner

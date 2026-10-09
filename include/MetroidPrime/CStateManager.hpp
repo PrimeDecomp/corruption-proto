@@ -7,6 +7,7 @@
 #include "Kyoto/CAssetId.hpp"
 #include "Kyoto/CRandom16.hpp"
 #include "Kyoto/TSignal2.hpp"
+#include "Kyoto/TSignal3.hpp"
 #include "Kyoto/TToken.hpp"
 #include "MetroidPrime/CWeaponMgr.hpp"
 #include "MetroidPrime/TGameTypes.hpp"
@@ -124,10 +125,12 @@ public:
   // Echoes' names and signatures; they write the same fields.
   void SetBossParams(TUniqueId bossId, float maxEnergy, uint stringIdx);
   void QueueMessage(int frameCount, CAssetId msg, float f1);
-  // Echoes' name. Unlike Echoes' (uid, type), it takes the owner, whose count goes down, and the
-  // weapon itself, whose id the removal signal passes on. CGameProjectile, CEnergyProjectile,
-  // CPlasmaProjectile and CBomb call it with their owner id, their own id and their weapon type.
+  // Echoes' names. Unlike Echoes' (uid, type), they take the owner, whose count goes up or down,
+  // and the weapon itself, whose id the signals pass on. CGameProjectile, CEnergyProjectile,
+  // CPlasmaProjectile and CBomb call them with their owner id, their own id and their weapon
+  // type.
   void RemoveWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType type);
+  void AddWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType type);
   // Guessed name. Restarts the "PhazonEnragedSlowdownUSER" time curve.
   void StartPhazonEnragedSlowdown();
 
@@ -207,11 +210,10 @@ private:
   int mDeferredTransition;      // Echoes' name
   uchar mPlayerLineOfSightPairs;
   uchar mNextPlayerLineOfSightPair;
-  // Guessed names. Two signals that projectiles and bombs fire through the state manager. The
-  // first (0x8028FD50) passes the state manager, the new weapon's id and its type after counting
-  // it in, so it is a three-argument signal (no TSignal3 is declared yet). The second
-  // (RemoveWeaponId) passes the state manager and the removed weapon's id.
-  int x1e0_weaponAdded[6];
+  // Guessed names. Two signals that projectiles and bombs fire through the state manager.
+  // AddWeaponId passes the state manager, the new weapon's id and its type after counting it in;
+  // RemoveWeaponId passes the state manager and the removed weapon's id.
+  TSignal3< CStateManager&, TUniqueId, EWeaponType > mWeaponAdded;
   TSignal2< CStateManager&, TUniqueId > mWeaponRemoved;
   // The constructor clears them all except x210_25. Echoes has three more flags before its
   // map-screen flag; this order is the prototype's.

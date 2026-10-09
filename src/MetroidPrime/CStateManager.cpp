@@ -17,9 +17,6 @@
 // 0x8028F904 +0x1AC: Echoes' ShowPausedHUDMemo; the update calls it when the queued memo is due
 // 0x8028FAB0 +0xD4: owned native method/helper retained; exact source-level name unresolved
 // 0x8028FB84 +0xE4: Echoes' SkipCinematic (the special-function id at 0x1A4); CMFGame calls it
-// 0x8028FD50 +0x74: Echoes' AddWeaponId, with the owner and the weapon ids and the type: IncrCount
-//   (0x800B121C), then emits the three-argument signal at 0x1E0 (needs TSignal3)
-// 0x8028FDC4 +0x74: that signal's Emit
 // 0x8028FE38 +0x200: Echoes' UpdateHintState(float)
 // 0x80290038 +0x178: Echoes' UpdateEscapeSequenceTimer(float); calls KillPlayer
 // 0x802901B0 +0xC: owned native method/helper retained; exact source-level name unresolved
@@ -139,6 +136,12 @@ bool CStateManager::SwapOutAllPossibleMemory() {
   CARAMManager::WaitForAllDMAsToComplete();
   CARAMToken::UpdateAllDMAs();
   return true;
+}
+
+// 0x8028FD50
+void CStateManager::AddWeaponId(TUniqueId owner, TUniqueId weapon, EWeaponType type) {
+  mWeaponMgr->IncrCount(owner, type);
+  mWeaponAdded.Emit(*this, weapon, type);
 }
 
 // 0x8028FC68

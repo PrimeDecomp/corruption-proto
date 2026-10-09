@@ -4,7 +4,10 @@
 #include "types.h"
 
 #include "Kyoto/Graphics/CColor.hpp"
+#include "Kyoto/TSignal1.hpp"
 
+#include "rstl/auto_ptr.hpp"
+#include "rstl/rc_ptr.hpp"
 #include "rstl/string.hpp"
 #include "rstl/vector.hpp"
 
@@ -12,8 +15,8 @@
 // "PVS", "Wireframe", ...). The class name comes from the "CDebugOption.cpp(NN) : " allocation
 // strings. An option holds a float value with a range and a step; boolean options use 0..1.
 // Options with named values ("OFF"/"ON"/"DEBUG", "Enabled"/"Reversed", ...) keep a table of
-// choices, and changes to the value are broadcast through a TSignal1 (TSignal1.h asserts in the
-// connector emitted into this unit). No Echoes/Prime equivalent is known.
+// choices, and changes to the value are broadcast through a TSignal1. No Echoes/Prime
+// equivalent is known.
 class CDebugOption {
 public:
   // Guessed name. A named value of an option ("OFF", "ON", ...), 0x14 bytes.
@@ -38,10 +41,16 @@ public:
                const CColor& color);
   ~CDebugOption();
 
+  // Guessed argument type: nothing tells a pointer from a reference.
+  typedef TSignal1< CDebugOption* > ValueSignal;
+
   // Guessed names.
+  // Notifies the listeners when the value changes, before storing it.
   void SetValue(float value);
   const rstl::string* GetChoiceName(float value);
   void AddChoice(const rstl::string& name, float value);
+  // 0x800F9C24. Adds a listener for value changes; deleting the result removes it.
+  rstl::auto_ptr< IConnection > Connect(ValueSignal::Functor functor);
 
   // Guessed names, used by main.cpp. ClearMessages is emitted there (0x80005BF0) and empties the
   // string vector at 0x38 once per frame.
@@ -57,9 +66,8 @@ private:
   float mMax;
   float mStep;
   CColor mColor;
-  // rstl::rc_ptr to the TSignal1 notified by SetValue; its release (0x80048DDC) and the signal
-  // type are emitted in CGameDebug, and no TSignal header exists yet.
-  uchar x2c_signal[8];
+  // Guessed name. Its release (0x80048DDC) and the signal destructor are emitted in CGameDebug.
+  rstl::ncrc_ptr< ValueSignal > mValueSignal;
   float x34_; // Always 0.9f
   rstl::vector< rstl::string > x38_;
   rstl::vector< SChoice* >* mChoices; // Allocated by the first AddChoice

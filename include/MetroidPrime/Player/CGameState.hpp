@@ -13,6 +13,7 @@
 
 class CBitStreamReader;
 class CGameMode;
+class CPlayerState;
 class CWorldTransManager;
 class CBitStreamWriter;
 
@@ -52,6 +53,7 @@ public:
   // Echoes names. The hard mode flag is the first bit of the byte at 0x308.
   bool GetHardModeEnabled() const { return mHardMode; }
   void SetHardMode(bool hardMode); // 0x80159C38
+  CPlayerState* GetPlayerState();  // Echoes name; 0x80159C8C returns the pointer at 0x20
   // Echoes' names. Both return the game mode owned through the rstl::auto_ptr at 0x198. Only the
   // first is called so far (CStateManager's constructor, CGameDebug); which twin is const is
   // inferred from Echoes emitting the mutable one first.

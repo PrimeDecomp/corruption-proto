@@ -22,6 +22,11 @@ public:
   // Guessed name. One row: the label, the id the menu reports when the row is picked, and the
   // colour the label is drawn in (0xC bytes).
   struct SItem {
+    SItem(const char* label, int id, CColor color) : mLabel(label), mId(id), mColor(color) {}
+    // A user-written copy: with the implicit one vector<SItem>::push_back (0x80047DA0) is
+    // inlined into CGameDebug::OpenMenu instead of being called.
+    SItem(const SItem& o) : mLabel(o.mLabel), mId(o.mId), mColor(o.mColor) {}
+
     const char* mLabel;
     int mId;
     CColor mColor;

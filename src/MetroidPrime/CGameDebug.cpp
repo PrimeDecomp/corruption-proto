@@ -3,39 +3,9 @@
 // Source identity: asserted target basename; absent from both retail source inventories.
 // Complete native/helper/callback inventory retained; no speculative declarations.
 // Remaining (not implemented) functions:
-// 0x8003C9B0 +0xD4: debug movie-capture name sanitization (SetMovieCaptureName; strips
-//   ":*?\"<>|\\/\n\t%" with a find_first_of(const char*) that rstl::string lacks)
-// 0x8003CA84 +0xD8: emitted string find helper used by movie name sanitization
-// 0x8003CB5C +0x80: emitted string iterator search helper
-// 0x800451AC +0x880: debug menu input and selected option handling (blocked on unnamed
-//   CGameState/CPlayerState/CGameOptions/language helpers and the menu builder below)
-// 0x800466E4 +0xD58: debug menu construction from category/options (OpenMenu(page, controller));
-//   vector.h assertion482; blocked on the unnamed demo/save-slot helpers and the
-//   optional_object<CDebugMenu> assign helpers 0x8004743C/0x80047484/0x8004775C
-// 0x8004743C +0x48: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047484 +0xA8: retained native/emitted helper; exact historical name/type unresolved
-// 0x8004752C +0x18C: retained native/emitted helper; exact historical name/type unresolved
-// 0x800476B8 +0xA4: retained native/emitted helper; exact historical name/type unresolved
-// 0x8004775C +0x20: retained native/emitted helper; exact historical name/type unresolved
-// 0x8004777C +0x28: retained native/emitted helper; exact historical name/type unresolved
-// 0x800477A4 +0xA4: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047848 +0x174: retained native/emitted helper; exact historical name/type unresolved
-// 0x800479BC +0x8C: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047A48 +0x68: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047AB0 +0x20: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047AD0 +0x28: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047AF8 +0xBC: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047BB4 +0x84: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047C38 +0x38: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047C70 +0x50: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047CC0 +0x20: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047CE0 +0x24: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047D04 +0x9C: retained native/emitted helper; exact historical name/type unresolved
-// 0x80047DA0 +0xF0: emitted vector push-back helper; vector.h assertion482
-// 0x80047E90 +0x98: debug option-name/value text building
-// 0x80047F28 +0x2C4: debug option value formatting
-// 0x800481EC +0xA4: debug powerup values from player state
-// 0x80048A94 +0x18C: debug unlock-music/map rewards operation ("UnlockMusic%d", "UnlockMap%d")
+// 0x80048A94 +0x18C: ApplyRewardUnlocks (guessed name): when "All Multiplayer Music/Maps Unlocked"
+//   are set, unlocks "UnlockMusic%d" 1..5 and "UnlockMap%d" 0..1 through the unnamed object at
+//   gpGameState+0x3C (0x8015E64C finds the entry by name, 0x8015E8B0 unlocks it)
 // 0x80049298 +0x30: registered CGameDebug static initializer; raw native and .ctors8065B508
 //   (stores -1, -1, -1, 0, 1, 2, -1 into 0x807973C0..0x807973D8, unused by this unit)
 
@@ -48,11 +18,13 @@
 #include "Kyoto/Basics/COsContext.hpp"
 #include "Kyoto/CDvdFile.hpp"
 #include "Kyoto/Graphics/CGraphics.hpp"
+#include "Kyoto/Input/CFinalInput.hpp"
 #include "Kyoto/Network/CBBASupport.hpp"
 #include "Kyoto/Text/CFont.hpp"
 #include "MetaRender/CCubeRenderer.hpp"
 #include "MetroidPrime/CConsoleOutputWindow.hpp"
 #include "MetroidPrime/CMain.hpp"
+#include "MetroidPrime/Player/CGameMode.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 #include "MetroidPrime/Player/CPlayerState.hpp"
 #include "MetroidPrime/Tweaks/CTweakAutoMapper.hpp"
@@ -61,7 +33,10 @@
 #include "MetroidPrime/Tweaks/CTweakPlayer.hpp"
 #include "MetroidPrime/Tweaks/CTweakTargeting.hpp"
 
+#include "rstl/StringExtras.hpp"
 #include "rstl/math.hpp"
+
+#include "dolphin/os.h"
 
 #include <string.h>
 
@@ -175,6 +150,171 @@ void CGameDebug::InstallOption(const CDebugOption& option) {
 
 void CGameDebug::AddOptionChoice(int index, const char* name, float value) {
   mOptions[index]->AddChoice(rstl::string_l(name), value);
+}
+
+void CGameDebug::ReadPowerupOptions(CPlayerState* playerState) {
+  for (int i = kDO_PowerBeam; i <= kDO_ItemPercentage; ++i) {
+    mOptions[i].data().SetValue(playerState->GetItemAmount(
+        static_cast< CPlayerState::EItemType >(GetPlayerItemForOption(i)), true));
+  }
+}
+
+// Bool options show ON/OFF unless they have named values; the others show their value with no
+// decimals when they step by whole units, and with three otherwise.
+rstl::string CGameDebug::GetOptionLabel(CDebugOption& option) {
+  rstl::string choice("");
+  if (option.GetChoiceName(option.GetValue()) != nullptr) {
+    choice.assign(" [");
+    choice.append(*option.GetChoiceName(option.GetValue()));
+    choice.append("]");
+  }
+  if (option.GetMin() == 0.f && option.GetMax() == 1.f && option.GetStep() == 1.f) {
+    if (choice.length() == 0) {
+      return option.GetName() + rstl::string_l(option.GetValue() != 0.f ? ": ON" : ": OFF");
+    }
+    return option.GetName() + rstl::string_l(": ") +
+           CStringExtras::CreateFromFloat(option.GetValue(), 0) + choice;
+  }
+  if (option.GetStep() == 1.f) {
+    return option.GetName() + rstl::string_l(": ") +
+           CStringExtras::CreateFromFloat(option.GetValue(), 0) + choice;
+  }
+  return option.GetName() + rstl::string_l(": ") +
+         CStringExtras::CreateFromFloat(option.GetValue(), 3) + choice;
+}
+
+rstl::string CGameDebug::GetDemoLabel(const CControllerRecorder::SDemoInfo& demo) {
+  rstl::string label(CBasics::Stringize("%s %s %s %s %.1fs", demo.mFileName.data(),
+                                        SObjectTag::Type2Text(demo.x44_type), demo.x10_.data(),
+                                        demo.x28_.data(), demo.mLength));
+  return label;
+}
+
+// Guessed names. CControllerRecorder's state: the demo count the "Demo" page lists, whether a
+// demo is being recorded, and the movie capture length it was last given.
+extern const int lbl_8079D1C8;
+extern bool lbl_8079817D;
+extern float lbl_80795D40;
+
+// Each category page lists its options with their values; Load Game and Save Game list three
+// slots and Demo lists the recorded demos, the "Save <demo>" row and the movie capture length.
+// The category list takes two pages, each ending with "Return" and "Quit game".
+void CGameDebug::OpenMenu(int page, int controller) {
+  ReadEngineState();
+  xA164_controller = controller;
+  if (mMenu) {
+    CloseMenu();
+  }
+  if (page != x9FE8_menuPage) {
+    x9FE8_menuPage = page;
+    xA154_currentCategory = 0;
+  }
+
+  int labelCount = 0;
+  rstl::string title = rstl::string_l("Game");
+  if (x9FE8_menuPage == 1) {
+    title = rstl::string_l("System");
+  }
+
+  if (xA154_currentCategory == 0) {
+    mMenuItems.reserve(35);
+    mMenuLabels.reserve(35);
+    int first = kC_Cheats;
+    int last = kC_Revolution;
+    if (x9FE8_menuPage == 1) {
+      first = kC_Misc;
+      last = kC_AudioDebug;
+    }
+    for (int category = first; category <= last; ++category) {
+      mMenuLabels.push_back(rstl::string_l(GetCategoryName(category)));
+      mMenuItems.push_back(
+          CDebugMenu::SItem(mMenuLabels[labelCount].data(), -category * 10, CColor::White()));
+      ++labelCount;
+    }
+    xA15C_backItemId = 999;
+    mMenuLabels.push_back(rstl::string_l("Return"));
+    mMenuItems.push_back(
+        CDebugMenu::SItem(mMenuLabels[labelCount].data(), xA15C_backItemId, CColor::White()));
+    xA160_exitItemId = 1000;
+    mMenuLabels.push_back(rstl::string_l("Quit game"));
+    mMenuItems.push_back(
+        CDebugMenu::SItem(mMenuLabels[labelCount + 1].data(), xA160_exitItemId, CColor::White()));
+  } else {
+    title = rstl::string_l(GetCategoryName(xA154_currentCategory));
+    if (xA154_currentCategory == kC_LoadGame || xA154_currentCategory == kC_SaveGame) {
+      mMenuItems.reserve(3);
+      mMenuLabels.reserve(3);
+      for (int slot = 0; slot < 3; ++slot) {
+        mMenuLabels.push_back(rstl::string(CBasics::Stringize("Slot %d", slot + 1)));
+        mMenuItems.push_back(CDebugMenu::SItem(mMenuLabels[slot].data(), slot, CColor::White()));
+      }
+    } else if (xA154_currentCategory == kC_Demo) {
+      mMenuItems.reserve(lbl_8079D1C8 + 4);
+      mMenuLabels.reserve(lbl_8079D1C8 + 4);
+      rstl::vector< CControllerRecorder::SDemoInfo > demos = CControllerRecorder::GetDemoList();
+      int demoCount = demos.size() > lbl_8079D1C8 ? lbl_8079D1C8 : demos.size();
+      for (int i = 0; i < demoCount; ++i) {
+        rstl::string label = GetDemoLabel(demos[i]);
+        mMenuLabels.push_back(label);
+        mMenuItems.push_back(CDebugMenu::SItem(label.data(), i, CColor::White()));
+        ++labelCount;
+      }
+
+      xA158_ = 997;
+      if (lbl_8079817D && xA169_) {
+        rstl::string demoName = CControllerRecorder::GetNextDemoFileName();
+        if (demoName.length() != 0) {
+          mMenuLabels.push_back(rstl::string(CBasics::Stringize("Save %s", demoName.data())));
+          mMenuItems.push_back(
+              CDebugMenu::SItem(mMenuLabels[labelCount].data(), xA158_, CColor::White()));
+          ++labelCount;
+        }
+      }
+
+      // The option starts from the recorder's length once, then keeps the edited value.
+      static bool sFirstOpen = true;
+      float captureLength;
+      if (sFirstOpen) {
+        captureLength = lbl_80795D40;
+      } else {
+        captureLength = gpGameDebug->GetOptionValue(kDO_MovieCaptureLength);
+      }
+      sFirstOpen = false;
+      CDebugOption option(kC_Demo, kDO_MovieCaptureLength, rstl::string_l("Movie Capture Length"),
+                          captureLength, 5.f, 3600.f, 5.f, CColor(CColor::White()));
+      InstallOption(option);
+      mMenuLabels.push_back(GetOptionLabel(option));
+      mMenuItems.push_back(CDebugMenu::SItem(mMenuLabels[labelCount].data(), kDO_MovieCaptureLength,
+                                             CColor::White()));
+      if (mCategorySelection[xA154_currentCategory] >= mMenuItems.size()) {
+        mCategorySelection[xA154_currentCategory] = 0;
+      }
+    } else {
+      int optionCount = 0;
+      for (int i = 0; i < mOptions.size(); ++i) {
+        if (mOptions[i]) {
+          ++optionCount;
+        }
+      }
+      mMenuItems.reserve(optionCount);
+      mMenuLabels.reserve(optionCount);
+      if (xA154_currentCategory >= kC_PowerupsWeapons && xA154_currentCategory <= kC_PowerupsMisc) {
+        ReadPowerupOptions(gpGameState->GetPlayerState());
+      }
+      for (int i = 0; i < mOptions.size(); ++i) {
+        if (mOptions[i] && xA154_currentCategory == mOptions[i].data().GetCategory()) {
+          mMenuLabels.push_back(GetOptionLabel(mOptions[i].data()));
+          mMenuItems.push_back(
+              CDebugMenu::SItem(mMenuLabels[labelCount].data(), i, mOptions[i].data().GetColor()));
+          ++labelCount;
+        }
+      }
+    }
+  }
+
+  title.append(rstl::string_l(" menu"));
+  mMenu = CDebugMenu(title, 0.9f, mMenuItems.data(), mMenuItems.size(),
+                     mCategorySelection[xA154_currentCategory], 1.2f);
 }
 
 // Guessed names. Engine switches that the debug options start from; they live in other units.
@@ -463,6 +603,182 @@ int CGameDebug::UpdateMenu(float dt) {
     DumpLog();
   }
   return 0;
+}
+
+// Guessed names. CActorAiDebugRecorder.cpp (0x802CBF00) clears the AI trace's focused actor;
+// CGameMemoryCardInterface.cpp (0x80164F3C) writes the game state to the host file
+// "MetroidPrimeD%2d" of a slot.
+void ResetAiTraceFocus();
+void SaveGameToDebugSlot(int slot);
+// The debug slot CMainFlow loads the game from when it is not -1; it resets it afterwards.
+extern int lbl_80795E50;
+extern "C" void CAudioManager_SetDebugOption(int option, bool enabled);
+
+// The Start command closes the menu (and asks the front end to drop its window unless the game
+// mode is 'FRND'). Right and left switch the pages of the category list. A picked row opens a
+// category, returns to the list, quits, loads or saves a slot, or steps the option by one (ten
+// with the multiplier; Decrement steps down), wrapping around at the range ends.
+CIOWin::EMessageReturn CGameDebug::ProcessMenuInput(const CControlMapper& mapper,
+                                                    const CFinalInput& input) {
+  if (xA164_controller != static_cast< int >(input.ControllerNumber())) {
+    return CIOWin::kMR_Normal;
+  }
+  if (xA154_currentCategory == 0) {
+    if (mapper.GetDigitalInput(CControlMapper::kC_DebugMenuRight, input,
+                               CControlMapper::kFT_Unfiltered) &&
+        x9FE8_menuPage == 0) {
+      CloseMenu();
+      OpenMenu(1, xA164_controller);
+      return CIOWin::kMR_Normal;
+    }
+    if (mapper.GetDigitalInput(CControlMapper::kC_DebugMenuLeft, input,
+                               CControlMapper::kFT_Unfiltered) &&
+        x9FE8_menuPage == 1) {
+      CloseMenu();
+      OpenMenu(0, xA164_controller);
+      return CIOWin::kMR_Normal;
+    }
+  }
+  if (mapper.GetPressInput(CControlMapper::kC_DebugMenuStart, input,
+                           CControlMapper::kFT_Unfiltered)) {
+    CloseMenu();
+    if (gpGameState->GetGameMode().GetGameType() != 'FRND' && x9FE8_menuPage == 0 &&
+        mapper.GetPressInput(CControlMapper::kC_DebugMenuStart, input,
+                             CControlMapper::kFT_Filtered)) {
+      return CIOWin::kMR_RemoveIOWin;
+    }
+    return CIOWin::kMR_Normal;
+  }
+
+  rstl::pair< int, int > picked = mMenu.data().ProcessInput(input);
+  int id = picked.first;
+  int row = picked.second;
+  if (id != CDebugMenu::kNoItem) {
+    mCategorySelection[xA154_currentCategory] = row;
+    if (id == xA15C_backItemId || mapper.GetDigitalInput(CControlMapper::kC_DebugMenuBack, input,
+                                                         CControlMapper::kFT_Unfiltered)) {
+      CloseMenu();
+      if (xA154_currentCategory != 0) {
+        xA154_currentCategory = 0;
+        OpenMenu(x9FE8_menuPage, xA164_controller);
+        return CIOWin::kMR_Normal;
+      }
+      return CIOWin::kMR_Normal;
+    }
+
+    int step = 1;
+    if (mapper.GetDigitalInput(CControlMapper::kC_DebugMenuDecrementValue, input,
+                               CControlMapper::kFT_Unfiltered)) {
+      step = -1;
+    }
+    if (mapper.GetDigitalInput(CControlMapper::kC_DebugMenuValueMultiplier, input,
+                               CControlMapper::kFT_Unfiltered)) {
+      step *= 10;
+    }
+
+    if (id == xA160_exitItemId) {
+      CloseMenu();
+      if (gpMain->GetGameFlowBuilt()) {
+        mCategorySelection[0] = 0;
+        return CIOWin::kMR_RemoveIOWinAndExit;
+      }
+      return CIOWin::kMR_Normal;
+    }
+
+    if (id < 0) {
+      xA154_currentCategory = -(id / 10);
+      OpenMenu(x9FE8_menuPage, xA164_controller);
+    } else if (xA154_currentCategory == kC_LoadGame || xA154_currentCategory == kC_SaveGame) {
+      if (mapper.GetPressInput(CControlMapper::kC_DebugMenuSelect, input,
+                               CControlMapper::kFT_Filtered)) {
+        bool save = xA154_currentCategory == kC_SaveGame;
+        rs_debugger_printf("Chose slot %d to %s.\n", id, save ? "save" : "load");
+        CloseMenu();
+        if (save) {
+          SaveGameToDebugSlot(id);
+          return CIOWin::kMR_Normal;
+        }
+        lbl_80795E50 = id;
+        gpMain->SetRestartMode(CMain::kRM_None);
+        return CIOWin::kMR_RemoveIOWinAndExit;
+      }
+    } else if (xA154_currentCategory != kC_Demo || id == kDO_MovieCaptureLength) {
+      CDebugOption& option = mOptions[id].data();
+      if (option.GetMin() == 0.f && option.GetMax() == 1.f && option.GetStep() == 1.f) {
+        if (option.GetValue() == 0.f) {
+          option.SetValue(1.f);
+        } else {
+          option.SetValue(0.f);
+        }
+      } else {
+        float value = option.GetValue() + step * option.GetStep();
+        if (value > option.GetMax()) {
+          option.SetValue(option.GetMin());
+        } else if (value < option.GetMin()) {
+          option.SetValue(option.GetMax());
+        } else {
+          option.SetValue(value);
+        }
+      }
+
+      // Viewing the AI trace hides the gun, closing it shows the gun again.
+      if (option.GetIndex() == kDO_AITraceViewMode) {
+        if (option.GetValue() == 0.f) {
+          if (gpGameDebug->GetOptionValue(kDO_RenderGun) == 0.f) {
+            gpGameDebug->SetOptionValue(kDO_RenderGun, 1.f);
+          }
+        } else if (gpGameDebug->IsOptionSet(kDO_RenderGun) == true) {
+          gpGameDebug->SetOptionValue(kDO_RenderGun, 0.f);
+        }
+        if (option.GetValue() == 1.f) {
+          ResetAiTraceFocus();
+        }
+      }
+
+      ApplyOptions();
+      if (GetOptionValue(kDO_DebugMessagesEnabled) != 0.f) {
+        RAssert_SetDiagnosticPrintCallback(CConsoleOutputWindow::Printf);
+        RAssert_SetDebuggerPrintCallback(nullptr);
+      } else {
+        RAssert_SetDiagnosticPrintCallback(RAssert_DiscardDiagnosticCallback);
+        RAssert_SetDebuggerPrintCallback(RAssert_ConsumeDebuggerPrintCallback);
+      }
+      mMenuLabels[row] = GetOptionLabel(option);
+      mMenuItems[row].mLabel = mMenuLabels[row].data();
+
+      if (xA154_currentCategory >= kC_PowerupsWeapons && xA154_currentCategory <= kC_PowerupsMisc) {
+        CPlayerState* playerState = gpGameState->GetPlayerState();
+        for (int i = kDO_PowerBeam; i <= kDO_ItemPercentage; ++i) {
+          CPlayerState::EItemType item =
+              static_cast< CPlayerState::EItemType >(GetPlayerItemForOption(i));
+          int amount = playerState->GetItemAmount(item, true);
+          int value = static_cast< int >(mOptions[i].data().GetValue());
+          playerState->AddPowerUp(item, value - amount);
+          if (value > amount) {
+            playerState->IncrPickUp(item, 9999);
+          }
+        }
+      } else if (xA154_currentCategory == kC_Misc && id == kDO_Language) {
+        uchar language = option.GetValue();
+        rs_debugger_printf("Setting language %d\n", language);
+        OSSetLanguage(language);
+      }
+      CAudioManager_SetDebugOption(0, !IsOptionSet(kDO_EnableAudio));
+      CAudioManager_SetDebugOption(1, GetOptionInt(kDO_DebugSoundSystem) == 3);
+    }
+  }
+
+  CGameOptions& options = gpGameState->GameOptions();
+  int sfxVolume = GetOptionInt(kDO_SfxMasterVolume);
+  if (sfxVolume != options.GetSfxVolume().mValue) {
+    options.SetSfxVolume(sfxVolume, CGameOptions::GetSliderPosition(sfxVolume, 0, 105), true);
+  }
+  int musicVolume = GetOptionInt(kDO_MusicMasterVolume);
+  if (musicVolume != options.GetMusicVolume().mValue) {
+    options.SetMusicVolume(musicVolume, CGameOptions::GetSliderPosition(musicVolume, 0, 100), true);
+  }
+  ApplyRewardUnlocks();
+  return CIOWin::kMR_Normal;
 }
 
 // Guessed name. Reads the tweaks and engine switches back into their options.
@@ -1520,7 +1836,7 @@ void CGameDebug::SetMovieCaptureName(const rstl::string& name) {
     mMovieCaptureName.erase(pos, 1);
   }
   xA180_ = 0;
-  if (mMovieCaptureName.size() != 0) {
+  if (mMovieCaptureName.length() != 0) {
     rs_debugger_printf("Movie Capture Name \"%s\"\n", mMovieCaptureName.data());
   }
 }
@@ -1528,7 +1844,7 @@ void CGameDebug::SetMovieCaptureName(const rstl::string& name) {
 // Picks the first "<name>_NNN_" prefix (NNN < 100) whose first movie file does not exist on the
 // host yet. The name is cleared when every slot is taken.
 const rstl::string& CGameDebug::GetMovieCaptureName() {
-  if (mMovieCaptureName.size() != 0 && !mMovieCaptureNameChosen) {
+  if (mMovieCaptureName.length() != 0 && !mMovieCaptureNameChosen) {
     bool found = false;
     char path[264];
     for (int i = 0; i < 100; ++i) {

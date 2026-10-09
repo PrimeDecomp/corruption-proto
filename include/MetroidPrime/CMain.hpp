@@ -88,6 +88,7 @@ public:
   void SetManageCard(bool manage) { mManageCard = manage; }
   void SetGameFrameDrawn(bool drawn) { mGameFrameDrawn = drawn; }
   void SetGameFlowBuilt(bool built) { mMfGameBuilt = built; }
+  bool GetGameFlowBuilt() const { return mMfGameBuilt; }
 
   void DecrementMaxSpeedDrawTimer(float dt) { mMaxSpeedDrawTimer -= dt; }
   bool GetFinished() const { return mFinished; }

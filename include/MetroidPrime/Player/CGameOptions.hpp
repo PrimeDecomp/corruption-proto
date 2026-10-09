@@ -48,6 +48,9 @@ public:
   // Echoes names, matched by field order (after the screen stretch at 0x1C).
   SSliderValue GetSfxVolume() const;   // 0x8017CE94, 0x24
   SSliderValue GetMusicVolume() const; // 0x8017CE80, 0x2C
+  // Echoes names; clamp to 0..105 and 0..100 and take the position like the screen setters.
+  void SetSfxVolume(int value, float position, bool apply);   // 0x8017CB80
+  void SetMusicVolume(int value, float position, bool apply); // 0x8017CAC8
 
 private:
   uint x0_;

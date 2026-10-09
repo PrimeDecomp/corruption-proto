@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-#include "rstl/rmemory_allocator.hpp"
 #include "rstl/linear_iterator.hpp"
 #include "rstl/pair.hpp"
+#include "rstl/rmemory_allocator.hpp"
 
 class CInputStream;
 class COutputStream;
@@ -133,14 +133,14 @@ public:
   void reserve(int len) { internal_prepare_to_write(len, true); }
 
   basic_string& assign(const basic_string&);
-  basic_string& assign(const _CharTp*, int);
+  basic_string& assign(const _CharTp*, int = -1);
   basic_string& operator=(const basic_string& other) {
     assign(other);
     return *this;
   }
   basic_string& append(const basic_string& other);
   basic_string& append(int, _CharTp);
-  basic_string& append(const _CharTp*, int);
+  basic_string& append(const _CharTp*, int = -1);
   basic_string& erase(int pos, int count);
   void clear();
 

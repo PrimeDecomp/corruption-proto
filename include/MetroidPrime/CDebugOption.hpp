@@ -63,6 +63,12 @@ public:
   // Guessed names (see the constructors).
   int GetCategory() const { return x0_; }
   int GetIndex() const { return x4_; }
+  // Guessed names. Read by CGameDebug's menu (labels, value steps and row colors).
+  const rstl::string& GetName() const { return mName; }
+  float GetMin() const { return mMin; }
+  float GetMax() const { return mMax; }
+  float GetStep() const { return mStep; }
+  const CColor& GetColor() const { return mColor; }
 
 private:
   int x0_; // Category

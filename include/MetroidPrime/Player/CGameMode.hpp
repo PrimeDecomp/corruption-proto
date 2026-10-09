@@ -25,9 +25,12 @@ public:
   virtual void x24_() = 0;
   virtual void x28_() = 0;
   virtual void x2C_() = 0;
-  virtual void x30_() = 0;
+  // Echoes' names. They keep Echoes' order (IsGameOver, EndGame, GetResultIndex, then the game
+  // type), two slots earlier. CMFGame ends the game when IsGameOver says so and quits to the front
+  // end when GetResultIndex returns 0.
+  virtual bool IsGameOver() = 0;
   virtual void x34_() = 0;
-  virtual void x38_() = 0;
+  virtual int GetResultIndex() const = 0;
   // Guessed name. CGMSinglePlayer returns 'SNGL'; the constructor prints it ("Game type is %s").
   virtual FourCC GetGameType() const = 0;
 };

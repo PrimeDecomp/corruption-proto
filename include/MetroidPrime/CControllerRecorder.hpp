@@ -32,6 +32,9 @@ public:
   // hands it to CGameDebug (0x8003C9B0); CStateManager's update calls it while a movie capture
   // runs without a name.
   static void SetMovieCaptureName(CStateManager& mgr);
+  // Guessed name. 0x80123530: while a recorder exists, stores the world's asset id in it and
+  // continues with the world's name. CMFGame's constructor calls it.
+  static void RecordWorld(CStateManager& mgr);
 
   // Guessed name. Set by the recorder's profiling switch (0x80121A14); main keeps the GX
   // performance counters running while it is set.

@@ -162,6 +162,24 @@ public:
   void Update(float dt, CArchitectureQueue& queue);
   // Echoes' name. CMFGame passes the frame number of its kAM_FrameBegin message.
   void FrameBegin(int frame);
+  // Echoes' names, by their place in CMFGame. FrameEnd (0x80292C48) ends the frame and flushes
+  // the simple pool; ProcessInput (0x80292D50) takes the in-game input; Touch (0x80290D58) runs
+  // before every draw.
+  void FrameEnd();
+  void ProcessInput(const CFinalInput& input);
+  void Touch();
+  // Echoes' guessed name. 0x8028F5A0 asks every area of the world's chain whether it still loads
+  // a layer.
+  bool HasPendingLayerLoads();
+  // Echoes' name, where Echoes' CMFGame::DrawGui calls it. The body (0x802D7B74) sits in
+  // CGameProfileStats.cpp and prints the profile counters into their debug option.
+  void DrawDebugStuff() const;
+
+  // Echoes' names.
+  void SetRandomAvailable(bool available) { mRandomAvailable = available; }
+  CAssetId GetPauseHUDMessage() const { return mPauseHudMessage; }
+  void IncrementHUDMessageFrameCounter() { ++mHudMessageFrameCount; }
+  void SetInMapScreen(bool inMapScreen) { mInMapScreen = inMapScreen; }
 
   // Echoes' names, in Echoes' order. The constructor installs the callback with CMemory; unlike
   // Echoes, it first reports the last and current areas.
@@ -233,6 +251,10 @@ public:
   static rstl::map< rstl::string, SProfileCountersB >* sProfileCountersB;
 
 private:
+  // Like Echoes' CMFGame, it reads the save screen, the deferred transition, the HUD message time
+  // and the quit and layer-restart flags directly.
+  friend class CMFGame;
+
   // Guessed names. The update's debug passes: the entity index check ("ENTITY INDEX MISMATCH",
   // 0x802951A8), the map world sphere (0x8029530C) and the low-memory report (0x80294748).
   void CheckEntityIndices();

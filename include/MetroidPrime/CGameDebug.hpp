@@ -545,6 +545,9 @@ public:
   CIOWin::EMessageReturn ProcessMenuInput(const CControlMapper& mapper, const CFinalInput& input);
   // Guessed name. main only handles the tweak load/save options while the menu is closed.
   bool IsMenuOpen() const { return mMenu.valid(); }
+  // Guessed name. The Demo page offers to save the recorded demo while the flag is set;
+  // CMFGame's destructor clears it.
+  void SetDemoSaveable(bool saveable) { xA169_ = saveable; }
 
   // Guessed names. The movie capture name ("<name>_NNN_" once a free slot was chosen) and the
   // remaining capture time that main counts down.
@@ -660,7 +663,7 @@ private:
   int xA160_exitItemId;
   int xA164_controller;
   bool xA168_;
-  bool xA169_; // Cleared by CMFGame
+  bool xA169_; // Cleared by CMFGame's destructor
   bool xA16A_;
   bool xA16B_; // main
   bool xA16C_; // main; not initialized

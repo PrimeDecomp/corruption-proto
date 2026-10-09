@@ -5,6 +5,7 @@
 
 #include "Kyoto/TSignal1.hpp"
 
+class CInGameGuiManager;
 class CStateManager;
 
 // Minimal declaration. The class name comes from the "CRenderManager.cpp(2108) : " allocation
@@ -18,6 +19,12 @@ public:
   // Guessed name. 0x802A9ECC advances the render clock at 0x77C (wrapped with fmod);
   // CStateManager's update calls it while running.
   void Update(float dt);
+
+  // Echoes' names for the CStateManager methods CMFGame calls at the same places: the world draw
+  // with the GUI (0x802A6660) and the end of a player's render (0x802A8190), which the GUI draw
+  // and the state manager's own passes call too.
+  void DrawWorld(const CInGameGuiManager& gui);
+  void EndPlayerRender();
 
   // Guessed names. A signal at +0x604 that the world render pass emits with the state manager
   // after the opaque geometry; CActor draws its collision boxes from it. The argument type is

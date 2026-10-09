@@ -4,6 +4,7 @@
 #include "types.h"
 
 #include "Kyoto/CToken.hpp"
+#include "MetroidPrime/CControlMapper.hpp"
 #include "MetroidPrime/CRedundantHintManager.hpp"
 #include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CPersistentOptions.hpp"
@@ -89,6 +90,8 @@ public:
   }
   void SetCompressedMultiplayerOptions(const rstl::vector< uchar >& options);
   rstl::vector< CToken >& AudioGroups() { return mAudioGroups; }               // Guessed name
+  // Guessed name. CMFGame toggles the debug camera and closes the debug menu with it.
+  const CControlMapper& GetControlMapper() const { return mControlMapper; }
   // Out of line (0x80159C7C); returns the rc_ptr at 0x28. Echoes' name.
   rstl::rc_ptr< CWorldTransManager >& WorldTransitionManager();
   // Echoes names. The hard mode flag is the first bit of the byte at 0x308.
@@ -129,7 +132,7 @@ private:
   uchar x188_[0x1a0 - 0x188];
   SPreviousGameResults mPreviousGameResults;
   rstl::vector< CToken > mAudioGroups;
-  uchar x204_[0x104];
+  CControlMapper mControlMapper;
   bool mHardMode : 1;
   // Guessed names. A script message queued for the object with an editor id: a console command
   // (0x80209600) stores both and clears the flag, CStateManager's constructor sets the flag, and

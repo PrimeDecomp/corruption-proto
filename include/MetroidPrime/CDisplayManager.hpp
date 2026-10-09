@@ -27,6 +27,12 @@ public:
   bool IsInCinematicCamera();
   bool IsCinematicActive();
   CCinematicCamera* GetCinematicCamera(); // Echoes' name; 0x802A36C8
+  // 0x802A36A8 only calls the one above. CMFGame reaches it through the const accessor.
+  const CCinematicCamera* GetCinematicCamera() const;
+  // Guessed name. 0x802A2164 maps a player value (0x30B8, through 0x800881A4) to one of four modes
+  // and stores it in the camera at 0x88. CMFGame calls it before the world draw, where Echoes'
+  // DrawWorld calls CStateManager::PreRender.
+  void PreRender();
   // Guessed name. The flag at 0x124 (0x802A3188), which the debug camera's activation (0x802A3310)
   // sets and its deactivation (0x802A32A0) clears.
   bool IsDebugCameraActive() const;

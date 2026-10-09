@@ -21,11 +21,15 @@ public:
 
   // Echoes names, matched by order and clamp range (0..8, -30..30, -19..19, -10..10). Unlike
   // Echoes, the prototype's setters also take the slider position of the value, which callers
-  // compute with fn_8017DD30 (see main.cpp).
+  // compute with GetSliderPosition (see main.cpp).
   void SetScreenBrightness(int value, float position, bool apply);
   void SetScreenPositionX(int value, float position, bool apply);
   void SetScreenPositionY(int value, float position, bool apply);
   void SetScreenStretch(int value, float position, bool apply);
+
+  // Guessed name. The slider position of an option value, (value - min) / (max - min); also used
+  // by CGameDebug.
+  static float GetSliderPosition(int value, int min, int max);
 
 private:
   uint x0_;

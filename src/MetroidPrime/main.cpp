@@ -45,8 +45,8 @@
 // 0x80007148 +0xD0: retained emitted/native function; exact class/type/name unresolved
 // 0x80007218 +0x230: retained emitted/native function; exact class/type/name unresolved
 // 0x80007448 +0x60: retained emitted/native function; exact class/type/name unresolved
-// 0x800074A8 +0x31C: retained emitted/native function; exact class/type/name unresolved
-// 0x800077C4 +0x16C: retained emitted/native function; exact class/type/name unresolved
+// 0x800074A8 +0x31C: CMain::UpdateTweakDebugOptions (guessed name); tweak load/save debug options 51..54
+// 0x800077C4 +0x16C: UpdateScreenCapture (guessed name); safe frame, screenshot and movie capture
 // 0x80007930 +0x6C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000799C +0x138: retained emitted/native function; exact class/type/name unresolved
 // 0x80007AD4 +0x84: retained emitted/native function; exact class/type/name unresolved
@@ -81,7 +81,7 @@
 // 0x80009888 +0x54: retained emitted/native function; exact class/type/name unresolved
 // 0x80009F08 +0x7C0: retained emitted/native function; exact class/type/name unresolved
 // 0x8000A6C8 +0xC4: retained emitted/native function; exact class/type/name unresolved
-// 0x8000A78C +0x150: retained emitted/native function; exact class/type/name unresolved
+// 0x8000A78C +0x150: CMain::UpdateGPMetrics (guessed name); GX perf counters from debug option 250
 // 0x8000A8DC +0x868: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B144 +0x4C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000B190 +0xC0: retained emitted/native function; exact class/type/name unresolved
@@ -110,7 +110,7 @@
 // 0x8000C2D4 +0x84: emitted optional locked-string-table-token assignment helper
 // 0x8000C358 +0xC8: CGameGlobalObjects PostInitialize; resource factories/string table/renderer initialization
 // 0x8000C420 +0x14C: CGameGlobalObjects constructor; Main.cpp allocations1267/1269, factory/pool/global registration
-// 0x8000C888 +0x208: main asset metadata loading with 64-bit asset-key/string-map insertion helper
+// 0x8000C888 +0x208: CMain::CheckForDuplicateWorlds (guessed name); MLVL asset-id/name map, asserts Main.cpp(993)
 // 0x8000CA90 +0x4C: retained emitted/native function; exact class/type/name unresolved
 // 0x8000CADC +0xA4: retained emitted/native function; exact class/type/name unresolved
 // 0x8000CB80 +0x30: retained emitted/native function; exact class/type/name unresolved
@@ -179,10 +179,19 @@
 #include "Kyoto/TFunctor.hpp"
 #include "Kyoto/Text/CStringTable.hpp"
 #include "MetaRender/CCubeRenderer.hpp"
+#include "MetroidPrime/AudioDebug.hpp"
+#include "MetroidPrime/CAnimData.hpp"
+#include "MetroidPrime/CDamageVulnerability.hpp"
 #include "MetroidPrime/CDebugOption.hpp"
+#include "MetroidPrime/CDecalManager.hpp"
 #include "MetroidPrime/CGameArchitectureSupport.hpp"
 #include "MetroidPrime/CGameGlobalObjects.hpp"
+#include "MetroidPrime/CGameProfiler.hpp"
+#include "MetroidPrime/CInGameTweakManager.hpp"
 #include "MetroidPrime/CSaveRegion.hpp"
+#include "MetroidPrime/CWorld.hpp"
+#include "MetroidPrime/ConsoleCommands.hpp"
+#include "MetroidPrime/Player/CGameOptions.hpp"
 #include "MetroidPrime/Player/CGameState.hpp"
 
 #include "rstl/auto_ptr.hpp"
@@ -217,19 +226,6 @@
 // - The soft-reset chord is checked over 51 controller buttons and the reset options stream is
 //   asserted to fit kGameOptionsFromResetSize (Main.cpp line 2242).
 
-// Unnamed prototype callees. The owning translation units are given for reference.
-extern "C" void fn_80584CE4(); // CAnimData.cpp; Echoes calls CAnimData::InitializeCache here.
-extern "C" void fn_80584C60(); // CAnimData.cpp; Echoes calls CAnimData::FreeCache here.
-extern "C" void fn_800ECE20(); // CDecalManager.cpp; Echoes calls CDecalManager::Initialize.
-extern "C" void fn_800ECCFC(); // CDecalManager.cpp; Echoes calls CDecalManager::ShutDown.
-extern "C" void
-fn_800E1A2C(); // CDamageVulnerability.cpp; Echoes: CDamageVulnerability::Initialize.
-extern "C" void fn_800E19B8(); // CDamageVulnerability.cpp; Echoes: CDamageVulnerability::Shutdown.
-extern "C" void fn_8016E164(int); // CGameProfiler.cpp
-extern "C" void fn_8016E0DC();    // CGameProfiler.cpp
-extern "C" void fn_80209778();    // ConsoleCommands.cpp
-extern "C" void fn_80037358();    // CActor.cpp
-
 extern "C" int CBBASupport_InitializeBBA(int);
 extern "C" void
 CBBASupport_RegisterStringMessageCallback(int,
@@ -242,39 +238,26 @@ extern "C" void CAudioManager_Update(float dt);
 extern IController* gpController;
 class CMemoryCard;
 extern CMemoryCard* gpMemoryCard;
-class CTweaks;
-extern CTweaks* gpTweakManager;
 
 // Unnamed callees of RsMain in other translation units.
 class CGameDebug;
-class CGameProfiler;
 extern "C" CGameDebug* gpGameDebug;       // Guessed name (0x8079710C); CGameGlobalObjects+0x130.
-extern "C" CGameProfiler* gpGameProfiler; // Guessed name (0x80798758).
 extern "C" void fn_8003CBDC(CGameDebug*); // CGameDebug.cpp: registers every debug option.
-extern "C" bool fn_8017ECB0(CTweaks*, const rstl::string&); // Echoes: ReadFromMemoryCard.
-extern "C" void fn_8016D600(CGameProfiler*, float);         // CGameProfiler.cpp: frame update.
-extern "C" void fn_8016D054(CGameProfiler*, const char*);   // CGameProfiler.cpp: begin section.
-extern "C" void fn_8016CED0(CGameProfiler*, const char*);   // CGameProfiler.cpp: end section.
-extern "C" void fn_803E7CE4();     // AudioDebug.cpp: first function of the unit.
-extern "C" void fn_8065B4A0(uint); // PadFallback.c; Echoes calls PADRecalibrate(0xf0000000) here.
-// CGameOptions.cpp: the slider position of an option value, (value - min) / (max - min).
-extern "C" float fn_8017DD30(int value, int min, int max);
-extern bool sProgressiveModePrompt; // Echoes name; the second bit of the save region.
+extern bool sProgressiveModePrompt;       // Echoes name; the second bit of the save region.
 
-// Unnamed main.cpp functions that RsMain calls; not implemented yet.
-extern "C" void fn_8000A78C(CMain*); // Programs the GX performance metrics from debug options.
-extern "C" void fn_800074A8(CMain*); // Saves/loads tweaks on request of debug options.
-extern "C" void fn_8000C888();       // Resolves asset ids once all paks are loaded.
-
-// Guessed. Owns the screenshot capture buffer between frames; handed to fn_800077C4, which
-// services sTakeScreenshot and the capture debug options.
+// Guessed. Owns the screenshot capture buffer between frames. The object belongs to
+// ScreenCapture.cpp, whose functions 0x8020B4D0/0x8020B4E0/0x8020B534 test, free and allocate
+// the buffer at 0x4 and reset the counter at 0x8.
 struct SScreenshotState {
   SScreenshotState() : x8_(0) {}
 
   rstl::auto_ptr< uchar > x0_buffer;
   uint x8_;
 };
-extern "C" void fn_800077C4(SScreenshotState& state);
+
+// Guessed name. Draws the safe frame on request of a debug option, takes the screenshot
+// requested through sTakeScreenshot or a debug option, and runs the movie capture.
+void UpdateScreenCapture(SScreenshotState& state);
 
 // Guessed name. A named CGameProfiler section that RsMain keeps open around a frame; the
 // section is closed around EndScene and when it goes out of scope.
@@ -282,20 +265,20 @@ class CProfileSection {
 public:
   CProfileSection(const rstl::string& name) : mName(name), mActive(true) {
     if (gpGameProfiler != nullptr) {
-      fn_8016D054(gpGameProfiler, mName.data());
+      gpGameProfiler->EnableProfileGroup(mName.data());
     }
   }
   ~CProfileSection() { Stop(); }
 
   void Stop() {
     if (gpGameProfiler != nullptr && mActive) {
-      fn_8016CED0(gpGameProfiler, mName.data());
+      gpGameProfiler->DisableProfileGroup(mName.data());
       mActive = false;
     }
   }
   void Start() {
     if (gpGameProfiler != nullptr && !mActive) {
-      fn_8016D054(gpGameProfiler, mName.data());
+      gpGameProfiler->EnableProfileGroup(mName.data());
       mActive = true;
     }
   }
@@ -434,10 +417,10 @@ void CMain::InitializeSubsystems() {
   printf("Stack: 0x%8.8x down to 0x%8.8x\n", thread->stackBase, thread->stackEnd);
 
   CElementGen::Initialize();
-  fn_80584CE4();
+  CAnimData::InitializeCache();
   CARAMManager::Initialize(0x800, 0x600000, 0x1000);
-  fn_800ECE20();
-  fn_800E1A2C();
+  CDecalManager::Initialize();
+  CDamageVulnerability::Initialize();
   CFrameDelayedKiller::Initialize();
   if (CBBASupport_InitializeBBA(0)) {
     printf("*************************\n");
@@ -446,21 +429,21 @@ void CMain::InitializeSubsystems() {
   }
   CBBASupport_RegisterStringMessageCallback(
       0, TStaticCallback2< int, const rstl::string& >::Make(ReceiveBBACommand));
-  fn_8016E164(4);
+  allocate_profiler(4);
 }
 
 void CMain::ShutdownSubsystems() {
-  fn_8016E0DC();
+  free_profiler();
   CFrameDelayedKiller::ShutDown();
-  fn_800ECCFC();
+  CDecalManager::ShutDown();
   CElementGen::ShutDown();
-  fn_80584C60();
+  CAnimData::FreeCache();
   CAudioManager_Shutdown();
   FreeTweaks();
   CBBASupport_Shutdown();
-  fn_80209778();
-  fn_80037358();
-  fn_800E19B8();
+  ShutdownConsoleCommands();
+  CWorld::ClearLockedTokens();
+  CDamageVulnerability::Shutdown();
 
   OSThread* thread = OSGetCurrentThread();
   uchar* stackEnd =
@@ -538,10 +521,10 @@ bool CMain::CheckReset() {
       __PADDisableRecalibration(false);
     } else {
       CGameOptions& options = gpGameState->GameOptions();
-      options.SetScreenBrightness(4, fn_8017DD30(4, 0, 8), false);
-      options.SetScreenPositionX(0, fn_8017DD30(0, -30, 30), false);
-      options.SetScreenPositionY(0, fn_8017DD30(0, -19, 19), false);
-      options.SetScreenStretch(0, fn_8017DD30(0, -10, 10), false);
+      options.SetScreenBrightness(4, CGameOptions::GetSliderPosition(4, 0, 8), false);
+      options.SetScreenPositionX(0, CGameOptions::GetSliderPosition(0, -30, 30), false);
+      options.SetScreenPositionY(0, CGameOptions::GetSliderPosition(0, -19, 19), false);
+      options.SetScreenStretch(0, CGameOptions::GetSliderPosition(0, -10, 10), false);
       __PADDisableRecalibration(true);
     }
     {
@@ -618,7 +601,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
   {
     rstl::string audioTweaksStatus;
     bool showAudioTweaksStatus;
-    if (fn_8017ECB0(gpTweakManager, rstl::string_l("AudioTweaks"))) {
+    if (gpTweakManager->ReadFromMemoryCard(rstl::string_l("AudioTweaks"))) {
       audioTweaksStatus = rstl::string_l("Loaded audio tweaks from memory card\n");
       showAudioTweaksStatus = true;
     } else {
@@ -657,13 +640,13 @@ int CMain::RsMain(int argc, const char* const* argv) {
     }
 
     while (!mFinished) {
-      fn_8016D600(gpGameProfiler, 1.f / 60.f);
+      gpGameProfiler->Update(1.f / 60.f);
       CProfileSection section(rstl::string_l("Update+Render"));
       architecture->GetStopwatch2().Reset();
       gpResourceFactory->GetResLoader().AsyncIdlePakLoading();
       if (gpMemoryCard == nullptr && gpResourceFactory->GetResLoader().AreAllPaksLoaded()) {
         MemoryCardInitializePump();
-        fn_8000C888();
+        CheckForDuplicateWorlds();
       }
       CARAMManager::CollectGarbage();
       CARAMToken::UpdateAllDMAs();
@@ -674,7 +657,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
       mTickTimes.AddValue(tickTime / (1.f / 60.f));
       mAverageTickTime = mTickTimes.GetAverage().data();
       architecture->GetStopwatch2().Reset();
-      fn_8000A78C(this);
+      UpdateGPMetrics();
 
       if (showAudioTweaksStatus) {
         showAudioTweaksStatus = false;
@@ -700,8 +683,8 @@ int CMain::RsMain(int argc, const char* const* argv) {
         architecture->GetIOWinManager().Draw();
         x70_frameCallbacks.x48_preDraw.Emit();
         DrawDebugMetrics(tickTime, architecture->GetStopwatch2());
-        fn_803E7CE4();
-        fn_800077C4(screenshot);
+        UpdateAudioDebug();
+        UpdateScreenCapture(screenshot);
         const double drawTime = architecture->GetStopwatch2().GetElapsedTime();
         mDrawTimes.AddValue(drawTime / (1.f / 60.f));
         mAverageDrawTime = mDrawTimes.GetAverage().data();
@@ -751,7 +734,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
       if (resetArchitecture) {
         mRestartMode = kRM_Default;
         CStreamAudioManager::StopAll();
-        fn_8065B4A0(0xf0000000);
+        PADRecalibrate(0xf0000000);
         CGraphics::SetIsBeginSceneClearFb(true);
         CGraphics::BeginScene();
         CGraphics::EndScene();
@@ -760,7 +743,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
         architecture = new ("Main.cpp(2689) : ", nullptr) CGameArchitectureSupport(*mOsContext);
         mArchSupport = architecture.get();
       }
-      fn_800074A8(this);
+      UpdateTweakDebugOptions();
     }
   }
 

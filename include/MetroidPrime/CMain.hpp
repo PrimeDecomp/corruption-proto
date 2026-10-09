@@ -63,6 +63,13 @@ public:
   bool CheckTerminate();
   void AddWorldPaks();
   void DrawDebugMetrics(double dt, CStopwatch& stopWatch);
+  // Guessed name. Programs the GX performance counters from a debug option every frame.
+  void UpdateGPMetrics();
+  // Guessed name. Services the "Load/Save Tweaks from/to PC Host/Memory Card" debug options.
+  void UpdateTweakDebugOptions();
+  // Guessed name. Once all paks are loaded, asserts that no two world paks hold the same MLVL
+  // ("Duplicate worlds found: %s and %s.  Delete one of the pakfiles from your drive!").
+  static void CheckForDuplicateWorlds();
 
   // Guessed name: the "screenshot" console command prints "Taking screenshot.\n" and calls
   // this, which only raises a flag consumed by the debug draw path.

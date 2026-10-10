@@ -1,10 +1,11 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. SoundI is the G2MEAB layout.
 
 #ifndef _FMOD_SOUNDI_H
 #define _FMOD_SOUNDI_H
 
 #include "fmod.h"
 #include "fmod_linkedlist.h"
+#include "fmod_syncpoint.h"
 
 struct FMOD_TAG;
 struct FMOD_VECTOR;
@@ -22,55 +23,63 @@ namespace FMOD {
 
 const int DEFAULT_FREQUENCY = 44100;
 const unsigned int SOUND_READCHUNKSIZE = 16384;
+// G2MEAB layout (0x348) from SoundI() 0x80616098 and accesses in fmod_soundi, fmod_sound_sample,
+// fmod_sample_software and fmod_sound_stream. The base node's vptr (+0x10) takes the SoundI vtable
+// 0x806EF4DC; its slots follow the 4.06 virtual order after the inherited destructor. Differences from
+// 4.06: an embedded 256-byte name, no mDefaultChannelMask, mSubSampleParent (set to this) ahead of the
+// subsound block, an embedded SyncPoint head, a second node and several unresolved words.
 struct SoundI : public LinkedListNode
 {
-    FMOD_SOUND_TYPE mType; // offset 0x10
-    FMOD_SOUND_FORMAT mFormat; // offset 0x14
-    FMOD_MODE mMode; // offset 0x18
-    char * mName; // offset 0x1C
-    unsigned int mPosition; // offset 0x20
-    unsigned int mLength; // offset 0x24
-    unsigned int mLengthBytes; // offset 0x28
-    unsigned int mLoopStart; // offset 0x2C
-    unsigned int mLoopLength; // offset 0x30
-    int mLoopCount; // offset 0x34
-    Codec * mCodec; // offset 0x38
-    int mChannels; // offset 0x3C
-    float mDefaultVolume; // offset 0x40
-    float mDefaultFrequency; // offset 0x44
-    float mDefaultPan; // offset 0x48
-    int mDefaultPriority; // offset 0x4C
-    unsigned int mDefaultChannelMask; // offset 0x50
-    float mFrequencyVariation; // offset 0x54
-    float mVolumeVariation; // offset 0x58
-    float mPanVariation; // offset 0x5C
-    float mMinDistance; // offset 0x60
-    float mMaxDistance; // offset 0x64
-    float mConeInsideAngle; // offset 0x68
-    float mConeOutsideAngle; // offset 0x6C
-    float mConeOutsideVolume; // offset 0x70
-    FMOD_VECTOR * mRolloffPoint; // offset 0x74
-    int mNumRolloffPoints; // offset 0x78
-    SoundI * * mSubSound; // offset 0x7C
-    bool mSubSoundShared; // offset 0x80
-    int mNumSubSounds; // offset 0x84
-    int mNumActiveSubSounds; // offset 0x88
-    SoundI * mSubSoundParent; // offset 0x8C
-    int mSubSoundIndex; // offset 0x90
-    int * mSubSoundList; // offset 0x94
-    int mSubSoundListNum; // offset 0x98
-    int mSubSoundListCurrent; // offset 0x9C
-    SoundI * mSubSampleParent; // offset 0xA0
-    void * mUserData; // offset 0xA4
-    SystemI * mSystem; // offset 0xA8
-    unsigned int mMemoryUsed; // offset 0xAC
-    int mNumSyncPoints; // offset 0xB0
-    SyncPoint * mSyncPointHead; // offset 0xB4
-    AsyncData * mAsyncData; // offset 0xB8
-    FMOD_OPENSTATE mOpenState; // offset 0xBC
-    FMOD_SOUND_PCMREADCALLBACK mPostReadCallback; // offset 0xC0
-    FMOD_SOUND_PCMSETPOSCALLBACK mPostSetPositionCallback; // offset 0xC4
-    FMOD_SOUND * mPostCallbackSound; // offset 0xC8
+    FMOD_SOUND_TYPE mType; // offset 0x14
+    FMOD_SOUND_FORMAT mFormat; // offset 0x18
+    FMOD_MODE mMode; // offset 0x1C
+    char mName[256]; // offset 0x20
+    unsigned int mPosition; // offset 0x120
+    unsigned int mLength; // offset 0x124
+    unsigned int mLengthBytes; // offset 0x128
+    unsigned int mLoopStart; // offset 0x12C
+    unsigned int mLoopLength; // offset 0x130
+    int mLoopCount; // offset 0x134
+    Codec * mCodec; // offset 0x138
+    int mChannels; // offset 0x13C
+    float mDefaultVolume; // offset 0x140
+    float mDefaultFrequency; // offset 0x144
+    float mDefaultPan; // offset 0x148
+    int mDefaultPriority; // offset 0x14C
+    float mFrequencyVariation; // offset 0x150
+    float mVolumeVariation; // offset 0x154
+    float mPanVariation; // offset 0x158
+    float mMinDistance; // offset 0x15C
+    float mMaxDistance; // offset 0x160
+    float mConeInsideAngle; // offset 0x164
+    float mConeOutsideAngle; // offset 0x168
+    float mConeOutsideVolume; // offset 0x16C
+    FMOD_VECTOR * mRolloffPoint; // offset 0x170
+    int mNumRolloffPoints; // offset 0x174
+    SoundI * mSubSampleParent; // offset 0x178, Guessed name (the constructor stores this, as 4.06 does)
+    SoundI * * mSubSound; // offset 0x17C
+    int mNumSubSounds; // offset 0x180
+    int mNumActiveSubSounds; // offset 0x184
+    SoundI * mSubSoundParent; // offset 0x188
+    int mSubSoundIndex; // offset 0x18C
+    int * mSubSoundList; // offset 0x190
+    int mSubSoundListNum; // offset 0x194
+    int mSubSoundListCurrent; // offset 0x198
+    void * mUserData; // offset 0x19C
+    SystemI * mSystem; // offset 0x1A0
+    int mNumSyncPoints; // offset 0x1A4
+    SyncPoint mSyncPointHead; // offset 0x1A8, embedded (4.06 holds a pointer)
+    AsyncData * mAsyncData; // offset 0x2C4
+    LinkedListNode mUnk2C8; // offset 0x2C8, unresolved
+    int mUnk2DC; // offset 0x2DC, unresolved
+    unsigned char mUnk2E0[0x4C]; // offset 0x2E0, unresolved (no access in the Sound TUs)
+    bool mUnk32C; // offset 0x32C, unresolved
+    FMOD_OPENSTATE mOpenState; // offset 0x330, Guessed name (4.06 constructor store position)
+    int mUnk334; // offset 0x334, unresolved
+    int mUnk338; // offset 0x338, unresolved
+    FMOD_SOUND_PCMREADCALLBACK mPostReadCallback; // offset 0x33C
+    FMOD_SOUND_PCMSETPOSCALLBACK mPostSetPositionCallback; // offset 0x340
+    FMOD_SOUND * mPostCallbackSound; // offset 0x344
     FMOD_RESULT updateSubSound(int);
     FMOD_RESULT getBytesFromSamples(unsigned int, unsigned int *);
     FMOD_RESULT getBytesFromSamples(unsigned int, unsigned int *, int, FMOD_SOUND_FORMAT);

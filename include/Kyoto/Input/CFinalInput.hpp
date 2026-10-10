@@ -11,10 +11,10 @@ class CControllerGamepadData;
 class COsContext;
 
 class CFinalInput {
+public:
   static const float kInput_AnalogOnThreshhold;
   static const float kInput_AnalogTriggerOnThreshhold;
 
-public:
   CFinalInput();
   CFinalInput(int channel, float dt, const CControllerGamepadData& data, float leftDif,
               float rightDiv);

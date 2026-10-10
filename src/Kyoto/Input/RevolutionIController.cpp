@@ -12,8 +12,5 @@ IController::IController() {}
 IController::~IController() {}
 
 IController* IController::Create(const COsContext& ctx) {
-  // The reference backend still requires this separate Initialize call.
-  CRevolutionController* cont = new CRevolutionController();
-  cont->Initialize();
-  return cont;
+  return rs_new_line(60) CRevolutionController();
 }

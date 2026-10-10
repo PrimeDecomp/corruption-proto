@@ -24,11 +24,73 @@ typedef struct FMOD_DSP FMOD_DSP;
 typedef struct FMOD_GEOMETRY FMOD_GEOMETRY;
 typedef struct FMOD_SYNCPOINT FMOD_SYNCPOINT;
 typedef unsigned int FMOD_MODE;
+#ifndef FMOD_DEFAULT
+// FMOD Ex mode bits. G2MEAB evidence: FMOD_3D (Output::getFreeChannel 0x8060ED74), FMOD_OPENMEMORY
+// (AsyncThread::threadFunc), FMOD_ACCURATETIME (CodecMPEG::setPositionInternal).
+#define FMOD_DEFAULT 0x00000000
+#define FMOD_LOOP_OFF 0x00000001
+#define FMOD_LOOP_NORMAL 0x00000002
+#define FMOD_LOOP_BIDI 0x00000004
+#define FMOD_2D 0x00000008
+#define FMOD_3D 0x00000010
+#define FMOD_HARDWARE 0x00000020
+#define FMOD_SOFTWARE 0x00000040
+#define FMOD_CREATESTREAM 0x00000080
+#define FMOD_CREATESAMPLE 0x00000100
+#define FMOD_CREATECOMPRESSEDSAMPLE 0x00000200
+#define FMOD_OPENUSER 0x00000400
+#define FMOD_OPENMEMORY 0x00000800
+#define FMOD_OPENRAW 0x00001000
+#define FMOD_OPENONLY 0x00002000
+#define FMOD_ACCURATETIME 0x00004000
+#define FMOD_MPEGSEARCH 0x00008000
+#define FMOD_NONBLOCKING 0x00010000
+#define FMOD_IGNORETAGS 0x02000000 // CodecTag::openInternal 0x805E73D4
+#endif
 typedef unsigned int FMOD_TIMEUNIT;
 typedef unsigned int FMOD_INITFLAGS;
 typedef unsigned int FMOD_CAPS;
+#ifndef FMOD_CAPS_NONE
+// FMOD Ex capability bits; OutputNoSound::getDriverCaps 0x8060F2BC sets 0x4..0x80.
+#define FMOD_CAPS_NONE 0x00000000
+#define FMOD_CAPS_HARDWARE 0x00000001
+#define FMOD_CAPS_HARDWARE_EMULATED 0x00000002
+#define FMOD_CAPS_OUTPUT_MULTICHANNEL 0x00000004
+#define FMOD_CAPS_OUTPUT_FORMAT_PCM8 0x00000008
+#define FMOD_CAPS_OUTPUT_FORMAT_PCM16 0x00000010
+#define FMOD_CAPS_OUTPUT_FORMAT_PCM24 0x00000020
+#define FMOD_CAPS_OUTPUT_FORMAT_PCM32 0x00000040
+#define FMOD_CAPS_OUTPUT_FORMAT_PCMFLOAT 0x00000080
+#endif
 typedef unsigned int FMOD_DEBUGLEVEL;
 typedef unsigned int FMOD_MEMORY_TYPE;
+
+#ifndef FMOD_TIMEUNIT_MS
+// FMOD Ex time unit and 3D mode bits. G2MEAB evidence: ChannelReal::getPosition 0x805B7320 (sentence
+// units, BUFFERED stripped), ChannelReal::setMode 0x805B77CC (3D relative/rolloff bits).
+#define FMOD_TIMEUNIT_MS 0x00000001
+#define FMOD_TIMEUNIT_PCM 0x00000002
+#define FMOD_TIMEUNIT_PCMBYTES 0x00000004
+#define FMOD_TIMEUNIT_RAWBYTES 0x00000008
+#define FMOD_INIT_SOFTWARE_DISABLE 0x00000004 // SystemI::createDSP 0x80620490 tests bit 2
+#ifndef FMOD_INIT_3D_RIGHTHANDED
+#define FMOD_INIT_3D_RIGHTHANDED 0x00000002 // ChannelI::calcVolumeAndPitchFor3D 0x805BD588 negates z on bit 1 (group B)
+#endif
+#define FMOD_TIMEUNIT_SENTENCE_MS 0x00010000
+#define FMOD_TIMEUNIT_SENTENCE_PCM 0x00020000
+#define FMOD_TIMEUNIT_SENTENCE_PCMBYTES 0x00040000
+#define FMOD_TIMEUNIT_SENTENCE 0x00080000
+#define FMOD_TIMEUNIT_SENTENCE_SUBSOUND 0x00100000
+#define FMOD_TIMEUNIT_BUFFERED 0x10000000
+#define FMOD_3D_HEADRELATIVE 0x00040000
+#define FMOD_3D_WORLDRELATIVE 0x00080000
+#define FMOD_3D_LOGROLLOFF 0x00100000
+#define FMOD_3D_LINEARROLLOFF 0x00200000
+#define FMOD_3D_CUSTOMROLLOFF 0x04000000
+#endif
+#define FMOD_TIMEUNIT_MODORDER 0x00000100
+#define FMOD_TIMEUNIT_MODROW 0x00000200
+#define FMOD_TIMEUNIT_MODPATTERN 0x00000400
 struct FMOD_VECTOR
 {
     float x; // offset 0x0
@@ -250,9 +312,10 @@ typedef FMOD_RESULT (* FMOD_FILE_OPENCALLBACK)(const char *, int, unsigned int *
 typedef FMOD_RESULT (* FMOD_FILE_CLOSECALLBACK)(void *, void *);
 typedef FMOD_RESULT (* FMOD_FILE_READCALLBACK)(void *, void *, unsigned int, unsigned int *, void *);
 typedef FMOD_RESULT (* FMOD_FILE_SEEKCALLBACK)(void *, unsigned int, void *);
-typedef void * (* FMOD_MEMORY_ALLOCCALLBACK)(unsigned int, FMOD_MEMORY_TYPE);
-typedef void * (* FMOD_MEMORY_REALLOCCALLBACK)(void *, unsigned int, FMOD_MEMORY_TYPE);
-typedef void (* FMOD_MEMORY_FREECALLBACK)(void *, FMOD_MEMORY_TYPE);
+// G2MEAB: MemPool::alloc/realloc/free 0x8060BB58/0x8060BEE0/0x8060BDB0 call these with no memory type.
+typedef void * (* FMOD_MEMORY_ALLOCCALLBACK)(unsigned int);
+typedef void * (* FMOD_MEMORY_REALLOCCALLBACK)(void *, unsigned int);
+typedef void (* FMOD_MEMORY_FREECALLBACK)(void *);
 enum FMOD_DSP_FFT_WINDOW {
     FMOD_DSP_FFT_WINDOW_RECT = 0,
     FMOD_DSP_FFT_WINDOW_TRIANGLE = 1,
@@ -372,6 +435,8 @@ struct FMOD_REVERB_PROPERTIES
 };
 
 typedef FMOD_REVERB_PROPERTIES FMOD_REVERB_PROPERTIES;
+// G2MEAB: the initializer SystemI::SystemI 0x8061E9B4 copies from 0x806B06F8 (FMOD Ex public preset).
+#define FMOD_PRESET_OFF { 0, -1, 7.5f, 1.00f, -10000, -10000, 0, 1.00f, 1.00f, 1.0f, -2602, 0.007f, { 0.0f, 0.0f, 0.0f }, 200, 0.011f, { 0.0f, 0.0f, 0.0f }, 0.250f, 0.00f, 0.25f, 0.000f, -5.0f, 5000.0f, 250.0f, 0.0f, 0.0f, 0.0f, 0x33f }
 struct FMOD_REVERB_CHANNELPROPERTIES
 {
     int Direct; // offset 0x0
@@ -395,15 +460,22 @@ struct FMOD_REVERB_CHANNELPROPERTIES
 };
 
 typedef FMOD_REVERB_CHANNELPROPERTIES FMOD_REVERB_CHANNELPROPERTIES;
+
+// Pre-4.06 instance bits (4.06 moved them to 0x10..0x80). G2MEAB evidence: ChannelGC::setReverbProperties
+// 0x80622A70 tests 0x8 (aux A), 0x10 (aux B) and rejects 0x20 with FMOD_ERR_REVERB_INSTANCE (group B).
+#ifndef FMOD_REVERB_CHANNELFLAGS_ENVIRONMENT0
+#define FMOD_REVERB_CHANNELFLAGS_ENVIRONMENT0 0x00000008 // Probable name
+#define FMOD_REVERB_CHANNELFLAGS_ENVIRONMENT1 0x00000010 // Probable name
+#define FMOD_REVERB_CHANNELFLAGS_ENVIRONMENT2 0x00000020 // Probable name
+#endif
 struct FMOD_ADVANCEDSETTINGS
 {
     int cbsize; // offset 0x0
     int maxMPEGcodecs; // offset 0x4
     int maxADPCMcodecs; // offset 0x8
     int maxXMAcodecs; // offset 0xC
-    int ASIONumChannels; // offset 0x10
-    char * * ASIOChannelList; // offset 0x14
 };
+// G2MEAB: 0x10 bytes, no ASIO members (SystemI+0xC60, SystemI::mUserData follows at +0xC70).
 
 typedef FMOD_ADVANCEDSETTINGS FMOD_ADVANCEDSETTINGS;
 enum FMOD_CHANNELINDEX {

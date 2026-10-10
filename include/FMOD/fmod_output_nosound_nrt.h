@@ -13,10 +13,14 @@ namespace FMOD {
 
 namespace FMOD {
 
-// Synthesized from the definitions in fmod_output_nosound_nrt.cpp: the 4.06 DWARF has no type entry,
-// so the base class is guessed and members are unknown.
+// Synthesized from the definitions in fmod_output_nosound_nrt.cpp: the 4.06 DWARF has no type entry.
+// G2MEAB: sizeof 0xDC (getDescriptionEx 0x806262F4 mSize); init 0x80626430 stores dspbufferlength at +0xD4
+// and the calloc'd buffer at +0xD8; update 0x8062664C mixes mBufferLength samples into mBuffer.
 struct OutputNoSound_NRT : public Output
 {
+    unsigned int mBufferLength; // offset 0xD4, Guessed name
+    void * mBuffer; // offset 0xD8, Guessed name
+
     static FMOD_OUTPUT_DESCRIPTION_EX * getDescriptionEx();
     FMOD_RESULT getNumDrivers(int * numdrivers);
     FMOD_RESULT getDriverName(int driver, char * name, int namelen);

@@ -14,12 +14,15 @@ namespace FMOD {
 
 namespace FMOD {
 
-// G2MEAB: vtable 0x806EF030. Stream() 0x80615750 clears mSample and the bytes at +0x350/+0x35C, sets
-// +0x354 to 1 and +0x358 to -1. Fields follow the 4.06 order without mLastPos.
+// G2MEAB: vtable 0x806EF030. Fields follow the 4.06 order without mChannel: flush 0x80615AD8
+// fills mSample->mLength from +0x348 and fill 0x806157B0 reads/seeks/clears through it; Stream()
+// 0x80615750 clears mLastPos (+0x34C, as 4.06 clears mLastPos) and mSubSound, sets +0x354 to 1 and
+// +0x358 to -1; setPosition 0x80615B1C stores the position in mPosition and mLastPos; getPosition
+// 0x80615D20 reports mLastPos.
 struct Stream : public SoundI
 {
-    ChannelStream * mChannel; // offset 0x348
-    Sample * mSample; // offset 0x34C
+    Sample * mSample; // offset 0x348
+    unsigned int mLastPos; // offset 0x34C
     bool mFinished; // offset 0x350
     int mBlockSize; // offset 0x354
     int mLoopCountCurrent; // offset 0x358

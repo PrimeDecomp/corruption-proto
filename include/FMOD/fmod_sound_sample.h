@@ -27,7 +27,7 @@ struct Sample : public SoundI
     Sample();
     virtual FMOD_RESULT lock(unsigned int offset, unsigned int length, void * * ptr1, void * * ptr2, unsigned int * len1, unsigned int * len2);
     virtual FMOD_RESULT unlock(void * ptr1, void * ptr2, unsigned int len1, unsigned int len2);
-    virtual FMOD_RESULT release(bool freethis);
+    virtual FMOD_RESULT release();
     virtual FMOD_RESULT setDefaults(float frequency, float volume, float pan, int priority);
     virtual FMOD_RESULT setVariations(float frequencyvar, float volumevar, float panvar);
     virtual FMOD_RESULT set3DMinMaxDistance(float min, float max);

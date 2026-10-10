@@ -1,4 +1,4 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. ChannelGroupI is the G2MEAB layout.
 
 #ifndef _FMOD_CHANNELGROUPI_H
 #define _FMOD_CHANNELGROUPI_H
@@ -19,24 +19,33 @@ namespace FMOD {
 
 namespace FMOD {
 
+// G2MEAB layout (0x150): addGroup 0x805BCA28 and SystemI 0x80620924 calloc 0x150 and inline the
+// constructor (node base with vtable 0x806E2AF0 at +0x10, mChannelHead node at +0x28, four 1.0f
+// floats at +0x140..+0x14C); SystemI copies up to 0x100 name bytes to +0x40 and stores itself at
+// +0x14; releaseInternal 0x805BC8F0 uses +0x18 as a DSP, +0x24 as the child group list head and
+// +0x28 as the channel list; addGroup stores the parent at +0x20. The vtable holds only the
+// implicit deleting destructor 0x805BCC28.
 struct ChannelGroupI : public LinkedListNode
 {
     static FMOD_RESULT validate(ChannelGroup * channelgroup, ChannelGroupI * * channelgroupi);
-    SystemI * mSystem; // offset 0xC
-    DSPI * mDSPHead; // offset 0x10
-    void * mUserData; // offset 0x14
-    ChannelGroupI * mParent; // offset 0x18
-    ChannelGroupI * mGroupHead; // offset 0x1C
-    LinkedListNode mChannelHead; // offset 0x20
-    int mNumChannels; // offset 0x2C
-    char * mName; // offset 0x30
-    float mVolume; // offset 0x34
-    float mRealVolume; // offset 0x38
-    float mPitch; // offset 0x3C
-    float mRealPitch; // offset 0x40
-    bool mMute; // offset 0x44
-    bool mPaused; // offset 0x45
-    ChannelGroupI();
+    SystemI * mSystem; // offset 0x14
+    DSPI * mDSPHead; // offset 0x18
+    int mUnk1C; // offset 0x1C, unresolved (4.06 order suggests mUserData)
+    ChannelGroupI * mParent; // offset 0x20
+    ChannelGroupI * mGroupHead; // offset 0x24
+    LinkedListNode mChannelHead; // offset 0x28
+    int mNumChannels; // offset 0x3C, ChannelI::setChannelGroup 0x805BFE88 decrements the old group's and increments the new group's count
+    char mName[256]; // offset 0x40
+    float mVolume; // offset 0x140
+    float mRealVolume; // offset 0x144
+    float mPitch; // offset 0x148
+    float mRealPitch; // offset 0x14C
+
+    ChannelGroupI()
+    {
+        mVolume = mRealVolume = 1.0f;
+        mPitch = mRealPitch = 1.0f;
+    }
     FMOD_RESULT release();
     FMOD_RESULT releaseInternal();
     FMOD_RESULT getSystemObject(System * * system);

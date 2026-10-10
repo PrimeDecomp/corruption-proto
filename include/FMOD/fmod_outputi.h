@@ -65,15 +65,17 @@ struct FMOD_OUTPUT_DESCRIPTION_EX : public FMOD_OUTPUT_DESCRIPTION, public Linke
 
 class Output : public Plugin, public FMOD_OUTPUT_STATE
 {
+    friend class PluginFactory; // createOutput 0x80611AB4 stores mSystem
+    friend struct SystemI; // getHardwareChannels 0x8061EC70 reads the pools, createChannelGroup 0x806208E8 stores mMusicChannelGroup (group A)
 protected:
-    bool mEnumerated; // offset 0x20
-    bool mPolling; // offset 0x21
-    SystemI * mSystem; // offset 0x24
-    ChannelPool * mChannelPool; // offset 0x28
-    ChannelPool * mChannelPool3D; // offset 0x2C
-    ChannelGroupI * mMusicChannelGroup; // offset 0x30
+    bool mEnumerated; // offset 0x28
+    bool mPolling; // offset 0x29
+    SystemI * mSystem; // offset 0x2C
+    ChannelPool * mChannelPool; // offset 0x30
+    ChannelPool * mChannelPool3D; // offset 0x34
+    ChannelGroupI * mMusicChannelGroup; // offset 0x38
 public:
-    FMOD_OUTPUT_DESCRIPTION_EX mDescription; // offset 0x34
+    FMOD_OUTPUT_DESCRIPTION_EX mDescription; // offset 0x3C
     Output();
     virtual FMOD_RESULT release();
     FMOD_RESULT mix(void * buffer, unsigned int numsamples);

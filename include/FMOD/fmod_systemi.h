@@ -1,9 +1,15 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// G2MEAB SystemI layout (sizeof 0x1148, System_Create 0x805B5F60 callocs 0x1148). Offsets come from the
+// constructor 0x8061E5B4, the implicit complete destructor 0x8060B0D4 (emitted in fmod_globals for the
+// static list head 0x807542DC) and member accesses in other TUs. Differences from 4.06: 0x14-byte list
+// node, no DSP connection-request queue or second/third DSP critical section, no plugin index cache, a
+// 0x10-byte FMOD_ADVANCEDSETTINGS, two DSPCodecPools (no RAW pool) and two ChannelStream list heads where
+// 4.06 has ReverbI members. Method declarations are still the 4.06 set.
 
 #ifndef _FMOD_SYSTEMI_H
 #define _FMOD_SYSTEMI_H
 
 #include "fmod.h"
+#include "fmod_channel_stream.h"
 #include "fmod_channelgroupi.h"
 #include "fmod_channeli.h"
 #include "fmod_dsp.h"
@@ -27,14 +33,15 @@ struct FMOD_DSP_DESCRIPTION;
 struct FMOD_REVERB_PROPERTIES;
 struct FMOD_VECTOR;
 namespace FMOD {
+    struct Channel;
     struct ChannelGroupI;
     struct ChannelI;
+    struct ChannelStream;
     class DSPI;
     struct FMOD_DSP_DESCRIPTION_EX;
     struct FMOD_SPEAKERCONFIG;
     class File;
     class GeometryI;
-    struct Global;
     class LinkedListNode;
     struct Listener;
     class Output;
@@ -52,6 +59,7 @@ namespace FMOD {
 
 namespace FMOD {
 
+// G2MEAB: 0x18 bytes, SystemI+0xEC0 [8]; setSpeakerPosition 0x8061FC4C.
 struct FMOD_SPEAKERCONFIG
 {
     FMOD_SPEAKER mSpeaker; // offset 0x0
@@ -67,81 +75,75 @@ const int FMOD_STREAMDECODEBUFFERSIZE_DEFAULT = 400;
 const int FMOD_ADVANCEDSETTINGS_MAXXMACODECS = 32;
 const int FMOD_ADVANCEDSETTINGS_MAXADPCMCODECS = 32;
 const int FMOD_ADVANCEDSETTINGS_MAXMPEGCODECS = 16;
+// vtable 0x806EE00C (only the node destructor slot).
 struct SystemI : public LinkedListNode
 {
-    bool mInitialized; // offset 0xC
-    bool mPluginsLoaded; // offset 0xD
-    unsigned int mMainThreadID; // offset 0x10
-    FMOD_INITFLAGS mFlags; // offset 0x14
-    SoundI mSoundListHead; // offset 0x18
+    bool mInitialized; // offset 0x14
+    bool mPluginsLoaded; // offset 0x15
+    unsigned int mMainThreadID; // offset 0x18
+    FMOD_INITFLAGS mFlags; // offset 0x1C
+    SoundI mSoundListHead; // offset 0x20
     static FMOD_OS_CRITICALSECTION * gSoundListCrit;
-    int mNumChannels; // offset 0xE4
-    ChannelI * mChannel; // offset 0xE8
-    ChannelI mChannelUsedListHead; // offset 0xEC
-    ChannelI mChannelFreeListHead; // offset 0x228
-    LinkedListNode mChannelSortedListHead; // offset 0x364
-    Output * mOutput; // offset 0x374
-    FMOD_OUTPUTTYPE mOutputType; // offset 0x378
-    FMOD_SOUND_FORMAT mOutputFormat; // offset 0x37C
-    int mOutputRate; // offset 0x380
-    int mOutputIndex; // offset 0x384
-    int mMaxInputChannels; // offset 0x388
-    int mMaxOutputChannels; // offset 0x38C
-    int mSelectedDriver; // offset 0x390
-    OutputEmulated * mEmulated; // offset 0x394
-    int mSelectedRecordDriver; // offset 0x398
-    unsigned int mDSPBlockSize; // offset 0x39C
-    unsigned int mDSPBufferSize; // offset 0x3A0
-    float * mDSPReadBuff[2]; // offset 0x3A4
-    float * mDSPReadBuffMem[2]; // offset 0x3AC
-    float * mDSPMixBuff[128]; // offset 0x3B4
-    DSPConnectionPool mDSPConnectionPool; // offset 0x5B4
-    FMOD_OS_CRITICALSECTION * mDSPCrit; // offset 0xE64
-    FMOD_OS_CRITICALSECTION * mDSPConnectionCrit; // offset 0xE68
-    FMOD_OS_CRITICALSECTION * mDSPQueueCrit; // offset 0xE6C
-    bool mDSPActive; // offset 0xE70
-    DSPI * mDSPSoundCard; // offset 0xE74
-    DSPI * mDSPChannelGroupTarget; // offset 0xE78
-    TimeStamp mDSPTimeStamp; // offset 0xE7C
-    int mDSPReadBuffIndex; // offset 0xEB4
-    DSPConnectionRequest mConnectionRequest[512]; // offset 0xEB8
-    DSPConnectionRequest mConnectionRequestUsedHead; // offset 0x46B8
-    DSPConnectionRequest mConnectionRequestFreeHead; // offset 0x46D4
-    bool mConnectionRequestFlushing; // offset 0x46F0
-    Listener mListener[4]; // offset 0x46F4
-    int mNumListeners; // offset 0x48B4
-    float mDistanceScale; // offset 0x48B8
-    float mRolloffScale; // offset 0x48BC
-    float mDopplerScale; // offset 0x48C0
-    PluginFactory * mPluginFactory; // offset 0x48C4
-    char mPluginPath[256]; // offset 0x48C8
-    int mFSBPluginIndex; // offset 0x49C8
-    int mWAVPluginIndex; // offset 0x49CC
-    int mMPEGPluginIndex; // offset 0x49D0
-    FMOD_ADVANCEDSETTINGS mAdvancedSettings; // offset 0x49D4
-    void * mUserData; // offset 0x49EC
-    TimeStamp mUpdateTimeStamp; // offset 0x49F0
-    unsigned int mLastTimeStamp; // offset 0x4A28
-    unsigned int mIndex; // offset 0x4A2C
-    int mNumSoftwareChannels; // offset 0x4A30
-    int mMinHardwareChannels2D; // offset 0x4A34
-    int mMaxHardwareChannels2D; // offset 0x4A38
-    int mMinHardwareChannels3D; // offset 0x4A3C
-    int mMaxHardwareChannels3D; // offset 0x4A40
-    ChannelGroupI * mChannelGroup; // offset 0x4A44
-    ChannelGroupI mChannelGroupHead; // offset 0x4A48
-    FMOD_DSP_RESAMPLER mResampleMethod; // offset 0x4A90
-    MemSingleton mMultiSubSampleLockBuffer; // offset 0x4A94
-    FMOD_FILE_OPENCALLBACK mOpenRiderCallback; // offset 0x4A9C
-    FMOD_FILE_CLOSECALLBACK mCloseRiderCallback; // offset 0x4AA0
-    FMOD_FILE_READCALLBACK mReadRiderCallback; // offset 0x4AA4
-    FMOD_FILE_SEEKCALLBACK mSeekRiderCallback; // offset 0x4AA8
-    FMOD_REVERB_PROPERTIES mReverbProperties; // offset 0x4AAC
-    unsigned int mStreamFileBufferSize; // offset 0x4B28
-    FMOD_TIMEUNIT mStreamFileBufferSizeType; // offset 0x4B2C
-    FMOD_SPEAKERMODE mSpeakerMode; // offset 0x4B30
-    FMOD_SPEAKERCONFIG mSpeaker[8]; // offset 0x4B34
-    FMOD_SPEAKERCONFIG * mSpeakerList[8]; // offset 0x4BF4
+    int mNumChannels; // offset 0x368
+    ChannelI * mChannel; // offset 0x36C
+    ChannelI mChannelUsedListHead; // offset 0x370
+    ChannelI mChannelFreeListHead; // offset 0x4AC
+    LinkedListNode mChannelSortedListHead; // offset 0x5E8
+    Output * mOutput; // offset 0x5FC
+    FMOD_OUTPUTTYPE mOutputType; // offset 0x600
+    FMOD_SOUND_FORMAT mOutputFormat; // offset 0x604, ctor 2
+    int mOutputRate; // offset 0x608, ctor 48000
+    int mOutputIndex; // offset 0x60C
+    int mMaxOutputChannels; // offset 0x610, setSpeakerMode 0x8061ED84 writes 1/2
+    int mSelectedDriver; // offset 0x614, ctor -1
+    int mMaxInputChannels; // offset 0x618, ctor 8
+    OutputEmulated * mEmulated; // offset 0x61C
+    int mSelectedRecordDriver; // offset 0x620, ctor -1
+    unsigned int mDSPBlockSize; // offset 0x624, ctor 0x400
+    unsigned int mDSPBufferSize; // offset 0x628, ctor 0x1000
+    float * mDSPReadBuff[2]; // offset 0x62C
+    float * mDSPMixBuff[128]; // offset 0x634
+    DSPConnectionPool mDSPConnectionPool; // offset 0x834
+    FMOD_OS_CRITICALSECTION * mDSPCrit; // offset 0x934
+    bool mDSPActive; // offset 0x938
+    DSPI * mDSPSoundCard; // offset 0x93C
+    int mUnk940; // offset 0x940, not accessed in FMOD code
+    DSPI * mDSPChannelGroupTarget; // offset 0x944, released in closeEx 0x8061F844
+    TimeStamp mDSPTimeStamp; // offset 0x948
+    int mDSPReadBuffIndex; // offset 0x980
+    Listener mListener[4]; // offset 0x984, __construct_array with 0x8060B50C
+    int mNumListeners; // offset 0xB44, ctor 1
+    float mDistanceScale; // offset 0xB48, ctor 1.0
+    float mRolloffScale; // offset 0xB4C, ctor 1.0
+    float mDopplerScale; // offset 0xB50, ctor 1.0
+    int mUnkB54; // offset 0xB54, not accessed in FMOD code
+    int mUnkB58; // offset 0xB58, ctor 1
+    PluginFactory * mPluginFactory; // offset 0xB5C
+    char mPluginPath[256]; // offset 0xB60
+    FMOD_ADVANCEDSETTINGS mAdvancedSettings; // offset 0xC60 (0x10; ctor 16/32/32)
+    void * mUserData; // offset 0xC70
+    TimeStamp mUpdateTimeStamp; // offset 0xC74
+    unsigned int mLastTimeStamp; // offset 0xCAC
+    unsigned int mIndex; // offset 0xCB0, 1..15 from System_Create
+    int mNumSoftwareChannels; // offset 0xCB4, ctor 64
+    int mMinHardwareChannels2D; // offset 0xCB8
+    int mMaxHardwareChannels2D; // offset 0xCBC, ctor 1000
+    int mMinHardwareChannels3D; // offset 0xCC0
+    int mMaxHardwareChannels3D; // offset 0xCC4, ctor 1000
+    ChannelGroupI * mChannelGroup; // offset 0xCC8
+    ChannelGroupI mChannelGroupHead; // offset 0xCCC
+    FMOD_DSP_RESAMPLER mResampleMethod; // offset 0xE1C, ctor 1
+    MemSingleton mMultiSubSampleLockBuffer; // offset 0xE20 (Sample::release 0x80615224)
+    FMOD_REVERB_PROPERTIES mReverbProperties; // offset 0xE28, ctor copies lbl_806B06F8
+    FMOD_FILE_OPENCALLBACK mOpenRiderCallback; // offset 0xEA4 (fmod_file 0x806089EC)
+    FMOD_FILE_CLOSECALLBACK mCloseRiderCallback; // offset 0xEA8
+    FMOD_FILE_READCALLBACK mReadRiderCallback; // offset 0xEAC
+    FMOD_FILE_SEEKCALLBACK mSeekRiderCallback; // offset 0xEB0
+    unsigned int mStreamFileBufferSize; // offset 0xEB4, ctor 0x4000
+    FMOD_TIMEUNIT mStreamFileBufferSizeType; // offset 0xEB8, ctor 8 (RAWBYTES)
+    FMOD_SPEAKERMODE mSpeakerMode; // offset 0xEBC
+    FMOD_SPEAKERCONFIG mSpeaker[8]; // offset 0xEC0
+    FMOD_SPEAKERCONFIG * mSpeakerList[8]; // offset 0xF80
     static void streamThread(void * data);
     static LinkedListNode gStreamHead;
     static Thread gStreamThread;
@@ -150,15 +152,12 @@ struct SystemI : public LinkedListNode
     static FMOD_OS_CRITICALSECTION * gStreamFillCrit;
     static FMOD_OS_CRITICALSECTION * gStreamListCrit;
     static TimeStamp gStreamTimeStamp;
-    OutputSoftware * mSoftware; // offset 0x4C14
-    DSPCodecPool mDSPCodecPool_MPEG; // offset 0x4C18
-    DSPCodecPool mDSPCodecPool_ADPCM; // offset 0x4D28
-    DSPCodecPool mDSPCodecPool_RAW; // offset 0x4E38
-    GeometryI * mGeometryList; // offset 0x4F48
-    GeometryMgr mGeometryMgr; // offset 0x4F4C
-    ReverbI mListenerReverb; // offset 0x4F64
-    ReverbI mReverbHead; // offset 0x500C
-    unsigned int mNumReverbs; // offset 0x50B4
+    OutputSoftware * mSoftware; // offset 0xFA0
+    DSPCodecPool mDSPCodecPool_MPEG; // offset 0xFA4 (0x10; ctor stores mSystem, codec_mpeg reads +0x4)
+    DSPCodecPool mDSPCodecPool_ADPCM; // offset 0xFB4
+    GeometryI * mGeometryList; // offset 0xFC4
+    GeometryMgr mGeometryMgr; // offset 0xFC8, ctor 0x8060A3C8, dtor 0x8060A3E8
+    ChannelStreamPool mStreamPool; // offset 0xFE0 (0x168, ends 0x1148), Guessed name; used list walked via mUsedHead's +0x78 node (0x80620E28)
     FMOD_RESULT getReverbProperties(unsigned int, FMOD_REVERB_PROPERTIES *);
     FMOD_RESULT setReverbProperties(unsigned int, const FMOD_REVERB_PROPERTIES *);
     unsigned int getReverbMaxInstances();
@@ -173,12 +172,41 @@ struct SystemI : public LinkedListNode
     FMOD_RESULT findChannel(FMOD_CHANNELINDEX id, SoundI * sound, ChannelI * * channel);
     FMOD_RESULT findChannel(FMOD_CHANNELINDEX id, DSPI * dsp, ChannelI * * channel);
     FMOD_RESULT createSample(FMOD_MODE mode, FMOD_CODEC_WAVEFORMAT * waveformat, Sample * * sample_out);
-    FMOD_RESULT createDSP(FMOD_DSP_DESCRIPTION_EX * description, DSPI * * dsp, bool allocate);
+    FMOD_RESULT createDSP(FMOD_DSP_DESCRIPTION_EX * description, DSPI * * dsp); // G2MEAB 0x80620600 takes no allocate flag (r6 unread)
     FMOD_RESULT createSoundInternal(const char * name_or_data, FMOD_MODE mode_in, FMOD_CREATESOUNDEXINFO * exinfo, SoundI * * sound);
     FMOD_RESULT setUpPlugins();
     FMOD_RESULT sortSpeakerList();
     FMOD_RESULT allocDSPCodec(FMOD_SOUND_FORMAT format, DSPI * * dsp);
-    FMOD_RESULT getSoftwareFormat(int *, FMOD_SOUND_FORMAT *, int *, int *, FMOD_DSP_RESAMPLER *, int *);
+    // Inline in G2MEAB: expanded in OutputPolled::threadFunc 0x8060F890 / start 0x8060FF30,
+    // OutputNoSound::getPosition 0x8060F584 and OutputNoSound_NRT::init 0x80626454 (4.06 store order).
+    FMOD_RESULT getSoftwareFormat(int * samplerate, FMOD_SOUND_FORMAT * format, int * numoutputchannels, int * maxinputchannels, FMOD_DSP_RESAMPLER * resamplemethod, int * bits)
+    {
+        if (samplerate)
+        {
+            *samplerate = mOutputRate;
+        }
+        if (format)
+        {
+            *format = mOutputFormat;
+        }
+        if (numoutputchannels)
+        {
+            *numoutputchannels = mMaxOutputChannels;
+        }
+        if (maxinputchannels)
+        {
+            *maxinputchannels = mMaxInputChannels;
+        }
+        if (resamplemethod)
+        {
+            *resamplemethod = mResampleMethod;
+        }
+        if (bits)
+        {
+            SoundI::getBitsFromFormat(mOutputFormat, bits);
+        }
+        return FMOD_OK;
+    }
     SystemI();
     FMOD_RESULT release();
     FMOD_RESULT setOutput(FMOD_OUTPUTTYPE outputtype);
@@ -241,9 +269,9 @@ struct SystemI : public LinkedListNode
     FMOD_RESULT createDSPByType(FMOD_DSP_TYPE type, DSPI * * dsp);
     FMOD_RESULT createDSPByIndex(int index, DSPI * * dsp);
     FMOD_RESULT createChannelGroup(const char * name, ChannelGroupI * * channelgroup);
-    FMOD_RESULT playSound(FMOD_CHANNELINDEX channelid, SoundI * sound, bool paused, ChannelI * * channel);
+    FMOD_RESULT playSound(FMOD_CHANNELINDEX channelid, SoundI * sound, bool paused, Channel * * channel); // G2MEAB 0x80620B54 validates *channel as a handle and returns one
     FMOD_RESULT playDSP(FMOD_CHANNELINDEX channelid, DSPI * dsp, bool paused, ChannelI * * channel);
-    FMOD_RESULT getChannel(int id, ChannelI * * channel);
+    FMOD_RESULT getChannel(int id, Channel * * channel); // G2MEAB 0x80620CE4 writes a handle, not a ChannelI *
     FMOD_RESULT getMasterChannelGroup(ChannelGroupI * * channelgroup);
     FMOD_RESULT setReverbProperties(const FMOD_REVERB_PROPERTIES * prop, bool force_create);
     FMOD_RESULT getReverbProperties(FMOD_REVERB_PROPERTIES * prop);
@@ -276,7 +304,6 @@ struct SystemI : public LinkedListNode
     FMOD_RESULT getListenerObject(int listener, Listener * * listenerobject);
     FMOD_RESULT flushDSPConnectionRequests(bool calledfrommainthread);
     static FMOD_RESULT createFile(File * * file);
-    static FMOD_RESULT getGlobals(Global * * global);
 };
 
 } // namespace FMOD

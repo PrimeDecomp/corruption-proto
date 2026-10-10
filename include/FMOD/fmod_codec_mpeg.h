@@ -1,4 +1,5 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. CodecMPEG uses the verified G2MEAB layout;
+// the helper structs keep the 4.06 layout (MPEG_FRAME is confirmed by decodeHeader 0x805D9864).
 
 #ifndef _FMOD_CODEC_MPEG_H
 #define _FMOD_CODEC_MPEG_H
@@ -89,6 +90,7 @@ struct bandInfoStruct
     int shortDiff[13]; // offset 0xEC
 };
 
+// 4.06 reference only: G2MEAB embeds these members in CodecMPEG (see below). Still named by DSPCodecMPEG.
 struct CodecMPEG_MemoryBlock
 {
     int mFrameSize; // offset 0x0
@@ -112,14 +114,38 @@ struct CodecMPEG_MemoryBlock
     bool mHasXingToc; // offset 0x48E5
 };
 
+// G2MEAB layout (sizeof 0x6EF8, the mSize stored by getDescriptionEx 0x805D8160). The 4.06 decoder state
+// (CodecMPEG_MemoryBlock, reached through mMemoryBlock) is embedded directly: decodeHeader 0x805D9864 stores
+// the MPEG_FRAME fields at +0x1FC..+0x248, the bit readers 0x805D975C.. use +0x2670/+0x2674, and
+// setPositionInternal 0x805D9244 clears +0x268 (0x1200), +0x146C (0x1200) and +0x2678 (0x2400). The sync
+// point and frame-length members sit between mFrameOffset and mBSSpace (soundCreateInternal 0x805D9560 walks
+// +0x254 with a 0x11C stride; openInternal passes +0x260 to decodeFrame as outlen). The PCM buffer is inline:
+// openInternal aligns this+0x4AE6 up to 16 bytes into Codec::mPCMBuffer.
 struct CodecMPEG : public Codec
 {
-    CodecMPEG_MemoryBlock * mMemoryBlock; // offset 0xD8
-    CodecMPEG_MemoryBlock * mMemoryBlockMemory; // offset 0xDC
-    SyncPoint * mSyncPoint; // offset 0xE0
-    int mNumSyncPoints; // offset 0xE4
-    unsigned int mPCMFrameLengthBytes; // offset 0xE8
-    unsigned char * mPCMBufferMemory; // offset 0xEC
+    int mFrameSize; // offset 0x1F4
+    int mFrameSizeOld; // offset 0x1F8
+    MPEG_FRAME mFrame; // offset 0x1FC
+    unsigned int mFrameHeader; // offset 0x248
+    unsigned int mNumFrames; // offset 0x24C
+    unsigned int * mFrameOffset; // offset 0x250
+    SyncPoint * mSyncPoint; // offset 0x254
+    int mNumSyncPoints; // offset 0x258
+    int mUnk25C; // offset 0x25C; never accessed (4.06 mPcmPoint position?)
+    unsigned int mPCMFrameLengthBytes; // offset 0x260
+    int mLayer; // offset 0x264
+    unsigned char mBSSpace[2][2304]; // offset 0x268
+    int mBSNum; // offset 0x1468
+    float mSynthBuffs[2][2][288]; // offset 0x146C
+    int mSynthBo; // offset 0x266C
+    int mBitIndex; // offset 0x2670
+    unsigned char * mWordPointer; // offset 0x2674
+    float mBlock[2][2][576]; // offset 0x2678
+    int mBlc[2]; // offset 0x4A78
+    unsigned char mXingToc[100]; // offset 0x4A80
+    bool mHasXingNumFrames; // offset 0x4AE4
+    bool mHasXingToc; // offset 0x4AE5
+    unsigned char mPCMBufferMemory[(1152 * 2 * 4) + 16]; // offset 0x4AE6
     static bool gInitialized;
     static float gDecWinMem[560];
     static float gCos64[16];
@@ -196,6 +222,7 @@ struct CodecMPEG : public Codec
     FMOD_RESULT III_hybrid(float (* fsIn)[18], float (* tsOut)[32], int ch, gr_info_s * gr_info);
     FMOD_RESULT synth(void * samples, float * bandPtr, int channels);
     FMOD_RESULT synthC(float * b0, int bo1, int channels, short * samples);
+    FMOD_RESULT synthFloat(float * b0, int bo1, int channels, float * samples); // Guessed name (0x805DAC18, the PCMFLOAT/MPEG-output path of synth)
     unsigned int getBits(int number_of_bits);
     unsigned int getBitsFast(int number_of_bits);
     unsigned int get1Bit();
@@ -216,5 +243,7 @@ struct CodecMPEG : public Codec
 };
 
 } // namespace FMOD
+
+extern float * FMOD_Mpeg_DecWin;
 
 #endif

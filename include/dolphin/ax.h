@@ -221,6 +221,20 @@ typedef void (*AXCallback)();
 #define AX_SRC_TYPE_4TAP_12K 3
 #define AX_SRC_TYPE_4TAP_16K 4
 
+#define AX_PB_STATE_STOP 0
+#define AX_PB_STATE_RUN  1
+
+#define AXPBADDR_LOOP_OFF 0
+#define AXPBADDR_LOOP_ON  1
+
+#define AX_PB_FORMAT_ADPCM 0x0
+#define AX_PB_FORMAT_PCM16 0xA
+#define AX_PB_FORMAT_PCM8  0x19
+
+#define AX_MODE_STEREO   0
+#define AX_MODE_SURROUND 1
+#define AX_MODE_DPL2     2
+
 // sync flags
 #define AX_SYNC_FLAG_COPYALL       (1 << 31)
 #define AX_SYNC_FLAG_UNK1          (1 << 30) // reserved, unused?

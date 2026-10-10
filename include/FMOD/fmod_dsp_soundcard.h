@@ -1,4 +1,6 @@
-// Reconstructed from a later FMOD Ex (Gormiti, Wii/MWCC) debug information. Member layout and offsets are the Gormiti reference, not yet verified against G2MEAB.
+// G2MEAB DSPSoundCard (group D): sizeof 0x128, vtable 0x806EDD50 (implicit deleting dtor 0x80606328).
+// mConversionBuffer at 0x124 is allocated by alloc 0x80606150, freed by release 0x806061FC and used by
+// execute 0x80606264 (DSPI slot 0x18). The Gormiti mConversionBufferMem member is absent here.
 
 #ifndef _FMOD_DSP_SOUNDCARD_H
 #define _FMOD_DSP_SOUNDCARD_H
@@ -7,20 +9,20 @@
 #include "fmod_dsp_filter.h"
 
 namespace FMOD {
-    class DSPFilter;
-    struct DSPSoundCard;
     struct FMOD_DSP_DESCRIPTION_EX;
 }
 
 namespace FMOD {
 
-struct DSPSoundCard : public DSPFilter
+class DSPSoundCard : public DSPFilter
 {
-    FMOD_RESULT alloc(FMOD_DSP_DESCRIPTION_EX * description);
-    FMOD_RESULT release(bool freethis);
-    FMOD_RESULT execute(void * * outbuffer, unsigned int * length, int * outchannels, unsigned int tick);
-    float * mConversionBuffer; // offset 0x118
-    float * mConversionBufferMem; // offset 0x11C
+public:
+    float * mConversionBuffer; // offset 0x124
+
+    // DSPI overrides
+    virtual FMOD_RESULT alloc(FMOD_DSP_DESCRIPTION_EX * description);
+    virtual FMOD_RESULT execute(float * inbuffer, float * * outbuffer, unsigned int * length, int inchannels, int * outchannels, FMOD_SPEAKERMODE speakermode);
+    virtual FMOD_RESULT release(bool freethis);
 };
 
 } // namespace FMOD

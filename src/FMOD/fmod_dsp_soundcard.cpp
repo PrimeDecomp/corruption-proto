@@ -1,30 +1,84 @@
-// NonMatching translation-unit scaffold; function bodies are empty placeholders.
-// G2MEAB .text: 0x80606150..0x80606428 (4 retained native functions).
-// directly named by target allocation/free body.
-// Evidence: Setup06150 allocates native-output conversion buffer+124 except outputformat5, naming
-// fmod_dsp_soundcard.cpp806EDDD8 line2D, then assigns graph order072E4. Release061FC frees same
-// field line4F then calls Filter release569AC. Process06264 calls Filter569F0 then PCM
-// converter626F40 when needed. Preserve all retained helpers, callback thunks, raw-only natives and
-// inline expansions in target order.
-
-// Reconstructed from a later FMOD Ex (Gormiti, Wii/MWCC) debug information. Member layout and offsets are the Gormiti reference, not yet verified against G2MEAB.
+// G2MEAB fmod_dsp_soundcard.cpp: complete reconstruction (group D).
+// .text: 0x80606150..0x80606428 (alloc, release, execute and the implicit deleting dtor 0x80606328).
+// alloc reads the DSP block size from SystemI 0x624 (fmod_systemi.h still has the 4.06 offset).
 
 #include "fmod_dsp_soundcard.h"
 #include "fmod.h"
 #include "fmod_dspi.h"
+#include "fmod_memory.h"
+#include "fmod_systemi.h"
 
 namespace FMOD {
 
 FMOD_RESULT DSPSoundCard::alloc(FMOD_DSP_DESCRIPTION_EX * description)
 {
+    FMOD_RESULT result;
+
+    result = DSPI::alloc(description);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    if (description->mFormat == FMOD_SOUND_FORMAT_PCMFLOAT)
+    {
+        mConversionBuffer = 0;
+    }
+    else
+    {
+        mConversionBuffer = (float *)FMOD_Memory_Calloc(mSystem->mDSPBlockSize * description->channels * sizeof(float));
+        if (!mConversionBuffer)
+        {
+            return FMOD_ERR_MEMORY;
+        }
+    }
+
+    updateTreeLevel(0);
+
+    return FMOD_OK;
 }
 
 FMOD_RESULT DSPSoundCard::release(bool freethis)
 {
+    if (mConversionBuffer)
+    {
+        FMOD_Memory_Free(mConversionBuffer);
+        mConversionBuffer = 0;
+    }
+
+    return DSPFilter::release(freethis);
 }
 
-FMOD_RESULT DSPSoundCard::execute(void * * outbuffer, unsigned int * length, int * outchannels, unsigned int tick)
+FMOD_RESULT DSPSoundCard::execute(float * inbuffer, float * * outbuffer, unsigned int * length, int inchannels, int * outchannels, FMOD_SPEAKERMODE speakermode)
 {
+    FMOD_RESULT result;
+
+    if (mConversionBuffer)
+    {
+        float * buffer = 0;
+
+        result = DSPFilter::execute(mConversionBuffer, &buffer, length, inchannels, outchannels, speakermode);
+        if (result != FMOD_OK)
+        {
+            return result;
+        }
+
+        result = DSPI::convert(*outbuffer, buffer, mDescription.mFormat, FMOD_SOUND_FORMAT_PCMFLOAT, *length * *outchannels, 1, 1, 1.0f);
+        if (result != FMOD_OK)
+        {
+            return result;
+        }
+    }
+    else
+    {
+        result = DSPFilter::execute(inbuffer, outbuffer, length, inchannels, outchannels, speakermode);
+        if (result != FMOD_OK)
+        {
+            return result;
+        }
+    }
+
+    return FMOD_OK;
 }
 
 } // namespace FMOD

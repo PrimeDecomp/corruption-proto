@@ -15,7 +15,7 @@ namespace FMOD {
 namespace FMOD {
 
 // Synthesized from the definitions in fmod_codec_user.cpp: the 4.06 DWARF has no type entry,
-// so the base class is guessed and members are unknown.
+// so the base class is guessed. G2MEAB: no own members (descriptor mSize 0x1F4, 0x805E8390).
 struct CodecUser : public Codec
 {
     static FMOD_CODEC_DESCRIPTION_EX * getDescriptionEx();

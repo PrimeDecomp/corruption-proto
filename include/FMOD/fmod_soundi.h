@@ -6,12 +6,14 @@
 #include "fmod.h"
 #include "fmod_linkedlist.h"
 #include "fmod_syncpoint.h"
+#include "fmod_types.h"
 
 struct FMOD_TAG;
 struct FMOD_VECTOR;
 namespace FMOD {
     class AsyncThread;
     struct Codec;
+    struct Metadata;
     struct Sound;
     struct SoundI;
     struct SyncPoint;
@@ -80,26 +82,27 @@ struct SoundI : public LinkedListNode
     bool mExInfoExists; // offset 0x32C, Guessed name (AsyncData::mExInfoExists)
     FMOD_OPENSTATE mOpenState; // offset 0x330, Guessed name; Sound wrappers return NOTREADY while nonzero
     FMOD_RESULT mAsyncResult; // offset 0x334, Guessed name (AsyncData::mResult)
-    int mUnk338; // offset 0x338, unresolved
+    Metadata * mMetadata; // offset 0x338; release 0x806175A8 calls Metadata::release on it, getNumTags 0x80618568 and getTag 0x806185D4 forward to it
     FMOD_SOUND_PCMREADCALLBACK mPostReadCallback; // offset 0x33C
     FMOD_SOUND_PCMSETPOSCALLBACK mPostSetPositionCallback; // offset 0x340
     FMOD_SOUND * mPostCallbackSound; // offset 0x344
     FMOD_RESULT updateSubSound(int);
     FMOD_RESULT getBytesFromSamples(unsigned int, unsigned int *);
-    FMOD_RESULT getBytesFromSamples(unsigned int, unsigned int *, int, FMOD_SOUND_FORMAT);
+    static FMOD_RESULT getBytesFromSamples(unsigned int samples, unsigned int * bytes, int channels, FMOD_SOUND_FORMAT format);
     FMOD_RESULT getSamplesFromBytes(unsigned int, unsigned int *);
-    FMOD_RESULT getSamplesFromBytes(unsigned int, unsigned int *, int, FMOD_SOUND_FORMAT);
+    static FMOD_RESULT getSamplesFromBytes(unsigned int bytes, unsigned int * samples, int channels, FMOD_SOUND_FORMAT format);
     FMOD_RESULT getBitsFromFormat(int *);
-    FMOD_RESULT getBitsFromFormat(FMOD_SOUND_FORMAT, int *);
-    FMOD_RESULT getFormatFromBits(int, FMOD_SOUND_FORMAT *);
-    virtual bool isStream();
+    static FMOD_RESULT getBitsFromFormat(FMOD_SOUND_FORMAT format, int * bits);
+    static FMOD_RESULT getFormatFromBits(int bits, FMOD_SOUND_FORMAT * format);
+    virtual bool isStream() { return false; } // inline: weak copy 0x805BE2A8 in fmod_channeli after ChannelI::alloc (group B)
     static FMOD_RESULT validate(Sound * sound, SoundI * * soundi);
     SoundI();
     FMOD_RESULT loadSubSound(int index, FMOD_MODE mode);
     FMOD_RESULT read(unsigned int offset, unsigned int numsamples, unsigned int * read);
     FMOD_RESULT seek(int subsound, unsigned int position);
     FMOD_RESULT clear(unsigned int offset, unsigned int numsamples);
-    virtual FMOD_RESULT release(bool freethis);
+    FMOD_RESULT downmix(void * dest, void * src, FMOD_SOUND_FORMAT format, int channels, unsigned int length); // Guessed name, 0x806161BC; readData averages the codec channels into a mono sound
+    virtual FMOD_RESULT release();
     virtual FMOD_RESULT getSystemObject(System * * system);
     virtual FMOD_RESULT lock(unsigned int offset, unsigned int length, void * * ptr1, void * * ptr2, unsigned int * len1, unsigned int * len2);
     virtual FMOD_RESULT unlock(void * ptr1, void * ptr2, unsigned int len1, unsigned int len2);
@@ -142,6 +145,178 @@ struct SoundI : public LinkedListNode
     virtual FMOD_RESULT setUserData(void * userdata);
     virtual FMOD_RESULT getUserData(void * * userdata);
 };
+
+// Header inlines: expanded in Output::mix 0x8060EA70 and OutputNoSound::init 0x8060F30C (same case order
+// as the 4.06 copies).
+inline FMOD_RESULT SoundI::getBitsFromFormat(FMOD_SOUND_FORMAT format, int * bits)
+{
+    switch (format)
+    {
+        case FMOD_SOUND_FORMAT_PCM8:
+            *bits = 8;
+            break;
+        case FMOD_SOUND_FORMAT_PCM16:
+            *bits = 16;
+            break;
+        case FMOD_SOUND_FORMAT_PCM24:
+            *bits = 24;
+            break;
+        case FMOD_SOUND_FORMAT_PCM32:
+            *bits = 32;
+            break;
+        case FMOD_SOUND_FORMAT_PCMFLOAT:
+            *bits = 32;
+            break;
+        case FMOD_SOUND_FORMAT_GCADPCM:
+            *bits = 0;
+            break;
+        case FMOD_SOUND_FORMAT_IMAADPCM:
+            *bits = 0;
+            break;
+        case FMOD_SOUND_FORMAT_XMA:
+            *bits = 0;
+            break;
+        case FMOD_SOUND_FORMAT_VAG:
+            *bits = 0;
+            break;
+        case FMOD_SOUND_FORMAT_MPEG:
+            *bits = 0;
+            break;
+        case FMOD_SOUND_FORMAT_NONE:
+            *bits = 0;
+            break;
+        default:
+            return FMOD_ERR_FORMAT;
+    }
+
+    return FMOD_OK;
+}
+
+inline FMOD_RESULT SoundI::getBytesFromSamples(unsigned int samples, unsigned int * bytes, int channels, FMOD_SOUND_FORMAT format)
+{
+    int bits;
+
+    getBitsFromFormat(format, &bits);
+
+    if (bits)
+    {
+        *bytes = samples * bits / 8;
+    }
+    else
+    {
+        switch (format)
+        {
+            case FMOD_SOUND_FORMAT_GCADPCM:
+                *bytes = (samples + 13) / 14 * 14 * 8 / 14;
+                break;
+            case FMOD_SOUND_FORMAT_IMAADPCM:
+                *bytes = (samples + 63) / 64 * 64 * 36 / 64;
+                break;
+            case FMOD_SOUND_FORMAT_VAG:
+                *bytes = (samples + 27) / 28 * 28 * 16 / 28;
+                break;
+            case FMOD_SOUND_FORMAT_XMA:
+                *bytes = samples;
+                return FMOD_OK;
+            case FMOD_SOUND_FORMAT_MPEG:
+                *bytes = samples;
+                return FMOD_OK;
+            case FMOD_SOUND_FORMAT_NONE:
+                *bytes = 0;
+                break;
+            default:
+                return FMOD_ERR_FORMAT;
+        }
+    }
+
+    *bytes *= channels;
+
+    return FMOD_OK;
+}
+
+// Expanded in ChannelReal::setPosition 0x805B7108 (group B): zero-channel guard, 64-bit __div2u for PCM
+// formats, no MPEG case.
+inline FMOD_RESULT SoundI::getSamplesFromBytes(unsigned int bytes, unsigned int * samples, int channels, FMOD_SOUND_FORMAT format)
+{
+    int bits;
+
+    if (!channels)
+    {
+        return FMOD_ERR_INVALID_PARAM;
+    }
+
+    getBitsFromFormat(format, &bits);
+
+    if (bits)
+    {
+        *samples = (unsigned int)(((FMOD_UINT64)bytes * 8) / bits);
+    }
+    else
+    {
+        switch (format)
+        {
+            case FMOD_SOUND_FORMAT_GCADPCM:
+                *samples = bytes * 14 / 8;
+                break;
+            case FMOD_SOUND_FORMAT_IMAADPCM:
+                *samples = bytes * 64 / 36;
+                break;
+            case FMOD_SOUND_FORMAT_VAG:
+                *samples = bytes * 28 / 16;
+                break;
+            case FMOD_SOUND_FORMAT_XMA:
+                *samples = bytes;
+                return FMOD_OK;
+            case FMOD_SOUND_FORMAT_NONE:
+                *samples = 0;
+                break;
+            default:
+                return FMOD_ERR_FORMAT;
+        }
+    }
+
+    *samples /= channels;
+
+    return FMOD_OK;
+}
+
+// Expanded in SoundI::clear 0x806171D4, getLength 0x806181CC and getLoopPoints 0x8061975C (loads mFormat
+// then mChannels).
+inline FMOD_RESULT SoundI::getBytesFromSamples(unsigned int samples, unsigned int * bytes)
+{
+    return getBytesFromSamples(samples, bytes, mChannels, mFormat);
+}
+
+// Expanded in ChannelStream::setPosition 0x805BBA78 (group B; loads mFormat then mChannels).
+inline FMOD_RESULT SoundI::getSamplesFromBytes(unsigned int bytes, unsigned int * samples)
+{
+    return getSamplesFromBytes(bytes, samples, mChannels, mFormat);
+}
+
+// Header inline (group F): expanded in CodecWav::openInternal 0x805E8940/0x805E8A30 and CodecAIFF
+// openInternal 0x805C29E8/0x805C2A7C (jump table over bits 8..32).
+inline FMOD_RESULT SoundI::getFormatFromBits(int bits, FMOD_SOUND_FORMAT * format)
+{
+    switch (bits)
+    {
+        case 8:
+            *format = FMOD_SOUND_FORMAT_PCM8;
+            break;
+        case 16:
+            *format = FMOD_SOUND_FORMAT_PCM16;
+            break;
+        case 24:
+            *format = FMOD_SOUND_FORMAT_PCM24;
+            break;
+        case 32:
+            *format = FMOD_SOUND_FORMAT_PCM32;
+            break;
+        default:
+            return FMOD_ERR_FORMAT;
+    }
+
+    return FMOD_OK;
+}
 
 } // namespace FMOD
 

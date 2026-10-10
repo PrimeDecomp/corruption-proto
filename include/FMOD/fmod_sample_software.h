@@ -7,6 +7,7 @@
 #include "fmod_sound_sample.h"
 
 namespace FMOD {
+    class OutputSoftware;
     class SampleSoftware;
 }
 
@@ -17,13 +18,17 @@ namespace FMOD {
 // restoreLoopPointData copies them back. No setMode or setBufferData override (vtable slots).
 class SampleSoftware : public Sample
 {
+    friend class OutputSoftware;
+    friend class ChannelSoftware; // alloc 0x805B9294 reads mBuffer (group B)
+    friend struct DSPWaveTable; // execute 0x8060652C reads mBuffer (group D)
+
     void * mBuffer; // offset 0x37C
     void * mBufferMemory; // offset 0x380
     unsigned char mUnk384[0x80]; // offset 0x384, unresolved (no access in fmod_sample_software)
     char mLoopPointDataEndMemory[0x80]; // offset 0x404
 public:
     SampleSoftware();
-    virtual FMOD_RESULT release(bool freethis);
+    virtual FMOD_RESULT release();
     virtual FMOD_RESULT lockInternal(unsigned int offset, unsigned int length, void * * ptr1, void * * ptr2, unsigned int * len1, unsigned int * len2);
     virtual FMOD_RESULT unlockInternal(void * ptr1, void * ptr2, unsigned int len1, unsigned int len2);
     FMOD_RESULT setLoopPoints(unsigned int loopstart, unsigned int looplength);

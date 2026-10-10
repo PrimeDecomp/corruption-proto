@@ -1,4 +1,5 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. ChannelI is the G2MEAB layout; other offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. ChannelI and FMOD_CHANNEL_INFO are the G2MEAB layouts
+// (fmod_channeli.cpp 0x805BCCA8..0x805C11FC).
 
 #ifndef _FMOD_CHANNELI_H
 #define _FMOD_CHANNELI_H
@@ -40,23 +41,23 @@ enum FMOD_CHANNEL_PANMODE {
     FMOD_CHANNEL_PANMODE_SPEAKERLEVELS = 2
 };
 
+// G2MEAB layout (0xAC) from ChannelI::getChannelInfo 0x805BD1A4 and setChannelInfo 0x805BD2AC: the
+// speaker levels are embedded (getSpeakerLevels(speaker, &mLevels[speaker * 8], ...) for each output
+// speaker), there is no low-pass cutoff, DSP head or mode, and the reverb properties end the record.
 struct FMOD_CHANNEL_INFO
 {
-    float * mLevels; // offset 0x0
-    unsigned int mPCM; // offset 0x4
-    unsigned int mLoopStart; // offset 0x8
-    unsigned int mLoopEnd; // offset 0xC
-    ChannelReal * mRealChannel; // offset 0x10
-    SoundI * mSound; // offset 0x14
-    int mLoopCount; // offset 0x18
-    bool mMute; // offset 0x1C
-    bool mPaused; // offset 0x1D
-    unsigned int mStartDelay; // offset 0x20
-    unsigned int mEndDelay; // offset 0x24
-    FMOD_REVERB_CHANNELPROPERTIES mReverbProperties; // offset 0x28
-    int mLowPassCutoff; // offset 0x70
-    DSPI * mDSPHead; // offset 0x74
-    FMOD_MODE mMode; // offset 0x78
+    float mLevels[16]; // offset 0x0
+    unsigned int mPCM; // offset 0x40
+    unsigned int mLoopStart; // offset 0x44
+    unsigned int mLoopEnd; // offset 0x48
+    ChannelReal * mRealChannel; // offset 0x4C
+    SoundI * mSound; // offset 0x50
+    int mLoopCount; // offset 0x54
+    bool mMute; // offset 0x58
+    bool mPaused; // offset 0x59
+    unsigned int mStartDelay; // offset 0x5C
+    unsigned int mEndDelay; // offset 0x60
+    FMOD_REVERB_CHANNELPROPERTIES mReverbProperties; // offset 0x64
 };
 
 // G2MEAB layout from ChannelI() fn_805BDCB8, ChannelI(int, SystemI *) fn_805BDD48 and init
@@ -72,14 +73,14 @@ struct ChannelI : public LinkedListNode
     SystemI * mSystem; // offset 0x34
     int mNumRealChannels; // offset 0x38
     ChannelReal * mRealChannel[8]; // offset 0x3C
-    int mUnk5C; // offset 0x5C, unresolved
+    FMOD_VECTOR * mUnk5C; // offset 0x5C, per-subchannel 3D position offsets (indexed in ChannelRealManual3D 0x805B7BD8); an allocation freed by stopEx 0x805BE878 (line 0x6D9), cleared by init
     unsigned int mHandleCurrent; // offset 0x60
     FMOD_CHANNEL_PANMODE mLastPanMode; // offset 0x64
     bool mLastPaused; // offset 0x68
     int mPriority; // offset 0x6C
     unsigned int mListPosition; // offset 0x70
     bool mJustWentVirtual; // offset 0x74
-    SyncPoint * mLastSyncPoint; // offset 0x78
+    unsigned int mSyncPointLastPos; // offset 0x78, Guessed name: PCM position of the last sync-point scan (update 0x805BE380)
     ChannelGroupI * mChannelGroup; // offset 0x7C
     LinkedListNode mChannelGroupNode; // offset 0x80
     float mVolume; // offset 0x94
@@ -111,14 +112,27 @@ struct ChannelI : public LinkedListNode
     FMOD_VECTOR mConeOrientation; // offset 0x108
     float mDirectOcclusion; // offset 0x114
     float mReverbOcclusion; // offset 0x118
-    float mDirectOcclusionTarget; // offset 0x11C
-    float mReverbOcclusionTarget; // offset 0x120
+    FMOD_VECTOR * mRolloffPoints; // offset 0x11C, set3DCustomRolloff 0x805BFBA8; read by calcVolumeAndPitchFor3D 0x805BD588
+    int mNumRolloffPoints; // offset 0x120
     FMOD_CHANNEL_CALLBACK mCallback[3]; // offset 0x124
     int mCallbackCommand[3]; // offset 0x130
     static FMOD_RESULT validate(Channel * channel, ChannelI * * channeli);
-    FMOD_RESULT validateInternal();
+    // Inline in G2MEAB: expanded in isPlaying 0x805C00F0 (no out-of-line copy).
+    FMOD_RESULT validateInternal()
+    {
+        bool valid = false;
+
+        if (mHandleCurrent == mHandleOriginal && mRealChannel)
+        {
+            valid = true;
+        }
+
+        return valid ? FMOD_OK : FMOD_ERR_CHANNEL_STOLEN;
+    }
     FMOD_RESULT returnToFreeList();
-    FMOD_RESULT setDefaults();
+    // Guessed signature: G2MEAB 0x805BCE30 takes the sound defaults from play 0x805BDF10 (priority,
+    // frequency, volume, pan and the three variations) instead of reading them itself.
+    FMOD_RESULT setDefaults(int priority, float frequency, float volume, float pan, float frequencyvariation, float volumevariation, float panvariation);
     FMOD_RESULT referenceStamp(bool newstamp);
     FMOD_RESULT updatePosition();
     FMOD_RESULT getChannelInfo(FMOD_CHANNEL_INFO * info);
@@ -140,7 +154,7 @@ struct ChannelI : public LinkedListNode
     FMOD_RESULT update(int delta, bool callrealupdate);
     FMOD_RESULT updateStream();
     FMOD_RESULT stop();
-    FMOD_RESULT stopEx(bool refstamp, bool updatelist, bool resetcallbacks, bool updateflags, bool callendcallback, bool resetchannelgroup);
+    FMOD_RESULT stopEx(bool refstamp, bool updatelist, bool resetcallbacks, bool updateflags, bool callendcallback); // G2MEAB 0x805BE878 reads r4..r8 only (no 4.06 resetchannelgroup)
     FMOD_RESULT setPaused(bool paused);
     FMOD_RESULT getPaused(bool * paused);
     FMOD_RESULT setVolume(float volume);

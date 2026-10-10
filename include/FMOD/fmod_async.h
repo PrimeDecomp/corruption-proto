@@ -1,4 +1,6 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// G2MEAB AsyncThread (sizeof 0x158, vtable 0x806E25A8 with only the destructor). Evidence: ctor
+// 0x805B60C0, init 0x805B6258, threadFunc 0x805B6468, allocation of 0x158 in getAsyncThread 0x805B65F8.
+// There is no 4.06 callback list.
 
 #ifndef _FMOD_ASYNC_H
 #define _FMOD_ASYNC_H
@@ -19,14 +21,13 @@ namespace FMOD {
 
 class AsyncThread : public LinkedListNode
 {
-    Thread mThread; // offset 0xC
-    bool mThreadActive; // offset 0x130
-    LinkedListNode mHead; // offset 0x134
-    FMOD_OS_CRITICALSECTION * mCrit; // offset 0x140
-    bool mOwned; // offset 0x144
-    bool mBusy; // offset 0x145
-    bool mDone; // offset 0x146
-    LinkedListNode mCallbackHead; // offset 0x148
+    Thread mThread; // offset 0x14
+    bool mThreadActive; // offset 0x138
+    LinkedListNode mHead; // offset 0x13C
+    FMOD_OS_CRITICALSECTION * mCrit; // offset 0x150
+    bool mOwned; // offset 0x154
+    bool mBusy; // offset 0x155
+    bool mDone; // offset 0x156
 public:
     FMOD_RESULT threadFunc();
     FMOD_RESULT init(bool owned);

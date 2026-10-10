@@ -1,4 +1,4 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information; G2MEAB layout (group D).
 
 #ifndef _FMOD_DSP_CONNECTIONPOOL_H
 #define _FMOD_DSP_CONNECTIONPOOL_H
@@ -13,20 +13,19 @@ namespace FMOD {
 
 namespace FMOD {
 
+// G2MEAB layout, sizeof 0x100 (embedded in SystemI at 0x834, next member at 0x934).
+// Evidence: init 0x805F3F7C, close 0x805F413C, alloc 0x805F41B8, free 0x805F43E0.
 class DSPConnectionPool
 {
-    SystemI * mSystem; // offset 0x0
-    DSPConnection * mConnection[32]; // offset 0x4
-    DSPConnection * mConnectionMemory[32]; // offset 0x84
-    int mNumInputLevels; // offset 0x104
-    int mNumOutputLevels; // offset 0x108
-    int mNumConnections; // offset 0x10C
-    DSPConnection mUsedListHead; // offset 0x110
-    DSPConnection mFreeListHead; // offset 0x460
-    float * mLevelData[32]; // offset 0x7B0
-    float * mLevelDataMemory[32]; // offset 0x830
 public:
-    FMOD_RESULT init(SystemI * system, int numconnections, int numoutputlevels, int numinputlevels);
+    DSPConnection * mConnection; // offset 0x0
+    int mNumInputLevels; // offset 0x4
+    int mNumConnections; // offset 0x8
+    DSPConnection mUsedListHead; // offset 0xC
+    DSPConnection mFreeListHead; // offset 0x84
+    float * mLevelDataMemory; // offset 0xFC
+
+    FMOD_RESULT init(int numconnections, int numinputlevels);
     FMOD_RESULT close();
     FMOD_RESULT alloc(DSPConnection * * connection);
     FMOD_RESULT free(DSPConnection * connection);

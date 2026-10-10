@@ -1,4 +1,4 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. ChannelPool keeps the 4.06 layout, verified for G2MEAB (0x14: ctor 0x805C11FC, init 0x805C1218).
 
 #ifndef _FMOD_CHANNELPOOL_H
 #define _FMOD_CHANNELPOOL_H
@@ -18,6 +18,8 @@ namespace FMOD {
 
 class ChannelPool
 {
+    friend class ChannelReal;
+
 protected:
     int mNumChannels; // offset 0x0
     int mChannelsUsed; // offset 0x4

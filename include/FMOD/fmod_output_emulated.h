@@ -15,7 +15,7 @@ namespace FMOD {
 
 class OutputEmulated : public Output
 {
-    ChannelEmulated * mChannel; // offset 0xC0
+    ChannelEmulated * mChannel; // offset 0xD4 (G2MEAB: Output is 0xD4 bytes; OutputEmulated::init 0x8060EF40)
 public:
     OutputEmulated();
     FMOD_RESULT init(int maxchannels);

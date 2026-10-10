@@ -1,30 +1,36 @@
-// G2MEAB prototype NonMatching translation-unit scaffold; function bodies are empty placeholders.
-// .text: 0x8062596C..0x806259D8 (5 native functions).
-// Split out of the former fmod_reverb_model scaffold; original basename from the 4.06 reference library object.
-// 0x8062596C +0x14: leading comb delay constructor
-// 0x80625980 +0xC: retained native; no unsupported symbol identity assigned
-// 0x8062598C +0x30: retained native; no unsupported symbol identity assigned
-// 0x806259BC +0x14: retained native; no unsupported symbol identity assigned
-// 0x806259D0 +0x8: retained native; no unsupported symbol identity assigned
+// G2MEAB prototype translation unit; complete reconstruction (Freeverb comb, public domain, Jezar at Dreampoint).
+// .text: 0x8062596C..0x806259D8 (5 native functions; getdamp and getfeedback are dead-stripped).
+// Original basename from the 4.06 reference library object (lib/freeverb/comb.cpp).
 
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed with the FMOD Ex 4.06.00 (PS3) debug information as reference; G2MEAB accesses confirm the
+// 4.06 layout (constructor 0x8062596C clears +0x4/+0x18, setbuffer +0x10/+0x14, setdamp +0x8/+0xC).
 
 #include "comb.h"
 
 comb::comb()
 {
+    filterstore = 0;
+    bufidx = 0;
 }
 
 void comb::setbuffer(float * buf, int size)
 {
+    buffer = buf;
+    bufsize = size;
 }
 
 void comb::mute()
 {
+    for (int i = 0; i < bufsize; i++)
+    {
+        buffer[i] = 0;
+    }
 }
 
 void comb::setdamp(float val)
 {
+    damp1 = val;
+    damp2 = 1 - val;
 }
 
 float comb::getdamp()
@@ -33,6 +39,7 @@ float comb::getdamp()
 
 void comb::setfeedback(float val)
 {
+    feedback = val;
 }
 
 float comb::getfeedback()

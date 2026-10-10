@@ -10,7 +10,6 @@ namespace FMOD {
 
 namespace FMOD {
 
-// Open question (G2MEAB): FMOD_CODEC_DESCRIPTION_EX suggests the node may be 16 bytes, not the 4.06 12 bytes.
 class LinkedListNode
 {
     LinkedListNode * mNodeNext; // offset 0x0

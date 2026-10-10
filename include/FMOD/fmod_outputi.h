@@ -36,28 +36,34 @@ typedef FMOD_RESULT (* FMOD_OUTPUT_CREATESAMPLECALLBACK)(FMOD_OUTPUT_STATE *, FM
 typedef FMOD_RESULT (* FMOD_OUTPUT_GETSOUNDRAMCALLBACK)(FMOD_OUTPUT_STATE *, int *, int *, int *);
 typedef FMOD_RESULT (* FMOD_OUTPUT_RECORDSTARTCALLBACK)(FMOD_OUTPUT_STATE *, int, FMOD_SOUND *, int);
 typedef FMOD_RESULT (* FMOD_OUTPUT_SETREVERBCALLBACK)(FMOD_OUTPUT_STATE *, const FMOD_REVERB_PROPERTIES *);
-// G2MEAB differs: the native builders clear 0x98 bytes (4.06: 0x8C); EX field offsets are unverified.
+// G2MEAB layout: builders clear 0x98 bytes; mType +0x48, mSize +0x4C, getsamplemaxchannels +0x54,
+// start +0x60, stop +0x64, createsample +0x6C, getsoundram +0x70, reverb_setproperties +0x90
+// (GC output and OutputSoftware stores). That is the 4.06 field order shifted by 8 bytes, plus one
+// trailing field. Whether the 8 bytes belong to the base description or precede mType is unresolved.
 struct FMOD_OUTPUT_DESCRIPTION_EX : public FMOD_OUTPUT_DESCRIPTION, public LinkedListNode
 {
-    FMOD_OUTPUTTYPE mType; // offset 0x40
-    int mSize; // offset 0x44
-    FMOD_OS_LIBRARY * mModule; // offset 0x48
-    FMOD_OUTPUT_GETSAMPLEMAXCHANNELS getsamplemaxchannels; // offset 0x4C
-    FMOD_OUTPUT_GETDRIVERCAPSEXCALLBACK getdrivercapsex; // offset 0x50
-    FMOD_OUTPUT_INITEXCALLBACK initex; // offset 0x54
-    FMOD_OUTPUT_STARTCALLBACK start; // offset 0x58
-    FMOD_OUTPUT_STOPCALLBACK stop; // offset 0x5C
-    FMOD_OUTPUT_UPDATEFINISHEDCALLBACK updatefinished; // offset 0x60
-    FMOD_OUTPUT_CREATESAMPLECALLBACK createsample; // offset 0x64
-    FMOD_OUTPUT_GETSOUNDRAMCALLBACK getsoundram; // offset 0x68
-    FMOD_OUTPUT_GETNUMDRIVERSCALLBACK record_getnumdrivers; // offset 0x6C
-    FMOD_OUTPUT_GETDRIVERNAMECALLBACK record_getdrivername; // offset 0x70
-    FMOD_OUTPUT_RECORDSTARTCALLBACK record_start; // offset 0x74
-    FMOD_OUTPUT_STOPCALLBACK record_stop; // offset 0x78
-    FMOD_OUTPUT_GETPOSITIONCALLBACK record_getposition; // offset 0x7C
-    FMOD_OUTPUT_LOCKCALLBACK record_lock; // offset 0x80
-    FMOD_OUTPUT_UNLOCKCALLBACK record_unlock; // offset 0x84
-    FMOD_OUTPUT_SETREVERBCALLBACK reverb_setproperties; // offset 0x88
+    int mUnk40; // offset 0x40, unresolved
+    int mUnk44; // offset 0x44, unresolved
+    FMOD_OUTPUTTYPE mType; // offset 0x48
+    int mSize; // offset 0x4C
+    FMOD_OS_LIBRARY * mModule; // offset 0x50
+    FMOD_OUTPUT_GETSAMPLEMAXCHANNELS getsamplemaxchannels; // offset 0x54
+    FMOD_OUTPUT_GETDRIVERCAPSEXCALLBACK getdrivercapsex; // offset 0x58
+    FMOD_OUTPUT_INITEXCALLBACK initex; // offset 0x5C
+    FMOD_OUTPUT_STARTCALLBACK start; // offset 0x60
+    FMOD_OUTPUT_STOPCALLBACK stop; // offset 0x64
+    FMOD_OUTPUT_UPDATEFINISHEDCALLBACK updatefinished; // offset 0x68
+    FMOD_OUTPUT_CREATESAMPLECALLBACK createsample; // offset 0x6C
+    FMOD_OUTPUT_GETSOUNDRAMCALLBACK getsoundram; // offset 0x70
+    FMOD_OUTPUT_GETNUMDRIVERSCALLBACK record_getnumdrivers; // offset 0x74
+    FMOD_OUTPUT_GETDRIVERNAMECALLBACK record_getdrivername; // offset 0x78
+    FMOD_OUTPUT_RECORDSTARTCALLBACK record_start; // offset 0x7C
+    FMOD_OUTPUT_STOPCALLBACK record_stop; // offset 0x80
+    FMOD_OUTPUT_GETPOSITIONCALLBACK record_getposition; // offset 0x84
+    FMOD_OUTPUT_LOCKCALLBACK record_lock; // offset 0x88
+    FMOD_OUTPUT_UNLOCKCALLBACK record_unlock; // offset 0x8C
+    FMOD_OUTPUT_SETREVERBCALLBACK reverb_setproperties; // offset 0x90
+    int mUnk94; // offset 0x94, unresolved
 };
 
 class Output : public Plugin, public FMOD_OUTPUT_STATE

@@ -22,15 +22,15 @@ namespace FMOD {
 
 typedef FMOD_RESULT (* FMOD_CODEC_RESETCALLBACK)(FMOD_CODEC_STATE *);
 typedef FMOD_RESULT (* FMOD_CODEC_CANPOINTCALLBACK)(FMOD_CODEC_STATE *);
-// G2MEAB differs: the native builders clear 0x50 bytes and store mType at +0x40 and mSize at +0x44
-// (4.06: +0x3C/+0x40), with no canpoint callback. Open question: is the 16-byte gap a larger LinkedListNode?
-struct FMOD_CODEC_DESCRIPTION_EX : public FMOD_CODEC_DESCRIPTION, public LinkedListNode
+// G2MEAB layout: builders clear 0x50 bytes and store mType at +0x40 and mSize at +0x44, which fits a
+// SortedLinkedListNode base as in the later Gormiti build (4.06 used LinkedListNode, mType +0x3C).
+// No canpoint callback is stored; the field at +0x4C is 4.06 reset or Gormiti mHandle (unresolved).
+struct FMOD_CODEC_DESCRIPTION_EX : public FMOD_CODEC_DESCRIPTION, public SortedLinkedListNode
 {
-    FMOD_SOUND_TYPE mType; // offset 0x3C
-    int mSize; // offset 0x40
-    FMOD_OS_LIBRARY * mModule; // offset 0x44
-    FMOD_CODEC_RESETCALLBACK reset; // offset 0x48
-    FMOD_CODEC_CANPOINTCALLBACK canpoint; // offset 0x4C
+    FMOD_SOUND_TYPE mType; // offset 0x40
+    int mSize; // offset 0x44
+    FMOD_OS_LIBRARY * mModule; // offset 0x48
+    FMOD_CODEC_RESETCALLBACK reset; // offset 0x4C
 };
 
 struct SYNCDATA

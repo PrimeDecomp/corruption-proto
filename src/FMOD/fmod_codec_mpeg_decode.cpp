@@ -356,6 +356,9 @@ FMOD_RESULT CodecMPEG::resetFrame()
     return FMOD_OK;
 }
 
+// The bare blocks below are lexical blocks in the original, not inlined helpers: the 4.06 DWARF declares
+// their costab/cos0/cos1 locals inside dct64 itself (fmod_codec_mpeg_decode.cpp:530, 581, 619, 659, 704)
+// and its -O0 object emits no out-of-line inline copies.
 void CodecMPEG::dct64(float * out0, float * out1, float * samples)
 {
     float b1[32], b2[32];
@@ -634,6 +637,8 @@ void CodecMPEG::dct64(float * out0, float * out1, float * samples)
     out1[0x10 * 15] = b1[0x1F];
 }
 
+// As in dct64, the sum blocks are lexical blocks (4.06 DWARF: fmod_codec_mpeg_decode.cpp:860, 894, 924);
+// an inline sample-write helper compiles to the same code, so the 4.06 shape is kept. synthFloat follows it.
 FMOD_RESULT CodecMPEG::synthC(float * b0, int bo1, int channels, short * samples)
 {
     int j;

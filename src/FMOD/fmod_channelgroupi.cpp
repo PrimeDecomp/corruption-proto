@@ -1,4 +1,5 @@
-// NonMatching translation-unit scaffold; function bodies are empty placeholders.
+// G2MEAB prototype translation unit; complete reconstruction of the 4 retained functions (release,
+// releaseInternal, addGroup, implicit deleting destructor). Dead-stripped methods stay empty placeholders.
 // G2MEAB .text: 0x805BC8B8..0x805BCCA8 (4 retained native functions).
 // Original basename directly named by target allocation/free evidence.
 // Evidence: Release805BC8F0 and child/DSP reassignment805BCA28 directly name fmod_channelgroupi.cpp
@@ -11,14 +12,69 @@
 // every retained stub, emitted helper and adjustor thunk; full inventory and inlining uncertainty
 // are recorded externally.
 
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed with the FMOD Ex 4.06.00 (PS3) debug information as reference; ChannelGroupI uses the G2MEAB layout.
+// G2MEAB DSPI calls here are virtual: release +0x20, addInput +0x28, disconnectFrom +0x2C, getNumOutputs +0x38,
+// getOutput +0x40 (DSPI vtable owned by the dsp group).
 
 #include "fmod_channelgroupi.h"
 #include "fmod.h"
 #include "fmod.hpp"
 #include "fmod_dspi.h"
+#include "fmod_channeli.h"
+#include "fmod_memory.h"
+#include "fmod_systemi.h"
 
 namespace FMOD {
+
+FMOD_RESULT ChannelGroupI::release()
+{
+    if (this == mSystem->mChannelGroup)
+    {
+        return FMOD_ERR_INVALID_HANDLE;
+    }
+
+    return releaseInternal();
+}
+
+FMOD_RESULT ChannelGroupI::releaseInternal()
+{
+    if (mSystem->mChannelGroup && this != mSystem->mChannelGroup)
+    {
+        while (mChannelHead.getNext() != &mChannelHead)
+        {
+            ChannelI *channel = (ChannelI *)mChannelHead.getNext()->getData();
+
+            channel->setChannelGroup(mSystem->mChannelGroup);
+        }
+    }
+
+    if (mDSPHead)
+    {
+        mDSPHead->release(true);
+    }
+
+    if (mGroupHead)
+    {
+        ChannelGroupI *currentgroup = (ChannelGroupI *)mGroupHead->getNext();
+        ChannelGroupI *mastergroup;
+
+        mSystem->getMasterChannelGroup(&mastergroup);
+
+        while (currentgroup != mGroupHead)
+        {
+            ChannelGroupI *next = (ChannelGroupI *)currentgroup->getNext();
+
+            mastergroup->addGroup(currentgroup);
+            currentgroup = next;
+        }
+
+        FMOD_Memory_Free(mGroupHead);
+    }
+
+    removeNode();
+    FMOD_Memory_Free(this);
+    return FMOD_OK;
+}
 
 FMOD_RESULT ChannelGroupI::validate(ChannelGroup * channelgroup, ChannelGroupI * * channelgroupi)
 {
@@ -90,14 +146,66 @@ FMOD_RESULT ChannelGroupI::overrideSpeakerMix(float frontleft, float frontright,
 
 FMOD_RESULT ChannelGroupI::addGroup(ChannelGroupI * group)
 {
-}
+    FMOD_RESULT result;
 
-FMOD_RESULT ChannelGroupI::releaseInternal()
-{
-}
+    if (!group)
+    {
+        return FMOD_ERR_INVALID_PARAM;
+    }
 
-FMOD_RESULT ChannelGroupI::release()
-{
+    group->removeNode();
+
+    if (group->mDSPHead)
+    {
+        int numoutputs;
+        int count;
+
+        result = group->mDSPHead->getNumOutputs(&numoutputs);
+        if (result != FMOD_OK)
+        {
+            return result;
+        }
+
+        for (count = 0; count < numoutputs; count++)
+        {
+            DSPI *output;
+
+            result = group->mDSPHead->getOutput(0, &output);
+            if (result != FMOD_OK)
+            {
+                return result;
+            }
+
+            result = output->disconnectFrom(group->mDSPHead);
+            if (result != FMOD_OK)
+            {
+                return result;
+            }
+        }
+    }
+
+    if (!mGroupHead)
+    {
+        mGroupHead = FMOD_Object_Calloc(ChannelGroupI);
+        if (!mGroupHead)
+        {
+            return FMOD_ERR_MEMORY;
+        }
+    }
+
+    group->addBefore(mGroupHead);
+
+    if (mDSPHead)
+    {
+        result = mDSPHead->addInput(group->mDSPHead);
+        if (result != FMOD_OK)
+        {
+            return result;
+        }
+    }
+
+    group->mParent = this;
+    return FMOD_OK;
 }
 
 FMOD_RESULT ChannelGroupI::getNumGroups(int * numgroups)

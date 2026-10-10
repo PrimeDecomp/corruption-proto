@@ -313,6 +313,9 @@ struct FMOD_TAG
 };
 
 typedef FMOD_TAG FMOD_TAG;
+// G2MEAB: 0x4C bytes. SystemI::createSoundInternal 0x8061C1C0 rejects any other cbsize, copies userdata
+// (+0x44) into SoundI::mUserData and compares suggestedsoundtype (+0x48) with the codec type; the codecs
+// that open embedded samples memset and set cbsize to 0x4C. 4.06 adds the user file callbacks after +0x48.
 struct FMOD_CREATESOUNDEXINFO
 {
     int cbsize; // offset 0x0
@@ -334,10 +337,6 @@ struct FMOD_CREATESOUNDEXINFO
     int maxpolyphony; // offset 0x40
     void * userdata; // offset 0x44
     FMOD_SOUND_TYPE suggestedsoundtype; // offset 0x48
-    FMOD_FILE_OPENCALLBACK useropen; // offset 0x4C
-    FMOD_FILE_CLOSECALLBACK userclose; // offset 0x50
-    FMOD_FILE_READCALLBACK userread; // offset 0x54
-    FMOD_FILE_SEEKCALLBACK userseek; // offset 0x58
 };
 
 typedef FMOD_CREATESOUNDEXINFO FMOD_CREATESOUNDEXINFO;

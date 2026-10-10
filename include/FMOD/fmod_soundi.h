@@ -10,7 +10,7 @@
 struct FMOD_TAG;
 struct FMOD_VECTOR;
 namespace FMOD {
-    struct AsyncData;
+    class AsyncThread;
     struct Codec;
     struct Sound;
     struct SoundI;
@@ -69,13 +69,17 @@ struct SoundI : public LinkedListNode
     SystemI * mSystem; // offset 0x1A0
     int mNumSyncPoints; // offset 0x1A4
     SyncPoint mSyncPointHead; // offset 0x1A8, embedded (4.06 holds a pointer)
-    AsyncData * mAsyncData; // offset 0x2C4
-    LinkedListNode mUnk2C8; // offset 0x2C8, unresolved
-    int mUnk2DC; // offset 0x2DC, unresolved
-    unsigned char mUnk2E0[0x4C]; // offset 0x2E0, unresolved (no access in the Sound TUs)
-    bool mUnk32C; // offset 0x32C, unresolved
-    FMOD_OPENSTATE mOpenState; // offset 0x330, Guessed name (4.06 constructor store position)
-    int mUnk334; // offset 0x334, unresolved
+    // 0x2C4-0x334 hold the 4.06 AsyncData fields inline (no separate allocation): getAsyncThread
+    // 0x805B65F8 stores the thread at +0x2C4 and queues +0x2C8; threadFunc 0x805B6468 opens +0x2DC
+    // (OPENMEMORY) or mName, passes +0x2E0 when +0x32C is set, stores the result at +0x334, sets
+    // +0x330 to READY or ERROR and calls the exinfo nonblock callback. Names follow AsyncData.
+    AsyncThread * mAsyncThread; // offset 0x2C4, Guessed name (AsyncData::mThread)
+    LinkedListNode mAsyncNode; // offset 0x2C8, Guessed name (AsyncData::mNode)
+    void * mAsyncNameData; // offset 0x2DC, Guessed name (AsyncData::mNameData)
+    FMOD_CREATESOUNDEXINFO mExInfo; // offset 0x2E0, Guessed name (AsyncData::mExInfo)
+    bool mExInfoExists; // offset 0x32C, Guessed name (AsyncData::mExInfoExists)
+    FMOD_OPENSTATE mOpenState; // offset 0x330, Guessed name; Sound wrappers return NOTREADY while nonzero
+    FMOD_RESULT mAsyncResult; // offset 0x334, Guessed name (AsyncData::mResult)
     int mUnk338; // offset 0x338, unresolved
     FMOD_SOUND_PCMREADCALLBACK mPostReadCallback; // offset 0x33C
     FMOD_SOUND_PCMSETPOSCALLBACK mPostSetPositionCallback; // offset 0x340

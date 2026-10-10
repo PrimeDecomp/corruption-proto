@@ -1,5 +1,7 @@
 #include "Kyoto/Input/CRumbleGenerator.hpp"
 
+#include <revolution/wpad.h>
+
 CRumbleGenerator::CRumbleGenerator(EIOPort inputIndex) : mInputIndex(inputIndex), mDisabled(false) {
   HardStopAll();
 }
@@ -47,18 +49,21 @@ void CRumbleGenerator::Update(float dt) {
       }
     }
     if (updated) {
-      PADControlMotor(mInputIndex, mCommand);
+      if (mCommand == kMS_Stop || mCommand == kMS_StopHard) {
+        WPADControlMotor(0, WPAD_MOTOR_STOP);
+      } else {
+        WPADControlMotor(0, WPAD_MOTOR_RUMBLE);
+      }
     }
   }
 }
 
 void CRumbleGenerator::HardStopAll() {
-
   mPeriodTime = 0.f;
   mOnTime = 0.f;
   mCommand = kMS_Stop;
   mVoice.HardReset();
-  PADControlMotor(mInputIndex, kMS_StopHard);
+  WPADControlMotor(0, WPAD_MOTOR_STOP);
 }
 
 void CRumbleGenerator::SetDisabled(const bool disabled) {

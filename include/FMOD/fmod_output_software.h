@@ -18,7 +18,7 @@ namespace FMOD {
 
 class OutputSoftware : public Output
 {
-    ChannelSoftware * mChannel; // offset 0xC0
+    ChannelSoftware * mChannel; // offset 0xD4 (G2MEAB: Output is 0xD4 bytes)
 public:
     OutputSoftware();
     virtual FMOD_RESULT init(int maxchannels);

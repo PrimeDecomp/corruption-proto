@@ -1,4 +1,5 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. G2MEAB: no members of its own (0x78, as ChannelReal);
+// vtable 0x806E27A0 replaces only slot +0x8 (set2DFreqVolumePanFor3D 0x805B7AB4).
 
 #ifndef _FMOD_CHANNEL_REALMANUAL3D_H
 #define _FMOD_CHANNEL_REALMANUAL3D_H

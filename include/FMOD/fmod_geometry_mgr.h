@@ -25,7 +25,7 @@ public:
     ~GeometryMgr();
     FMOD_RESULT aquireMainOctree();
     void releaseMainOctree();
-    Octree * mainOctree();
+    Octree * mainOctree() { return mMainOctree; } // inline: no G2MEAB copy, read directly by GeometryI::updateSpacialData 0x8060A5F8
     FMOD_RESULT setWorldSize(float worldSize);
     float getWorldSize();
     FMOD_RESULT lineTestAll(FMOD_VECTOR * start, FMOD_VECTOR * end, float * directOcclusion, float * reverbOcclusion);

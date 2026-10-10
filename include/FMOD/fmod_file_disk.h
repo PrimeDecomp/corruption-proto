@@ -1,4 +1,5 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// G2MEAB DiskFile: 0x1A0 bytes (SystemI::createSoundInternal vtable store 0x8061C400, vtable 0x806EDF60).
+// Its code is part of the fmod_file unit (0x80609E34..0x80609FFC).
 
 #ifndef _FMOD_FILE_DISK_H
 #define _FMOD_FILE_DISK_H
@@ -14,9 +15,8 @@ namespace FMOD {
 
 class DiskFile : public File
 {
-    void * mHandle; // offset 0x9A4
+    void * mHandle; // offset 0x19C, reallyOpen 0x80609EA8
 public:
-    DiskFile();
     virtual FMOD_RESULT reallyOpen(const char * name_or_data, unsigned int * filesize);
     virtual FMOD_RESULT reallyClose();
     virtual FMOD_RESULT reallyRead(void * buffer, unsigned int size, unsigned int * rd);

@@ -1,4 +1,4 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information (Freeverb). The 4.06 layout is confirmed by the G2MEAB accesses (see the .cpp).
 
 #ifndef _REVMODEL_H
 #define _REVMODEL_H

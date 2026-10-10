@@ -1,32 +1,23 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// G2MEAB globals. This FMOD build predates the 4.06 Global struct: the system list head and the
+// memory pool are two separate .sdata pointers, statically initialized to the objects defined in
+// fmod_globals.cpp (gSystemHead 0x80796F08 = &0x807542DC, gSystemPool 0x80796F0C = &0x80754290).
+// Codecs copy them from their Plugin base (+0x18/+0x1C) before working (e.g. 0x805C2754).
 
 #ifndef _FMOD_GLOBALS_H
 #define _FMOD_GLOBALS_H
 
 #include "fmod.h"
-#include "fmod_debug.h"
 
 namespace FMOD {
-    struct Global;
     class MemPool;
     struct SystemI;
 }
 
 namespace FMOD {
 
-struct Global
-{
-    void init();
-    Global();
-    SystemI * gSystemHead; // offset 0x0
-    MemPool * gSystemPool; // offset 0x4
-    FMOD_DEBUGLEVEL gDebugLevel; // offset 0x8
-    FMOD_DEBUGMODE gDebugMode; // offset 0xC
-    unsigned int gDSPClock; // offset 0x10
-    unsigned int gDSPClockTimeStamp; // offset 0x14
-};
+extern SystemI * gSystemHead;
+extern MemPool * gSystemPool;
 
-extern Global * gGlobal;
 } // namespace FMOD
 
 #endif

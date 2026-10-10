@@ -37,36 +37,52 @@ struct SYNCDATA
     char name[256]; // offset 0x4
 };
 
+// G2MEAB layout (sizeof 0x1F4): PluginFactory::createCodec 0x806115A0 allocates at least 0x1F4 and
+// inlines the constructor; the Raw/AIFF/Tag/User/Playlist descriptors store mSize 0x1F4. Vtable
+// 0x806E2D14 holds only the destructor 0x805C2414 and release. The waveformat is embedded (+0x40:
+// CodecRaw::openInternal 0x805E3124 clears 0x128 bytes there; setPosition 0x805C1A90 copies subsound
+// formats into it). Absent versus 4.06: mWaveFormatMemory, mReadBuffer, mReadBufferLength,
+// mPCMBufferMemory (FSB frees mPCMBuffer directly) and mOriginalMode. See layouts.md for evidence.
 struct Codec : public Plugin, public FMOD_CODEC_STATE
 {
-    FMOD_CODEC_WAVEFORMAT * mWaveFormatMemory; // offset 0x38
-    FMOD_SOUND_TYPE mType; // offset 0x3C
-    FMOD_CODEC_DESCRIPTION_EX mDescription; // offset 0x40
-    unsigned int mSrcDataOffset; // offset 0x90
-    unsigned int mLoopPoints[2]; // offset 0x94
-    int mSubSoundIndex; // offset 0x9C
-    bool mAccurateLength; // offset 0xA0
-    unsigned int mBlockAlign; // offset 0xA4
-    unsigned char * mReadBuffer; // offset 0xA8
-    unsigned int mReadBufferLength; // offset 0xAC
-    unsigned char * mPCMBuffer; // offset 0xB0
-    unsigned char * mPCMBufferMemory; // offset 0xB4
-    unsigned int mPCMBufferLength; // offset 0xB8
-    unsigned int mPCMBufferLengthBytes; // offset 0xBC
-    unsigned int mPCMBufferOffsetBytes; // offset 0xC0
-    unsigned int mPCMBufferFilledBytes; // offset 0xC4
-    FMOD_MODE mMode; // offset 0xC8
-    FMOD_MODE mOriginalMode; // offset 0xCC
-    Metadata * mMetadata; // offset 0xD0
-    File * mFile; // offset 0xD4
-    FMOD_RESULT defaultFileRead(void *, void *, unsigned int, unsigned int *, void *);
-    FMOD_RESULT defaultFileSeek(void *, unsigned int, void *);
-    FMOD_RESULT defaultMetaData(FMOD_CODEC_STATE *, FMOD_TAGTYPE, char *, void *, unsigned int, FMOD_TAGDATATYPE, int);
-    FMOD_RESULT defaultGetWaveFormat(FMOD_CODEC_STATE *, int, FMOD_CODEC_WAVEFORMAT *);
-    Codec();
-    FMOD_RESULT init(FMOD_SOUND_TYPE);
-    virtual FMOD_RESULT reset();
-    FMOD_RESULT canPointTo();
+    FMOD_CODEC_WAVEFORMAT mWaveFormat; // offset 0x40, Guessed name
+    FMOD_SOUND_TYPE mType; // offset 0x168
+    FMOD_CODEC_DESCRIPTION_EX mDescription; // offset 0x16C
+    unsigned int mSrcDataOffset; // offset 0x1BC
+    unsigned int mLoopPoints[2]; // offset 0x1C0
+    int mSubSoundIndex; // offset 0x1C8
+    bool mAccurateLength; // offset 0x1CC
+    unsigned int mBlockAlign; // offset 0x1D0
+    unsigned char * mPCMBuffer; // offset 0x1D4
+    unsigned int mPCMBufferLength; // offset 0x1D8
+    unsigned int mPCMBufferLengthBytes; // offset 0x1DC
+    unsigned int mPCMBufferOffsetBytes; // offset 0x1E0
+    unsigned int mPCMBufferFilledBytes; // offset 0x1E4
+    FMOD_MODE mMode; // offset 0x1E8
+    Metadata * mMetadata; // offset 0x1EC
+    File * mFile; // offset 0x1F0
+
+    static FMOD_RESULT defaultFileRead(void * handle, void * buffer, unsigned int sizebytes, unsigned int * bytesread, void * userdata);
+    static FMOD_RESULT defaultFileSeek(void * handle, unsigned int pos, void * userdata);
+    static FMOD_RESULT defaultMetaData(FMOD_CODEC_STATE * codec, FMOD_TAGTYPE type, char * name, void * data, unsigned int datalen, FMOD_TAGDATATYPE datatype, int unique);
+
+    Codec()
+    {
+        mType = FMOD_SOUND_TYPE_UNKNOWN;
+        mMetadata = 0;
+        fileread = defaultFileRead;
+        fileseek = defaultFileSeek;
+        metadata = defaultMetaData;
+    }
+
+    FMOD_RESULT init(FMOD_SOUND_TYPE type)
+    {
+        Plugin::init();
+        mType = type;
+        mMetadata = 0;
+        return FMOD_OK;
+    }
+
     virtual FMOD_RESULT release();
     FMOD_RESULT read(void * buffer, unsigned int sizebytes, unsigned int * bytesread);
     FMOD_RESULT getMetadataFromFile();

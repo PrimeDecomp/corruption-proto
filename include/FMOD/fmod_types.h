@@ -7,6 +7,11 @@ typedef long long FMOD_SINT64;
 typedef unsigned long long FMOD_UINT64;
 typedef unsigned int FMOD_UINT_NATIVE;
 typedef float FMOD_UFLOAT;
+
+// G2MEAB: big-endian readers of little-endian data (CodecMPEG::openInternal 0x805D894C, readInternal 0x805D9160).
+#define FMOD_SWAPENDIAN_DWORD(_x) ((((_x) & 0x000000FF) << 24) | (((_x) & 0x0000FF00) << 8) | (((_x) & 0x00FF0000) >> 8) | (((_x) & 0xFF000000) >> 24))
+// G2MEAB: CodecWav::parseChunk 0x805EAE58 ("fmt " fields).
+#define FMOD_SWAPENDIAN_WORD(_x) ((((_x) & 0xFF00) >> 8) | (((_x) & 0x00FF) << 8))
 struct FMOD_GUID
 {
     unsigned int Data1; // offset 0x0
@@ -14,6 +19,8 @@ struct FMOD_GUID
     unsigned short Data3; // offset 0x6
     unsigned char Data4[8]; // offset 0x8
 };
+
+#pragma cpp_extensions on // anonymous struct members
 
 union FMOD_UINT64P {
     FMOD_UINT64 mValue; // offset 0x0
@@ -30,6 +37,8 @@ union FMOD_SINT64P {
         unsigned int mLo; // offset 0x4
     }; // offset 0x0
 };
+
+#pragma cpp_extensions reset
 
 struct FMOD_INT24
 {

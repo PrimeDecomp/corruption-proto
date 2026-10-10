@@ -5,6 +5,7 @@
 
 #include "fmod.h"
 #include "fmod_outputi.h"
+#include "fmod_output_polled.h"
 
 struct FMOD_OUTPUT_STATE;
 namespace FMOD {
@@ -13,10 +14,15 @@ namespace FMOD {
 
 namespace FMOD {
 
-// Synthesized from the definitions in fmod_output_nosound.cpp: the 4.06 DWARF has no type entry,
-// so the base class is guessed and members are unknown.
-struct OutputNoSound : public Output
+// Synthesized from the definitions in fmod_output_nosound.cpp: the 4.06 DWARF has no type entry.
+// G2MEAB: sizeof 0x20C (getDescriptionEx 0x8060F1B8 mSize); polled output (description polling = 1,
+// members after OutputPolled's 0x204 bytes); init 0x8060F30C fills +0x204 with the buffer size in bytes
+// and allocates +0x208; lock 0x8060F5E8 wraps offsets around +0x204.
+struct OutputNoSound : public OutputPolled
 {
+    unsigned int mBufferLength; // offset 0x204, Guessed name
+    void * mBuffer; // offset 0x208, Guessed name
+
     static FMOD_OUTPUT_DESCRIPTION_EX * getDescriptionEx();
     FMOD_RESULT getNumDrivers(int * numdrivers);
     FMOD_RESULT getDriverName(int driver, char * name, int namelen);

@@ -1,4 +1,5 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. CodecWav uses the G2MEAB layout
+// (sizeof 0x234, descriptor mSize 0x805E8650); the WAVE_* records match the native byte-swap accesses.
 
 #ifndef _FMOD_CODEC_WAV_H
 #define _FMOD_CODEC_WAV_H
@@ -7,6 +8,7 @@
 #include "fmod_codec.h"
 #include "fmod_codeci.h"
 #include "fmod_types.h"
+#include "fmod_syncpoint.h"
 
 struct FMOD_CODEC_STATE;
 struct FMOD_CREATESOUNDEXINFO;
@@ -18,6 +20,10 @@ namespace FMOD {
 }
 
 namespace FMOD {
+
+// The RIFF records are byte-packed: Samples sits at 0x12 and sizeof(WAVE_FORMATEXTENSIBLE) is 0x28
+// (parseChunk calloc minimum 0x805EAE00, CodecWav::mNumSyncPoints at 0x228).
+#pragma pack(1)
 
 struct WAVE_CHUNK
 {
@@ -79,29 +85,30 @@ struct WAVE_CUEPOINT
     int dwSampleOffset; // offset 0x14
 };
 
+#pragma pack()
+
 class CodecWav : public Codec
 {
-    WAVE_FORMATEXTENSIBLE mDestFormat; // offset 0xD8
-    int mNumSyncPoints; // offset 0x100
-    SyncPoint * mSyncPoint; // offset 0x104
-    int mSamplesPerADPCMBlock; // offset 0x108
 public:
+    unsigned char * mReadBuffer; // offset 0x1F4, calloc'd in openInternal 0x805E8BE4 // Guessed name (4.06 Codec member)
+    unsigned int mReadBufferLength; // offset 0x1F8, source nBlockAlign 0x805E8B90 // Guessed name (4.06 Codec member)
+    WAVE_FORMATEXTENSIBLE * mSrcFormat; // offset 0x1FC, "fmt " chunk copy (parseChunk 0x805EAE20)
+    WAVE_FORMATEXTENSIBLE mDestFormat; // offset 0x200
+    int mNumSyncPoints; // offset 0x228, "cue " count (parseChunk 0x805EAFFC)
+    SyncPoint * mSyncPoint; // offset 0x22C, array of mNumSyncPoints (parseChunk 0x805EB05C)
+    int mSamplesPerADPCMBlock; // offset 0x230 (openInternal 0x805E8B88)
+
     FMOD_RESULT parseChunk(unsigned int chunksize);
     FMOD_RESULT openInternal(FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO * userexinfo);
     FMOD_RESULT closeInternal();
     FMOD_RESULT soundCreateInternal(int subsound, FMOD_SOUND * sound);
-    FMOD_RESULT canPointInternal();
     FMOD_RESULT readInternal(void * buffer, unsigned int sizebytes, unsigned int * bytesread);
     FMOD_RESULT setPositionInternal(int subsound, unsigned int position, FMOD_TIMEUNIT postype);
-    FMOD_CODEC_WAVEFORMAT mWaveFormat; // offset 0x10C
-    WAVE_FORMATEXTENSIBLE mSrcFormatMemory; // offset 0x234
-    WAVE_FORMATEXTENSIBLE * mSrcFormat; // offset 0x25C
     static FMOD_RESULT openCallback(FMOD_CODEC_STATE * codec, FMOD_MODE usermode, FMOD_CREATESOUNDEXINFO * userexinfo);
     static FMOD_RESULT closeCallback(FMOD_CODEC_STATE * codec);
     static FMOD_RESULT soundCreateCallback(FMOD_CODEC_STATE * codec, int subsound, FMOD_SOUND * sound);
     static FMOD_RESULT readCallback(FMOD_CODEC_STATE * codec, void * buffer, unsigned int sizebytes, unsigned int * bytesread);
     static FMOD_RESULT setPositionCallback(FMOD_CODEC_STATE * codec, int subsound, unsigned int position, FMOD_TIMEUNIT postype);
-    static FMOD_RESULT canPointCallback(FMOD_CODEC_STATE * codec);
     static FMOD_CODEC_DESCRIPTION_EX * getDescriptionEx();
 };
 

@@ -25,6 +25,9 @@ void * FMOD_memmove(void * dest, const void * src, int count);
 char * FMOD_strdup(const char * src);
 char * FMOD_eatwhite(const char * string);
 int FMOD_atoi(const char * s);
+// G2MEAB 0x8061A1C8 / 0x8061A1F4 (names from another MWCC FMOD build's fmod_stringw.cpp).
+int FMOD_strlenW(const short * s);
+short * FMOD_strncpyW(short * dest, const short * src, int count);
 
 #ifdef __cplusplus
 }

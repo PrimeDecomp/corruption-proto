@@ -1,7 +1,9 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information (Freeverb). The 4.06 layout is confirmed by the G2MEAB accesses (see the .cpp).
 
 #ifndef _COMB_H
 #define _COMB_H
+
+#include "denormals.h"
 
 class comb;
 
@@ -25,5 +27,26 @@ private:
     int bufsize; // offset 0x14
     int bufidx; // offset 0x18
 };
+
+// Big to inline - but crucial for speed (Freeverb); inlined into revmodel::processreplace 0x80625D84.
+inline float comb::process(float input)
+{
+    float output;
+
+    output = buffer[bufidx];
+    undenormalise(output);
+
+    filterstore = (output * damp2) + (filterstore * damp1);
+    undenormalise(filterstore);
+
+    buffer[bufidx] = input + (filterstore * feedback);
+
+    if (++bufidx >= bufsize)
+    {
+        bufidx = 0;
+    }
+
+    return output;
+}
 
 #endif

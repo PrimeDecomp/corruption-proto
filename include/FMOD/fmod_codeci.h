@@ -22,8 +22,8 @@ namespace FMOD {
 
 typedef FMOD_RESULT (* FMOD_CODEC_CANPOINTCALLBACK)(FMOD_CODEC_STATE *);
 // G2MEAB layout: builders clear 0x50 bytes and store mType at +0x40 and mSize at +0x44. The node base
-// sits at +0x2C, so MWCC appends this struct's own vptr after mModule (+0x4C, vtable lbl_806E2D24;
-// destructor fn_805C24C4 with base thunk fn_805C2538). No reset/canpoint callbacks are present.
+// sits at +0x2C, so MWCC appends this struct's own vptr after mModule (+0x4C, vtable 0x806E2D24;
+// destructor 0x805C24C4 with base thunk 0x805C2538). No reset/canpoint callbacks are present.
 struct FMOD_CODEC_DESCRIPTION_EX : public FMOD_CODEC_DESCRIPTION, public LinkedListNode
 {
     FMOD_SOUND_TYPE mType; // offset 0x40

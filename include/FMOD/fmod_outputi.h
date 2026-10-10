@@ -39,7 +39,7 @@ typedef FMOD_RESULT (* FMOD_OUTPUT_SETREVERBCALLBACK)(FMOD_OUTPUT_STATE *, const
 // G2MEAB layout: builders clear 0x98 bytes; mType +0x48, mSize +0x4C, getsamplemaxchannels +0x54,
 // start +0x60, stop +0x64, createsample +0x6C, getsoundram +0x70, reverb_setproperties +0x90
 // (GC output and OutputSoftware stores). The 0x14 node base occupies +0x34..+0x48 and MWCC appends
-// this struct's own vptr at +0x94 (vtable lbl_806EE668, destructor fn_8060E9C4).
+// this struct's own vptr at +0x94 (vtable __vt__Q24FMOD26FMOD_OUTPUT_DESCRIPTION_EX, destructor 0x8060E9C4).
 struct FMOD_OUTPUT_DESCRIPTION_EX : public FMOD_OUTPUT_DESCRIPTION, public LinkedListNode
 {
     FMOD_OUTPUTTYPE mType; // offset 0x48

@@ -62,7 +62,7 @@ struct FMOD_CHANNEL_INFO
 // G2MEAB layout from ChannelI() fn_805BDCB8, ChannelI(int, SystemI *) fn_805BDD48 and init
 // fn_805BDE24: 4.06 order with 0x14 nodes, an extra word at +0x5C, and no mLPFCutoff, rolloff
 // points, spread, 3D pan level or 3D doppler level. The base node's vptr (+0x10) takes the ChannelI
-// vtable lbl_806E2C20 (destructor fn_805C1164).
+// vtable __vt__Q24FMOD8ChannelI (destructor 0x805C1164).
 struct ChannelI : public LinkedListNode
 {
     LinkedListNode mSortedListNode; // offset 0x14

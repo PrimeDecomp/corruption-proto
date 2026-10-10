@@ -13,9 +13,9 @@ namespace FMOD {
 namespace FMOD {
 
 // G2MEAB: constructors (e.g. ChannelI fn_805BDCB8) self-link the node, store -1 at +0xC and the
-// vtable lbl_806E25B4 at +0x10; sorted and plain channel nodes share that vtable, so the 4.06
+// vtable 0x806E25B4 at +0x10; sorted and plain channel nodes share that vtable, so the 4.06
 // SortedLinkedListNode is not a separate dynamic type here. The vtable holds only the destructor
-// fn_805B6184.
+// 0x805B6184.
 class LinkedListNode
 {
     LinkedListNode * mNodeNext; // offset 0x0

@@ -1,27 +1,29 @@
 #ifndef _CTRANSITION
 #define _CTRANSITION
 
-#include "rstl/pair.hpp"
+#include "Kyoto/CAssetId.hpp"
+
 #include "rstl/rc_ptr.hpp"
 
 class IMetaTrans;
 class CInputStream;
-class CTransition {
-  uint mId;
-  uint mAnimA;
-  uint mAnimB;
-  rstl::rc_ptr< IMetaTrans > mTrans;
 
+// G2MEAB keys transitions by animation asset id (CTransition.cpp 0x805608C0..0x8056098C).
+class CTransition {
 public:
   explicit CTransition(CInputStream& in);
-  uint GetFromAnimIndex() const { return mAnimA; }
-  uint GetToAnimIndex() const { return mAnimB; }
-  u32 GetAnimA() const { return mAnimA; }
-  u32 GetAnimB() const { return mAnimB; }
-  rstl::pair< uint, uint > GetAnimPair() const { return rstl::pair< uint, uint >(mAnimA, mAnimB); }
-  const rstl::rc_ptr< IMetaTrans >& GetMetaTrans() const { return mTrans; }
-};
 
-CHECK_SIZEOF(CTransition, 0x14)
+  // Guessed names. Emitted out of line in CTransition.cpp.
+  const CAssetId& GetToAnimId() const;   // 0x805608C0
+  const CAssetId& GetFromAnimId() const; // 0x805608C8
+  const rstl::rc_ptr< IMetaTrans >& GetMetaTrans() const; // 0x805608D0, Prime's name
+
+private:
+  uchar mVersion; // Guessed name: the first byte of the stream record
+  CAssetId mFromAnim;
+  CAssetId mToAnim;
+  rstl::rc_ptr< IMetaTrans > mMetaTrans;
+};
+CHECK_SIZEOF(CTransition, 0x20)
 
 #endif // _CTRANSITION

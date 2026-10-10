@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+#include "rstl/construct.hpp"
 #include "rstl/string.hpp"
 
 class CInputStream;
@@ -20,9 +21,12 @@ public:
   void PutTo(COutputStream& out) const;            // 0x805085CC
   unsigned long long Value() const { return mId; } // Guessed name
 
-  bool operator==(const CAssetId& other) const { return mId == other.mId; }
-  bool operator!=(const CAssetId& other) const { return mId != other.mId; }
-  bool operator<(const CAssetId& other) const { return mId < other.mId; }
+  // The operand is taken by value: comparisons copy the right-hand id first
+  // (CActor::PlaySoundEffect copies kInvalidAssetId; CTransitionDatabaseGame's lower_bound at
+  // 0x8055F8E0 compares against a copy of the searched key).
+  bool operator==(CAssetId other) const { return mId == other.mId; }
+  bool operator!=(CAssetId other) const { return mId != other.mId; }
+  bool operator<(CAssetId other) const { return mId < other.mId; }
 
 private:
   static long long ParseDecimalString(const char* str); // 0x80508758, Guessed name
@@ -30,6 +34,13 @@ private:
   unsigned long long mId;
 };
 CHECK_SIZEOF(CAssetId, 0x8)
+
+// Containers of ids are copied flat and freed without destroying their elements
+// (CTransitionDatabaseGame's additive table at 0x8055ED04 and 0x8055E1F8, and main.cpp's
+// vector<pair<CAssetId, TEditorId> >::clear).
+namespace rstl {
+RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(CAssetId)
+} // namespace rstl
 
 // 0x8079B460: set to -1 by IObj.cpp's static initializer.
 extern const CAssetId kInvalidAssetId; // Guessed name

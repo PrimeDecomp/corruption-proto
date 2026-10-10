@@ -43,6 +43,8 @@ public:
     static FMOD_RESULT removeCallback(FMOD_ASYNC_CALLBACK callback);
 };
 
+// 4.06 only, with 4.06 PS3 offsets (a 0x5C mExInfo). G2MEAB keeps these fields inline in SoundI
+// (+0x2C4-+0x334); no separate AsyncData object has been observed.
 struct AsyncData
 {
     char mName[256]; // offset 0x0

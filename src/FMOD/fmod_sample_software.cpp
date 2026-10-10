@@ -26,10 +26,6 @@ FMOD_RESULT SampleSoftware::setLoopPointData()
 {
 }
 
-FMOD_RESULT SampleSoftware::setMode(FMOD_MODE mode)
-{
-}
-
 FMOD_RESULT SampleSoftware::restoreLoopPointData()
 {
 }
@@ -39,10 +35,6 @@ FMOD_RESULT SampleSoftware::lockInternal(unsigned int offset, unsigned int lengt
 }
 
 FMOD_RESULT SampleSoftware::unlockInternal(void * ptr1, void * ptr2, unsigned int len1, unsigned int len2)
-{
-}
-
-FMOD_RESULT SampleSoftware::setBufferData(void * data)
 {
 }
 

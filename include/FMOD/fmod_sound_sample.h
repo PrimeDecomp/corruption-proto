@@ -1,4 +1,4 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Sample is the G2MEAB layout.
 
 #ifndef _FMOD_SOUND_SAMPLE_H
 #define _FMOD_SOUND_SAMPLE_H
@@ -12,17 +12,18 @@ namespace FMOD {
 
 namespace FMOD {
 
+// G2MEAB: 0x37C bytes, vtable 0x806EEF18. Sample() 0x80612B54 clears mNumSubSamples and sets
+// mLockCanRead. The vtable ends with lockInternal and unlockInternal; 4.06 setBufferData is absent.
 struct Sample : public SoundI
 {
-    int mNumSubSamples; // offset 0xCC
-    Sample * mSubSample[8]; // offset 0xD0
-    void * mLockBuffer; // offset 0xF0
-    unsigned int mLockLength; // offset 0xF4
-    unsigned int mLockOffset; // offset 0xF8
-    bool mLockCanRead; // offset 0xFC
+    int mNumSubSamples; // offset 0x348
+    Sample * mSubSample[8]; // offset 0x34C
+    void * mLockBuffer; // offset 0x36C
+    unsigned int mLockLength; // offset 0x370
+    unsigned int mLockOffset; // offset 0x374
+    bool mLockCanRead; // offset 0x378
     virtual FMOD_RESULT lockInternal(unsigned int, unsigned int, void * *, void * *, unsigned int *, unsigned int *);
     virtual FMOD_RESULT unlockInternal(void *, void *, unsigned int, unsigned int);
-    virtual FMOD_RESULT setBufferData(void *);
     Sample();
     virtual FMOD_RESULT lock(unsigned int offset, unsigned int length, void * * ptr1, void * * ptr2, unsigned int * len1, unsigned int * len2);
     virtual FMOD_RESULT unlock(void * ptr1, void * ptr2, unsigned int len1, unsigned int len2);

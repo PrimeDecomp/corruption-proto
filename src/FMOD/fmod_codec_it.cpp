@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805C84F4..0x805D12C8 (48 retained native functions).
 // Original basename directly named by target allocation/free evidence.
 // Evidence: IT descriptor8073FC0C registration84F4, formatA/state3C04, binds11A4/11D0/11FC/1228 to

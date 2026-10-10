@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805C168C..0x805C2540 (12 retained native functions).
 // Original basename directly named by target allocation/free evidence.
 // Evidence: Release168C and metadata-copy/add18A8/2318 directly name fmod_codec.cpp. Shared Codec
@@ -8,3 +8,41 @@
 // adjustor2538 remain emitted here. Following2540 begins AIFF descriptor registration and its
 // closed callback/parser family. Preserve every retained callback, emitted helper and initializer;
 // complete inventory and inlining uncertainty are recorded externally.
+
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+
+#include "fmod_codec.h"
+#include "fmod.h"
+#include "fmod_codeci.h"
+
+namespace FMOD {
+
+FMOD_RESULT Codec::release()
+{
+}
+
+FMOD_RESULT Codec::getMetadataFromFile()
+{
+}
+
+FMOD_RESULT Codec::read(void * buffer, unsigned int sizebytes, unsigned int * bytesread)
+{
+}
+
+FMOD_RESULT Codec::getLength(unsigned int * length, FMOD_TIMEUNIT lengthtype)
+{
+}
+
+FMOD_RESULT Codec::setPosition(int subsound, unsigned int position, FMOD_TIMEUNIT postype)
+{
+}
+
+FMOD_RESULT Codec::getPosition(unsigned int * position, FMOD_TIMEUNIT postype)
+{
+}
+
+FMOD_RESULT Codec::metaData(FMOD_TAGTYPE type, const char * name, void * data, unsigned int datalen, FMOD_TAGDATATYPE datatype, bool unique)
+{
+}
+
+} // namespace FMOD

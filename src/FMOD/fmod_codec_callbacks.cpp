@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805B5D10..0x805B5DA4 (3 retained native functions).
 // Provisional adapter-family filename; original standalone placement is unproven.
 // Retained bodies: codec metadata callback bridge, codec absolute-seek callback bridge, codec

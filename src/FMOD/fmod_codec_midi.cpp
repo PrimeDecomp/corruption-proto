@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805D12C8..0x805D4E84 (28 retained native functions).
 // Original basename directly named by target allocation/free evidence.
 // Evidence: MIDI descriptor80740C6C registrationD12C8 binds4D60/4D8C/4DB8/4DE4 to

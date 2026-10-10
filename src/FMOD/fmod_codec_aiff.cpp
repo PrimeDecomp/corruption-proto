@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805C2540..0x805C3308 (12 retained native functions).
 // Inferred basename; original source filename is unproven.
 // Evidence: Registration2540 initializes 50-byte AIFF descriptor8073F704, format2 and state500,

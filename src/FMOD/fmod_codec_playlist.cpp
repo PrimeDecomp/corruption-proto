@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805E1C88..0x805E308C (18 retained native functions).
 // Inferred basename; original source filename is unproven.
 // Evidence: Playlist Reader descriptor807533D4 registration1C88, formatF/state500, binds open1D20

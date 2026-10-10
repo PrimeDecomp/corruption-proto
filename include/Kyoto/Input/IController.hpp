@@ -5,6 +5,7 @@
 
 #include "Kyoto/Input/CControllerGamepadData.hpp"
 #include "Kyoto/Input/InputTypes.hpp"
+#include "Kyoto/Math/CVector2f.hpp"
 
 class COsContext;
 class IController {
@@ -22,6 +23,10 @@ public:
   virtual CControllerGamepadData& GetGamepadData(int controller) = 0;
   virtual uint GetControllerType(int) const = 0;
   virtual void SetMotorState(EIOPort port, EMotorState state) = 0;
+  virtual int GetTrackingState(int controller) const = 0;                    // Guessed name
+  virtual uint GetConsecutiveValidTrackingFrames(int controller) const = 0;   // Guessed name
+  virtual uint GetConsecutiveInvalidTrackingFrames(int controller) const = 0; // Guessed name
+  virtual CVector2f GetTrackedPosition(int controller) const = 0;            // Guessed name
 
   static IController* Create(const COsContext& ctx);
 };

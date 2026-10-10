@@ -902,21 +902,17 @@ bool CMain::CheckTerminate() {
   return false;
 }
 
-// The prototype's gamepad data has 51 buttons (from 0x64, where our shared header only names
-// the first 12 from 0x34).
-static const int kLastGamepadButton = 50;
-
 bool CMain::CheckReset() {
   const BOOL resetPressed = OSGetResetButtonState();
   const CControllerGamepadData& pad = gpController->GetGamepadData(0);
   // The chord is buttons 1, 2 and 7 (B, X and Start in Echoes) with nothing else held.
   bool resetChord = true;
-  for (int i = 0; i <= kLastGamepadButton && resetChord; ++i) {
+  for (int i = 0; i <= kBU_MAX - 1 && resetChord; ++i) {
     const bool pressed = pad.GetButton(static_cast< EButton >(i)).GetIsPressed();
     switch (i) {
-    case 1:
-    case 2:
-    case 7:
+    case kBU_Core0001:
+    case kBU_Core0002:
+    case kBU_Core0100:
       if (!pressed) {
         resetChord = false;
       }
@@ -1164,8 +1160,7 @@ int CMain::RsMain(int argc, const char* const* argv) {
 
     if (CGraphics::CanSetProgressiveMode()) {
       bool progressive = CGraphics::GetProgressiveDefault();
-      // The prototype's gamepad data keeps 51 buttons from 0x64; the Start button is at 0x70.
-      if (gpController->GetGamepadData(0).GetButton(kBU_Start).GetIsPressed()) {
+      if (gpController->GetGamepadData(0).GetButton(kBU_Core0008).GetIsPressed()) {
         progressive = !progressive;
         gpfnWarningPrintf("Progressive mode has been turned %s\n", progressive ? "ON" : "OFF");
       }

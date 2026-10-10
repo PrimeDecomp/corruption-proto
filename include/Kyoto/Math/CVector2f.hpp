@@ -27,6 +27,7 @@ public:
   float Magnitude() const;
   float MagSquared() const;
   CVector2f AsNormalized() const;
+  bool CanBeNormalized() const; // Guessed name
 
   float& operator[](int idx) { return *(&mX + idx); }
 

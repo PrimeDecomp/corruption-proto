@@ -21,6 +21,8 @@ typedef FMOD_RESULT (* FMOD_CODEC_GETPOSITIONCALLBACK)(FMOD_CODEC_STATE *, unsig
 typedef FMOD_RESULT (* FMOD_CODEC_SOUNDCREATECALLBACK)(FMOD_CODEC_STATE *, int, FMOD_SOUND *);
 typedef FMOD_RESULT (* FMOD_CODEC_METADATACALLBACK)(FMOD_CODEC_STATE *, FMOD_TAGTYPE, char *, void *, unsigned int, FMOD_TAGDATATYPE, int);
 typedef FMOD_RESULT (* FMOD_CODEC_GETWAVEFORMAT)(FMOD_CODEC_STATE *, int, FMOD_CODEC_WAVEFORMAT *);
+// G2MEAB: 0x2C bytes. The description EX node starts at +0x2C (__sinit_fmod_codec_wav_cpp), so the
+// 4.06 getwaveformat member is absent; no builder stores past soundcreate.
 struct FMOD_CODEC_DESCRIPTION
 {
     const char * name; // offset 0x0
@@ -34,7 +36,6 @@ struct FMOD_CODEC_DESCRIPTION
     FMOD_CODEC_SETPOSITIONCALLBACK setposition; // offset 0x20
     FMOD_CODEC_GETPOSITIONCALLBACK getposition; // offset 0x24
     FMOD_CODEC_SOUNDCREATECALLBACK soundcreate; // offset 0x28
-    FMOD_CODEC_GETWAVEFORMAT getwaveformat; // offset 0x2C
 };
 
 typedef FMOD_CODEC_DESCRIPTION FMOD_CODEC_DESCRIPTION;

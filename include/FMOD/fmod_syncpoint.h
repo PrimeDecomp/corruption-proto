@@ -7,7 +7,7 @@
 
 namespace FMOD {
 
-struct SyncPoint : public SortedLinkedListNode
+struct SyncPoint : public LinkedListNode
 {
     unsigned int mOffset; // offset 0x10
     char mName[256]; // offset 0x14

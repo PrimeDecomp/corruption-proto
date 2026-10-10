@@ -1,4 +1,4 @@
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. ChannelI is the G2MEAB layout; other offsets are the 4.06 reference, not yet verified against G2MEAB.
 
 #ifndef _FMOD_CHANNELI_H
 #define _FMOD_CHANNELI_H
@@ -59,61 +59,60 @@ struct FMOD_CHANNEL_INFO
     FMOD_MODE mMode; // offset 0x78
 };
 
+// G2MEAB layout from ChannelI() fn_805BDCB8, ChannelI(int, SystemI *) fn_805BDD48 and init
+// fn_805BDE24: 4.06 order with 0x14 nodes, an extra word at +0x5C, and no mLPFCutoff, rolloff
+// points, spread, 3D pan level or 3D doppler level. The base node's vptr (+0x10) takes the ChannelI
+// vtable lbl_806E2C20 (destructor fn_805C1164).
 struct ChannelI : public LinkedListNode
 {
-    SortedLinkedListNode mSortedListNode; // offset 0xC
-    int mIndex; // offset 0x1C
-    void * mUserData; // offset 0x20
-    unsigned int mHandleOriginal; // offset 0x24
-    SystemI * mSystem; // offset 0x28
-    int mNumRealChannels; // offset 0x2C
-    ChannelReal * mRealChannel[8]; // offset 0x30
-    unsigned int mHandleCurrent; // offset 0x50
-    FMOD_CHANNEL_PANMODE mLastPanMode; // offset 0x54
-    bool mLastPaused; // offset 0x58
-    int mPriority; // offset 0x5C
-    unsigned int mListPosition; // offset 0x60
-    bool mJustWentVirtual; // offset 0x64
-    SyncPoint * mLastSyncPoint; // offset 0x68
-    ChannelGroupI * mChannelGroup; // offset 0x6C
-    LinkedListNode mChannelGroupNode; // offset 0x70
-    int mLPFCutoff; // offset 0x7C
-    float mVolume; // offset 0x80
-    float mFrequency; // offset 0x84
-    float mPan; // offset 0x88
-    float mSpeakerFL; // offset 0x8C
-    float mSpeakerFR; // offset 0x90
-    float mSpeakerC; // offset 0x94
-    float mSpeakerLFE; // offset 0x98
-    float mSpeakerBL; // offset 0x9C
-    float mSpeakerBR; // offset 0xA0
-    float mSpeakerSL; // offset 0xA4
-    float mSpeakerSR; // offset 0xA8
-    float * mLevels; // offset 0xAC
-    bool mMute; // offset 0xB0
-    bool mMoved; // offset 0xB1
-    float mVolumeOcclusion; // offset 0xB4
-    float mVolume3D; // offset 0xB8
-    float mPitch3D; // offset 0xBC
-    FMOD_VECTOR mPosition3D; // offset 0xC0
-    FMOD_VECTOR mVelocity3D; // offset 0xCC
-    float mDistance; // offset 0xD8
-    float mMinDistance; // offset 0xDC
-    float mMaxDistance; // offset 0xE0
-    float mConeVolume3D; // offset 0xE4
-    float mConeInsideAngle; // offset 0xE8
-    float mConeOutsideAngle; // offset 0xEC
-    float mConeOutsideVolume; // offset 0xF0
-    FMOD_VECTOR mConeOrientation; // offset 0xF4
-    float mDirectOcclusion; // offset 0x100
-    float mReverbOcclusion; // offset 0x104
-    float mDirectOcclusionTarget; // offset 0x108
-    float mReverbOcclusionTarget; // offset 0x10C
-    FMOD_VECTOR * mRolloffPoint; // offset 0x110
-    int mNumRolloffPoints; // offset 0x114
-    float mSpread; // offset 0x118
-    float m3DPanLevel; // offset 0x11C
-    float m3DDopplerLevel; // offset 0x120
+    LinkedListNode mSortedListNode; // offset 0x14
+    int mIndex; // offset 0x28
+    void * mUserData; // offset 0x2C
+    unsigned int mHandleOriginal; // offset 0x30
+    SystemI * mSystem; // offset 0x34
+    int mNumRealChannels; // offset 0x38
+    ChannelReal * mRealChannel[8]; // offset 0x3C
+    int mUnk5C; // offset 0x5C, unresolved
+    unsigned int mHandleCurrent; // offset 0x60
+    FMOD_CHANNEL_PANMODE mLastPanMode; // offset 0x64
+    bool mLastPaused; // offset 0x68
+    int mPriority; // offset 0x6C
+    unsigned int mListPosition; // offset 0x70
+    bool mJustWentVirtual; // offset 0x74
+    SyncPoint * mLastSyncPoint; // offset 0x78
+    ChannelGroupI * mChannelGroup; // offset 0x7C
+    LinkedListNode mChannelGroupNode; // offset 0x80
+    float mVolume; // offset 0x94
+    float mFrequency; // offset 0x98
+    float mPan; // offset 0x9C
+    float mSpeakerFL; // offset 0xA0
+    float mSpeakerFR; // offset 0xA4
+    float mSpeakerC; // offset 0xA8
+    float mSpeakerLFE; // offset 0xAC
+    float mSpeakerBL; // offset 0xB0
+    float mSpeakerBR; // offset 0xB4
+    float mSpeakerSL; // offset 0xB8
+    float mSpeakerSR; // offset 0xBC
+    float * mLevels; // offset 0xC0
+    bool mMute; // offset 0xC4
+    bool mMoved; // offset 0xC5
+    float mVolumeOcclusion; // offset 0xC8
+    float mVolume3D; // offset 0xCC
+    float mPitch3D; // offset 0xD0
+    FMOD_VECTOR mPosition3D; // offset 0xD4
+    FMOD_VECTOR mVelocity3D; // offset 0xE0
+    float mDistance; // offset 0xEC
+    float mMinDistance; // offset 0xF0
+    float mMaxDistance; // offset 0xF4
+    float mConeVolume3D; // offset 0xF8
+    float mConeInsideAngle; // offset 0xFC
+    float mConeOutsideAngle; // offset 0x100
+    float mConeOutsideVolume; // offset 0x104
+    FMOD_VECTOR mConeOrientation; // offset 0x108
+    float mDirectOcclusion; // offset 0x114
+    float mReverbOcclusion; // offset 0x118
+    float mDirectOcclusionTarget; // offset 0x11C
+    float mReverbOcclusionTarget; // offset 0x120
     FMOD_CHANNEL_CALLBACK mCallback[3]; // offset 0x124
     int mCallbackCommand[3]; // offset 0x130
     static FMOD_RESULT validate(Channel * channel, ChannelI * * channeli);

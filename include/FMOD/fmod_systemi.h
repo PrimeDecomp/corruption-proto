@@ -79,7 +79,7 @@ struct SystemI : public LinkedListNode
     ChannelI * mChannel; // offset 0xE8
     ChannelI mChannelUsedListHead; // offset 0xEC
     ChannelI mChannelFreeListHead; // offset 0x228
-    SortedLinkedListNode mChannelSortedListHead; // offset 0x364
+    LinkedListNode mChannelSortedListHead; // offset 0x364
     Output * mOutput; // offset 0x374
     FMOD_OUTPUTTYPE mOutputType; // offset 0x378
     FMOD_SOUND_FORMAT mOutputFormat; // offset 0x37C

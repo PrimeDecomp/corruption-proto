@@ -20,17 +20,15 @@ namespace FMOD {
 
 namespace FMOD {
 
-typedef FMOD_RESULT (* FMOD_CODEC_RESETCALLBACK)(FMOD_CODEC_STATE *);
 typedef FMOD_RESULT (* FMOD_CODEC_CANPOINTCALLBACK)(FMOD_CODEC_STATE *);
-// G2MEAB layout: builders clear 0x50 bytes and store mType at +0x40 and mSize at +0x44, which fits a
-// SortedLinkedListNode base as in the later Gormiti build (4.06 used LinkedListNode, mType +0x3C).
-// No canpoint callback is stored; the field at +0x4C is 4.06 reset or Gormiti mHandle (unresolved).
-struct FMOD_CODEC_DESCRIPTION_EX : public FMOD_CODEC_DESCRIPTION, public SortedLinkedListNode
+// G2MEAB layout: builders clear 0x50 bytes and store mType at +0x40 and mSize at +0x44. The node base
+// sits at +0x2C, so MWCC appends this struct's own vptr after mModule (+0x4C, vtable lbl_806E2D24;
+// destructor fn_805C24C4 with base thunk fn_805C2538). No reset/canpoint callbacks are present.
+struct FMOD_CODEC_DESCRIPTION_EX : public FMOD_CODEC_DESCRIPTION, public LinkedListNode
 {
     FMOD_SOUND_TYPE mType; // offset 0x40
     int mSize; // offset 0x44
     FMOD_OS_LIBRARY * mModule; // offset 0x48
-    FMOD_CODEC_RESETCALLBACK reset; // offset 0x4C
 };
 
 struct SYNCDATA

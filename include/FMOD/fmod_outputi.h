@@ -38,12 +38,10 @@ typedef FMOD_RESULT (* FMOD_OUTPUT_RECORDSTARTCALLBACK)(FMOD_OUTPUT_STATE *, int
 typedef FMOD_RESULT (* FMOD_OUTPUT_SETREVERBCALLBACK)(FMOD_OUTPUT_STATE *, const FMOD_REVERB_PROPERTIES *);
 // G2MEAB layout: builders clear 0x98 bytes; mType +0x48, mSize +0x4C, getsamplemaxchannels +0x54,
 // start +0x60, stop +0x64, createsample +0x6C, getsoundram +0x70, reverb_setproperties +0x90
-// (GC output and OutputSoftware stores). That is the 4.06 field order shifted by 8 bytes, plus one
-// trailing field. Whether the 8 bytes belong to the base description or precede mType is unresolved.
+// (GC output and OutputSoftware stores). The 0x14 node base occupies +0x34..+0x48 and MWCC appends
+// this struct's own vptr at +0x94 (vtable lbl_806EE668, destructor fn_8060E9C4).
 struct FMOD_OUTPUT_DESCRIPTION_EX : public FMOD_OUTPUT_DESCRIPTION, public LinkedListNode
 {
-    int mUnk40; // offset 0x40, unresolved
-    int mUnk44; // offset 0x44, unresolved
     FMOD_OUTPUTTYPE mType; // offset 0x48
     int mSize; // offset 0x4C
     FMOD_OS_LIBRARY * mModule; // offset 0x50
@@ -63,7 +61,6 @@ struct FMOD_OUTPUT_DESCRIPTION_EX : public FMOD_OUTPUT_DESCRIPTION, public Linke
     FMOD_OUTPUT_LOCKCALLBACK record_lock; // offset 0x88
     FMOD_OUTPUT_UNLOCKCALLBACK record_unlock; // offset 0x8C
     FMOD_OUTPUT_SETREVERBCALLBACK reverb_setproperties; // offset 0x90
-    int mUnk94; // offset 0x94, unresolved
 };
 
 class Output : public Plugin, public FMOD_OUTPUT_STATE

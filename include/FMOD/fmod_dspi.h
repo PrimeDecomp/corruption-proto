@@ -31,15 +31,17 @@ enum FMOD_DSP_CATEGORY {
 };
 
 const int FMOD_DSP_TYPE_CODECREADER = 1000;
+// G2MEAB layout: builders clear 0x90 bytes. The 0x14 node base occupies +0x5C..+0x70 and MWCC appends
+// this struct's own vptr at +0x8C (vtable __vt__Q24FMOD23FMOD_DSP_DESCRIPTION_EX, __sinit stores).
 struct FMOD_DSP_DESCRIPTION_EX : public FMOD_DSP_DESCRIPTION, public LinkedListNode
 {
-    FMOD_SOUND_FORMAT mFormat; // offset 0x68
-    FMOD_DSP_TYPE mType; // offset 0x6C
-    int mSize; // offset 0x70
-    FMOD_DSP_CATEGORY mCategory; // offset 0x74
-    FMOD_OS_LIBRARY * mModule; // offset 0x78
-    void * mAEffect; // offset 0x7C
-    int mResamplerBlockLength; // offset 0x80
+    FMOD_SOUND_FORMAT mFormat; // offset 0x70
+    FMOD_DSP_TYPE mType; // offset 0x74
+    int mSize; // offset 0x78
+    FMOD_DSP_CATEGORY mCategory; // offset 0x7C
+    FMOD_OS_LIBRARY * mModule; // offset 0x80
+    void * mAEffect; // offset 0x84
+    int mResamplerBlockLength; // offset 0x88
 };
 
 enum FMOD_DSPCONNECTIONREQUEST_CMD {

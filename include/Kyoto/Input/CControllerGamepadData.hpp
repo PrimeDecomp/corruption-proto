@@ -5,6 +5,8 @@
 #include "Kyoto/Input/CControllerButton.hpp"
 #include "Kyoto/Input/InputTypes.hpp"
 
+#include "types.h"
+
 class CControllerGamepadData {
 public:
   void SetDeviceIsPresent(bool present) { mPresent = present; }
@@ -25,9 +27,11 @@ public:
 private:
   bool mPresent;
   bool mJustDisconnected;
-  CControllerAxis mAxes[4];
-  CControllerAxis mTriggers[2];
-  CControllerButton mButtons[12];
+  CControllerAxis mAxes[kJA_MAX];
+  CControllerAxis mTriggers[kBA_MAX];
+  CControllerButton mButtons[kBU_MAX];
 };
+
+CHECK_SIZEOF(CControllerGamepadData, 0x100);
 
 #endif // _CCONTROLLERGAMEPADDATA

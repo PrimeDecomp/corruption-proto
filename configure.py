@@ -351,9 +351,15 @@ def LzoLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
     }
 
 
-# Provisional profile for FMOD scaffolds; historical compiler and flags are unverified.
+# FMOD Ex profile: GC/2.7 at -O3,p without the peephole pass reproduces the native
+# LinkedListNode destructor exactly (no record-form compares) and the fmod_time TU.
 # Keep this independent from the imported Dolphin SDK and Retro inlining settings.
-cflags_fmod = [*cflags_base, "-i include/FMOD"]
+cflags_fmod = [
+    *[flag for flag in cflags_base if flag != "-O4,p"],
+    "-O3,p",
+    "-opt nopeephole",
+    "-i include/FMOD",
+]
 
 
 def FmodLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:

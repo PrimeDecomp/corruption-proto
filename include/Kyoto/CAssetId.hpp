@@ -3,6 +3,7 @@
 
 #include "types.h"
 
+#include "rstl/construct.hpp"
 #include "rstl/string.hpp"
 
 class CInputStream;
@@ -20,9 +21,11 @@ public:
   void PutTo(COutputStream& out) const;            // 0x805085CC
   unsigned long long Value() const { return mId; } // Guessed name
 
-  bool operator==(const CAssetId& other) const { return mId == other.mId; }
-  bool operator!=(const CAssetId& other) const { return mId != other.mId; }
-  bool operator<(const CAssetId& other) const { return mId < other.mId; }
+  // The operand is taken by value: callers compare against a copy of the right-hand id
+  // (CActor::PlaySoundEffect copies kInvalidAssetId, CTransitionDatabaseGame's lookups copy keys).
+  bool operator==(CAssetId other) const { return mId == other.mId; }
+  bool operator!=(CAssetId other) const { return mId != other.mId; }
+  bool operator<(CAssetId other) const { return mId < other.mId; }
 
 private:
   static long long ParseDecimalString(const char* str); // 0x80508758, Guessed name
@@ -30,6 +33,10 @@ private:
   unsigned long long mId;
 };
 CHECK_SIZEOF(CAssetId, 0x8)
+
+namespace rstl {
+RSTL_DECLARE_TRIVIALLY_CONSTRUCTIBLE(CAssetId)
+} // namespace rstl
 
 // 0x8079B460: set to -1 by IObj.cpp's static initializer.
 extern const CAssetId kInvalidAssetId; // Guessed name

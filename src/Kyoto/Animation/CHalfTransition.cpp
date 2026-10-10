@@ -5,4 +5,8 @@
 #include "Kyoto/Streams/CInputStream.hpp"
 
 CHalfTransition::CHalfTransition(CInputStream& in)
-: mId(in.Get< uint >()), mTrans(CMetaTransFactory::CreateMetaTrans(in)) {}
+: mVersion(in.Get< uchar >()), mToAnim(in), mMetaTrans(CMetaTransFactory::CreateMetaTrans(in)) {}
+
+const CAssetId& CHalfTransition::GetToAnimId() const { return mToAnim; }
+
+const rstl::rc_ptr< IMetaTrans >& CHalfTransition::GetMetaTrans() const { return mMetaTrans; }

@@ -1,30 +1,138 @@
-// NonMatching translation-unit scaffold; function bodies are empty placeholders.
-// G2MEAB .text: 0x805B5DA4..0x805B60A0 (3 retained native functions).
-// Original basename directly named by target allocation/free evidence.
-// Evidence: 805B5F60 allocates0x1148 and frees on failure with fmod.cpp lines227/253, constructs
-// SystemI8061E5B4 and registers it in the global system list. Leading805B5DA4 configures that same
-// FMOD global memory pool/callback trio only while the system list is empty;805B5F30 reads
-// allocation counters+1C/+20. Following805B60A0 is a thread entry forwarding to the closed
-// async-job service family. Three preceding codec/DSP callback adapters are deliberately excluded
-// because original emitting-file ownership is unproven. Preserve every retained stub, emitted
-// helper and adjustor thunk; full inventory and inlining uncertainty are recorded externally.
-
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Partial reconstruction of the G2MEAB unit (.text 0x805B5DA4..0x805B60A0). The three retained natives
+// (FMOD_Memory_Initialize 0x805B5DA4, FMOD_Memory_GetStats 0x805B5F30, FMOD_System_Create 0x805B5F60)
+// are reconstructed in native order. The remaining C API wrappers are dead-stripped in G2MEAB and stay
+// as empty 4.06 placeholders.
 
 #include "fmod.h"
 #include "fmod_codec.h"
 #include "fmod_dsp.h"
+#include "fmod_globals.h"
+#include "fmod_memory.h"
+#include "fmod_systemi.h"
 
-FMOD_RESULT FMOD_Memory_GetStats(int * currentalloced, int * maxalloced)
+#include <string.h>
+
+// Guessed name: the native materializes a bool from both node links (0x805B5DB8), unlike
+// LinkedListNode::isEmpty, which tests only the next link.
+static inline bool isSystemListEmpty(FMOD::LinkedListNode * head)
 {
+    if (head->getNext() == head && head->getPrev() == head)
+    {
+        return true;
+    }
+    return false;
 }
 
 FMOD_RESULT FMOD_Memory_Initialize(void * poolmem, int poollen, FMOD_MEMORY_ALLOCCALLBACK useralloc, FMOD_MEMORY_REALLOCCALLBACK userrealloc, FMOD_MEMORY_FREECALLBACK userfree)
 {
+    if (!isSystemListEmpty(FMOD::gSystemHead))
+    {
+        return FMOD_ERR_INITIALIZED;
+    }
+
+    if (poollen % 64)
+    {
+        return FMOD_ERR_INVALID_PARAM;
+    }
+
+    if (poollen && poolmem)
+    {
+        FMOD_RESULT result;
+
+        if (useralloc || userrealloc || userfree)
+        {
+            return FMOD_ERR_INVALID_PARAM;
+        }
+        if (poollen < 64)
+        {
+            return FMOD_ERR_INVALID_PARAM;
+        }
+
+        result = FMOD::gSystemPool->init(poolmem, poollen, 64);
+        if (result == FMOD_OK)
+        {
+            FMOD::gSystemPool->setCallbacks(0, 0, 0);
+        }
+        return result;
+    }
+    else if (poolmem || poollen)
+    {
+        return FMOD_ERR_INVALID_PARAM;
+    }
+    else if (useralloc && userrealloc && userfree)
+    {
+        FMOD::gSystemPool->setCallbacks(useralloc, userrealloc, userfree);
+    }
+    else if (!useralloc && !userrealloc && !userfree)
+    {
+        FMOD::gSystemPool->setCallbacks(FMOD::Memory_DefaultMalloc, FMOD::Memory_DefaultRealloc, FMOD::Memory_DefaultFree);
+    }
+    else
+    {
+        return FMOD_ERR_INVALID_PARAM;
+    }
+
+    return FMOD_OK;
+}
+
+FMOD_RESULT FMOD_Memory_GetStats(int * currentalloced, int * maxalloced)
+{
+    if (currentalloced)
+    {
+        *currentalloced = FMOD::gSystemPool->getCurrentAllocated();
+    }
+    if (maxalloced)
+    {
+        *maxalloced = FMOD::gSystemPool->getMaxAllocated();
+    }
+
+    return FMOD_OK;
 }
 
 FMOD_RESULT FMOD_System_Create(FMOD_SYSTEM * * system)
 {
+    FMOD::SystemI * sys;
+    FMOD::LinkedListNode * node;
+    unsigned char used[16];
+    int count;
+
+    if (!system)
+    {
+        return FMOD_ERR_INVALID_PARAM;
+    }
+
+    sys = FMOD_Object_Calloc(FMOD::SystemI);
+    *system = (FMOD_SYSTEM *)sys;
+    if (!*system)
+    {
+        return FMOD_ERR_MEMORY;
+    }
+
+    memset(used, 0, 16);
+
+    for (node = FMOD::gSystemHead->getNext(); node != FMOD::gSystemHead; node = node->getNext())
+    {
+        used[((FMOD::SystemI *)node)->mIndex - 1] = 1;
+    }
+
+    sys->addAfter(FMOD::gSystemHead);
+
+    for (count = 0; count < 15; count++)
+    {
+        if (!used[count])
+        {
+            sys->mIndex = count + 1;
+            break;
+        }
+    }
+
+    if (count == 15)
+    {
+        FMOD_Memory_Free(sys);
+        return FMOD_ERR_MEMORY;
+    }
+
+    return FMOD_OK;
 }
 
 FMOD_RESULT FMOD_System_Release(FMOD_SYSTEM * system)

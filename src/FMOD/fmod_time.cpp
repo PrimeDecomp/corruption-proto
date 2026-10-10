@@ -1,15 +1,8 @@
-// G2MEAB prototype NonMatching translation-unit scaffold; function bodies are empty placeholders.
+// G2MEAB prototype translation unit; complete reconstruction (NonMatching only by sdata2 constant labels).
 // .text: 0x80621568..0x80621870 (7 native functions).
 // Split out of the former fmod_systemi scaffold; original basename from the 4.06 reference library object.
-// 0x80621568 +0x30: profiling state constructor emitted with system
-// 0x80621598 +0x38: retained native; no unsupported symbol identity assigned
-// 0x806215D0 +0x150: retained native; no unsupported symbol identity assigned
-// 0x80621720 +0x20: retained native; no unsupported symbol identity assigned
-// 0x80621740 +0xC4: retained native; no unsupported symbol identity assigned
-// 0x80621804 +0x48: retained native; no unsupported symbol identity assigned
-// 0x8062184C +0x24: thread sleep adapter to OS623228
 
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed with the FMOD Ex 4.06.00 (PS3) debug information as reference; TimeStamp keeps the 4.06 layout.
 
 #include "fmod_time.h"
 #include "fmod.h"
@@ -41,14 +34,14 @@ FMOD_RESULT TimeStamp::stampIn()
 
 FMOD_RESULT TimeStamp::stampOut(int damppercentage)
 {
-    unsigned int now;
-    FMOD_UFLOAT damp = (FMOD_UFLOAT)damppercentage / 100.0f;
+    unsigned int val;
     FMOD_UFLOAT total;
-    FMOD_UFLOAT avtotal;
+    FMOD_UFLOAT smoothedtotal;
+    FMOD_UFLOAT dampratio = (FMOD_UFLOAT)damppercentage / 100.0f;
 
-    FMOD_OS_Time_GetNs(&now);
-    mOut = now;
-    mTotalOut = now;
+    FMOD_OS_Time_GetNs(&val);
+    mOut = val;
+    mTotalOut = val;
 
     if (mTotalOut < mTotalIn)
     {
@@ -59,18 +52,20 @@ FMOD_RESULT TimeStamp::stampOut(int damppercentage)
         total = (FMOD_UFLOAT)(mTotalOut - mTotalIn);
     }
 
-    mAvTotal *= damp;
+    mAvTotal *= dampratio;
     mAvTotal += total;
-    avtotal = mAvTotal * (1.0f - damp);
+    smoothedtotal = mAvTotal * (1.0f - dampratio);
 
-    mPercent *= damp;
+    mPercent *= dampratio;
     if (mOut > mIn)
     {
-        mPercent += 100.0f * (FMOD_UFLOAT)(mOut - mIn - mPausedTotal) / avtotal;
+        unsigned int delta = mOut - mIn - mPausedTotal;
+
+        mPercent += 100.0f * (FMOD_UFLOAT)delta / smoothedtotal;
     }
 
-    mCPUUsage = mPercent * (1.0f - damp);
-    mTotalIn = now;
+    mCPUUsage = mPercent * (1.0f - dampratio);
+    mTotalIn = val;
     mPausedTotal = 0;
     mPausedRefCount = 0;
     mTiming = false;

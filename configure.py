@@ -352,7 +352,8 @@ def LzoLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 
 
 # FMOD Ex profile: GC/2.7 at -O3,p without the peephole pass reproduces the native
-# LinkedListNode destructor exactly (no record-form compares) and the fmod_time TU.
+# LinkedListNode destructor exactly (no record-form compares) and fmod_time to within
+# sdata2 label relocations. -O4,p -opt nopeephole,noschedule ties on both; undecided.
 # Keep this independent from the imported Dolphin SDK and Retro inlining settings.
 cflags_fmod = [
     *[flag for flag in cflags_base if flag != "-O4,p"],

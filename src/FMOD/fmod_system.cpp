@@ -1,33 +1,32 @@
-// G2MEAB prototype NonMatching translation-unit scaffold.
-// .text: 0x8061A228..0x8061A6E0 (13 native functions).
-// Source identity: inferred public-system basename. Extent confidence: medium-high.
-// Complete native inventory retained, including callbacks and emitted helpers.
-// Function bodies are empty placeholders from the 4.06 reference inventory.
-// 0x8061A228 +0x38: retained native; no unsupported symbol identity assigned
-// 0x8061A260 +0x78: retained native; no unsupported symbol identity assigned
-// 0x8061A2D8 +0x48: retained native; no unsupported symbol identity assigned
-// 0x8061A320 +0x68: retained native; no unsupported symbol identity assigned
-// 0x8061A388 +0x38: retained native; no unsupported symbol identity assigned
-// 0x8061A3C0 +0x68: retained native; no unsupported symbol identity assigned
-// 0x8061A428 +0x48: retained native; no unsupported symbol identity assigned
-// 0x8061A470 +0x68: retained native; no unsupported symbol identity assigned
-// 0x8061A4D8 +0x48: retained native; no unsupported symbol identity assigned
-// 0x8061A520 +0x78: retained native; no unsupported symbol identity assigned
-// 0x8061A598 +0x78: retained native; no unsupported symbol identity assigned
-// 0x8061A610 +0x78: retained native; no unsupported symbol identity assigned
-// 0x8061A688 +0x58: retained native; no unsupported symbol identity assigned
+// Partial reconstruction of the G2MEAB unit (.text 0x8061A228..0x8061A6E0). The 13 retained System
+// wrappers are reconstructed; each validates the handle (SystemI::validate 0x8061A850) and forwards to
+// SystemI. Identities follow the SystemI callees: release 0x8061EA2C, setHardwareChannels 0x8061EC1C,
+// setSpeakerMode 0x8061ED84, init 0x8061EE30, update 0x8061FA80, set3DSettings 0x8061FCD0,
+// set3DNumListeners 0x8061FD54, set3DListenerAttributes 0x8061FD98, getChannelsPlaying 0x8062008C,
+// getCPUUsage 0x806200C8, createSound 0x806201A0, playSound 0x80620B54 and getChannel 0x80620CE4.
+// The other 4.06 wrappers are dead-stripped in G2MEAB and stay as empty placeholders.
 
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
 
 #include "fmod.h"
 #include "fmod.hpp"
 #include "fmod_codec.h"
 #include "fmod_dsp.h"
+#include "fmod_systemi.h"
 
 namespace FMOD {
 
 FMOD_RESULT System::release()
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->release();
 }
 
 FMOD_RESULT System::setOutput(FMOD_OUTPUTTYPE output)
@@ -60,6 +59,16 @@ FMOD_RESULT System::getDriver(int * driver)
 
 FMOD_RESULT System::setHardwareChannels(int min2d, int max2d, int min3d, int max3d)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->setHardwareChannels(min2d, max2d, min3d, max3d);
 }
 
 FMOD_RESULT System::setSoftwareChannels(int numsoftwarechannels)
@@ -104,6 +113,16 @@ FMOD_RESULT System::getAdvancedSettings(FMOD_ADVANCEDSETTINGS * settings)
 
 FMOD_RESULT System::setSpeakerMode(FMOD_SPEAKERMODE speakermode)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->setSpeakerMode(speakermode);
 }
 
 FMOD_RESULT System::getSpeakerMode(FMOD_SPEAKERMODE * speakermode)
@@ -144,6 +163,16 @@ FMOD_RESULT System::createCodec(FMOD_CODEC_DESCRIPTION * description)
 
 FMOD_RESULT System::init(int maxchannels, FMOD_INITFLAGS flags, void * extradriverdata)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->init(maxchannels, flags, extradriverdata);
 }
 
 FMOD_RESULT System::close()
@@ -152,10 +181,30 @@ FMOD_RESULT System::close()
 
 FMOD_RESULT System::update()
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->update();
 }
 
 FMOD_RESULT System::set3DSettings(float dopplerscale, float distancefactor, float rolloffscale)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->set3DSettings(dopplerscale, distancefactor, rolloffscale);
 }
 
 FMOD_RESULT System::get3DSettings(float * dopplerscale, float * distancefactor, float * rolloffscale)
@@ -164,6 +213,16 @@ FMOD_RESULT System::get3DSettings(float * dopplerscale, float * distancefactor, 
 
 FMOD_RESULT System::set3DNumListeners(int numlisteners)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->set3DNumListeners(numlisteners);
 }
 
 FMOD_RESULT System::get3DNumListeners(int * numlisteners)
@@ -172,6 +231,16 @@ FMOD_RESULT System::get3DNumListeners(int * numlisteners)
 
 FMOD_RESULT System::set3DListenerAttributes(int listener, const FMOD_VECTOR * pos, const FMOD_VECTOR * vel, const FMOD_VECTOR * forward, const FMOD_VECTOR * up)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->set3DListenerAttributes(listener, pos, vel, forward, up);
 }
 
 FMOD_RESULT System::get3DListenerAttributes(int listener, FMOD_VECTOR * pos, FMOD_VECTOR * vel, FMOD_VECTOR * forward, FMOD_VECTOR * up)
@@ -204,6 +273,16 @@ FMOD_RESULT System::getOutputHandle(void * * handle)
 
 FMOD_RESULT System::getChannelsPlaying(int * channels)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->getChannelsPlaying(channels);
 }
 
 FMOD_RESULT System::getHardwareChannels(int * num2d, int * num3d, int * total)
@@ -212,6 +291,16 @@ FMOD_RESULT System::getHardwareChannels(int * num2d, int * num3d, int * total)
 
 FMOD_RESULT System::getCPUUsage(float * dsp, float * stream, float * update, float * total)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->getCPUUsage(dsp, stream, update, total);
 }
 
 FMOD_RESULT System::getSoundRAM(int * currentalloced, int * maxalloced, int * total)
@@ -236,6 +325,16 @@ FMOD_RESULT System::getWaveData(float * wavearray, int numvalues, int channeloff
 
 FMOD_RESULT System::createSound(const char * name_or_data, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO * exinfo, Sound * * sound)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->createSound(name_or_data, mode, exinfo, (SoundI * *)sound);
 }
 
 FMOD_RESULT System::createStream(const char * name_or_data, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO * exinfo, Sound * * sound)
@@ -260,6 +359,16 @@ FMOD_RESULT System::createChannelGroup(const char * name, ChannelGroup * * chann
 
 FMOD_RESULT System::playSound(FMOD_CHANNELINDEX channelid, Sound * sound, bool paused, Channel * * channel)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->playSound(channelid, (SoundI *)sound, paused, channel);
 }
 
 FMOD_RESULT System::playDSP(FMOD_CHANNELINDEX channelid, DSP * dsp, bool paused, Channel * * channel)
@@ -268,6 +377,16 @@ FMOD_RESULT System::playDSP(FMOD_CHANNELINDEX channelid, DSP * dsp, bool paused,
 
 FMOD_RESULT System::getChannel(int channelid, Channel * * channel)
 {
+    FMOD_RESULT result;
+    SystemI * systemi;
+
+    result = SystemI::validate(this, &systemi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return systemi->getChannel(channelid, channel);
 }
 
 FMOD_RESULT System::getMasterChannelGroup(ChannelGroup * * channelgroup)

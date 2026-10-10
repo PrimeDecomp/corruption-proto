@@ -1,41 +1,258 @@
-// NonMatching translation-unit scaffold; function bodies are empty placeholders.
-// G2MEAB .text: 0x805B60A0..0x805B67C0 (12 retained native functions).
-// Original basename directly named by target allocation/free evidence.
-// Evidence: Allocation805B65F8 names fmod_async.cpp line415 and frees805B6338 with the same file
-// line236. Entry805B60A0 forwards to worker805B6468; ctor805B60C0 establishes thread, nested
-// intrusive list, lock and flags in0x158 bytes;805B6258 starts FMOD_NONBLOCKING thread. Shared
-// global list807176E4 and mutex8079B7E0 close shutdown/reap/assign paths; final805B6764 registers
-// list destructor805B6184. Next805B67C0 changes to channel-handle validation and forwarding
-// wrappers. Source basename is direct target allocation evidence, not the version/thread string
-// alone. Preserve every retained stub, emitted helper and adjustor thunk; full inventory and
-// inlining uncertainty are recorded externally.
-
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Complete reconstruction of the G2MEAB unit (.text 0x805B60A0..0x805B67C0), in native order. The
+// LinkedListNode destructor 0x805B6184 and the AsyncThread destructor 0x805B66E4 are compiler-emitted.
+// addCallback, removeCallback and wakeupThread are not retained and stay as empty placeholders.
 
 #include "fmod_async.h"
 #include "fmod.h"
 #include "fmod_linkedlist.h"
+#include "fmod_memory.h"
 #include "fmod_os_misc.h"
 #include "fmod_soundi.h"
+#include "fmod_systemi.h"
 
 namespace FMOD {
 
 FMOD_OS_CRITICALSECTION * AsyncThread::gAsyncCrit;
 LinkedListNode AsyncThread::gAsyncHead;
 
-AsyncThread::AsyncThread()
+void asyncThreadFunc(void * data)
 {
+    AsyncThread * asyncthread = (AsyncThread *)data;
+
+    asyncthread->threadFunc();
 }
 
-FMOD_RESULT AsyncThread::removeCallback(FMOD_ASYNC_CALLBACK callback)
+AsyncThread::AsyncThread()
 {
+    mCrit = 0;
+    mThreadActive = false;
+    mBusy = false;
+    mDone = false;
+
+    if (!gAsyncCrit)
+    {
+        FMOD_RESULT result;
+
+        result = FMOD_OS_CriticalSection_Create(&gAsyncCrit, false);
+        if (result != FMOD_OK)
+        {
+            return;
+        }
+    }
+}
+
+FMOD_RESULT AsyncThread::shutDown()
+{
+    if (gAsyncCrit)
+    {
+        LinkedListNode * current;
+
+        FMOD_OS_CriticalSection_Enter(gAsyncCrit);
+
+        current = gAsyncHead.getNext();
+        while (current != &gAsyncHead)
+        {
+            LinkedListNode * next = current->getNext();
+
+            ((AsyncThread *)current)->reallyRelease();
+            current = next;
+        }
+
+        FMOD_OS_CriticalSection_Leave(gAsyncCrit);
+
+        if (gAsyncCrit)
+        {
+            FMOD_OS_CriticalSection_Free(gAsyncCrit);
+            gAsyncCrit = 0;
+        }
+    }
+
+    return FMOD_OK;
 }
 
 FMOD_RESULT AsyncThread::init(bool owned)
 {
+    FMOD_RESULT result;
+
+    mOwned = owned;
+
+    result = FMOD_OS_CriticalSection_Create(&mCrit, false);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    result = mThread.initThread("FMOD thread for FMOD_NONBLOCKING", asyncThreadFunc, this, Thread::PRIORITY_NORMAL, 0, 16 * 1024, false, 10);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    mThreadActive = true;
+
+    FMOD_OS_CriticalSection_Enter(gAsyncCrit);
+    addBefore(&gAsyncHead);
+    FMOD_OS_CriticalSection_Leave(gAsyncCrit);
+
+    return FMOD_OK;
+}
+
+FMOD_RESULT AsyncThread::release()
+{
+    if (mOwned)
+    {
+        mDone = true;
+    }
+
+    return FMOD_OK;
+}
+
+FMOD_RESULT AsyncThread::reallyRelease()
+{
+    FMOD_OS_CriticalSection_Enter(mCrit);
+    FMOD_OS_CriticalSection_Leave(mCrit);
+
+    FMOD_OS_CriticalSection_Enter(gAsyncCrit);
+    removeNode();
+    FMOD_OS_CriticalSection_Leave(gAsyncCrit);
+
+    mThreadActive = false;
+    mThread.closeThread();
+
+    if (mCrit)
+    {
+        FMOD_OS_CriticalSection_Free(mCrit);
+    }
+
+    FMOD_Memory_Free(this);
+
+    return FMOD_OK;
+}
+
+FMOD_RESULT AsyncThread::update()
+{
+    if (gAsyncCrit)
+    {
+        LinkedListNode * current;
+
+        FMOD_OS_CriticalSection_Enter(gAsyncCrit);
+
+        current = gAsyncHead.getNext();
+        while (current != &gAsyncHead)
+        {
+            LinkedListNode * next = current->getNext();
+
+            if (((AsyncThread *)current)->mDone)
+            {
+                ((AsyncThread *)current)->reallyRelease();
+            }
+            current = next;
+        }
+
+        FMOD_OS_CriticalSection_Leave(gAsyncCrit);
+    }
+
+    return FMOD_OK;
+}
+
+FMOD_RESULT AsyncThread::threadFunc()
+{
+    FMOD_RESULT result = FMOD_OK;
+    SoundI * sound = 0;
+
+    if (mThreadActive)
+    {
+        LinkedListNode * current;
+
+        FMOD_OS_CriticalSection_Enter(mCrit);
+
+        current = mHead.getNext();
+        if (current != &mHead)
+        {
+            sound = (SoundI *)current->getData();
+            current->removeNode();
+            mBusy = true;
+        }
+
+        FMOD_OS_CriticalSection_Leave(mCrit);
+
+        if (sound)
+        {
+            SystemI * system = sound->mSystem;
+
+            if (sound->mOpenState == FMOD_OPENSTATE_LOADING)
+            {
+                if (sound->mMode & FMOD_OPENMEMORY)
+                {
+                    result = system->createSoundInternal((const char *)sound->mAsyncNameData, sound->mMode, sound->mExInfoExists ? &sound->mExInfo : 0, &sound);
+                }
+                else
+                {
+                    result = system->createSoundInternal(sound->mName, sound->mMode, sound->mExInfoExists ? &sound->mExInfo : 0, &sound);
+                }
+            }
+
+            sound->mAsyncThread = 0;
+            sound->mAsyncResult = result;
+            sound->mOpenState = result == FMOD_OK ? FMOD_OPENSTATE_READY : FMOD_OPENSTATE_ERROR;
+
+            mBusy = false;
+
+            if (sound->mExInfoExists && sound->mExInfo.nonblockcallback)
+            {
+                sound->mExInfo.nonblockcallback((FMOD_SOUND *)sound, result);
+            }
+
+            release();
+        }
+    }
+
+    return FMOD_OK;
 }
 
 FMOD_RESULT AsyncThread::getAsyncThread(SoundI * sound)
+{
+    LinkedListNode * current;
+    bool found = false;
+    AsyncThread * asyncthread = 0;
+
+    FMOD_OS_CriticalSection_Enter(gAsyncCrit);
+
+    current = gAsyncHead.getNext();
+    if (current != &gAsyncHead)
+    {
+        asyncthread = (AsyncThread *)current;
+
+        FMOD_OS_CriticalSection_Enter(asyncthread->mCrit);
+        found = true;
+        FMOD_OS_CriticalSection_Leave(asyncthread->mCrit);
+    }
+
+    FMOD_OS_CriticalSection_Leave(gAsyncCrit);
+
+    if (!found)
+    {
+        FMOD_RESULT result;
+
+        asyncthread = FMOD_Object_Alloc(AsyncThread);
+        if (!asyncthread)
+        {
+            return FMOD_ERR_MEMORY;
+        }
+
+        result = asyncthread->init(false);
+        if (result != FMOD_OK)
+        {
+            return result;
+        }
+    }
+
+    sound->mAsyncThread = asyncthread;
+
+    return FMOD_OK;
+}
+
+FMOD_RESULT AsyncThread::wakeupThread()
 {
 }
 
@@ -43,31 +260,7 @@ FMOD_RESULT AsyncThread::addCallback(FMOD_ASYNC_CALLBACK callback, AsyncThread *
 {
 }
 
-FMOD_RESULT AsyncThread::release()
-{
-}
-
-FMOD_RESULT AsyncThread::reallyRelease()
-{
-}
-
-FMOD_RESULT AsyncThread::shutDown()
-{
-}
-
-FMOD_RESULT AsyncThread::wakeupThread()
-{
-}
-
-FMOD_RESULT AsyncThread::update()
-{
-}
-
-FMOD_RESULT AsyncThread::threadFunc()
-{
-}
-
-void asyncThreadFunc(void * data)
+FMOD_RESULT AsyncThread::removeCallback(FMOD_ASYNC_CALLBACK callback)
 {
 }
 

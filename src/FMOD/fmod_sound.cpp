@@ -1,4 +1,5 @@
-// NonMatching translation-unit scaffold; function bodies are empty placeholders.
+// G2MEAB prototype translation unit; complete reconstruction of the 4 retained wrappers (the rest of
+// the 4.06 Sound API is dead-stripped and kept as empty placeholders).
 // G2MEAB .text: 0x80612998..0x80612B54 (4 retained native functions).
 // inferred descriptive source basename; original filename unverified.
 // Evidence: Four public handle wrappers call the same validator1606C and dispatch SoundI virtual
@@ -10,11 +11,22 @@
 
 #include "fmod.h"
 #include "fmod.hpp"
+#include "fmod_soundi.h"
 
 namespace FMOD {
 
 FMOD_RESULT Sound::release()
 {
+    FMOD_RESULT result;
+    SoundI * soundi;
+
+    result = SoundI::validate(this, &soundi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return soundi->release();
 }
 
 FMOD_RESULT Sound::getSystemObject(System * * system)
@@ -35,6 +47,21 @@ FMOD_RESULT Sound::setDefaults(float frequency, float volume, float pan, int pri
 
 FMOD_RESULT Sound::getDefaults(float * frequency, float * volume, float * pan, int * priority)
 {
+    FMOD_RESULT result;
+    SoundI * soundi;
+
+    result = SoundI::validate(this, &soundi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    if (soundi->mOpenState != FMOD_OPENSTATE_READY)
+    {
+        return FMOD_ERR_NOTREADY;
+    }
+
+    return soundi->getDefaults(frequency, volume, pan, priority);
 }
 
 FMOD_RESULT Sound::setVariations(float frequencyvar, float volumevar, float panvar)
@@ -47,6 +74,21 @@ FMOD_RESULT Sound::getVariations(float * frequencyvar, float * volumevar, float 
 
 FMOD_RESULT Sound::set3DMinMaxDistance(float min, float max)
 {
+    FMOD_RESULT result;
+    SoundI * soundi;
+
+    result = SoundI::validate(this, &soundi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    if (soundi->mOpenState != FMOD_OPENSTATE_READY)
+    {
+        return FMOD_ERR_NOTREADY;
+    }
+
+    return soundi->set3DMinMaxDistance(min, max);
 }
 
 FMOD_RESULT Sound::get3DMinMaxDistance(float * min, float * max)
@@ -139,6 +181,21 @@ FMOD_RESULT Sound::deleteSyncPoint(FMOD_SYNCPOINT * point)
 
 FMOD_RESULT Sound::setMode(FMOD_MODE mode)
 {
+    FMOD_RESULT result;
+    SoundI * soundi;
+
+    result = SoundI::validate(this, &soundi);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    if (soundi->mOpenState != FMOD_OPENSTATE_READY)
+    {
+        return FMOD_ERR_NOTREADY;
+    }
+
+    return soundi->setMode(mode);
 }
 
 FMOD_RESULT Sound::getMode(FMOD_MODE * mode)

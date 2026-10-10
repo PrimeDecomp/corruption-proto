@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805F0414..0x805F1364 (14 retained native functions).
 // Original basename directly named by target allocation/free evidence.
 // Evidence: Chorus DSP registration0414 initializes90-byte descriptor80753A5C, six callback

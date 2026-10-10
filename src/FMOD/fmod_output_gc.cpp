@@ -2,7 +2,7 @@
 // .text: 0x806236F0..0x8062591C (40 native functions).
 // Source identity: inferred from GameCube output descriptor. Extent confidence: high.
 // Complete native inventory retained, including callbacks and emitted helpers.
-// No reconstruction bodies or speculative declarations.
+// Function bodies are empty placeholders from the 4.06 reference inventory.
 // 0x806236F0 +0x44: register GameCube output plugin
 // 0x80623734 +0x20: GameCube output shutdown adapter
 // 0x80623754 +0xF8: GameCube output descriptor builder; explicit callback table

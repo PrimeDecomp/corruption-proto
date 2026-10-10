@@ -2,7 +2,7 @@
 // .text: 0x80621870..0x80622C90 (18 native functions).
 // Source identity: asserted original basename. Extent confidence: high.
 // Complete native inventory retained, including callbacks and emitted helpers.
-// No reconstruction bodies or speculative declarations.
+// Function bodies are empty placeholders from the 4.06 reference inventory.
 // 0x80621870 +0x64: GC channel constructor, final vtable806EFC70
 // 0x806218D4 +0xC8: GC channel initialization and AX voice acquisition; asserted filename
 // 0x8062199C +0x20: retained native; no unsupported symbol identity assigned

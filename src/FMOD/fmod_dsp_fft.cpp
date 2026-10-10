@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805F5914..0x805F69AC (3 retained native functions).
 // inferred descriptive basename; original filename unverified.
 // Evidence: 5914 initializes0x2000 cosine lookup values in FFT workspace+20000;59DC performs

@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x805C3308..0x805C5794 (12 retained native functions).
 // Original basename directly named by target allocation/free evidence.
 // Evidence: Registration3308 initializes DLS descriptor8073F764, format6/state214. Allocator/free

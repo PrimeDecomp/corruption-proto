@@ -1,4 +1,4 @@
-// NonMatching translation-unit scaffold; no implementation is supplied.
+// NonMatching translation-unit scaffold; function bodies are empty placeholders.
 // G2MEAB .text: 0x80605958..0x80606150 (14 retained native functions).
 // inferred descriptive basename; original filename unverified.
 // Evidence: Leading80605958 initializes independent0x90 plugin descriptor807541DC, original plugin

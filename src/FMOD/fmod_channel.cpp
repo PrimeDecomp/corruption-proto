@@ -1,4 +1,5 @@
-// NonMatching translation-unit scaffold; function bodies are empty placeholders.
+// G2MEAB prototype translation unit; complete reconstruction of the 13 retained public Channel wrappers
+// (remaining diffs are calls to still-unnamed ChannelI targets). Dead-stripped wrappers stay empty placeholders.
 // G2MEAB .text: 0x805B67C0..0x805B6C3C (13 retained native functions).
 // Inferred basename; original source filename is unproven.
 // Evidence: All13 natives validate opaque channel handles through805BCCA8, then forward to ChannelI
@@ -9,10 +10,13 @@
 // public wrapper family, not an original assertion. Preserve every retained stub, emitted helper
 // and adjustor thunk; full inventory and inlining uncertainty are recorded externally.
 
-// Reconstructed from FMOD Ex 4.06.00 (PS3) debug information. Member layout and offsets are the 4.06 reference, not yet verified against G2MEAB.
+// Reconstructed with the FMOD Ex 4.06.00 (PS3) debug information as reference. The tenth wrapper forwards to
+// ChannelI::set3DCustomRolloff (805BFBA8 validates FMOD_VECTOR points), not get3DMinMaxDistance.
 
 #include "fmod.h"
 #include "fmod.hpp"
+#include "fmod_channeli.h"
+#include "fmod_soundi.h"
 
 namespace FMOD {
 
@@ -22,10 +26,30 @@ FMOD_RESULT Channel::getSystemObject(System * * system)
 
 FMOD_RESULT Channel::stop()
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->stop();
 }
 
 FMOD_RESULT Channel::setPaused(bool paused)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->setPaused(paused);
 }
 
 FMOD_RESULT Channel::getPaused(bool * paused)
@@ -34,6 +58,16 @@ FMOD_RESULT Channel::getPaused(bool * paused)
 
 FMOD_RESULT Channel::setVolume(float volume)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->setVolume(volume);
 }
 
 FMOD_RESULT Channel::getVolume(float * volume)
@@ -42,6 +76,16 @@ FMOD_RESULT Channel::getVolume(float * volume)
 
 FMOD_RESULT Channel::setFrequency(float frequency)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->setFrequency(frequency);
 }
 
 FMOD_RESULT Channel::getFrequency(float * frequency)
@@ -66,6 +110,16 @@ FMOD_RESULT Channel::getDelay(unsigned int * startdelay, unsigned int * enddelay
 
 FMOD_RESULT Channel::setSpeakerMix(float frontleft, float frontright, float center, float lfe, float backleft, float backright, float sideleft, float sideright)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->setSpeakerMix(frontleft, frontright, center, lfe, backleft, backright, sideleft, sideright, true);
 }
 
 FMOD_RESULT Channel::getSpeakerMix(float * frontleft, float * frontright, float * center, float * lfe, float * backleft, float * backright, float * sideleft, float * sideright)
@@ -82,6 +136,16 @@ FMOD_RESULT Channel::getSpeakerLevels(FMOD_SPEAKER speaker, float * levels, int 
 
 FMOD_RESULT Channel::setMute(bool mute)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->setMute(mute);
 }
 
 FMOD_RESULT Channel::getMute(bool * mute)
@@ -126,14 +190,52 @@ FMOD_RESULT Channel::setCallback(FMOD_CHANNEL_CALLBACKTYPE type, FMOD_CHANNEL_CA
 
 FMOD_RESULT Channel::set3DAttributes(const FMOD_VECTOR * pos, const FMOD_VECTOR * vel)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->set3DAttributes(pos, vel);
 }
 
 FMOD_RESULT Channel::get3DAttributes(FMOD_VECTOR * pos, FMOD_VECTOR * vel)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        if (pos)
+        {
+            pos->x = pos->y = pos->z = 0.0f;
+        }
+        if (vel)
+        {
+            vel->x = vel->y = vel->z = 0.0f;
+        }
+        return result;
+    }
+
+    return channeli->get3DAttributes(pos, vel);
 }
 
 FMOD_RESULT Channel::set3DMinMaxDistance(float mindistance, float maxdistance)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->set3DMinMaxDistance(mindistance, maxdistance);
 }
 
 FMOD_RESULT Channel::get3DMinMaxDistance(float * mindistance, float * maxdistance)
@@ -158,6 +260,16 @@ FMOD_RESULT Channel::get3DConeOrientation(FMOD_VECTOR * orientation)
 
 FMOD_RESULT Channel::set3DCustomRolloff(FMOD_VECTOR * points, int numpoints)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        return result;
+    }
+
+    return channeli->set3DCustomRolloff(points, numpoints);
 }
 
 FMOD_RESULT Channel::get3DCustomRolloff(FMOD_VECTOR * * points, int * numpoints)
@@ -206,6 +318,20 @@ FMOD_RESULT Channel::addDSP(DSP * dsp)
 
 FMOD_RESULT Channel::isPlaying(bool * isplaying)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        if (isplaying)
+        {
+            *isplaying = false;
+        }
+        return result;
+    }
+
+    return channeli->isPlaying(isplaying);
 }
 
 FMOD_RESULT Channel::isVirtual(bool * isvirtual)
@@ -214,10 +340,38 @@ FMOD_RESULT Channel::isVirtual(bool * isvirtual)
 
 FMOD_RESULT Channel::getAudibility(float * audibility)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        if (audibility)
+        {
+            *audibility = 0.0f;
+        }
+        return result;
+    }
+
+    return channeli->getAudibility(audibility);
 }
 
 FMOD_RESULT Channel::getCurrentSound(Sound * * sound)
 {
+    FMOD_RESULT result;
+    ChannelI *channeli;
+
+    result = ChannelI::validate(this, &channeli);
+    if (result != FMOD_OK)
+    {
+        if (sound)
+        {
+            *sound = 0;
+        }
+        return result;
+    }
+
+    return channeli->getCurrentSound((SoundI **)sound);
 }
 
 FMOD_RESULT Channel::getSpectrum(float * spectrumarray, int numvalues, int channeloffset, FMOD_DSP_FFT_WINDOW windowtype)
